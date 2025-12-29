@@ -3,7 +3,6 @@ i3
 feh
 polybar
 rofi
-rofi-calc
 sddm
 
 # Icons & Themes
@@ -30,7 +29,7 @@ pipewire-jack-audio-connection-kit
 wireplumber
 
 # Multimedia & Plugins
-gstreamer1-plugin-pipewire
+pipewire-gstreamer
 flameshot
 chromium
 
@@ -46,11 +45,11 @@ qt5-qtsvg
 qt6-qtsvg
 qt6-qtdeclarative
 rtkit
-polkit-gnome
+polkit
 
 # Input Drivers
 xorg-x11-drv-evdev
-xorg-x11-drv-synaptics
+xorg-x11-drv-libinput
 
 # File Compression & Downloads
 zip
