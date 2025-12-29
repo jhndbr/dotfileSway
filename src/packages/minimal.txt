@@ -1,0 +1,61 @@
+# Window Manager & UI
+i3
+feh
+polybar
+rofi
+rofi-calc
+sddm
+
+# Icons & Themes
+papirus-icon-theme
+
+# Fonts
+gnu-free-fonts-common
+jetbrains-mono-fonts
+jetbrains-mono-nl-fonts
+google-noto-sans-fonts
+google-noto-emoji-fonts
+google-noto-sans-cjk-fonts
+google-noto-serif-cjk-fonts
+
+# File Management
+nemo
+nemo-extensions
+
+# Audio
+pipewire
+pipewire-alsa
+pipewire-pulseaudio
+pipewire-jack-audio-connection-kit
+wireplumber
+
+# Multimedia & Plugins
+gstreamer1-plugin-pipewire
+flameshot
+chromium
+
+# System & Utilities
+alacritty
+bash-completion
+gnome-keyring
+fastfetch
+nano
+qt5-qtgraphicaleffects
+qt5-qtquickcontrols2
+qt5-qtsvg
+qt6-qtsvg
+qt6-qtdeclarative
+rtkit
+polkit-gnome
+
+# Input Drivers
+xorg-x11-drv-evdev
+xorg-x11-drv-synaptics
+
+# File Compression & Downloads
+zip
+unzip
+unrar
+p7zip
+p7zip-plugins
+wget

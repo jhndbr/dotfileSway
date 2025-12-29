@@ -1,0 +1,112 @@
+configuration {
+    modi: "run,drun,window,ssh";
+    terminal: "alacritty";
+
+    hide-scrollbar: true;
+    show-icons: true;
+    sidebar-mode: false;
+    disable-history: false;
+
+    display-calc: "   ";
+    display-drun: "   Apps ";
+    display-Network: " 󰤨  Networks ";
+    display-run: "   Run ";
+    display-ssh: " 󰦝  SSH ";
+    display-window: "   Windows ";
+
+    drun-display-format: "{icon} {name}";
+    location: 0;
+}
+
+@theme "/dev/null"
+
+* {
+    width: 600px;
+    font: "JetBrainsMono Nerd Font 16";
+    base: #1e1e2e;
+    mauve: #cba6f7;
+    overlay: #6c7086;
+    subtext: #a6adc8;
+    text: #cdd6f4;
+}
+
+/* General elements */
+element-icon, element-text, mode-switcher {
+    background-color: inherit;
+    text-color: inherit;
+}
+
+/* Main containers */
+window, element, listview, mainbox {
+    background-color: @base;
+}
+
+listview {
+    columns: 1;
+    lines: 6;
+    margin: 10px 0px 20px 20px;
+    padding: 5px 0px 0px;
+}
+
+element {
+    padding: 5px;
+    text-color: @text;
+}
+
+element-icon {
+    size: 25px;
+}
+
+element selected {
+    background-color: @base;
+    text-color: @mauve;
+}
+
+/* Input & Prompt */
+inputbar {
+    background-color: @base;
+    border-radius: 5px;
+    children: [prompt, entry];
+    padding: 5px;
+}
+
+entry {
+    background-color: @base;
+    margin: 20px 0px 0px 10px;
+    padding: 5px;
+    text-color: @text;
+}
+
+prompt {
+    background-color: @mauve;
+    border-radius: 5px;
+    margin: 20px 0px 0px 20px;
+    padding: 5px;
+    text-color: @base;
+}
+
+textbox-prompt-colon {
+    expand: false;
+    str: ":";
+}
+
+/* Buttons */
+button {
+    background-color: @base;
+    horizontal-align: 0.5;
+    padding: 10px;
+    text-color: @overlay;
+    vertical-align: 0.5;
+}
+
+button selected {
+    background-color: @base;
+    text-color: @mauve;
+}
+
+/* Additional UI elements */
+message, textbox {
+    background-color: @base;
+    padding: 5px 0px 0px 10px;
+    text-color: @mauve;
+}

@@ -1,0 +1,28 @@
+# System Utilities
+dosfstools
+nvtop
+htop
+btop
+dnf-utils
+ntfs-3g
+gdu
+
+# GNOME Applications
+gnome-calculator
+gnome-disk-utility
+gnome-text-editor
+pika-backup
+
+# Advanced File Management
+fuse
+gvfs
+gvfs-smb
+
+# Extended Multimedia & Plugins
+gstreamer1-libav
+gstreamer1-plugins-ugly
+totem
+loupe
+
+# Appearance
+lxappearance
