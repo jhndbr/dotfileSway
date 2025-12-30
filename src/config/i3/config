@@ -129,7 +129,7 @@ bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOU
 
 # start apps
 bindsym $mod+Return exec --no-startup-id alacritty
-bindsym $mod+b exec --no-startup-id brave
+bindsym $mod+b exec --no-startup-id chromium
 bindsym $mod+e exec --no-startup-id nemo
 bindsym $mod+n exec --no-startup-id "flameshot gui"
 bindsym $mod+m exec --no-startup-id "flameshot screen"

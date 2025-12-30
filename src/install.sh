@@ -275,6 +275,145 @@ EOF
 	esac
 }
 
+install_jetbrains_nerd() {
+	echo -e "\nInstalling JetBrains Mono Nerd Font..."
+
+	local tmpzip="/tmp/JetBrainsMonoNerd.zip"
+	local url="https://github.com/ryanoasis/nerd-fonts/releases/latest/download/JetBrainsMono.zip"
+
+	if [[ ${EUID} -eq 0 ]]; then
+		target_dir="/usr/local/share/fonts/jetbrains-nerd"
+		sudo mkdir -p "${target_dir}"
+	else
+		target_dir="${HOME}/.local/share/fonts"
+		mkdir -p "${target_dir}"
+	fi
+
+	if command -v wget >/dev/null 2>&1; then
+		wget -O "${tmpzip}" "${url}" || { echo "Failed to download JetBrainsMono.zip"; return 1; }
+	elif command -v curl >/dev/null 2>&1; then
+		curl -L -o "${tmpzip}" "${url}" || { echo "Failed to download JetBrainsMono.zip"; return 1; }
+	else
+		echo "Neither wget nor curl found — cannot download JetBrains Mono Nerd Font. Skipping."
+		return 1
+	fi
+
+	unzip -o "${tmpzip}" -d "${target_dir}" || { echo "Failed to unzip fonts"; rm -f "${tmpzip}"; return 1; }
+	rm -f "${tmpzip}"
+
+	if [[ ${EUID} -eq 0 ]]; then
+		fc-cache -fv || echo "fc-cache failed (global)"
+	else
+		fc-cache -fv "${HOME}/.local/share/fonts" || echo "fc-cache failed (user)"
+	fi
+
+	echo "JetBrains Mono Nerd Font installed to ${target_dir}"
+}
+
+install_zsh_custom() {
+	# Customizable installer for zsh and optional frameworks (oh-my-zsh, powerlevel10k)
+	echo -e "\nCustom installation for zsh"
+
+	# If already installed, ask whether to proceed with customization
+	if command -v zsh >/dev/null 2>&1; then
+		echo "zsh is already installed at: $(command -v zsh)"
+		read -rp "Do you want to run the zsh customization steps anyway? [y/N] " ans
+		case "${ans}" in
+			[Yy]*)
+				echo "Proceeding with customization..."
+				;;
+			*)
+				echo "Skipping zsh customization."
+				return 0
+				;;
+		esac
+	else
+		read -rp "zsh is not installed. Install it now via dnf? [Y/n] " ans
+		case "${ans}" in
+			[Nn])
+				echo "Skipping zsh installation."
+				return 0
+				;;
+			*)
+				sudo dnf install -y zsh || echo "Failed to install zsh via dnf"
+				;;
+		esac
+	fi
+
+	# Ask to install oh-my-zsh
+	read -rp "Install oh-my-zsh (recommended) ? [Y/n] " ohans
+	if [[ "${ohans}" =~ ^([Yy]|"")$ ]]; then
+		if [[ -d "${HOME}/.oh-my-zsh" ]]; then
+			echo "oh-my-zsh already present"
+		else
+			echo "Installing oh-my-zsh..."
+			# Use unattended install script
+			sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" || echo "oh-my-zsh installer failed"
+		fi
+	fi
+
+	# Ask to install Powerlevel10k theme
+	read -rp "Install Powerlevel10k theme for oh-my-zsh? [Y/n] " p10kans
+	if [[ "${p10kans}" =~ ^([Yy]|"")$ ]]; then
+		if [[ -d "${HOME}/.oh-my-zsh/custom/themes/powerlevel10k" ]]; then
+			echo "powerlevel10k already installed"
+		else
+			echo "Installing powerlevel10k..."
+			git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "${HOME}/.oh-my-zsh/custom/themes/powerlevel10k" || echo "Failed to clone powerlevel10k"
+		fi
+	fi
+
+	# Install essential zsh plugins
+	read -rp "Install essential zsh plugins (autosuggestions, syntax-highlighting, completions)? [Y/n] " plugans
+	if [[ "${plugans}" =~ ^([Yy]|"")$ ]]; then
+		echo "Installing zsh plugins..."
+		
+		# zsh-autosuggestions
+		if [[ ! -d "${HOME}/.oh-my-zsh/custom/plugins/zsh-autosuggestions" ]]; then
+			git clone https://github.com/zsh-users/zsh-autosuggestions "${HOME}/.oh-my-zsh/custom/plugins/zsh-autosuggestions" || echo "Failed to clone zsh-autosuggestions"
+		fi
+		
+		# zsh-syntax-highlighting
+		if [[ ! -d "${HOME}/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting" ]]; then
+			git clone https://github.com/zsh-users/zsh-syntax-highlighting.git "${HOME}/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting" || echo "Failed to clone zsh-syntax-highlighting"
+		fi
+		
+		# zsh-completions
+		if [[ ! -d "${HOME}/.oh-my-zsh/custom/plugins/zsh-completions" ]]; then
+			git clone https://github.com/zsh-users/zsh-completions "${HOME}/.oh-my-zsh/custom/plugins/zsh-completions" || echo "Failed to clone zsh-completions"
+		fi
+		
+		echo "Essential plugins installed. Remember to add them to your .zshrc plugins list:"
+		echo "plugins=(git zsh-autosuggestions zsh-syntax-highlighting zsh-completions)"
+	fi
+
+	# If there is an assets/zsh directory, copy configs
+	if [[ -d "${directory}/assets/zsh" ]]; then
+		echo "Copying zsh config files from assets to ~"
+		# Copy dotfiles (e.g., .zshrc) and any config folder
+		shopt -s dotglob
+		cp -r "${directory}/assets/zsh/"* "${HOME}/" || echo "Failed to copy zsh assets"
+		shopt -u dotglob
+	fi
+
+	# Offer to set zsh as default shell
+	read -rp "Set zsh as the default login shell for user ${USER}? [Y/n] " shellans
+	case "${shellans}" in
+		[Nn])
+			echo "Skipping chsh."
+			;;
+		*)
+			if command -v zsh >/dev/null 2>&1; then
+				sudo chsh -s "$(command -v zsh)" "${USER}" || echo "chsh failed; you may need to run it manually"
+			else
+				echo "zsh not found in PATH; cannot set as default shell"
+			fi
+			;;
+	esac
+
+	echo "zsh customization completed. You may need to restart your session for changes to take effect."
+}
+
 chooseInput() {
 	# Lets the user pick their preffered keyboard layout and input driver.
 
@@ -551,6 +690,12 @@ pacmanPackages
 
 # Step 7
 extraPackages
+
+# Step 7.5: Install JetBrains Mono Nerd Font (optional, needed for "JetBrains Mono Nerd Font" in configs)
+install_jetbrains_nerd || true
+
+# Step 7.6: Custom install for zsh (interactive)
+install_zsh_custom || true
 
 # Step 8
 chooseInput

@@ -58,3 +58,4 @@ unrar
 p7zip
 p7zip-plugins
 wget
+zsh
