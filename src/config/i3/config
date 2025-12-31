@@ -76,6 +76,12 @@ for_window [class="gnome-calendar"] floating enable
 for_window [class="Totem"] floating enable
 for_window [class="loupe"] floating enable
 for_window [class="mpv"] floating enable
+for_window [class="Pavucontrol"] floating enable
+for_window [title="Picture-in-Picture"] floating enable, sticky enable
+
+# Scratchpad terminal (terminal flotante rápido)
+for_window [title="scratchpad"] move scratchpad, border pixel 3
+exec --no-startup-id alacritty --title scratchpad
 
 #for_window [class="org.gnome.Nautilus"] floating enable
 #for_window [class="pcmanfm"] floating enable
@@ -95,6 +101,8 @@ exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
 exec --no-startup-id nm-applet
 exec --no-startup-id blueman-applet
 exec --no-startup-id ${HOME}/.screenlayout/default.sh
+exec --no-startup-id dunst
+exec --no-startup-id picom -b
 
 exec_always --no-startup-id "${HOME}/.config/polybar/launch.sh"
 exec_always --no-startup-id "${HOME}/.fehbg"
@@ -122,10 +130,22 @@ floating_modifier $mod
 tiling_drag modifier titlebar
 
 # Use pactl to adjust volume in PulseAudio.
-bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +10%
-bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -10%
-bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle
-bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle
+bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +10% && notify-send -t 1000 "Volumen: $(pactl get-sink-volume @DEFAULT_SINK@ | grep -Po '\d+(?=%)' | head -1)%"
+bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -10% && notify-send -t 1000 "Volumen: $(pactl get-sink-volume @DEFAULT_SINK@ | grep -Po '\d+(?=%)' | head -1)%"
+bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle && notify-send -t 1000 "Audio $(pactl get-sink-mute @DEFAULT_SINK@ | grep -q yes && echo 'Muteado' || echo 'Activo')"
+bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle && notify-send -t 1000 "Micrófono $(pactl get-source-mute @DEFAULT_SOURCE@ | grep -q yes && echo 'Muteado' || echo 'Activo')"
+
+# Brillo (para laptops)
+bindsym XF86MonBrightnessUp exec --no-startup-id brightnessctl set +10% && notify-send -t 1000 "Brillo: $(brightnessctl get)"
+bindsym XF86MonBrightnessDown exec --no-startup-id brightnessctl set 10%- && notify-send -t 1000 "Brillo: $(brightnessctl get)"
+
+# Power menu y bloqueo de pantalla
+bindsym $mod+Shift+x exec --no-startup-id i3lock -c 000000
+bindsym $mod+Shift+p exec "$HOME/.config/rofi/scripts/powermenu.sh"
+
+# Scratchpad (terminal flotante rápido)
+bindsym $mod+Shift+grave move scratchpad
+bindsym $mod+grave scratchpad show
 
 # start apps
 bindsym $mod+Return exec --no-startup-id alacritty
@@ -236,3 +256,67 @@ bindsym $mod+Shift+c reload
 bindsym $mod+Shift+r restart
 # exit i3 (logs you out of your X session)
 bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -B 'Yes, exit i3' 'i3-msg exit'"
+
+# Modo Resize mejorado
+mode "resize" {
+        # Estas teclas redimensionan la ventana
+        bindsym h resize shrink width 10 px or 10 ppt
+        bindsym j resize grow height 10 px or 10 ppt
+        bindsym k resize shrink height 10 px or 10 ppt
+        bindsym l resize grow width 10 px or 10 ppt
+
+        # Flechas también funcionan
+        bindsym Left resize shrink width 10 px or 10 ppt
+        bindsym Down resize grow height 10 px or 10 ppt
+        bindsym Up resize shrink height 10 px or 10 ppt
+        bindsym Right resize grow width 10 px or 10 ppt
+        
+        # Shift para movimientos más rápidos
+        bindsym Shift+h resize shrink width 30 px or 30 ppt
+        bindsym Shift+j resize grow height 30 px or 30 ppt
+        bindsym Shift+k resize shrink height 30 px or 30 ppt
+        bindsym Shift+l resize grow width 30 px or 30 ppt
+
+        # Volver al modo normal: Enter, Escape, o $mod+r
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+        bindsym $mod+r mode "default"
+}
+
+bindsym $mod+r mode "resize"
+
+# Modo para mover ventanas flotantes
+mode "move" {
+        bindsym h move left 20px
+        bindsym j move down 20px
+        bindsym k move up 20px
+        bindsym l move right 20px
+        
+        bindsym Left move left 20px
+        bindsym Down move down 20px
+        bindsym Up move up 20px
+        bindsym Right move right 20px
+        
+        # Shift para movimientos más rápidos
+        bindsym Shift+h move left 100px
+        bindsym Shift+j move down 100px
+        bindsym Shift+k move up 100px
+        bindsym Shift+l move right 100px
+
+        # Centrar ventana
+        bindsym c move position center
+
+        # Volver al modo normal
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+        bindsym $mod+m mode "default"
+}
+
+bindsym $mod+Shift+m mode "move"
+
+# Workspace assignments (asignar aplicaciones a workspaces específicos)
+# assign [class="Brave-browser"] $ws2
+# assign [class="Chromium"] $ws2
+# assign [class="VSCodium"] $ws3
+# assign [class="discord"] $ws4
+# assign [class="Steam"] $ws5

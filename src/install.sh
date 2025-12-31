@@ -9,6 +9,11 @@
 
 export scriptVersion="1.7-fedora"
 
+### LOGGING ###
+export INSTALL_LOG="${HOME}/.config/fedora-i3wm-install.log"
+export FAILED_PACKAGES_LOG="${HOME}/.config/fedora-i3wm-failed.log"
+export SUCCESS_PACKAGES_LOG="${HOME}/.config/fedora-i3wm-success.log"
+
 ### COLOR CODES ###
 export black="\e[1;30m"
 export red="\e[1;31m"
@@ -156,6 +161,8 @@ installPackages() {
 	# Installs the packages inside the txt file provided in the packages/ directory.
 
 	local file="$1"
+	echo -e "${yellow}[INFO]${reset} Instalando paquetes desde: ${file}" | tee -a "${INSTALL_LOG}"
+	
 	if [[ ${file} == "full.txt" ]]; then
 		# Vulkan driver table because of steam.
 
@@ -175,9 +182,32 @@ installPackages() {
 		echo -e "│ Virtual Machines -> mesa-vulkan-drivers (Open-Source)           │"
 		echo -e "└─────────────────────────────────────────────────────────────────┘"
 		echo -e ""
-		sed '/^\s*#/d;/^\s*$/d' "${directory}/packages/${file}" | xargs sudo dnf install -y || errorHandling 2
-	else
-		sed '/^\s*#/d;/^\s*$/d' "${directory}/packages/${file}" | xargs sudo dnf install -y || errorHandling 2
+	fi
+	
+	# Instalar paquetes uno por uno para mejor seguimiento
+	local failed_count=0
+	local success_count=0
+	
+	while IFS= read -r package; do
+		[[ "$package" =~ ^[[:space:]]*# ]] && continue
+		[[ -z "$package" ]] && continue
+		
+		echo -e "${cyan}[INSTALANDO]${reset} ${package}"
+		
+		if sudo dnf install -y "${package}" >> "${INSTALL_LOG}" 2>&1; then
+			echo -e "${green}[OK]${reset} ${package}" | tee -a "${SUCCESS_PACKAGES_LOG}"
+			((success_count++))
+		else
+			echo -e "${red}[FALLO]${reset} ${package}" | tee -a "${FAILED_PACKAGES_LOG}"
+			((failed_count++))
+		fi
+	done < "${directory}/packages/${file}"
+	
+	echo -e "${green}Instalados exitosamente: ${success_count}${reset}"
+	echo -e "${red}Fallidos: ${failed_count}${reset}"
+	
+	if [[ ${failed_count} -gt 0 ]]; then
+		echo -e "${yellow}[ADVERTENCIA]${reset} Algunos paquetes fallaron. Revisa ${FAILED_PACKAGES_LOG}"
 	fi
 }
 
@@ -618,9 +648,60 @@ EOF
 	sudo systemctl enable sddm
 }
 
+showSummary() {
+	# Muestra un resumen de la instalación
+	
+	clear
+	cat <<"EOF"
+┌──────────────────────────────────────────────────┐
+│                                                  │
+│ Resumen de Instalación                           │
+│                                                  │
+└──────────────────────────────────────────────────┘
+
+EOF
+
+	echo -e "${green}═══════════════════════════════════════════════${reset}"
+	echo -e "${bold}PAQUETES INSTALADOS EXITOSAMENTE:${reset}"
+	echo -e "${green}═══════════════════════════════════════════════${reset}"
+	
+	if [[ -f "${SUCCESS_PACKAGES_LOG}" ]]; then
+		local success_count=$(wc -l < "${SUCCESS_PACKAGES_LOG}")
+		echo -e "${green}✓ Total: ${success_count} paquetes${reset}"
+		echo -e "${gray}(Ver detalles en: ${SUCCESS_PACKAGES_LOG})${reset}"
+	fi
+	
+	echo -e ""
+	echo -e "${red}═══════════════════════════════════════════════${reset}"
+	echo -e "${bold}PAQUETES QUE FALLARON:${reset}"
+	echo -e "${red}═══════════════════════════════════════════════${reset}"
+	
+	if [[ -f "${FAILED_PACKAGES_LOG}" ]] && [[ -s "${FAILED_PACKAGES_LOG}" ]]; then
+		cat "${FAILED_PACKAGES_LOG}"
+		echo -e ""
+		echo -e "${yellow}⚠ Puedes instalar estos paquetes manualmente después con:${reset}"
+		echo -e "${cyan}sudo dnf install <nombre-del-paquete>${reset}"
+	else
+		echo -e "${green}✓ Ninguno - Todos los paquetes se instalaron correctamente${reset}"
+	fi
+	
+	echo -e ""
+	echo -e "${blue}═══════════════════════════════════════════════${reset}"
+	echo -e "${bold}ARCHIVOS DE LOG:${reset}"
+	echo -e "${blue}═══════════════════════════════════════════════${reset}"
+	echo -e "${cyan}• Log completo: ${INSTALL_LOG}${reset}"
+	echo -e "${cyan}• Paquetes exitosos: ${SUCCESS_PACKAGES_LOG}${reset}"
+	echo -e "${cyan}• Paquetes fallidos: ${FAILED_PACKAGES_LOG}${reset}"
+	echo -e ""
+	
+	read -rp "Presiona Enter para continuar..."
+}
+
 finished() {
 	# Rebooting the machine after 5 seconds.
 
+	showSummary
+	
 	clear
 	cat <<"EOF"
 ┌──────────────────────────────────────────────────┐
@@ -675,6 +756,13 @@ trap 'exitScript "Aborted!"' SIGINT
 
 # Step 2: Get main directory for variable install paths
 directory=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
+
+# Step 2.5: Initialize log files
+mkdir -p "${HOME}/.config"
+echo "=== Fedora i3WM Installation Log - $(date) ===" > "${INSTALL_LOG}"
+echo "=== Paquetes Instalados Exitosamente ===" > "${SUCCESS_PACKAGES_LOG}"
+echo "=== Paquetes que Fallaron ===" > "${FAILED_PACKAGES_LOG}"
+echo -e "${green}[INFO]${reset} Logs guardados en: ${HOME}/.config/"
 
 # Step 3
 confirmInstallation
