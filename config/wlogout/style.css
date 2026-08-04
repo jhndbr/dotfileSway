@@ -1,0 +1,51 @@
+/* ╔══════════════════════════════════════════════════════════════╗ */
+/* ║        Wlogout Style                                         ║ */
+/* ╚══════════════════════════════════════════════════════════════╝ */
+
+window {
+    background-color: rgba(20, 20, 20, 0.88);
+    font-family: 'Inter', 'JetBrainsMono Nerd Font', sans-serif;
+}
+
+button {
+    background-color: rgba(255, 255, 255, 0.06);
+    border-radius: 12px;
+    border: none;
+    color: #f2f2f7;
+    margin: 10px;
+    transition: box-shadow 0.2s ease-in-out, background-color 0.2s ease-in-out;
+}
+
+button:hover {
+    background-color: rgba(255, 255, 255, 0.14);
+    color: #ffffff;
+}
+
+#lock {
+    /* Insertar icono Nerd Font vía font si es necesario, o via image */
+    background-image: image(url("icons/lock.png"));
+}
+
+#logout {
+    background-image: image(url("icons/logout.png"));
+}
+
+#suspend {
+    background-image: image(url("icons/suspend.png"));
+}
+
+#hibernate {
+    background-image: image(url("icons/hibernate.png"));
+}
+
+#reboot {
+    background-image: image(url("icons/reboot.png"));
+}
+
+#shutdown {
+    background-image: image(url("icons/shutdown.png"));
+}
+
+#shutdown:hover {
+    background-color: rgba(255, 69, 58, 0.88); /* accent_red: #ff453a */
+}

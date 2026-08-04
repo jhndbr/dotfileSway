@@ -1,0 +1,193 @@
+/* ╔══════════════════════════════════════════════════════════════╗
+   ║              Waybar Style — macOS Monochromatic              ║
+   ║              Minimalist, Elegant & Translucent              ║
+   ╚══════════════════════════════════════════════════════════════╝ */
+
+/* ── Variables Monocromáticas macOS ────────────────────────── */
+@define-color bg_bar        rgba(22, 22, 24, 0.75);
+@define-color bg_item       rgba(255, 255, 255, 0.06);
+@define-color bg_hover      rgba(255, 255, 255, 0.12);
+@define-color bg_active     rgba(255, 255, 255, 0.18);
+@define-color border_subtle rgba(255, 255, 255, 0.08);
+@define-color text_primary  #f2f2f7;
+@define-color text_secondary #8e8e93;
+@define-color text_active   #ffffff;
+
+/* ── Global ─────────────────────────────────────────────────── */
+* {
+    border: none;
+    border-radius: 0;
+    font-family: "Inter", "-apple-system", "SF Pro Display", "JetBrainsMono Nerd Font", sans-serif;
+    font-size: 13px;
+    min-height: 0;
+    font-weight: 500;
+}
+
+window#waybar {
+    background: @bg_bar;
+    border-radius: 0;
+    border-bottom: 1px solid @border_subtle;
+    transition: all 0.2s ease;
+}
+
+window#waybar.hidden {
+    opacity: 0;
+}
+
+tooltip {
+    background: rgba(28, 28, 30, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 8px 12px;
+}
+
+tooltip label {
+    color: @text_primary;
+    font-size: 12px;
+}
+
+/* ── Modules container ──────────────────────────────────────── */
+#workspaces,
+#mode,
+#scratchpad,
+#window,
+#clock,
+#custom-media,
+#pulseaudio,
+#backlight,
+#network,
+#bluetooth,
+#cpu,
+#memory,
+#temperature,
+#battery,
+#tray,
+#custom-power {
+    padding: 0 10px;
+    margin: 4px 2px;
+    color: @text_primary;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+/* ── Workspaces (Pills estilo macOS) ────────────────────────── */
+#workspaces {
+    background: @bg_item;
+    border-radius: 10px;
+    padding: 0 4px;
+    margin-left: 4px;
+    border: 1px solid @border_subtle;
+}
+
+#workspaces button {
+    color: @text_secondary;
+    padding: 0 6px;
+    margin: 3px 2px;
+    border-radius: 6px;
+    background: transparent;
+    min-width: 22px;
+    transition: all 0.2s ease;
+}
+
+#workspaces button:hover {
+    background: @bg_hover;
+    color: @text_primary;
+}
+
+#workspaces button.focused {
+    background: @bg_active;
+    color: @text_active;
+    font-weight: 600;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+#workspaces button.urgent {
+    background: rgba(255, 69, 58, 0.3);
+    color: #ff453a;
+}
+
+/* ── Modo / Window / Clock ──────────────────────────────────── */
+#mode {
+    background: @bg_active;
+    color: @text_active;
+    font-weight: 600;
+}
+
+#window {
+    color: @text_secondary;
+    font-size: 12px;
+    font-weight: 400;
+}
+
+#clock {
+    background: @bg_item;
+    color: @text_primary;
+    font-weight: 600;
+    border-radius: 10px;
+    padding: 0 14px;
+    border: 1px solid @border_subtle;
+}
+
+#clock:hover {
+    background: @bg_hover;
+}
+
+/* ── Hardware / Status Indicators Monocromáticos ────────────── */
+#pulseaudio,
+#backlight,
+#network,
+#bluetooth,
+#cpu,
+#memory,
+#temperature,
+#battery {
+    background: transparent;
+    color: @text_primary;
+}
+
+#pulseaudio:hover,
+#backlight:hover,
+#network:hover,
+#bluetooth:hover,
+#cpu:hover,
+#memory:hover,
+#battery:hover {
+    background: @bg_hover;
+}
+
+#pulseaudio.muted,
+#network.disconnected,
+#bluetooth.disabled {
+    color: @text_secondary;
+}
+
+#battery.warning {
+    color: #ffd60a;
+}
+
+#battery.critical {
+    color: #ff453a;
+}
+
+/* ── Tray & Separator & Power ───────────────────────────────── */
+#tray {
+    padding: 0 6px;
+}
+
+#custom-separator {
+    color: rgba(255, 255, 255, 0.15);
+    padding: 0 4px;
+}
+
+#custom-power {
+    color: @text_primary;
+    font-size: 14px;
+    padding: 0 8px;
+    margin-right: 4px;
+    border-radius: 8px;
+}
+
+#custom-power:hover {
+    background: rgba(255, 69, 58, 0.2);
+    color: #ff453a;
+}

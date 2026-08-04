@@ -1,0 +1,47 @@
+# ╔══════════════════════════════════════════════════════════════╗
+# ║              Configuración Global de Git                     ║
+# ╚══════════════════════════════════════════════════════════════╝
+
+[user]
+    email = jhonhnra@gmail.com
+    name = jhon aroa
+
+[init]
+    defaultBranch = main
+
+[core]
+    editor = nvim
+    autocrlf = input
+    whitespace = trailing-space,space-before-tab
+    pager = less -FRX
+
+[pull]
+    rebase = true
+
+[push]
+    autoSetupRemote = true
+    default = current
+
+[merge]
+    conflictstyle = diff3
+
+[diff]
+    colorMoved = default
+
+[color]
+    ui = auto
+
+[alias]
+    st = status -sb
+    co = checkout
+    br = branch
+    ci = commit
+    last = log -1 HEAD
+    lg = log --graph --oneline --decorate --all -20
+    unstage = reset HEAD --
+    amend = commit --amend --no-edit
+    undo = reset --soft HEAD~1
+    wip = !git add -A && git commit -m 'WIP'
+
+[credential]
+    helper = store

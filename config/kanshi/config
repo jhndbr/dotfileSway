@@ -1,0 +1,18 @@
+# ╔══════════════════════════════════════════════════════════════╗
+# ║        Kanshi                                                ║
+# ╚══════════════════════════════════════════════════════════════╝
+# Configurar pantallas automáticamente (ver: swaymsg -t get_outputs para personalizar)
+
+profile laptop-solo {
+    output eDP-1 mode 1920x1080 position 0,0 scale 1
+}
+
+profile docked {
+    output eDP-1 disable
+    output 'HDMI-A-1' mode 2560x1440 position 0,0
+}
+
+profile dual {
+    output eDP-1 mode 1920x1080 position 0,0
+    output 'HDMI-A-1' mode 2560x1440 position 1920,0
+}

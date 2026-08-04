@@ -1,0 +1,273 @@
+# ╔══════════════════════════════════════════════════════════════╗
+# ║                    Sway Configuration                       ║
+# ║                    macOS Monochromatic Style                ║
+# ╚══════════════════════════════════════════════════════════════╝
+
+### Variables
+set $mod Mod4
+set $left h
+set $down j
+set $up k
+set $right l
+set $term foot
+set $menu wofi --show drun
+set $lock swaylock -f
+set $scripts ~/.local/bin
+
+# macOS Monochromatic Palette
+set $bg_dark      #141414
+set $bg_surface   #1c1c1e
+set $bg_overlay   #2c2c2e
+set $border_focus #ffffff
+set $border_unfocus #2c2c2e
+set $text_main    #ffffff
+set $text_muted   #8e8e93
+set $accent_red   #ff453a
+
+# ── Apariencia Monocromática ────────────────────────────────────
+# class                  border          bg           text        indicator       child_border
+client.focused           $border_focus   $bg_surface  $text_main  $border_focus   $border_focus
+client.focused_inactive  $border_unfocus $bg_surface  $text_muted $border_unfocus $border_unfocus
+client.unfocused         $border_unfocus $bg_dark     $text_muted $border_unfocus $border_unfocus
+client.urgent            $accent_red     $bg_surface  $text_main  $accent_red     $accent_red
+
+# Bordes y gaps
+default_border pixel 2
+default_floating_border pixel 2
+gaps inner 8
+gaps outer 4
+smart_gaps on
+smart_borders on
+
+# Tipografía elegante
+font pango:Inter, SF Pro Display, JetBrainsMono Nerd Font 10
+
+# Comportamiento
+focus_follows_mouse yes
+popup_during_fullscreen smart
+focus_wrapping yes
+workspace_auto_back_and_forth yes
+
+# ── Output ──────────────────────────────────────────────────────
+output * bg ~/Pictures/1.jpg fill
+
+# ── Input ───────────────────────────────────────────────────────
+input type:touchpad {
+    dwt enabled
+    tap enabled
+    natural_scroll enabled
+    middle_emulation enabled
+    scroll_factor 0.4
+}
+
+input type:keyboard {
+    xkb_layout "es"
+    repeat_delay 300
+    repeat_rate 50
+}
+
+# ── Keybindings Principales ─────────────────────────────────────
+# Cerrar ventana
+bindsym $mod+q kill
+
+# Menú de aplicaciones (Wofi)
+bindsym $mod+a exec $menu
+
+# Toggle ventana flotante
+bindsym $mod+w floating toggle
+
+# Bloquear pantalla
+bindsym $mod+Escape exec $lock
+
+# Historial de portapapeles (Cliphist)
+bindsym $mod+v exec cliphist list | wofi --dmenu --prompt "Clipboard" | cliphist decode | wl-copy
+
+# Terminal
+bindsym $mod+Return exec $term
+
+# Administrador de archivos
+bindsym $mod+e exec thunar
+
+# Drag / Resize con mouse
+floating_modifier $mod normal
+
+# Reload config
+bindsym $mod+Shift+c reload
+
+# Menú de apagado (wlogout)
+bindsym $mod+Shift+e exec wlogout -p layer-shell
+
+# ── Navegación ──────────────────────────────────────────────────
+# Vim-style
+bindsym $mod+$left focus left
+bindsym $mod+$down focus down
+bindsym $mod+$up focus up
+bindsym $mod+$right focus right
+
+# Arrow keys
+bindsym $mod+Left focus left
+bindsym $mod+Down focus down
+bindsym $mod+Up focus up
+bindsym $mod+Right focus right
+
+# Mover ventanas (vim-style)
+bindsym $mod+Shift+$left move left
+bindsym $mod+Shift+$down move down
+bindsym $mod+Shift+$up move up
+bindsym $mod+Shift+$right move right
+
+# Mover ventanas (arrow keys)
+bindsym $mod+Shift+Left move left
+bindsym $mod+Shift+Down move down
+bindsym $mod+Shift+Up move up
+bindsym $mod+Shift+Right move right
+
+# ── Workspaces ──────────────────────────────────────────────────
+bindsym $mod+1 workspace number 1
+bindsym $mod+2 workspace number 2
+bindsym $mod+3 workspace number 3
+bindsym $mod+4 workspace number 4
+bindsym $mod+5 workspace number 5
+bindsym $mod+6 workspace number 6
+bindsym $mod+7 workspace number 7
+bindsym $mod+8 workspace number 8
+bindsym $mod+9 workspace number 9
+bindsym $mod+0 workspace number 10
+
+bindsym $mod+Shift+1 move container to workspace number 1
+bindsym $mod+Shift+2 move container to workspace number 2
+bindsym $mod+Shift+3 move container to workspace number 3
+bindsym $mod+Shift+4 move container to workspace number 4
+bindsym $mod+Shift+5 move container to workspace number 5
+bindsym $mod+Shift+6 move container to workspace number 6
+bindsym $mod+Shift+7 move container to workspace number 7
+bindsym $mod+Shift+8 move container to workspace number 8
+bindsym $mod+Shift+9 move container to workspace number 9
+bindsym $mod+Shift+0 move container to workspace number 10
+
+# ── Layout ──────────────────────────────────────────────────────
+bindsym $mod+b splith
+bindsym $mod+Shift+v splitv
+bindsym $mod+f fullscreen
+bindsym $mod+space focus mode_toggle
+bindsym $mod+s layout stacking
+bindsym $mod+t layout tabbed
+bindsym $mod+d layout toggle split
+bindsym $mod+p focus parent
+bindsym $mod+c focus child
+
+# Scratchpad
+bindsym $mod+Shift+minus move scratchpad
+bindsym $mod+minus scratchpad show
+
+# ── Modo Resize ─────────────────────────────────────────────────
+mode "resize" {
+    bindsym $left resize shrink width 10px
+    bindsym $down resize grow height 10px
+    bindsym $up resize shrink height 10px
+    bindsym $right resize grow width 10px
+    bindsym Left resize shrink width 10px
+    bindsym Down resize grow height 10px
+    bindsym Up resize shrink height 10px
+    bindsym Right resize grow width 10px
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+bindsym $mod+r mode "resize"
+
+# ── Screenshots (grim + slurp) ──────────────────────────────────
+# Pantalla completa
+bindsym Print exec grim ~/Pictures/Screenshots/$(date +%Y%m%d_%H%M%S).png && notify-send "📸 Screenshot" "Pantalla completa guardada"
+# Seleccionar área → guardar + copiar
+bindsym $mod+Print exec grim -g "$(slurp -d -b 1c1c1eaa -c ffffffff -s ffffff20 -w 1)" - | tee ~/Pictures/Screenshots/$(date +%Y%m%d_%H%M%S).png | wl-copy && notify-send "📸 Screenshot" "Selección guardada y copiada"
+# Seleccionar área → solo copiar
+bindsym $mod+Shift+s exec grim -g "$(slurp -d -b 1c1c1eaa -c ffffffff -s ffffff20 -w 1)" - | wl-copy && notify-send "📸 Screenshot" "Selección copiada al portapapeles"
+# Menú de screenshot completo
+bindsym $mod+Shift+Print exec $scripts/screenshot.sh
+# Color picker
+bindsym $mod+Shift+p exec $scripts/color-picker.sh
+
+# ── Media / Audio / Brillo ──────────────────────────────────────
+bindsym --locked XF86AudioMute exec $scripts/volume.sh mute
+bindsym --locked XF86AudioLowerVolume exec $scripts/volume.sh down
+bindsym --locked XF86AudioRaiseVolume exec $scripts/volume.sh up
+bindsym --locked XF86AudioMicMute exec pactl set-source-mute @DEFAULT_SOURCE@ toggle
+
+bindsym --locked XF86AudioPlay exec playerctl play-pause
+bindsym --locked XF86AudioPause exec playerctl play-pause
+bindsym --locked XF86AudioPrev exec playerctl previous
+bindsym --locked XF86AudioNext exec playerctl next
+
+bindsym --locked XF86MonBrightnessDown exec $scripts/brightness.sh down
+bindsym --locked XF86MonBrightnessUp exec $scripts/brightness.sh up
+
+# ── Asignar Aplicaciones a Workspaces ───────────────────────────
+# Descomentar y ajustar según tus preferencias:
+# assign [app_id="firefox"] workspace number 2
+# assign [class="Code"] workspace number 3
+# assign [class="Spotify"] workspace number 8
+# assign [app_id="org.telegram.desktop"] workspace number 9
+
+# ── Reglas de Ventanas Flotantes ────────────────────────────────
+for_window [app_id="polkit-gnome-authentication-agent-1"] floating enable, move position center
+for_window [app_id="pavucontrol"] floating enable, resize set 750 550, move position center
+for_window [app_id="nm-connection-editor"] floating enable, move position center
+for_window [app_id="blueman-manager"] floating enable, move position center
+for_window [app_id="org.gnome.Calculator"] floating enable, move position center
+for_window [app_id="org.gnome.Nautilus"] floating enable, resize set 900 600, move position center
+for_window [app_id="thunar"] floating enable, resize set 900 600, move position center
+for_window [app_id="imv"] floating enable
+for_window [app_id="mpv"] floating enable, resize set 960 540, move position center
+for_window [app_id="wlogout"] fullscreen enable
+for_window [window_type="dialog"] floating enable, move position center
+for_window [window_role="dialog"] floating enable, move position center
+for_window [window_role="pop-up"] floating enable, move position center
+for_window [window_role="bubble"] floating enable
+for_window [window_role="task_dialog"] floating enable
+for_window [title="(?:Open|Save) (?:File|Folder|As)"] floating enable, resize set 800 600, move position center
+for_window [title="Picture-in-Picture"] floating enable, sticky enable, resize set 480 270
+for_window [title="Firefox — Sharing Indicator"] floating enable, move position center
+
+# ── Inhibir idle cuando hay video/audio ─────────────────────────
+for_window [app_id="firefox"] inhibit_idle fullscreen
+for_window [class="Chromium"] inhibit_idle fullscreen
+for_window [app_id="mpv"] inhibit_idle visible
+
+# ── Autostart ───────────────────────────────────────────────────
+bar {
+    swaybar_command waybar
+}
+
+# D-Bus / Entorno
+exec dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway QT_QPA_PLATFORMTHEME=qt6ct
+exec systemctl --user set-environment QT_QPA_PLATFORMTHEME=qt6ct
+
+# Servicios del sistema
+exec /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
+exec gnome-keyring-daemon --start --components=secrets,ssh
+
+# Notificaciones
+exec dunst
+
+# Portapapeles
+exec wl-paste --watch cliphist store
+
+# Idle management (bloqueo, apagar pantalla, suspender)
+exec swayidle -w \
+    timeout 300 'swaylock -f' \
+    timeout 600 'swaymsg "output * dpms off"' \
+    resume 'swaymsg "output * dpms on"' \
+    timeout 1800 'systemctl suspend' \
+    before-sleep 'swaylock -f' \
+    lock 'swaylock -f'
+
+# Multi-monitor automático
+exec_always kanshi
+
+# Filtro de luz azul (night light)
+exec gammastep
+
+# Gestor de pantalla de fondo (redundante con output * bg, pero útil para cambios dinámicos)
+# exec swaybg -i ~/Pictures/1.jpg -m fill
+
+include /etc/sway/config.d/*

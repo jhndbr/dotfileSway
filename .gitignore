@@ -1,0 +1,37 @@
+# Archivos temporales y editores
+*.swp
+*.swo
+*~
+*.bak
+*.tmp
+*.orig
+\#*#
+.#*
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Cache
+.cache/
+__pycache__/
+
+# Archivos sensibles (nunca commitear)
+.ssh/
+.gnupg/
+.password-store/
+*.pem
+*.key
+id_rsa*
+
+# Archivos generados por el sistema
+*.log
+*.pid
+
+# Directorios de Node (si los hay)
+node_modules/
+
+# Thumbnails
+._*
+Thumbs.db

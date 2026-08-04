@@ -1,0 +1,97 @@
+# ╔══════════════════════════════════════════════════════════════╗
+# ║        Dunst Notifications — macOS Monochromatic            ║
+# ╚══════════════════════════════════════════════════════════════╝
+
+[global]
+    monitor = 0
+    follow = mouse
+
+    # Geometría (Sintaxis Dunst 1.12+)
+    width = (300, 400)
+    height = (0, 300)
+    origin = top-right
+    offset = (16, 48)
+    notification_limit = 5
+    indicate_hidden = yes
+
+    # Barra de progreso
+    progress_bar = true
+    progress_bar_height = 6
+    progress_bar_frame_width = 0
+    progress_bar_min_width = 150
+    progress_bar_max_width = 300
+    progress_bar_corner_radius = 3
+
+    # Apariencia macOS Monocromática Grafito
+    transparency = 10
+    separator_height = 1
+    padding = 16
+    horizontal_padding = 18
+    text_icon_padding = 16
+    frame_width = 1
+    gap_size = 8
+    separator_color = frame
+    sort = yes
+    idle_threshold = 120
+
+    # Texto y Fuentes
+    font = Inter, SF Pro Text, JetBrainsMono Nerd Font 10
+    line_height = 3
+    markup = full
+    format = "<b>%s</b>\n%b"
+    alignment = left
+    vertical_alignment = center
+    show_age_threshold = 60
+    ellipsize = middle
+    ignore_newline = no
+    stack_duplicates = true
+    hide_duplicate_count = false
+    show_indicators = yes
+
+    # Iconos
+    enable_recursive_icon_lookup = true
+    icon_theme = "Adwaita"
+    icon_position = left
+    min_icon_size = 32
+    max_icon_size = 48
+
+    # Esquinas redondeadas estilo macOS
+    corner_radius = 12
+    sticky_history = yes
+    history_length = 20
+    browser = /usr/bin/xdg-open
+    always_run_script = true
+    title = Dunst
+    class = Dunst
+    ignore_dbusclose = false
+    force_xwayland = false
+
+    # Acciones con Mouse
+    mouse_left_click = close_current
+    mouse_middle_click = do_action, close_current
+    mouse_right_click = close_all
+
+# Estilos Monocromáticos por Urgencia
+[urgency_low]
+    background = "#18181a"
+    foreground = "#f2f2f7"
+    frame_color = "#ffffff20"
+    highlight = "#ffffff"
+    timeout = 5
+    default_icon = dialog-information
+
+[urgency_normal]
+    background = "#18181a"
+    foreground = "#ffffff"
+    frame_color = "#ffffff35"
+    highlight = "#ffffff"
+    timeout = 8
+    default_icon = dialog-information
+
+[urgency_critical]
+    background = "#18181a"
+    foreground = "#ffffff"
+    frame_color = "#ff453a"
+    highlight = "#ff453a"
+    timeout = 0
+    default_icon = dialog-warning
