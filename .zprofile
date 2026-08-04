@@ -15,7 +15,6 @@ export QT_AUTO_SCREEN_SCALE_FACTOR=1
 
 # ── GTK ─────────────────────────────────────────────────────────
 export GDK_BACKEND=wayland,x11
-export GTK_THEME=Adwaita:dark
 
 # ── Electron / Chromium ─────────────────────────────────────────
 export ELECTRON_OZONE_PLATFORM_HINT=auto

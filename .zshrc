@@ -93,7 +93,7 @@ alias reload='source ~/.zshrc && echo "✅ .zshrc recargado"'
 alias dotfiles='cd ~/Documents/dotfileSway'
 alias dots-update='bash ~/Documents/dotfileSway/update_dotfiles.sh'
 alias dots-apply='bash ~/Documents/dotfileSway/setup.sh'
-alias theme-gen='~/.local/bin/theme-from-wallpaper.sh'
+alias wallpaper='~/.local/bin/set-wallpaper.sh'
 
 # Apps personales
 alias tidal='cd /home/dzhon/Documents/Github/tuidal && uv run tidal_tui'

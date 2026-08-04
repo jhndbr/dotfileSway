@@ -99,11 +99,11 @@ if [ -d "$SCRIPT_DIR/scripts" ]; then
     done
 fi
 
-# ── 7. Copiar fondo de pantalla ─────────────────────────────────
+# ── 7. Aplicar fondo de pantalla y generar temas dinámicos ─────
 if [ -f "$SCRIPT_DIR/wallpapers/1.jpg" ]; then
     echo ""
-    echo -e "  ${GREEN}→${NC} Copiando fondo de pantalla a ${BLUE}~/Pictures/1.jpg${NC}..."
-    cp -f "$SCRIPT_DIR/wallpapers/1.jpg" ~/Pictures/1.jpg
+    echo -e "  ${GREEN}→${NC} Aplicando wallpaper y generando temas dinámicos..."
+    bash "$HOME/.local/bin/set-wallpaper.sh" "$SCRIPT_DIR/wallpapers/1.jpg" 2>/dev/null || true
 fi
 
 # ── 8. Resultado ────────────────────────────────────────────────
