@@ -95,6 +95,7 @@ PACKAGES=(
     noto-fonts-cjk
 
     # GTK / Qt / Dynamic Theming & Iconos
+    adw-gtk-theme
     papirus-icon-theme
     adwaita-icon-theme
     adwaita-cursors
@@ -133,7 +134,6 @@ fi
 echo -e "${BLUE}▶ Instalando wlogout y paquetes AUR con yay...${NC}"
 AUR_PACKAGES=(
     wlogout
-    adw-gtk3
     zsh-autosuggestions
     zsh-syntax-highlighting
     papirus-folders-git
