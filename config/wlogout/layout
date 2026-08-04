@@ -1,36 +1,36 @@
 {
-    "label" : "lock",
-    "action" : "swaylock -f",
-    "text" : "Bloquear",
-    "keybind" : "l"
+    "label": "lock",
+    "action": "swaylock -f",
+    "text": "Bloquear (L)",
+    "keybind": "l"
 }
 {
-    "label" : "logout",
-    "action" : "swaymsg exit",
-    "text" : "Cerrar sesión",
-    "keybind" : "e"
+    "label": "logout",
+    "action": "swaymsg exit",
+    "text": "Cerrar Sesión (E)",
+    "keybind": "e"
 }
 {
-    "label" : "suspend",
-    "action" : "systemctl suspend",
-    "text" : "Suspender",
-    "keybind" : "u"
+    "label": "suspend",
+    "action": "systemctl suspend",
+    "text": "Suspender (U)",
+    "keybind": "u"
 }
 {
-    "label" : "hibernate",
-    "action" : "systemctl hibernate",
-    "text" : "Hibernar",
-    "keybind" : "h"
+    "label": "hibernate",
+    "action": "systemctl hibernate",
+    "text": "Hibernar (H)",
+    "keybind": "h"
 }
 {
-    "label" : "reboot",
-    "action" : "systemctl reboot",
-    "text" : "Reiniciar",
-    "keybind" : "r"
+    "label": "reboot",
+    "action": "systemctl reboot",
+    "text": "Reiniciar (R)",
+    "keybind": "r"
 }
 {
-    "label" : "shutdown",
-    "action" : "systemctl poweroff",
-    "text" : "Apagar",
-    "keybind" : "s"
+    "label": "shutdown",
+    "action": "systemctl poweroff",
+    "text": "Apagar (S)",
+    "keybind": "s"
 }

@@ -1,25 +1,44 @@
 # ╔══════════════════════════════════════════════════════════════╗
-# ║        Swaylock                                              ║
+# ║        Swaylock — macOS Monochromatic                       ║
 # ╚══════════════════════════════════════════════════════════════╝
 
+# Fondo
+image=/home/dzhon/Pictures/1.jpg
+scaling=fill
 color=141414
-inside-color=1c1c1e
-ring-color=ffffff40
-ring-ver-color=ffffff80
-ring-wrong-color=ff453a
-ring-clear-color=8e8e93
+
+# Indicador (Ring)
+indicator-idle-visible
+indicator-radius=110
+indicator-thickness=10
+
+# Estilo Monocromático / Translucidez
+inside-color=1c1c1eD0
+inside-clear-color=1c1c1eD0
+inside-ver-color=1c1c1eD0
+inside-wrong-color=1c1c1eD0
+
+ring-color=ffffff30
+ring-clear-color=8e8e9380
+ring-ver-color=0a84ff80
+ring-wrong-color=ff453a80
+
 key-hl-color=ffffff
 bs-hl-color=ff453a
+
 text-color=ffffff
+text-clear-color=8e8e93
 text-ver-color=ffffff
 text-wrong-color=ff453a
-text-clear-color=8e8e93
+
 line-color=00000000
 separator-color=00000000
-indicator-radius=100
-indicator-thickness=10
-layout-text-color=8e8e93
+
+# Tipografía
 font=Inter
-ignore-empty-password
+font-size=16
+
+# Opciones de comportamiento
 show-failed-attempts
+ignore-empty-password
 daemonize

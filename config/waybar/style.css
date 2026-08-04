@@ -4,16 +4,21 @@
    ╚══════════════════════════════════════════════════════════════╝ */
 
 /* ── Variables Monocromáticas macOS ────────────────────────── */
-@define-color bg_bar        rgba(22, 22, 24, 0.75);
-@define-color bg_item       rgba(255, 255, 255, 0.06);
-@define-color bg_hover      rgba(255, 255, 255, 0.12);
-@define-color bg_active     rgba(255, 255, 255, 0.18);
-@define-color border_subtle rgba(255, 255, 255, 0.08);
-@define-color text_primary  #f2f2f7;
-@define-color text_secondary #8e8e93;
-@define-color text_active   #ffffff;
+@define-color bg_bar        rgba(20, 20, 22, 0.82);
+@define-color bg_pill       rgba(255, 255, 255, 0.055);
+@define-color bg_pill_hover rgba(255, 255, 255, 0.10);
+@define-color bg_active     rgba(255, 255, 255, 0.16);
+@define-color border_subtle rgba(255, 255, 255, 0.07);
+@define-color border_pill   rgba(255, 255, 255, 0.06);
+@define-color text_primary  #e8e8ed;
+@define-color text_secondary #636366;
+@define-color text_bright   #ffffff;
+@define-color accent_green  #30d158;
+@define-color accent_yellow #ffd60a;
+@define-color accent_red    #ff453a;
+@define-color accent_blue   #0a84ff;
 
-/* ── Global ─────────────────────────────────────────────────── */
+/* ── Global Reset ──────────────────────────────────────────── */
 * {
     border: none;
     border-radius: 0;
@@ -21,24 +26,27 @@
     font-size: 13px;
     min-height: 0;
     font-weight: 500;
+    padding: 0;
+    margin: 0;
 }
 
+/* ── Barra Principal ───────────────────────────────────────── */
 window#waybar {
     background: @bg_bar;
-    border-radius: 0;
     border-bottom: 1px solid @border_subtle;
-    transition: all 0.2s ease;
+    transition: background 0.3s ease;
 }
 
 window#waybar.hidden {
     opacity: 0;
 }
 
+/* ── Tooltips ──────────────────────────────────────────────── */
 tooltip {
-    background: rgba(28, 28, 30, 0.95);
+    background: rgba(28, 28, 30, 0.96);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 10px;
-    padding: 8px 12px;
+    border-radius: 12px;
+    padding: 10px 14px;
 }
 
 tooltip label {
@@ -46,13 +54,19 @@ tooltip label {
     font-size: 12px;
 }
 
-/* ── Modules container ──────────────────────────────────────── */
+/* ══════════════════════════════════════════════════════════════
+   ║  MÓDULOS — Base reset para todos                          ║
+   ══════════════════════════════════════════════════════════════ */
+
 #workspaces,
 #mode,
 #scratchpad,
 #window,
 #clock,
 #custom-media,
+#custom-gammastep,
+#idle_inhibitor,
+#custom-notification,
 #pulseaudio,
 #backlight,
 #network,
@@ -62,132 +76,309 @@ tooltip label {
 #temperature,
 #battery,
 #tray,
-#custom-power {
-    padding: 0 10px;
-    margin: 4px 2px;
+#custom-power,
+#custom-separator {
+    padding: 0 8px;
+    margin: 0;
     color: @text_primary;
-    border-radius: 8px;
     transition: all 0.2s ease;
 }
 
-/* ── Workspaces (Pills estilo macOS) ────────────────────────── */
+/* ══════════════════════════════════════════════════════════════
+   ║  IZQUIERDA — Workspaces, Mode, Window                    ║
+   ══════════════════════════════════════════════════════════════ */
+
+/* ── Workspaces (Pills macOS) ──────────────────────────────── */
 #workspaces {
-    background: @bg_item;
+    background: @bg_pill;
     border-radius: 10px;
-    padding: 0 4px;
-    margin-left: 4px;
-    border: 1px solid @border_subtle;
+    padding: 0 3px;
+    margin: 4px 0 4px 6px;
+    border: 1px solid @border_pill;
 }
 
 #workspaces button {
     color: @text_secondary;
-    padding: 0 6px;
-    margin: 3px 2px;
-    border-radius: 6px;
+    padding: 0 7px;
+    margin: 3px 1px;
+    border-radius: 7px;
     background: transparent;
-    min-width: 22px;
+    min-width: 20px;
     transition: all 0.2s ease;
 }
 
 #workspaces button:hover {
-    background: @bg_hover;
+    background: @bg_pill_hover;
     color: @text_primary;
 }
 
 #workspaces button.focused {
     background: @bg_active;
-    color: @text_active;
+    color: @text_bright;
     font-weight: 600;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
 }
 
 #workspaces button.urgent {
-    background: rgba(255, 69, 58, 0.3);
-    color: #ff453a;
+    background: rgba(255, 69, 58, 0.25);
+    color: @accent_red;
 }
 
-/* ── Modo / Window / Clock ──────────────────────────────────── */
+/* ── Mode ──────────────────────────────────────────────────── */
 #mode {
     background: @bg_active;
-    color: @text_active;
+    color: @text_bright;
     font-weight: 600;
+    border-radius: 8px;
+    margin: 4px 4px;
+    padding: 0 12px;
 }
 
+/* ── Window Title ──────────────────────────────────────────── */
 #window {
     color: @text_secondary;
     font-size: 12px;
     font-weight: 400;
+    padding: 0 8px;
 }
 
+/* ══════════════════════════════════════════════════════════════
+   ║  CENTRO — Clock                                          ║
+   ══════════════════════════════════════════════════════════════ */
+
 #clock {
-    background: @bg_item;
+    background: @bg_pill;
     color: @text_primary;
     font-weight: 600;
+    font-size: 13px;
     border-radius: 10px;
-    padding: 0 14px;
-    border: 1px solid @border_subtle;
+    padding: 0 16px;
+    margin: 4px 0;
+    border: 1px solid @border_pill;
 }
 
 #clock:hover {
-    background: @bg_hover;
+    background: @bg_pill_hover;
 }
 
-/* ── Hardware / Status Indicators Monocromáticos ────────────── */
+/* ══════════════════════════════════════════════════════════════
+   ║  DERECHA — Módulos agrupados en pills                    ║
+   ══════════════════════════════════════════════════════════════ */
+
+/* ── Separador (punto sutil entre grupos) ──────────────────── */
+#custom-separator {
+    color: rgba(255, 255, 255, 0.10);
+    font-size: 8px;
+    padding: 0 2px;
+    margin: 0;
+}
+
+/* ── Media Player ──────────────────────────────────────────── */
+#custom-media {
+    color: @accent_green;
+    font-size: 12px;
+    padding: 0 10px;
+    margin: 4px 0;
+    border-radius: 8px;
+    font-weight: 400;
+}
+
+#custom-media:hover {
+    background: @bg_pill_hover;
+}
+
+#custom-media.Paused {
+    color: @text_secondary;
+}
+
+/* ── Grupo: Controles del entorno (gammastep + idle) ──────── */
+#custom-gammastep,
+#idle_inhibitor {
+    font-size: 14px;
+    padding: 0 6px;
+    margin: 4px 0;
+    border-radius: 8px;
+    color: @text_secondary;
+}
+
+#custom-gammastep:hover,
+#idle_inhibitor:hover {
+    background: @bg_pill_hover;
+    color: @text_primary;
+}
+
+#idle_inhibitor.activated {
+    color: @accent_blue;
+}
+
+#custom-gammastep.on {
+    color: @accent_yellow;
+}
+
+#custom-gammastep.off {
+    color: @text_secondary;
+}
+
+/* ── Grupo: Audio + Brillo (pill con fondo) ────────────────── */
 #pulseaudio,
-#backlight,
-#network,
-#bluetooth,
-#cpu,
-#memory,
-#temperature,
-#battery {
+#backlight {
+    padding: 0 10px;
+    margin: 4px 0;
+    border-radius: 8px;
     background: transparent;
+}
+
+#pulseaudio {
+    color: @text_primary;
+}
+
+#backlight {
     color: @text_primary;
 }
 
 #pulseaudio:hover,
-#backlight:hover,
-#network:hover,
-#bluetooth:hover,
-#cpu:hover,
-#memory:hover,
-#battery:hover {
-    background: @bg_hover;
+#backlight:hover {
+    background: @bg_pill_hover;
 }
 
-#pulseaudio.muted,
-#network.disconnected,
+#pulseaudio.muted {
+    color: @text_secondary;
+}
+
+/* ── Grupo: Conectividad (network + bluetooth) ─────────────── */
+#network,
+#bluetooth {
+    padding: 0 8px;
+    margin: 4px 0;
+    border-radius: 8px;
+    background: transparent;
+}
+
+#network:hover,
+#bluetooth:hover {
+    background: @bg_pill_hover;
+}
+
+#network.disconnected {
+    color: @text_secondary;
+}
+
+#network.wifi {
+    color: @text_primary;
+}
+
 #bluetooth.disabled {
     color: @text_secondary;
 }
 
-#battery.warning {
-    color: #ffd60a;
+#bluetooth.connected {
+    color: @accent_blue;
 }
 
-#battery.critical {
-    color: #ff453a;
-}
-
-/* ── Tray & Separator & Power ───────────────────────────────── */
-#tray {
+/* ── Grupo: Hardware (CPU + RAM + Temp) — Pill agrupado ───── */
+#cpu,
+#memory,
+#temperature {
+    font-size: 12px;
     padding: 0 6px;
-}
-
-#custom-separator {
-    color: rgba(255, 255, 255, 0.15);
-    padding: 0 4px;
-}
-
-#custom-power {
-    color: @text_primary;
-    font-size: 14px;
-    padding: 0 8px;
-    margin-right: 4px;
+    margin: 4px 0;
+    color: @text_secondary;
+    background: transparent;
     border-radius: 8px;
 }
 
+#cpu:hover,
+#memory:hover {
+    background: @bg_pill_hover;
+    color: @text_primary;
+}
+
+#temperature {
+    color: @text_secondary;
+}
+
+#temperature.critical {
+    color: @accent_red;
+
+}
+
+/* ── Batería ───────────────────────────────────────────────── */
+#battery {
+    padding: 0 10px;
+    margin: 4px 2px;
+    border-radius: 8px;
+    font-weight: 500;
+    background: transparent;
+}
+
+#battery:hover {
+    background: @bg_pill_hover;
+}
+
+#battery.good {
+    color: @text_primary;
+}
+
+#battery.warning {
+    color: @accent_yellow;
+}
+
+#battery.critical {
+    color: @accent_red;
+}
+
+#battery.charging,
+#battery.plugged {
+    color: @accent_green;
+}
+
+#battery.full {
+    color: @accent_green;
+}
+
+/* ── Tray ──────────────────────────────────────────────────── */
+#tray {
+    padding: 0 6px;
+    margin: 4px 0;
+}
+
+#tray > .passive {
+    -gtk-icon-effect: dim;
+}
+
+#tray > .needs-attention {
+    -gtk-icon-effect: highlight;
+}
+
+/* ── Notificaciones (Dunst toggle) ─────────────────────────── */
+#custom-notification {
+    font-size: 14px;
+    padding: 0 6px;
+    margin: 4px 0;
+    border-radius: 8px;
+    color: @text_secondary;
+}
+
+#custom-notification:hover {
+    background: @bg_pill_hover;
+    color: @text_primary;
+}
+
+#custom-notification.paused {
+    color: @accent_yellow;
+}
+
+/* ── Power Button ──────────────────────────────────────────── */
+#custom-power {
+    font-size: 14px;
+    padding: 0 10px;
+    margin: 4px 6px 4px 2px;
+    border-radius: 8px;
+    color: @text_secondary;
+    transition: all 0.25s ease;
+}
+
 #custom-power:hover {
-    background: rgba(255, 69, 58, 0.2);
-    color: #ff453a;
+    background: rgba(255, 69, 58, 0.18);
+    color: @accent_red;
 }

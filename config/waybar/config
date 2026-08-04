@@ -1,7 +1,7 @@
 {
     "layer": "top",
     "position": "top",
-    "height": 34,
+    "height": 36,
     "spacing": 0,
     "margin-top": 0,
     "margin-left": 0,
@@ -24,8 +24,12 @@
     "modules-right": [
         "custom/media",
         "custom/separator",
+        "custom/gammastep",
+        "idle_inhibitor",
+        "custom/separator",
         "pulseaudio",
         "backlight",
+        "custom/separator",
         "network",
         "bluetooth",
         "custom/separator",
@@ -36,6 +40,7 @@
         "battery",
         "custom/separator",
         "tray",
+        "custom/notification",
         "custom/power"
     ],
 
@@ -82,7 +87,10 @@
         "rewrite": {
             "(.*) — Mozilla Firefox": "󰈹 $1",
             "(.*) - foot": " $1",
-            "(.*) — Thunar": "󰝰 $1"
+            "(.*) — Thunar": "󰝰 $1",
+            "(.*) - Visual Studio Code": "󰨞 $1",
+            "(.*) - Zed": " $1",
+            "(.*) — Spotify": " $1"
         },
         "tooltip": false
     },
@@ -96,23 +104,49 @@
     },
 
     "custom/media": {
-        "format": "{icon} {}",
+        "format": "{icon} {text}",
         "return-type": "json",
-        "max-length": 30,
+        "max-length": 25,
         "format-icons": {
             "spotify": "",
-            "default": "🎵"
+            "default": ""
         },
         "escape": true,
         "exec": "playerctl -a metadata --format '{\"text\": \"{{artist}} - {{markup_escape(title)}}\", \"tooltip\": \"{{playerName}} : {{markup_escape(title)}}\", \"alt\": \"{{status}}\", \"class\": \"{{status}}\"}' -F 2>/dev/null",
-        "on-click": "playerctl play-pause"
+        "on-click": "playerctl play-pause",
+        "on-click-right": "playerctl next",
+        "on-scroll-up": "playerctl volume 0.05+",
+        "on-scroll-down": "playerctl volume 0.05-"
+    },
+
+    "custom/gammastep": {
+        "format": "{icon}",
+        "format-icons": {
+            "on": "󰌵",
+            "off": "󰌶"
+        },
+        "return-type": "json",
+        "interval": 2,
+        "exec": "if pgrep -x gammastep > /dev/null; then echo '{\"alt\": \"on\", \"tooltip\": \"Luz Cálida: ACTIVADA\", \"class\": \"on\"}'; else echo '{\"alt\": \"off\", \"tooltip\": \"Luz Cálida: DESACTIVADA\", \"class\": \"off\"}'; fi",
+        "on-click": "~/.local/bin/gammastep-toggle.sh",
+        "tooltip": true
+    },
+
+    "idle_inhibitor": {
+        "format": "{icon}",
+        "format-icons": {
+            "activated": "󰅶",
+            "deactivated": "󰾪"
+        },
+        "tooltip-format-activated": "Idle inhibido (pantalla NO se apagará)",
+        "tooltip-format-deactivated": "Idle normal (pantalla se apagará)"
     },
 
     "pulseaudio": {
-        "format": "{icon}  {volume}%",
-        "format-bluetooth": "󰂰  {volume}%",
-        "format-bluetooth-muted": "󰂲  mute",
-        "format-muted": "󰝟  mute",
+        "format": "{icon} {volume}%",
+        "format-bluetooth": "󰂰 {volume}%",
+        "format-bluetooth-muted": "󰂲",
+        "format-muted": "󰝟",
         "format-icons": {
             "headphone": "󰋋",
             "hands-free": "󰋎",
@@ -125,23 +159,24 @@
         "on-click": "pavucontrol",
         "on-click-right": "pactl set-sink-mute @DEFAULT_SINK@ toggle",
         "scroll-step": 5,
-        "tooltip-format": "{desc} | {volume}%"
+        "tooltip-format": "{desc}\n{volume}%"
     },
 
     "backlight": {
-        "format": "{icon}  {percent}%",
-        "format-icons": ["", "", "", "", "", "", "", "", ""],
+        "format": "{icon} {percent}%",
+        "format-icons": ["󰃞", "󰃟", "󰃠"],
         "scroll-step": 5,
         "tooltip-format": "Brillo: {percent}%"
     },
 
     "network": {
         "format-wifi": "  {signalStrength}%",
-        "format-ethernet": "󰈀  {ipaddr}",
+        "format-ethernet": "󰈀",
         "format-linked": "  No IP",
-        "format-disconnected": "󰤭  Off",
-        "tooltip-format-wifi": "{essid} ({signalStrength}%)\n{ipaddr}/{cidr}\n {bandwidthUpBits}  {bandwidthDownBits}",
-        "tooltip-format-ethernet": "{ifname}\n{ipaddr}/{cidr}\n {bandwidthUpBits}  {bandwidthDownBits}",
+        "format-disconnected": "󰤭",
+        "tooltip-format-wifi": "{essid} ({signalStrength}%)\n{ipaddr}/{cidr}\n↑ {bandwidthUpBits}  ↓ {bandwidthDownBits}",
+        "tooltip-format-ethernet": "{ifname}\n{ipaddr}/{cidr}\n↑ {bandwidthUpBits}  ↓ {bandwidthDownBits}",
+        "tooltip-format-disconnected": "Desconectado",
         "on-click": "nm-connection-editor",
         "interval": 5
     },
@@ -151,27 +186,29 @@
         "format-connected": "󰂱 {num_connections}",
         "format-disabled": "󰂲",
         "tooltip-format": "{controller_alias}\t{controller_address}",
-        "tooltip-format-connected": "{controller_alias}\t{controller_address}\n\n{device_enumerate}",
-        "tooltip-format-enumerate-connected": "{device_alias}\t{device_address}",
+        "tooltip-format-connected": "{controller_alias}\n\n{device_enumerate}",
+        "tooltip-format-enumerate-connected": "  {device_alias}",
         "on-click": "blueman-manager"
     },
 
     "cpu": {
-        "format": "  {usage}%",
+        "format": " {usage}%",
         "interval": 3,
-        "tooltip-format": "CPU: {usage}%\n{avg_frequency} GHz"
+        "tooltip-format": "CPU: {usage}%\n{avg_frequency} GHz",
+        "on-click": "foot -e btop"
     },
 
     "memory": {
-        "format": "  {percentage}%",
+        "format": "󰍛 {percentage}%",
         "interval": 5,
-        "tooltip-format": "RAM: {used:0.1f} GiB / {total:0.1f} GiB\nSwap: {swapUsed:0.1f} GiB / {swapTotal:0.1f} GiB"
+        "tooltip-format": "RAM: {used:0.1f} GiB / {total:0.1f} GiB\nSwap: {swapUsed:0.1f} GiB / {swapTotal:0.1f} GiB",
+        "on-click": "foot -e btop"
     },
 
     "temperature": {
         "critical-threshold": 80,
-        "format": "{icon} {temperatureC}°C",
-        "format-critical": "{icon} {temperatureC}°C",
+        "format": " {temperatureC}°",
+        "format-critical": " {temperatureC}°",
         "format-icons": ["", "", "", "", ""],
         "tooltip-format": "Temperatura: {temperatureC}°C"
     },
@@ -182,12 +219,12 @@
             "warning": 30,
             "critical": 15
         },
-        "format": "{icon}  {capacity}%",
-        "format-charging": "󰂄  {capacity}%",
-        "format-plugged": "  {capacity}%",
-        "format-full": "󰁹  Full",
+        "format": "{icon} {capacity}%",
+        "format-charging": "󰂄 {capacity}%",
+        "format-plugged": " {capacity}%",
+        "format-full": "󰁹",
         "format-icons": ["󰂎", "󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"],
-        "tooltip-format": "{timeTo}\n{capacity}% - {power:.1f}W",
+        "tooltip-format": "{timeTo}\n{capacity}% — {power:.1f}W",
         "interval": 10
     },
 
@@ -196,14 +233,25 @@
         "spacing": 8
     },
 
+    "custom/notification": {
+        "format": "{}",
+        "return-type": "json",
+        "exec": "if dunstctl is-paused | grep -q 'true'; then echo '{\"text\": \"󰂛\", \"tooltip\": \"Notificaciones: Pausadas\", \"class\": \"paused\"}'; else echo '{\"text\": \"󰂚\", \"tooltip\": \"Notificaciones: Activas\", \"class\": \"active\"}'; fi",
+        "on-click": "dunstctl set-paused toggle",
+        "on-click-right": "dunstctl history-pop",
+        "interval": 2,
+        "tooltip": true
+    },
+
     "custom/separator": {
-        "format": "│",
+        "format": "",
         "tooltip": false
     },
 
     "custom/power": {
         "format": "⏻",
-        "tooltip": false,
-        "on-click": "swaynag -t warning -m 'Power Menu' -B 'Apagar' 'systemctl poweroff' -B 'Reiniciar' 'systemctl reboot' -B 'Suspender' 'systemctl suspend' -B 'Cerrar sesión' 'swaymsg exit'"
+        "tooltip-format": "Menú de apagado",
+        "on-click": "wlogout -p layer-shell",
+        "tooltip": true
     }
 }

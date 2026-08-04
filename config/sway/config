@@ -76,7 +76,8 @@ bindsym $mod+a exec $menu
 # Toggle ventana flotante
 bindsym $mod+w floating toggle
 
-# Bloquear pantalla
+# Bloquear pantalla (Mod+L y Mod+Escape)
+bindsym $mod+l exec $lock
 bindsym $mod+Escape exec $lock
 
 # Historial de portapapeles (Cliphist)
@@ -98,29 +99,27 @@ bindsym $mod+Shift+c reload
 bindsym $mod+Shift+e exec wlogout -p layer-shell
 
 # ── Navegación ──────────────────────────────────────────────────
-# Vim-style
-bindsym $mod+$left focus left
-bindsym $mod+$down focus down
-bindsym $mod+$up focus up
-bindsym $mod+$right focus right
-
-# Arrow keys
+# Navegación con flechas
 bindsym $mod+Left focus left
 bindsym $mod+Down focus down
 bindsym $mod+Up focus up
 bindsym $mod+Right focus right
 
-# Mover ventanas (vim-style)
-bindsym $mod+Shift+$left move left
-bindsym $mod+Shift+$down move down
-bindsym $mod+Shift+$up move up
-bindsym $mod+Shift+$right move right
+# Navegación estilo Vim (h, j, k) — Mod+L bloquea pantalla
+bindsym $mod+h focus left
+bindsym $mod+j focus down
+bindsym $mod+k focus up
 
-# Mover ventanas (arrow keys)
+# Mover ventanas (flechas)
 bindsym $mod+Shift+Left move left
 bindsym $mod+Shift+Down move down
 bindsym $mod+Shift+Up move up
 bindsym $mod+Shift+Right move right
+
+# Mover ventanas (estilo Vim h, j, k)
+bindsym $mod+Shift+h move left
+bindsym $mod+Shift+j move down
+bindsym $mod+Shift+k move up
 
 # ── Workspaces ──────────────────────────────────────────────────
 bindsym $mod+1 workspace number 1

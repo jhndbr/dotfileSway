@@ -57,7 +57,7 @@ done
 if [ -d "$HOME/.local/bin" ]; then
     echo ""
     echo -e "${CYAN}⚡ Sincronizando scripts...${NC}"
-    for script in screenshot.sh volume.sh brightness.sh color-picker.sh swayidle.sh; do
+    for script in screenshot.sh volume.sh brightness.sh color-picker.sh swayidle.sh gammastep-toggle.sh; do
         if [ -f "$HOME/.local/bin/$script" ]; then
             echo -e "  ${GREEN}→${NC} Actualizando: ${BLUE}$script${NC}"
             cp -f "$HOME/.local/bin/$script" "$DOTFILES_DIR/scripts/$script"
