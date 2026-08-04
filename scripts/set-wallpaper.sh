@@ -53,63 +53,74 @@ if [ -n "$GEN_DANK16" ]; then
 fi
 
 # ── 3. Asegurar estructura de plantillas y configuración Matugen ─
+TEMPLATES_DIR="$HOME/.config/matugen/templates"
+mkdir -p "$TEMPLATES_DIR"
 mkdir -p "$HOME/.config/matugen"
 mkdir -p "$HOME/.config/gtk-3.0" "$HOME/.config/gtk-4.0"
 mkdir -p "$HOME/.config/zed/themes"
 mkdir -p "$HOME/.config/qt5ct/colors" "$HOME/.config/qt6ct/colors"
 mkdir -p "$HOME/.config/kitty" "$HOME/.config/foot"
 
+# Sincronizar plantillas a ~/.config/matugen/templates desde las ubicaciones posibles
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+if [ -d "$SCRIPT_DIR/../templates" ]; then
+    cp -rf "$SCRIPT_DIR/../templates/"* "$TEMPLATES_DIR/" 2>/dev/null || true
+elif [ -d "$HOME/Documentos/Github/dotfileSway/templates" ]; then
+    cp -rf "$HOME/Documentos/Github/dotfileSway/templates/"* "$TEMPLATES_DIR/" 2>/dev/null || true
+elif [ -d "$HOME/dotfileSway/templates" ]; then
+    cp -rf "$HOME/dotfileSway/templates/"* "$TEMPLATES_DIR/" 2>/dev/null || true
+fi
+
 # Configuración de Matugen vinculando las plantillas de Dank Linux
-SCRIPT_DOTFILES="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cat << EOF > "$HOME/.config/matugen/config.toml"
 [config]
 
 [templates.gtk3]
-input_path = '$SCRIPT_DOTFILES/templates/gtk-colors.css'
+input_path = '$TEMPLATES_DIR/gtk-colors.css'
 output_path = '$HOME/.config/gtk-3.0/dank-colors.css'
 
 [templates.gtk4]
-input_path = '$SCRIPT_DOTFILES/templates/gtk-colors.css'
+input_path = '$TEMPLATES_DIR/gtk-colors.css'
 output_path = '$HOME/.config/gtk-4.0/dank-colors.css'
 
 [templates.zed]
-input_path = '$SCRIPT_DOTFILES/templates/dank-zed.json'
+input_path = '$TEMPLATES_DIR/dank-zed.json'
 output_path = '$HOME/.config/zed/themes/dank-zed-theme.json'
 
 [templates.vscode]
-input_path = '$SCRIPT_DOTFILES/templates/vscode-color-theme-dark.json'
+input_path = '$TEMPLATES_DIR/vscode-color-theme-dark.json'
 output_path = '$HOME/.vscode/extensions/danklinux.dms-theme-0.0.3/themes/dankshell-dark.json'
 
 [templates.qt5ct]
-input_path = '$SCRIPT_DOTFILES/templates/qtct-colors.conf'
+input_path = '$TEMPLATES_DIR/qtct-colors.conf'
 output_path = '$HOME/.config/qt5ct/colors/matugen.conf'
 
 [templates.qt6ct]
-input_path = '$SCRIPT_DOTFILES/templates/qtct-colors.conf'
+input_path = '$TEMPLATES_DIR/qtct-colors.conf'
 output_path = '$HOME/.config/qt6ct/colors/matugen.conf'
 
 [templates.kdeglobals]
-input_path = '$SCRIPT_DOTFILES/templates/qtct-colors.conf'
+input_path = '$TEMPLATES_DIR/qtct-colors.conf'
 output_path = '$HOME/.config/kdeglobals'
 
 [templates.kitty]
-input_path = '$SCRIPT_DOTFILES/templates/kitty.conf'
+input_path = '$TEMPLATES_DIR/kitty.conf'
 output_path = '$HOME/.config/kitty/dank-theme.conf'
 
 [templates.foot]
-input_path = '$SCRIPT_DOTFILES/templates/foot.ini'
+input_path = '$TEMPLATES_DIR/foot.ini'
 output_path = '$HOME/.config/foot/dank-colors.ini'
 
 [templates.swaylock]
-input_path = '$SCRIPT_DOTFILES/templates/swaylock.conf'
+input_path = '$TEMPLATES_DIR/swaylock.conf'
 output_path = '$HOME/.config/swaylock/config'
 
 [templates.sway]
-input_path = '$SCRIPT_DOTFILES/templates/sway-colors'
+input_path = '$TEMPLATES_DIR/sway-colors'
 output_path = '$HOME/.config/sway/dank-colors'
 
 [templates.dunst]
-input_path = '$SCRIPT_DOTFILES/templates/dunstrc'
+input_path = '$TEMPLATES_DIR/dunstrc'
 output_path = '$HOME/.config/dunst/dunstrc'
 EOF
 

@@ -75,6 +75,12 @@ for item in "${CONFIGS[@]}"; do
     fi
 done
 
+if [ -d "$SCRIPT_DIR/templates" ]; then
+    echo -e "  ${GREEN}→${NC} Copiando plantillas de Matugen..."
+    mkdir -p "$HOME/.config/matugen/templates"
+    cp -rf "$SCRIPT_DIR/templates/"* "$HOME/.config/matugen/templates/" 2>/dev/null || true
+fi
+
 if [ -f "$HOME/.config/gtk-3.0/bookmarks" ]; then
     sed -i "s|file:///home/[^/]*|file://$HOME|g" "$HOME/.config/gtk-3.0/bookmarks" 2>/dev/null || true
 fi
