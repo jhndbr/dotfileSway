@@ -14,7 +14,10 @@ set $menu wofi --show drun
 set $lock swaylock -f
 set $scripts ~/.local/bin
 
-# macOS Monochromatic Palette
+# Dynamic Palette from Matugen (fallback to default)
+include ~/.config/sway/dank-colors
+
+# Default fallback values
 set $bg_dark      #141414
 set $bg_surface   #1c1c1e
 set $bg_overlay   #2c2c2e
@@ -96,7 +99,7 @@ floating_modifier $mod normal
 bindsym $mod+Shift+c reload
 
 # Menú de apagado (wlogout)
-bindsym $mod+Shift+e exec wlogout -p layer-shell
+bindsym $mod+Shift+e exec wlogout -p layer-shell -b 3 -c 16 -r 16 -T 240 -B 240 -L 280 -R 280
 
 # ── Navegación ──────────────────────────────────────────────────
 # Navegación con flechas

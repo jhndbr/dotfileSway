@@ -1,40 +1,40 @@
 /* ╔══════════════════════════════════════════════════════════════╗
-   ║              Waybar Style — macOS Monochromatic              ║
-   ║              Minimalist, Elegant & Translucent              ║
+   ║        Waybar Style — Floating Glassmorphism & Precise Drawers║
    ╚══════════════════════════════════════════════════════════════╝ */
 
-/* ── Variables Monocromáticas macOS ────────────────────────── */
-@define-color bg_bar        rgba(20, 20, 22, 0.82);
-@define-color bg_pill       rgba(255, 255, 255, 0.055);
-@define-color bg_pill_hover rgba(255, 255, 255, 0.10);
-@define-color bg_active     rgba(255, 255, 255, 0.16);
-@define-color border_subtle rgba(255, 255, 255, 0.07);
-@define-color border_pill   rgba(255, 255, 255, 0.06);
-@define-color text_primary  #e8e8ed;
-@define-color text_secondary #636366;
-@define-color text_bright   #ffffff;
-@define-color accent_green  #30d158;
-@define-color accent_yellow #ffd60a;
-@define-color accent_red    #ff453a;
-@define-color accent_blue   #0a84ff;
+@import url("../gtk-3.0/dank-colors.css");
+
+/* ── Palette Aliases & Glass Tokens ──────────────────────────── */
+@define-color bg_bar        alpha(@window_bg_color, 0.78);
+@define-color bg_pill       alpha(@window_fg_color, 0.07);
+@define-color bg_pill_hover alpha(@window_fg_color, 0.16);
+@define-color bg_active     @accent_bg_color;
+@define-color border_subtle alpha(@window_fg_color, 0.12);
+@define-color border_pill   alpha(@window_fg_color, 0.09);
+@define-color text_primary  @window_fg_color;
+@define-color text_secondary alpha(@window_fg_color, 0.65);
+@define-color text_bright   @accent_fg_color;
+@define-color accent_color  @accent_bg_color;
 
 /* ── Global Reset ──────────────────────────────────────────── */
 * {
     border: none;
     border-radius: 0;
-    font-family: "Inter", "-apple-system", "SF Pro Display", "JetBrainsMono Nerd Font", sans-serif;
+    font-family: "Inter", "JetBrainsMono Nerd Font", sans-serif;
     font-size: 13px;
-    min-height: 0;
     font-weight: 500;
+    min-height: 0;
     padding: 0;
     margin: 0;
 }
 
-/* ── Barra Principal ───────────────────────────────────────── */
+/* ── Floating Bar Container ────────────────────────────────── */
 window#waybar {
     background: @bg_bar;
-    border-bottom: 1px solid @border_subtle;
-    transition: background 0.3s ease;
+    border: 1px solid @border_subtle;
+    border-radius: 14px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.40);
+    transition: all 0.3s ease;
 }
 
 window#waybar.hidden {
@@ -43,10 +43,11 @@ window#waybar.hidden {
 
 /* ── Tooltips ──────────────────────────────────────────────── */
 tooltip {
-    background: rgba(28, 28, 30, 0.96);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: alpha(@window_bg_color, 0.94);
+    border: 1px solid alpha(@accent_color, 0.35);
     border-radius: 12px;
     padding: 10px 14px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.55);
 }
 
 tooltip label {
@@ -55,9 +56,14 @@ tooltip label {
 }
 
 /* ══════════════════════════════════════════════════════════════
-   ║  MÓDULOS — Base reset para todos                          ║
+   ║  ESTILO UNIFORME DE PÍLDORAS (SOLO EN EL CONTENEDOR EXTERNO) ║
    ══════════════════════════════════════════════════════════════ */
 
+#audio,
+#backlight,
+#network,
+#battery,
+#hardware,
 #workspaces,
 #mode,
 #scratchpad,
@@ -67,43 +73,129 @@ tooltip label {
 #custom-gammastep,
 #idle_inhibitor,
 #custom-notification,
-#pulseaudio,
-#backlight,
-#network,
-#bluetooth,
-#cpu,
-#memory,
-#temperature,
-#battery,
 #tray,
-#custom-power,
-#custom-separator {
+#custom-power {
+    background: @bg_pill;
+    border: 1px solid @border_pill;
+    border-radius: 10px;
     padding: 0 8px;
-    margin: 0;
+    margin: 4px 2px;
     color: @text_primary;
-    transition: all 0.2s ease;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Efecto Hover idéntico para el CONTENEDOR PRINCIPAL únicamente */
+#audio:hover,
+#backlight:hover,
+#network:hover,
+#battery:hover,
+#hardware:hover,
+#workspaces:hover,
+#clock:hover,
+#custom-media:hover,
+#custom-gammastep:hover,
+#idle_inhibitor:hover,
+#custom-notification:hover,
+#custom-power:hover {
+    background: @bg_pill_hover;
+    border-color: alpha(@accent_color, 0.40);
 }
 
 /* ══════════════════════════════════════════════════════════════
-   ║  IZQUIERDA — Workspaces, Mode, Window                    ║
+   ║  REMOVER FONDOS Y BORDES INTERNOS Y EN HOVER INTERNO        ║
    ══════════════════════════════════════════════════════════════ */
 
-/* ── Workspaces (Pills macOS) ──────────────────────────────── */
-#workspaces {
-    background: @bg_pill;
-    border-radius: 10px;
-    padding: 0 3px;
-    margin: 4px 0 4px 6px;
-    border: 1px solid @border_pill;
+#audio *,
+#backlight *,
+#network *,
+#battery *,
+#hardware *,
+#audio *:hover,
+#backlight *:hover,
+#network *:hover,
+#battery *:hover,
+#hardware *:hover {
+    background: transparent;
+    background-color: transparent;
+    background-image: none;
+    border: none;
+    outline: none;
+    box-shadow: none;
 }
+
+#audio label,
+#backlight label,
+#network label,
+#battery label,
+#hardware label,
+#audio label:hover,
+#backlight label:hover,
+#network label:hover,
+#battery label:hover,
+#hardware label:hover {
+    background: transparent;
+    background-color: transparent;
+    background-image: none;
+    border: none;
+    outline: none;
+    box-shadow: none;
+    padding: 0 4px;
+    margin: 0;
+    color: @text_primary;
+    font-weight: 500;
+}
+
+/* Iconos de disparo a la izquierda */
+#custom-system-icon {
+    font-size: 14px;
+    color: @accent_color;
+    padding: 0 4px;
+}
+
+#pulseaudio\.icon {
+    font-size: 14px;
+    color: @accent_color;
+    padding: 0 4px;
+}
+
+#backlight\.icon {
+    font-size: 14px;
+    color: #ffd60a;
+    padding: 0 4px;
+}
+
+#network\.icon {
+    font-size: 14px;
+    color: #30d158;
+    padding: 0 4px;
+}
+
+#battery\.icon {
+    font-size: 14px;
+    color: @accent_color;
+    padding: 0 4px;
+}
+
+/* Submódulos numéricos desplegables a la derecha */
+#cpu, #memory, #temperature,
+#pulseaudio\.text, #backlight\.text, #network\.text, #battery\.text {
+    font-size: 12px;
+    padding: 0 4px;
+    color: @text_primary;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   ║  WORKSPACES Y BOTONES                                       ║
+   ══════════════════════════════════════════════════════════════ */
 
 #workspaces button {
     color: @text_secondary;
-    padding: 0 7px;
-    margin: 3px 1px;
+    padding: 0 8px;
+    margin: 3px 2px;
     border-radius: 7px;
     background: transparent;
-    min-width: 20px;
+    min-width: 22px;
+    font-size: 13px;
     transition: all 0.2s ease;
 }
 
@@ -113,272 +205,99 @@ tooltip label {
 }
 
 #workspaces button.focused {
-    background: @bg_active;
+    background: @accent_color;
     color: @text_bright;
-    font-weight: 600;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
+    font-weight: 700;
+    box-shadow: 0 2px 8px alpha(@accent_color, 0.45);
 }
 
 #workspaces button.urgent {
-    background: rgba(255, 69, 58, 0.25);
-    color: @accent_red;
+    background: alpha(@destructive_bg_color, 0.35);
+    color: @destructive_bg_color;
 }
 
-/* ── Mode ──────────────────────────────────────────────────── */
 #mode {
-    background: @bg_active;
+    background: @accent_color;
     color: @text_bright;
-    font-weight: 600;
+    font-weight: 700;
     border-radius: 8px;
     margin: 4px 4px;
     padding: 0 12px;
 }
 
-/* ── Window Title ──────────────────────────────────────────── */
+#scratchpad {
+    background: @bg_pill;
+    border: 1px solid @border_pill;
+    color: @text_primary;
+}
+
 #window {
     color: @text_secondary;
     font-size: 12px;
-    font-weight: 400;
-    padding: 0 8px;
+    font-weight: 500;
+    padding: 0 10px;
 }
 
 /* ══════════════════════════════════════════════════════════════
-   ║  CENTRO — Clock                                          ║
+   ║  CENTRO — Reloj                                            ║
    ══════════════════════════════════════════════════════════════ */
 
 #clock {
-    background: @bg_pill;
-    color: @text_primary;
-    font-weight: 600;
+    font-weight: 700;
     font-size: 13px;
     border-radius: 10px;
-    padding: 0 16px;
-    margin: 4px 0;
-    border: 1px solid @border_pill;
-}
-
-#clock:hover {
-    background: @bg_pill_hover;
+    padding: 0 18px;
 }
 
 /* ══════════════════════════════════════════════════════════════
-   ║  DERECHA — Módulos agrupados en pills                    ║
+   ║  ESTADOS ESPECÍFICOS                                       ║
    ══════════════════════════════════════════════════════════════ */
 
-/* ── Separador (punto sutil entre grupos) ──────────────────── */
-#custom-separator {
-    color: rgba(255, 255, 255, 0.10);
-    font-size: 8px;
-    padding: 0 2px;
-    margin: 0;
-}
-
-/* ── Media Player ──────────────────────────────────────────── */
 #custom-media {
-    color: @accent_green;
+    color: @accent_color;
     font-size: 12px;
-    padding: 0 10px;
-    margin: 4px 0;
-    border-radius: 8px;
-    font-weight: 400;
-}
-
-#custom-media:hover {
-    background: @bg_pill_hover;
 }
 
 #custom-media.Paused {
     color: @text_secondary;
 }
 
-/* ── Grupo: Controles del entorno (gammastep + idle) ──────── */
-#custom-gammastep,
-#idle_inhibitor {
-    font-size: 14px;
-    padding: 0 6px;
-    margin: 4px 0;
-    border-radius: 8px;
-    color: @text_secondary;
-}
-
-#custom-gammastep:hover,
-#idle_inhibitor:hover {
-    background: @bg_pill_hover;
-    color: @text_primary;
-}
-
 #idle_inhibitor.activated {
-    color: @accent_blue;
+    color: @accent_color;
 }
 
 #custom-gammastep.on {
-    color: @accent_yellow;
+    color: #ffd60a;
 }
 
-#custom-gammastep.off {
-    color: @text_secondary;
+/* Batería Estados */
+#battery\.icon.warning, #battery\.text.warning {
+    color: #ffd60a;
 }
 
-/* ── Grupo: Audio + Brillo (pill con fondo) ────────────────── */
-#pulseaudio,
-#backlight {
-    padding: 0 10px;
-    margin: 4px 0;
-    border-radius: 8px;
-    background: transparent;
+#battery\.icon.critical, #battery\.text.critical {
+    color: @destructive_bg_color;
 }
 
-#pulseaudio {
-    color: @text_primary;
+#battery\.icon.charging, #battery\.icon.plugged {
+    color: #30d158;
 }
 
-#backlight {
-    color: @text_primary;
-}
-
-#pulseaudio:hover,
-#backlight:hover {
-    background: @bg_pill_hover;
-}
-
-#pulseaudio.muted {
-    color: @text_secondary;
-}
-
-/* ── Grupo: Conectividad (network + bluetooth) ─────────────── */
-#network,
-#bluetooth {
-    padding: 0 8px;
-    margin: 4px 0;
-    border-radius: 8px;
-    background: transparent;
-}
-
-#network:hover,
-#bluetooth:hover {
-    background: @bg_pill_hover;
-}
-
-#network.disconnected {
-    color: @text_secondary;
-}
-
-#network.wifi {
-    color: @text_primary;
-}
-
-#bluetooth.disabled {
-    color: @text_secondary;
-}
-
-#bluetooth.connected {
-    color: @accent_blue;
-}
-
-/* ── Grupo: Hardware (CPU + RAM + Temp) — Pill agrupado ───── */
-#cpu,
-#memory,
-#temperature {
-    font-size: 12px;
-    padding: 0 6px;
-    margin: 4px 0;
-    color: @text_secondary;
-    background: transparent;
-    border-radius: 8px;
-}
-
-#cpu:hover,
-#memory:hover {
-    background: @bg_pill_hover;
-    color: @text_primary;
-}
-
-#temperature {
-    color: @text_secondary;
-}
-
-#temperature.critical {
-    color: @accent_red;
-
-}
-
-/* ── Batería ───────────────────────────────────────────────── */
-#battery {
-    padding: 0 10px;
-    margin: 4px 2px;
-    border-radius: 8px;
-    font-weight: 500;
-    background: transparent;
-}
-
-#battery:hover {
-    background: @bg_pill_hover;
-}
-
-#battery.good {
-    color: @text_primary;
-}
-
-#battery.warning {
-    color: @accent_yellow;
-}
-
-#battery.critical {
-    color: @accent_red;
-}
-
-#battery.charging,
-#battery.plugged {
-    color: @accent_green;
-}
-
-#battery.full {
-    color: @accent_green;
-}
-
-/* ── Tray ──────────────────────────────────────────────────── */
 #tray {
-    padding: 0 6px;
-    margin: 4px 0;
-}
-
-#tray > .passive {
-    -gtk-icon-effect: dim;
-}
-
-#tray > .needs-attention {
-    -gtk-icon-effect: highlight;
-}
-
-/* ── Notificaciones (Dunst toggle) ─────────────────────────── */
-#custom-notification {
-    font-size: 14px;
-    padding: 0 6px;
-    margin: 4px 0;
-    border-radius: 8px;
-    color: @text_secondary;
-}
-
-#custom-notification:hover {
-    background: @bg_pill_hover;
-    color: @text_primary;
+    padding: 0 8px;
 }
 
 #custom-notification.paused {
-    color: @accent_yellow;
+    color: #ffd60a;
 }
 
-/* ── Power Button ──────────────────────────────────────────── */
 #custom-power {
     font-size: 14px;
     padding: 0 10px;
-    margin: 4px 6px 4px 2px;
-    border-radius: 8px;
-    color: @text_secondary;
-    transition: all 0.25s ease;
 }
 
 #custom-power:hover {
-    background: rgba(255, 69, 58, 0.18);
-    color: @accent_red;
+    background: alpha(@destructive_bg_color, 0.25);
+    border-color: @destructive_bg_color;
+    color: @destructive_bg_color;
 }

@@ -1,70 +1,99 @@
 /* ╔══════════════════════════════════════════════════════════════╗
-   ║        Wlogout — macOS Monochromatic Glassmorphism            ║
+   ║      Wlogout — Ultra-Modern Glassmorphism Card Grid          ║
    ╚══════════════════════════════════════════════════════════════╝ */
+
+@import url("../gtk-3.0/dank-colors.css");
 
 * {
     background-image: none;
     box-shadow: none;
-    font-family: "Inter", "-apple-system", "SF Pro Display", "JetBrainsMono Nerd Font", sans-serif;
-    font-size: 14px;
-    font-weight: 500;
-    transition: all 0.2s ease-in-out;
+    font-family: "Inter", "JetBrainsMono Nerd Font", sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 window {
-    background-color: rgba(18, 18, 20, 0.88);
+    background-color: alpha(@window_bg_color, 0.82);
 }
 
 button {
-    color: #e5e5ea;
-    background-color: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 18px;
+    color: @window_fg_color;
+    background-color: alpha(@window_fg_color, 0.07);
+    border: 1px solid alpha(@window_fg_color, 0.14);
+    border-radius: 24px;
     background-repeat: no-repeat;
-    background-position: center 35%;
-    background-size: 26%;
-    margin: 12px;
+    background-position: center 30%;
+    background-size: 32px 32px;
+    margin: 18px;
+    padding-top: 50px;
+    padding-bottom: 12px;
     outline: none;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.40);
 }
 
 button:focus, button:active, button:hover {
-    background-color: rgba(255, 255, 255, 0.14);
-    border-color: rgba(255, 255, 255, 0.28);
-    color: #ffffff;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.60);
 }
 
+/* ── Custom SVGs & Dynamic Color Actions ─────────────────────── */
+
+/* Lock — Primary Matugen Accent */
 #lock {
-    background-image: image(url("/usr/share/wlogout/icons/lock.png"));
+    background-image: image(url("/home/dzhon/.config/wlogout/icons/lock.svg"));
+}
+#lock:hover {
+    background-color: alpha(@accent_bg_color, 0.25);
+    border-color: @accent_bg_color;
+    color: @accent_bg_color;
 }
 
+/* Logout — Gold Amber */
 #logout {
-    background-image: image(url("/usr/share/wlogout/icons/logout.png"));
+    background-image: image(url("/home/dzhon/.config/wlogout/icons/logout.svg"));
 }
-
-#suspend {
-    background-image: image(url("/usr/share/wlogout/icons/suspend.png"));
-}
-
-#hibernate {
-    background-image: image(url("/usr/share/wlogout/icons/hibernate.png"));
-}
-
-#reboot {
-    background-image: image(url("/usr/share/wlogout/icons/reboot.png"));
-}
-
-#shutdown {
-    background-image: image(url("/usr/share/wlogout/icons/shutdown.png"));
-}
-
-#shutdown:hover {
-    background-color: rgba(255, 69, 58, 0.22);
-    border-color: #ff453a;
-    color: #ff453a;
-}
-
 #logout:hover {
-    background-color: rgba(255, 214, 10, 0.18);
+    background-color: rgba(255, 214, 10, 0.25);
     border-color: #ffd60a;
     color: #ffd60a;
+}
+
+/* Suspend — Sky Blue */
+#suspend {
+    background-image: image(url("/home/dzhon/.config/wlogout/icons/suspend.svg"));
+}
+#suspend:hover {
+    background-color: rgba(10, 132, 255, 0.25);
+    border-color: #0a84ff;
+    color: #0a84ff;
+}
+
+/* Hibernate — Purple Lavender */
+#hibernate {
+    background-image: image(url("/home/dzhon/.config/wlogout/icons/hibernate.svg"));
+}
+#hibernate:hover {
+    background-color: rgba(191, 90, 242, 0.25);
+    border-color: #bf5af2;
+    color: #bf5af2;
+}
+
+/* Reboot — Electric Cyan */
+#reboot {
+    background-image: image(url("/home/dzhon/.config/wlogout/icons/reboot.svg"));
+}
+#reboot:hover {
+    background-color: rgba(50, 173, 230, 0.25);
+    border-color: #32ade6;
+    color: #32ade6;
+}
+
+/* Shutdown — Crimson Coral Red */
+#shutdown {
+    background-image: image(url("/home/dzhon/.config/wlogout/icons/shutdown.svg"));
+}
+#shutdown:hover {
+    background-color: alpha(@destructive_bg_color, 0.30);
+    border-color: @destructive_bg_color;
+    color: @destructive_bg_color;
 }

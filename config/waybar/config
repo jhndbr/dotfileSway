@@ -1,11 +1,11 @@
 {
     "layer": "top",
     "position": "top",
-    "height": 36,
+    "height": 44,
     "spacing": 0,
-    "margin-top": 0,
-    "margin-left": 0,
-    "margin-right": 0,
+    "margin-top": 6,
+    "margin-left": 10,
+    "margin-right": 10,
     "margin-bottom": 0,
     "reload_style_on_change": true,
 
@@ -13,7 +13,6 @@
         "sway/workspaces",
         "sway/mode",
         "sway/scratchpad",
-        "custom/separator",
         "sway/window"
     ],
 
@@ -23,22 +22,13 @@
 
     "modules-right": [
         "custom/media",
-        "custom/separator",
         "custom/gammastep",
         "idle_inhibitor",
-        "custom/separator",
-        "pulseaudio",
-        "backlight",
-        "custom/separator",
-        "network",
-        "bluetooth",
-        "custom/separator",
-        "cpu",
-        "memory",
-        "temperature",
-        "custom/separator",
-        "battery",
-        "custom/separator",
+        "group/audio",
+        "group/backlight",
+        "group/network",
+        "group/battery",
+        "group/hardware",
         "tray",
         "custom/notification",
         "custom/power"
@@ -58,10 +48,7 @@
             "7": "󰲬",
             "8": "󰲮",
             "9": "󰲰",
-            "10": "󰿬",
-            "urgent": "",
-            "focused": "",
-            "default": ""
+            "10": "󰿬"
         },
         "persistent-workspaces": {
             "*": 5
@@ -69,35 +56,34 @@
     },
 
     "sway/mode": {
-        "format": " {}",
+        "format": "󰩨 {}",
         "max-length": 50
     },
 
     "sway/scratchpad": {
-        "format": "{icon} {count}",
+        "format": "󰖯 {count}",
         "show-empty": false,
-        "format-icons": ["", ""],
         "tooltip": true,
         "tooltip-format": "{app}: {title}"
     },
 
     "sway/window": {
         "format": "{}",
-        "max-length": 40,
+        "max-length": 45,
         "rewrite": {
             "(.*) — Mozilla Firefox": "󰈹 $1",
-            "(.*) - foot": " $1",
+            "(.*) - foot": "󰞷 $1",
             "(.*) — Thunar": "󰝰 $1",
             "(.*) - Visual Studio Code": "󰨞 $1",
-            "(.*) - Zed": " $1",
-            "(.*) — Spotify": " $1"
+            "(.*) - Zed": "󰅩 $1",
+            "(.*) — Spotify": "󰓇 $1"
         },
         "tooltip": false
     },
 
     "clock": {
-        "format": "  {:%H:%M}",
-        "format-alt": "  {:%A %d de %B, %Y  │  %H:%M:%S}",
+        "format": "󰥔 {:%H:%M}",
+        "format-alt": "󰃭 {:%A %d de %B, %Y  │  %H:%M:%S}",
         "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
         "locale": "es_AR.UTF-8",
         "interval": 1
@@ -106,10 +92,10 @@
     "custom/media": {
         "format": "{icon} {text}",
         "return-type": "json",
-        "max-length": 25,
+        "max-length": 30,
         "format-icons": {
-            "spotify": "",
-            "default": ""
+            "spotify": "󰓇",
+            "default": "󰝚"
         },
         "escape": true,
         "exec": "playerctl -a metadata --format '{\"text\": \"{{artist}} - {{markup_escape(title)}}\", \"tooltip\": \"{{playerName}} : {{markup_escape(title)}}\", \"alt\": \"{{status}}\", \"class\": \"{{status}}\"}' -F 2>/dev/null",
@@ -142,57 +128,157 @@
         "tooltip-format-deactivated": "Idle normal (pantalla se apagará)"
     },
 
-    "pulseaudio": {
-        "format": "{icon} {volume}%",
-        "format-bluetooth": "󰂰 {volume}%",
+    /* ── Audio Drawer Group ──────────────────────────────────────── */
+    "group/audio": {
+        "orientation": "horizontal",
+        "drawer": {
+            "transition-duration": 300,
+            "transition-left-to-right": true
+        },
+        "modules": [
+            "pulseaudio#icon",
+            "pulseaudio#text"
+        ]
+    },
+    "pulseaudio#icon": {
+        "format": "{icon}",
+        "format-bluetooth": "󰂰",
         "format-bluetooth-muted": "󰂲",
         "format-muted": "󰝟",
         "format-icons": {
             "headphone": "󰋋",
             "hands-free": "󰋎",
             "headset": "󰋎",
-            "phone": "",
-            "portable": "",
-            "car": "",
-            "default": ["", "", ""]
+            "phone": "󰏲",
+            "portable": "󰏲",
+            "car": "󰄋",
+            "default": ["󰕿", "󰖀", "󰕾"]
         },
         "on-click": "pavucontrol",
         "on-click-right": "pactl set-sink-mute @DEFAULT_SINK@ toggle",
         "scroll-step": 5,
-        "tooltip-format": "{desc}\n{volume}%"
+        "tooltip-format": "Audio: {volume}%\n{desc}"
+    },
+    "pulseaudio#text": {
+        "format": "{volume}%",
+        "on-click": "pavucontrol",
+        "on-click-right": "pactl set-sink-mute @DEFAULT_SINK@ toggle",
+        "scroll-step": 5,
+        "tooltip-format": "{desc}"
     },
 
-    "backlight": {
-        "format": "{icon} {percent}%",
+    /* ── Brightness Drawer Group ─────────────────────────────────── */
+    "group/backlight": {
+        "orientation": "horizontal",
+        "drawer": {
+            "transition-duration": 300,
+            "transition-left-to-right": true
+        },
+        "modules": [
+            "backlight#icon",
+            "backlight#text"
+        ]
+    },
+    "backlight#icon": {
+        "format": "{icon}",
         "format-icons": ["󰃞", "󰃟", "󰃠"],
         "scroll-step": 5,
         "tooltip-format": "Brillo: {percent}%"
     },
+    "backlight#text": {
+        "format": "{percent}%",
+        "scroll-step": 5,
+        "tooltip-format": "Brillo: {percent}%"
+    },
 
-    "network": {
-        "format-wifi": "  {signalStrength}%",
+    /* ── Network Drawer Group ────────────────────────────────────── */
+    "group/network": {
+        "orientation": "horizontal",
+        "drawer": {
+            "transition-duration": 300,
+            "transition-left-to-right": true
+        },
+        "modules": [
+            "network#icon",
+            "network#text"
+        ]
+    },
+    "network#icon": {
+        "format-wifi": "{icon}",
         "format-ethernet": "󰈀",
-        "format-linked": "  No IP",
+        "format-linked": "󰈀",
         "format-disconnected": "󰤭",
-        "tooltip-format-wifi": "{essid} ({signalStrength}%)\n{ipaddr}/{cidr}\n↑ {bandwidthUpBits}  ↓ {bandwidthDownBits}",
-        "tooltip-format-ethernet": "{ifname}\n{ipaddr}/{cidr}\n↑ {bandwidthUpBits}  ↓ {bandwidthDownBits}",
+        "format-icons": ["󰤯", "󰤟", "󰤢", "󰤥", "󰤨"],
+        "tooltip-format-wifi": "{essid} ({signalStrength}%)\n{ipaddr}/{cidr}",
+        "tooltip-format-ethernet": "{ifname}\n{ipaddr}/{cidr}",
         "tooltip-format-disconnected": "Desconectado",
         "on-click": "nm-connection-editor",
         "interval": 5
     },
+    "network#text": {
+        "format-wifi": "{signalStrength}%",
+        "format-ethernet": "LAN",
+        "format-linked": "Sin IP",
+        "format-disconnected": "OFF",
+        "tooltip-format-wifi": "{essid}\n↑ {bandwidthUpBits}  ↓ {bandwidthDownBits}",
+        "on-click": "nm-connection-editor",
+        "interval": 5
+    },
 
-    "bluetooth": {
-        "format": "󰂯",
-        "format-connected": "󰂱 {num_connections}",
-        "format-disabled": "󰂲",
-        "tooltip-format": "{controller_alias}\t{controller_address}",
-        "tooltip-format-connected": "{controller_alias}\n\n{device_enumerate}",
-        "tooltip-format-enumerate-connected": "  {device_alias}",
-        "on-click": "blueman-manager"
+    /* ── Battery Drawer Group ────────────────────────────────────── */
+    "group/battery": {
+        "orientation": "horizontal",
+        "drawer": {
+            "transition-duration": 300,
+            "transition-left-to-right": true
+        },
+        "modules": [
+            "battery#icon",
+            "battery#text"
+        ]
+    },
+    "battery#icon": {
+        "states": {
+            "good": 80,
+            "warning": 30,
+            "critical": 15
+        },
+        "format": "{icon}",
+        "format-charging": "󰂄",
+        "format-plugged": "󰚥",
+        "format-full": "󰁹",
+        "format-icons": ["󰂎", "󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"],
+        "tooltip-format": "Batería: {capacity}%\n{timeTo} — {power:.1f}W",
+        "interval": 10
+    },
+    "battery#text": {
+        "format": "{capacity}%",
+        "tooltip-format": "{timeTo}\n{power:.1f}W",
+        "interval": 10
+    },
+
+    /* ── Hardware Drawer Group ───────────────────────────────────── */
+    "group/hardware": {
+        "orientation": "horizontal",
+        "drawer": {
+            "transition-duration": 350,
+            "transition-left-to-right": true
+        },
+        "modules": [
+            "custom/system-icon",
+            "cpu",
+            "memory",
+            "temperature"
+        ]
+    },
+    "custom/system-icon": {
+        "format": "󰍛",
+        "tooltip-format": "Hardware del Sistema\n(Pasa el cursor para ver CPU, RAM y Temp)",
+        "on-click": "foot -e btop"
     },
 
     "cpu": {
-        "format": " {usage}%",
+        "format": "󰻠 {usage}%",
         "interval": 3,
         "tooltip-format": "CPU: {usage}%\n{avg_frequency} GHz",
         "on-click": "foot -e btop"
@@ -207,25 +293,9 @@
 
     "temperature": {
         "critical-threshold": 80,
-        "format": " {temperatureC}°",
-        "format-critical": " {temperatureC}°",
-        "format-icons": ["", "", "", "", ""],
+        "format": "󰔏 {temperatureC}°",
+        "format-critical": "󰔏 {temperatureC}°",
         "tooltip-format": "Temperatura: {temperatureC}°C"
-    },
-
-    "battery": {
-        "states": {
-            "good": 80,
-            "warning": 30,
-            "critical": 15
-        },
-        "format": "{icon} {capacity}%",
-        "format-charging": "󰂄 {capacity}%",
-        "format-plugged": " {capacity}%",
-        "format-full": "󰁹",
-        "format-icons": ["󰂎", "󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"],
-        "tooltip-format": "{timeTo}\n{capacity}% — {power:.1f}W",
-        "interval": 10
     },
 
     "tray": {
@@ -243,15 +313,10 @@
         "tooltip": true
     },
 
-    "custom/separator": {
-        "format": "",
-        "tooltip": false
-    },
-
     "custom/power": {
         "format": "⏻",
         "tooltip-format": "Menú de apagado",
-        "on-click": "wlogout -p layer-shell",
+        "on-click": "wlogout -p layer-shell -b 3 -c 16 -r 16 -T 240 -B 240 -L 280 -R 280",
         "tooltip": true
     }
 }
