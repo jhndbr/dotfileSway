@@ -1,27 +1,27 @@
 image=/home/dzhon/Pictures/1.jpg
 scaling=fill
-color=161217
+color=12140e
 
 indicator-idle-visible
 indicator-radius=110
 indicator-thickness=10
 
-inside-color=161217D0
-inside-clear-color=161217D0
-inside-ver-color=161217D0
-inside-wrong-color=161217D0
+inside-color=12140eD0
+inside-clear-color=12140eD0
+inside-ver-color=12140eD0
+inside-wrong-color=12140eD0
 
-ring-color=e2b7f4A0
-ring-clear-color=d4c0d8A0
-ring-ver-color=5b396cA0
+ring-color=b5d086A0
+ring-clear-color=c1caabA0
+ring-ver-color=384d12A0
 ring-wrong-color=ffb4abA0
 
-key-hl-color=e9e0e7
+key-hl-color=e3e3d8
 bs-hl-color=ffb4ab
 
-text-color=e9e0e7
-text-clear-color=392c3e
-text-ver-color=f6d9ff
+text-color=e3e3d8
+text-clear-color=2b331d
+text-ver-color=d1eca0
 text-wrong-color=690005
 
 line-color=00000000

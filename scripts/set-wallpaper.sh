@@ -66,13 +66,29 @@ output_path = '/home/dzhon/.config/qt5ct/colors/matugen.conf'
 input_path = '/home/dzhon/Documents/dotfileSway/templates/qtct-colors.conf'
 output_path = '/home/dzhon/.config/qt6ct/colors/matugen.conf'
 
+[templates.kdeglobals]
+input_path = '/home/dzhon/Documents/dotfileSway/templates/qtct-colors.conf'
+output_path = '/home/dzhon/.config/kdeglobals'
+
 [templates.kitty]
 input_path = '/home/dzhon/Documents/dotfileSway/templates/kitty.conf'
 output_path = '/home/dzhon/.config/kitty/dank-theme.conf'
 
 [templates.foot]
 input_path = '/home/dzhon/Documents/dotfileSway/templates/foot.ini'
-output_path = '/home/dzhon/.config/foot/foot.ini'
+output_path = '/home/dzhon/.config/foot/dank-colors.ini'
+
+[templates.swaylock]
+input_path = '/home/dzhon/Documents/dotfileSway/templates/swaylock.conf'
+output_path = '/home/dzhon/.config/swaylock/config'
+
+[templates.sway]
+input_path = '/home/dzhon/Documents/dotfileSway/templates/sway-colors'
+output_path = '/home/dzhon/.config/sway/dank-colors'
+
+[templates.dunst]
+input_path = '/home/dzhon/Documents/dotfileSway/templates/dunstrc'
+output_path = '/home/dzhon/.config/dunst/dunstrc'
 EOF
 
 # ── 4. Ejecutar Matugen standalone ──────────────────────────────
@@ -83,26 +99,55 @@ rm -f "$HOME/.config/gtk-3.0/gtk.css" "$HOME/.config/gtk-4.0/gtk.css"
 echo '@import url("dank-colors.css");' > "$HOME/.config/gtk-3.0/gtk.css"
 echo '@import url("dank-colors.css");' > "$HOME/.config/gtk-4.0/gtk.css"
 
-# ── 6. Sincronizar copias en el repositorio de dotfiles ──────────
-DOTFILES_DIR="$HOME/Documents/dotfileSway"
-if [ -d "$DOTFILES_DIR" ]; then
-    mkdir -p "$DOTFILES_DIR/config/gtk-3.0" "$DOTFILES_DIR/config/gtk-4.0" "$DOTFILES_DIR/config/zed/themes"
-    cp -f "$HOME/.config/gtk-3.0/dank-colors.css" "$DOTFILES_DIR/config/gtk-3.0/dank-colors.css"
-    cp -f "$HOME/.config/gtk-4.0/dank-colors.css" "$DOTFILES_DIR/config/gtk-4.0/dank-colors.css"
-    cp -f "$HOME/.config/zed/themes/dank-zed-theme.json" "$DOTFILES_DIR/config/zed/themes/dank-zed-theme.json"
+# ── 6. Sincronizar color de iconos con la paleta actual ─────────
+if [ -f "$HOME/.local/bin/sync-icon-color.py" ]; then
+    python3 "$HOME/.local/bin/sync-icon-color.py" || true
 fi
 
-# ── 7. Refrescar GTK en tiempo real vía D-Bus ───────────────────
+# ── 7. Asegurar estilo Qt en Fusion, Papirus-Dark y kdeglobals ──
+sed -i 's/^style=.*/style=Fusion/' "$HOME/.config/qt5ct/qt5ct.conf" 2>/dev/null || true
+sed -i 's/^style=.*/style=Fusion/' "$HOME/.config/qt6ct/qt6ct.conf" 2>/dev/null || true
+sed -i 's/^icon_theme=.*/icon_theme=Papirus-Dark/' "$HOME/.config/qt5ct/qt5ct.conf" 2>/dev/null || true
+sed -i 's/^icon_theme=.*/icon_theme=Papirus-Dark/' "$HOME/.config/qt6ct/qt6ct.conf" 2>/dev/null || true
+
+# ── 8. Recargar componentes del escritorio y Foot ───────────────
+pkill -SIGUSR2 waybar 2>/dev/null || true
+pkill -SIGUSR1 foot 2>/dev/null || true
+if pgrep -x sway &>/dev/null; then
+    swaymsg reload 2>/dev/null || true
+fi
+if pgrep -x dunst &>/dev/null; then
+    killall dunst 2>/dev/null || true
+    dunst &>/dev/null &
+fi
+
+# ── 9. Sincronizar copias en el repositorio de dotfiles ──────────
+DOTFILES_DIR="$HOME/Documents/dotfileSway"
+if [ -d "$DOTFILES_DIR" ]; then
+    mkdir -p "$DOTFILES_DIR/config/gtk-3.0" "$DOTFILES_DIR/config/gtk-4.0" "$DOTFILES_DIR/config/zed/themes" "$DOTFILES_DIR/config/foot" "$DOTFILES_DIR/scripts" "$DOTFILES_DIR/config/qt5ct" "$DOTFILES_DIR/config/qt6ct"
+    cp -f "$HOME/.config/gtk-3.0/dank-colors.css" "$DOTFILES_DIR/config/gtk-3.0/dank-colors.css"
+    cp -f "$HOME/.config/gtk-4.0/dank-colors.css" "$DOTFILES_DIR/config/gtk-4.0/dank-colors.css"
+    cp -f "$HOME/.config/gtk-3.0/settings.ini" "$DOTFILES_DIR/config/gtk-3.0/settings.ini"
+    cp -f "$HOME/.config/gtk-4.0/settings.ini" "$DOTFILES_DIR/config/gtk-4.0/settings.ini"
+    cp -f "$HOME/.config/qt5ct/qt5ct.conf" "$DOTFILES_DIR/config/qt5ct/qt5ct.conf"
+    cp -f "$HOME/.config/qt6ct/qt6ct.conf" "$DOTFILES_DIR/config/qt6ct/qt6ct.conf"
+    cp -f "$HOME/.config/zed/themes/dank-zed-theme.json" "$DOTFILES_DIR/config/zed/themes/dank-zed-theme.json"
+    cp -f "$HOME/.config/foot/foot.ini" "$DOTFILES_DIR/config/foot/foot.ini"
+    cp -f "$HOME/.local/bin/sync-icon-color.py" "$DOTFILES_DIR/scripts/sync-icon-color.py"
+fi
+
+# ── 10. Refrescar GTK e Iconos en tiempo real vía D-Bus ──────────
 unset GTK_THEME 2>/dev/null || true
+gsettings set org.gnome.desktop.interface icon-theme 'Papirus-Dark' 2>/dev/null || true
 gsettings set org.gnome.desktop.interface gtk-theme 'adw-gtk3' 2>/dev/null || true
 gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark' 2>/dev/null || true
 gsettings set org.gnome.desktop.interface gtk-theme 'Adwaita' 2>/dev/null || true
 sleep 0.1
 gsettings set org.gnome.desktop.interface gtk-theme 'adw-gtk3' 2>/dev/null || true
 
-# ── 8. Notificación ──────────────────────────────────────────────
+# ── 11. Notificación ──────────────────────────────────────────────
 if command -v dunstify &>/dev/null; then
-    dunstify -a "DMS Matugen" -r 8812 "🎨 Tema Dinámico Aplicado" "GTK (Widgets completos), Qt, VSCode y Zed actualizados"
+    dunstify -a "DMS Matugen" -r 8812 "🎨 Tema Dinámico Aplicado" "Sway, Waybar, Foot, Qt, Iconos, Swaylock, Wofi y GTK sincronizados" || true
 fi
 
-echo "✅ Tema dinámico Dank aplicado exitosamente (Widgets GTK completos)."
+echo "✅ Tema dinámico Dank aplicado exitosamente a todo el escritorio."
