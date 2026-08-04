@@ -90,15 +90,15 @@ alias ip='ip -c'
 alias reload='source ~/.zshrc && echo "✅ .zshrc recargado"'
 
 # Dotfiles management
-alias dotfiles='cd ~/Documents/dotfileSway'
-alias dots-update='bash ~/Documents/dotfileSway/update_dotfiles.sh'
-alias dots-apply='bash ~/Documents/dotfileSway/setup.sh'
+alias dotfiles='cd ~/Documentos/Github/dotfileSway'
+alias dots-update='bash ~/Documentos/Github/dotfileSway/update_dotfiles.sh'
+alias dots-apply='bash ~/Documentos/Github/dotfileSway/setup.sh'
 alias wallpaper='~/.local/bin/set-wallpaper.sh'
 
 # Apps personales
-alias tidal='cd /home/dzhon/Documents/Github/tuidal && uv run tidal_tui'
-alias chatia='cd /home/dzhon/Documents/Github/chatia && uv run chatia'
-alias anti='/home/dzhon/Aplicaciones/Antigravity/Antigravity-x64/antigravity'
+alias tidal='cd ~/Documentos/Github/tuidal && uv run tidal_tui'
+alias chatia='cd ~/Documentos/Github/chatia && uv run chatia'
+alias anti='~/Aplicaciones/Antigravity/Antigravity-x64/antigravity'
 
 # Sway
 alias sway-reload='swaymsg reload'

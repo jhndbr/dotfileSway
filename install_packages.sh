@@ -21,6 +21,16 @@ echo "║  📦 Instalando dependencias del entorno Sway               ║"
 echo "╚══════════════════════════════════════════════════════════════╝"
 echo -e "${NC}"
 
+# ── Configuración regional (Locales) ───────────────────────────
+echo -e "${BLUE}▶ Generando locales del sistema (es_AR.UTF-8 / en_US.UTF-8)...${NC}"
+sudo sed -i 's/#es_AR.UTF-8 UTF-8/es_AR.UTF-8 UTF-8/' /etc/locale.gen
+sudo sed -i 's/#en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen
+sudo locale-gen
+echo "LANG=es_AR.UTF-8" | sudo tee /etc/locale.conf
+
+# ── Herramientas base de compilación ───────────────────────────
+sudo pacman -S --needed --noconfirm base-devel git
+
 # ── Paquetes principales (pacman) ───────────────────────────────
 PACKAGES=(
     # Entorno principal y UI
@@ -33,7 +43,6 @@ PACKAGES=(
     foot
     dunst
     kanshi
-    wlogout
 
     # Capturas de pantalla e historial de portapapeles
     grim
@@ -111,23 +120,25 @@ if ! command -v papirus-folders &>/dev/null; then
     chmod +x "$HOME/.local/bin/papirus-folders"
 fi
 
-# ── Paquetes AUR (con yay) ──────────────────────────────────────
+# ── Helper de AUR (yay) y Paquetes AUR ──────────────────────────
 echo ""
-if command -v yay &> /dev/null; then
-    echo -e "${BLUE}▶ Instalando paquetes AUR con yay...${NC}"
-
-    AUR_PACKAGES=(
-        # Shell
-        zsh-autosuggestions
-        zsh-syntax-highlighting
-        papirus-folders-git
-    )
-
-    yay -S --needed --noconfirm "${AUR_PACKAGES[@]}" 2>/dev/null || true
-else
-    echo -e "${YELLOW}⚠  yay no está instalado. Para instalar paquetes AUR, instalá yay primero:${NC}"
-    echo -e "   ${BLUE}git clone https://aur.archlinux.org/yay.git && cd yay && makepkg -si${NC}"
+echo -e "${BLUE}▶ Verificando instalador de AUR (yay)...${NC}"
+if ! command -v yay &> /dev/null; then
+    echo -e "${YELLOW}▶ yay no encontrado. Instalando yay-bin desde AUR...${NC}"
+    git clone https://aur.archlinux.org/yay-bin.git /tmp/yay-bin
+    (cd /tmp/yay-bin && makepkg -si --noconfirm)
+    rm -rf /tmp/yay-bin
 fi
+
+echo -e "${BLUE}▶ Instalando wlogout y paquetes AUR con yay...${NC}"
+AUR_PACKAGES=(
+    wlogout
+    zsh-autosuggestions
+    zsh-syntax-highlighting
+    papirus-folders-git
+)
+
+yay -S --needed --noconfirm "${AUR_PACKAGES[@]}"
 
 # ── Oh My Zsh ──────────────────────────────────────────────────
 echo ""

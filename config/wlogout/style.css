@@ -40,7 +40,7 @@ button:focus, button:active, button:hover {
 
 /* Lock — Primary Matugen Accent */
 #lock {
-    background-image: image(url("/home/dzhon/.config/wlogout/icons/lock.svg"));
+    background-image: image(url("icons/lock.svg"));
 }
 #lock:hover {
     background-color: alpha(@accent_bg_color, 0.25);
@@ -50,7 +50,7 @@ button:focus, button:active, button:hover {
 
 /* Logout — Gold Amber */
 #logout {
-    background-image: image(url("/home/dzhon/.config/wlogout/icons/logout.svg"));
+    background-image: image(url("icons/logout.svg"));
 }
 #logout:hover {
     background-color: rgba(255, 214, 10, 0.25);
@@ -60,7 +60,7 @@ button:focus, button:active, button:hover {
 
 /* Suspend — Sky Blue */
 #suspend {
-    background-image: image(url("/home/dzhon/.config/wlogout/icons/suspend.svg"));
+    background-image: image(url("icons/suspend.svg"));
 }
 #suspend:hover {
     background-color: rgba(10, 132, 255, 0.25);
@@ -70,7 +70,7 @@ button:focus, button:active, button:hover {
 
 /* Hibernate — Purple Lavender */
 #hibernate {
-    background-image: image(url("/home/dzhon/.config/wlogout/icons/hibernate.svg"));
+    background-image: image(url("icons/hibernate.svg"));
 }
 #hibernate:hover {
     background-color: rgba(191, 90, 242, 0.25);
@@ -80,7 +80,7 @@ button:focus, button:active, button:hover {
 
 /* Reboot — Electric Cyan */
 #reboot {
-    background-image: image(url("/home/dzhon/.config/wlogout/icons/reboot.svg"));
+    background-image: image(url("icons/reboot.svg"));
 }
 #reboot:hover {
     background-color: rgba(50, 173, 230, 0.25);
@@ -90,7 +90,7 @@ button:focus, button:active, button:hover {
 
 /* Shutdown — Crimson Coral Red */
 #shutdown {
-    background-image: image(url("/home/dzhon/.config/wlogout/icons/shutdown.svg"));
+    background-image: image(url("icons/shutdown.svg"));
 }
 #shutdown:hover {
     background-color: alpha(@destructive_bg_color, 0.30);

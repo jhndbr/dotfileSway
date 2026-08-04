@@ -75,15 +75,26 @@ for item in "${CONFIGS[@]}"; do
     fi
 done
 
-# ── 5. Copiar archivos de home (.zshrc, .zprofile, .gitconfig) ──
+if [ -f "$HOME/.config/gtk-3.0/bookmarks" ]; then
+    sed -i "s|file:///home/[^/]*|file://$HOME|g" "$HOME/.config/gtk-3.0/bookmarks" 2>/dev/null || true
+fi
+
+# ── 5. Copiar archivos de home (.zshrc, .zprofile, .gitconfig, .p10k.zsh) ──
 echo ""
 echo -e "${CYAN}🏠 Aplicando configuraciones de home...${NC}"
-for file in .zshrc .zprofile .gitconfig; do
+for file in .zshrc .zprofile .gitconfig .p10k.zsh; do
     if [ -f "$SCRIPT_DIR/$file" ]; then
         echo -e "  ${GREEN}→${NC} Copiando ${BLUE}$file${NC}..."
         cp -f "$SCRIPT_DIR/$file" "$HOME/$file"
     fi
 done
+
+# Garantizar que .zshrc cargue la configuración de p10k
+if [ -f "$HOME/.zshrc" ]; then
+    if ! grep -q "source ~/.p10k.zsh" "$HOME/.zshrc"; then
+        echo '[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh' >> "$HOME/.zshrc"
+    fi
+fi
 
 # ── 6. Copiar scripts a ~/.local/bin ────────────────────────────
 if [ -d "$SCRIPT_DIR/scripts" ]; then

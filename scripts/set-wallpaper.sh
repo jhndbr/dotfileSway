@@ -51,56 +51,57 @@ mkdir -p "$HOME/.config/qt5ct/colors" "$HOME/.config/qt6ct/colors"
 mkdir -p "$HOME/.config/kitty" "$HOME/.config/foot"
 
 # Configuración de Matugen vinculando las plantillas de Dank Linux
-cat << 'EOF' > "$HOME/.config/matugen/config.toml"
+SCRIPT_DOTFILES="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+cat << EOF > "$HOME/.config/matugen/config.toml"
 [config]
 
 [templates.gtk3]
-input_path = '/home/dzhon/Documents/dotfileSway/templates/gtk-colors.css'
-output_path = '/home/dzhon/.config/gtk-3.0/dank-colors.css'
+input_path = '$SCRIPT_DOTFILES/templates/gtk-colors.css'
+output_path = '$HOME/.config/gtk-3.0/dank-colors.css'
 
 [templates.gtk4]
-input_path = '/home/dzhon/Documents/dotfileSway/templates/gtk-colors.css'
-output_path = '/home/dzhon/.config/gtk-4.0/dank-colors.css'
+input_path = '$SCRIPT_DOTFILES/templates/gtk-colors.css'
+output_path = '$HOME/.config/gtk-4.0/dank-colors.css'
 
 [templates.zed]
-input_path = '/home/dzhon/Documents/dotfileSway/templates/dank-zed.json'
-output_path = '/home/dzhon/.config/zed/themes/dank-zed-theme.json'
+input_path = '$SCRIPT_DOTFILES/templates/dank-zed.json'
+output_path = '$HOME/.config/zed/themes/dank-zed-theme.json'
 
 [templates.vscode]
-input_path = '/home/dzhon/Documents/dotfileSway/templates/vscode-color-theme-dark.json'
-output_path = '/home/dzhon/.vscode/extensions/danklinux.dms-theme-0.0.3/themes/dankshell-dark.json'
+input_path = '$SCRIPT_DOTFILES/templates/vscode-color-theme-dark.json'
+output_path = '$HOME/.vscode/extensions/danklinux.dms-theme-0.0.3/themes/dankshell-dark.json'
 
 [templates.qt5ct]
-input_path = '/home/dzhon/Documents/dotfileSway/templates/qtct-colors.conf'
-output_path = '/home/dzhon/.config/qt5ct/colors/matugen.conf'
+input_path = '$SCRIPT_DOTFILES/templates/qtct-colors.conf'
+output_path = '$HOME/.config/qt5ct/colors/matugen.conf'
 
 [templates.qt6ct]
-input_path = '/home/dzhon/Documents/dotfileSway/templates/qtct-colors.conf'
-output_path = '/home/dzhon/.config/qt6ct/colors/matugen.conf'
+input_path = '$SCRIPT_DOTFILES/templates/qtct-colors.conf'
+output_path = '$HOME/.config/qt6ct/colors/matugen.conf'
 
 [templates.kdeglobals]
-input_path = '/home/dzhon/Documents/dotfileSway/templates/qtct-colors.conf'
-output_path = '/home/dzhon/.config/kdeglobals'
+input_path = '$SCRIPT_DOTFILES/templates/qtct-colors.conf'
+output_path = '$HOME/.config/kdeglobals'
 
 [templates.kitty]
-input_path = '/home/dzhon/Documents/dotfileSway/templates/kitty.conf'
-output_path = '/home/dzhon/.config/kitty/dank-theme.conf'
+input_path = '$SCRIPT_DOTFILES/templates/kitty.conf'
+output_path = '$HOME/.config/kitty/dank-theme.conf'
 
 [templates.foot]
-input_path = '/home/dzhon/Documents/dotfileSway/templates/foot.ini'
-output_path = '/home/dzhon/.config/foot/dank-colors.ini'
+input_path = '$SCRIPT_DOTFILES/templates/foot.ini'
+output_path = '$HOME/.config/foot/dank-colors.ini'
 
 [templates.swaylock]
-input_path = '/home/dzhon/Documents/dotfileSway/templates/swaylock.conf'
-output_path = '/home/dzhon/.config/swaylock/config'
+input_path = '$SCRIPT_DOTFILES/templates/swaylock.conf'
+output_path = '$HOME/.config/swaylock/config'
 
 [templates.sway]
-input_path = '/home/dzhon/Documents/dotfileSway/templates/sway-colors'
-output_path = '/home/dzhon/.config/sway/dank-colors'
+input_path = '$SCRIPT_DOTFILES/templates/sway-colors'
+output_path = '$HOME/.config/sway/dank-colors'
 
 [templates.dunst]
-input_path = '/home/dzhon/Documents/dotfileSway/templates/dunstrc'
-output_path = '/home/dzhon/.config/dunst/dunstrc'
+input_path = '$SCRIPT_DOTFILES/templates/dunstrc'
+output_path = '$HOME/.config/dunst/dunstrc'
 EOF
 
 # ── 4. Ejecutar Matugen standalone importando dank16.json ───────
@@ -134,7 +135,7 @@ if pgrep -x dunst &>/dev/null; then
 fi
 
 # ── 9. Sincronizar copias en el repositorio de dotfiles ──────────
-DOTFILES_DIR="$HOME/Documents/dotfileSway"
+DOTFILES_DIR="$SCRIPT_DOTFILES"
 if [ -d "$DOTFILES_DIR" ]; then
     mkdir -p "$DOTFILES_DIR/config/gtk-3.0" "$DOTFILES_DIR/config/gtk-4.0" "$DOTFILES_DIR/config/zed/themes" "$DOTFILES_DIR/config/foot" "$DOTFILES_DIR/scripts" "$DOTFILES_DIR/config/qt5ct" "$DOTFILES_DIR/config/qt6ct"
     cp -f "$HOME/.config/gtk-3.0/dank-colors.css" "$DOTFILES_DIR/config/gtk-3.0/dank-colors.css"
