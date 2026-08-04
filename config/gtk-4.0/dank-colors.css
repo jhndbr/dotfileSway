@@ -1,43 +1,30 @@
-/*
-* GTK Colors
-* Generated with Matugen
-*/
+/* ╔══════════════════════════════════════════════════════════════╗
+   ║  GTK 3 & GTK 4 Dynamic Theme Template                        ║
+   ║  Material You / Dynamic Palette with Custom Widget Styles   ║
+   ╚══════════════════════════════════════════════════════════════╝ */
 
-/* via thairanaru on GitHub: */
-
-/* Destructive colors are basically error colors */
+/* ── Variables de Color Material You ───────────────────────────── */
 @define-color destructive_bg_color #ffb4ab;
 @define-color destructive_fg_color #690005;
-/* Follow material spec */
 @define-color error_bg_color #ffb4ab;
 @define-color error_fg_color #690005;
-/* Follow material spec (also I think looks nicer) */
 @define-color accent_fg_color #00363d;
 @define-color accent_bg_color #82d3e1;
-/* Use surface instead of background */
 @define-color window_bg_color #0e1415;
 @define-color window_fg_color #dee3e5;
-/* Make it more similar to Adwaita */
 @define-color view_bg_color #0e1415;
 @define-color view_fg_color #dee3e5;
 @define-color headerbar_bg_color #0e1415;
 @define-color headerbar_fg_color #dee3e5;
 @define-color sidebar_bg_color #1b2122;
 @define-color sidebar_fg_color #dee3e5;
-/* There is only like one application I know that uses this, and there isn't a good way to get
-a color between surface and surface container so I think just giving this surface is a good enough fallback*/
-@define-color secondary_sidebar_bg_color #0e1415;
-@define-color secondary_sidebar_fg_color #dee3e5;
 @define-color card_bg_color #1b2122;
 @define-color card_fg_color #dee3e5;
-@define-color overview_bg_color #1b2122;
-@define-color overview_fg_color #dee3e5;
 @define-color popover_bg_color #1b2122;
 @define-color popover_fg_color #dee3e5;
 @define-color dialog_bg_color #0e1415;
 @define-color dialog_fg_color #dee3e5;
 
-/* Backdrop/unfocused states - prevents white flash on window unfocus */
 @define-color headerbar_backdrop_color @window_bg_color;
 @define-color sidebar_backdrop_color @sidebar_bg_color;
 @define-color theme_unfocused_fg_color @window_fg_color;
@@ -47,20 +34,110 @@ a color between surface and surface container so I think just giving this surfac
 @define-color theme_unfocused_selected_bg_color @accent_bg_color;
 @define-color theme_unfocused_selected_fg_color @accent_fg_color;
 
+/* ── Estilos de Widgets Completos para GTK3 y GTK4 ─────────────── */
 
-/* Reglas explícitas para forzar paleta Matugen en widgets GTK3/GTK4 */
-window, .background, headerbar, .titlebar, actionbar, notebook, dialog {
+/* Ventanas y Contenedores */
+window, .background, body {
     background-color: @window_bg_color;
     color: @window_fg_color;
 }
 
-sidebar, .sidebar, treeview, list, row {
+/* Headerbars y Titlebars */
+headerbar, .titlebar, headerbar.titlebar {
+    background-color: @headerbar_bg_color;
+    color: @headerbar_fg_color;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Sidebars y Paneles Laterales */
+sidebar, .sidebar, stack > grid, .navigation-sidebar {
     background-color: @sidebar_bg_color;
     color: @sidebar_fg_color;
 }
 
-button.suggested-action, .accent {
-    background-color: @accent_bg_color;
-    color: @accent_fg_color;
+/* Botones Principales */
+button {
+    background-color: rgba(255, 255, 255, 0.06);
+    color: @window_fg_color;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 6px 12px;
+    transition: all 0.15s ease-in-out;
 }
 
+button:hover {
+    background-color: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.25);
+    color: #ffffff;
+}
+
+button:active, button:checked {
+    background-color: @accent_bg_color;
+    color: @accent_fg_color;
+    border-color: @accent_bg_color;
+}
+
+button.suggested-action {
+    background-color: @accent_bg_color;
+    color: @accent_fg_color;
+    border-color: @accent_bg_color;
+}
+
+button.suggested-action:hover {
+    filter: brightness(1.15);
+}
+
+button.destructive-action {
+    background-color: @destructive_bg_color;
+    color: @destructive_fg_color;
+    border-color: @destructive_bg_color;
+}
+
+/* Inputs / Campos de Texto */
+entry, textview text {
+    background-color: rgba(255, 255, 255, 0.04);
+    color: @window_fg_color;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 6px 10px;
+}
+
+entry:focus {
+    border-color: @accent_bg_color;
+    box-shadow: 0 0 0 1px @accent_bg_color;
+}
+
+/* Listas y Filas Seleccionadas */
+row:selected, treeview.view:selected, list > row:selected {
+    background-color: rgba(255, 255, 255, 0.12);
+    color: #ffffff;
+}
+
+/* Interruptores (Switches) */
+switch {
+    background-color: rgba(255, 255, 255, 0.12);
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+switch:checked {
+    background-color: @accent_bg_color;
+    border-color: @accent_bg_color;
+}
+
+switch slider {
+    background-color: #ffffff;
+    border-radius: 50%;
+}
+
+/* Barras de Desplazamiento (Scrollbars) */
+scrollbar slider {
+    min-width: 6px;
+    min-height: 6px;
+    border-radius: 4px;
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+scrollbar slider:hover {
+    background-color: @accent_bg_color;
+}

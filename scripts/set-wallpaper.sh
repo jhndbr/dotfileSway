@@ -78,35 +78,7 @@ EOF
 # ── 4. Ejecutar Matugen standalone ──────────────────────────────
 matugen image "$TARGET_WALLPAPER" -m dark --source-color-index 0 --import-json /tmp/dank16.json
 
-# ── 5. Inyectar reglas explícitas para componentes GTK3/GTK4 ────
-GTK_OVERRIDES='
-
-/* Reglas explícitas para forzar paleta Matugen en widgets GTK3/GTK4 */
-window, .background, headerbar, .titlebar, actionbar, notebook, dialog {
-    background-color: @window_bg_color;
-    color: @window_fg_color;
-}
-
-sidebar, .sidebar, treeview, list, row {
-    background-color: @sidebar_bg_color;
-    color: @sidebar_fg_color;
-}
-
-button.suggested-action, .accent {
-    background-color: @accent_bg_color;
-    color: @accent_fg_color;
-}
-'
-
-if [ -f "$HOME/.config/gtk-3.0/dank-colors.css" ]; then
-    echo "$GTK_OVERRIDES" >> "$HOME/.config/gtk-3.0/dank-colors.css"
-fi
-
-if [ -f "$HOME/.config/gtk-4.0/dank-colors.css" ]; then
-    echo "$GTK_OVERRIDES" >> "$HOME/.config/gtk-4.0/dank-colors.css"
-fi
-
-# Vinculación de gtk.css
+# ── 5. Vincular gtk.css en GTK 3 y GTK 4 ─────────────────────────
 rm -f "$HOME/.config/gtk-3.0/gtk.css" "$HOME/.config/gtk-4.0/gtk.css"
 echo '@import url("dank-colors.css");' > "$HOME/.config/gtk-3.0/gtk.css"
 echo '@import url("dank-colors.css");' > "$HOME/.config/gtk-4.0/gtk.css"
@@ -130,7 +102,7 @@ gsettings set org.gnome.desktop.interface gtk-theme 'adw-gtk3' 2>/dev/null || tr
 
 # ── 8. Notificación ──────────────────────────────────────────────
 if command -v dunstify &>/dev/null; then
-    dunstify -a "DMS Matugen" -r 8812 "🎨 Tema Dinámico Standalone" "GTK, Qt, VSCode, Zed y Terminales actualizados desde el wallpaper"
+    dunstify -a "DMS Matugen" -r 8812 "🎨 Tema Dinámico Aplicado" "GTK (Widgets completos), Qt, VSCode y Zed actualizados"
 fi
 
-echo "✅ Tema dinámico Dank aplicado exitosamente sin DMS."
+echo "✅ Tema dinámico Dank aplicado exitosamente (Widgets GTK completos)."
