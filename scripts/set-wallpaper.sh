@@ -38,9 +38,18 @@ echo "🎨 Generando paleta de colores dinámicas desde: $WALLPAPER_INPUT..."
 
 # ── 2. Extraer colores con Pywal (sin secuencias de escape OSC 4) ─
 rm -rf "$HOME/.cache/wal/colors.json" 2>/dev/null || true
-wal -i "$CONVERTED_PNG" -n -q -s -t || true
-if [ -f "$HOME/.local/bin/generate-dank16.py" ]; then
-    python3 "$HOME/.local/bin/generate-dank16.py" || true
+wal -i "$CONVERTED_PNG" -n -q -s -t 2>/dev/null || true
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+GEN_DANK16=""
+if [ -f "$SCRIPT_DIR/generate-dank16.py" ]; then
+    GEN_DANK16="$SCRIPT_DIR/generate-dank16.py"
+elif [ -f "$HOME/.local/bin/generate-dank16.py" ]; then
+    GEN_DANK16="$HOME/.local/bin/generate-dank16.py"
+fi
+
+if [ -n "$GEN_DANK16" ]; then
+    python3 "$GEN_DANK16" || true
 fi
 
 # ── 3. Asegurar estructura de plantillas y configuración Matugen ─
@@ -104,8 +113,12 @@ input_path = '$SCRIPT_DOTFILES/templates/dunstrc'
 output_path = '$HOME/.config/dunst/dunstrc'
 EOF
 
-# ── 4. Ejecutar Matugen standalone importando dank16.json ───────
-matugen image "$CONVERTED_PNG" -m dark --source-color-index 0 --import-json /tmp/dank16.json
+# ── 4. Ejecutar Matugen standalone importando dank16.json si existe ───────
+if [ -f "/tmp/dank16.json" ]; then
+    matugen image "$CONVERTED_PNG" -m dark --source-color-index 0 --import-json /tmp/dank16.json
+else
+    matugen image "$CONVERTED_PNG" -m dark --source-color-index 0
+fi
 
 # ── 5. Vincular gtk.css en GTK 3 y GTK 4 ─────────────────────────
 rm -f "$HOME/.config/gtk-3.0/gtk.css" "$HOME/.config/gtk-4.0/gtk.css"

@@ -100,7 +100,7 @@ fi
 if [ -d "$SCRIPT_DIR/scripts" ]; then
     echo ""
     echo -e "${CYAN}⚡ Instalando scripts utilitarios...${NC}"
-    for script in "$SCRIPT_DIR/scripts/"*.sh; do
+    for script in "$SCRIPT_DIR/scripts/"*; do
         if [ -f "$script" ]; then
             script_name=$(basename "$script")
             echo -e "  ${GREEN}→${NC} Instalando ${BLUE}$script_name${NC}..."
