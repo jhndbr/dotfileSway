@@ -96,6 +96,7 @@ PACKAGES=(
 
     # GTK / Qt / Dynamic Theming & Iconos
     adw-gtk-theme
+    breeze
     papirus-icon-theme
     adwaita-icon-theme
     adwaita-cursors
