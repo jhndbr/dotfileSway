@@ -85,7 +85,8 @@ PACKAGES=(
     noto-fonts-emoji
     noto-fonts-cjk
 
-    # GTK / Qt / Dynamic Theming
+    # GTK / Qt / Dynamic Theming & Iconos
+    papirus-icon-theme
     adwaita-icon-theme
     adwaita-cursors
     nwg-look
@@ -102,6 +103,14 @@ echo -e "${BLUE}▶ Instalando paquetes con pacman...${NC}"
 echo ""
 sudo pacman -S --needed --noconfirm "${PACKAGES[@]}"
 
+# ── Instalador de papirus-folders ──────────────────────────────
+if ! command -v papirus-folders &>/dev/null; then
+    echo -e "${BLUE}▶ Instalando script helper papirus-folders...${NC}"
+    mkdir -p "$HOME/.local/bin"
+    curl -sSLo "$HOME/.local/bin/papirus-folders" https://raw.githubusercontent.com/PapirusDevelopmentTeam/papirus-folders/master/papirus-folders
+    chmod +x "$HOME/.local/bin/papirus-folders"
+fi
+
 # ── Paquetes AUR (con yay) ──────────────────────────────────────
 echo ""
 if command -v yay &> /dev/null; then
@@ -111,6 +120,7 @@ if command -v yay &> /dev/null; then
         # Shell
         zsh-autosuggestions
         zsh-syntax-highlighting
+        papirus-folders-git
     )
 
     yay -S --needed --noconfirm "${AUR_PACKAGES[@]}" 2>/dev/null || true
