@@ -15,8 +15,17 @@ if [ ! -f "$WALLPAPER_INPUT" ]; then
 fi
 
 TARGET_WALLPAPER="$HOME/Pictures/1.jpg"
+CONVERTED_PNG="/tmp/wallpaper.png"
 
-# ── 1. Copiar y establecer fondo de pantalla en Sway ────────────
+# ── 1. Normalizar formato de imagen a PNG para evitar fallos en Matugen ──
+if command -v magick &>/dev/null; then
+    magick "$WALLPAPER_INPUT" "$CONVERTED_PNG" 2>/dev/null || cp -f "$WALLPAPER_INPUT" "$CONVERTED_PNG"
+elif command -v convert &>/dev/null; then
+    convert "$WALLPAPER_INPUT" "$CONVERTED_PNG" 2>/dev/null || cp -f "$WALLPAPER_INPUT" "$CONVERTED_PNG"
+else
+    cp -f "$WALLPAPER_INPUT" "$CONVERTED_PNG"
+fi
+
 if [ "$WALLPAPER_INPUT" != "$TARGET_WALLPAPER" ]; then
     cp -f "$WALLPAPER_INPUT" "$TARGET_WALLPAPER"
 fi
@@ -25,11 +34,14 @@ if command -v swaymsg &>/dev/null && pgrep -x sway &>/dev/null; then
     swaymsg "output * bg '$TARGET_WALLPAPER' fill" || true
 fi
 
-echo "🎨 Generando paleta de colores dinámicas desde: $TARGET_WALLPAPER..."
+echo "🎨 Generando paleta de colores dinámicas desde: $WALLPAPER_INPUT..."
 
-# ── 2. Extraer colores con Pywal y generar contexto Dank16 ───────
-wal -i "$TARGET_WALLPAPER" -n -q -s -t
-python3 "$HOME/.local/bin/generate-dank16.py"
+# ── 2. Extraer colores con Pywal (sin secuencias de escape OSC 4) ─
+rm -rf "$HOME/.cache/wal/colors.json" 2>/dev/null || true
+wal -i "$CONVERTED_PNG" -n -q -s -t || true
+if [ -f "$HOME/.local/bin/generate-dank16.py" ]; then
+    python3 "$HOME/.local/bin/generate-dank16.py" || true
+fi
 
 # ── 3. Asegurar estructura de plantillas y configuración Matugen ─
 mkdir -p "$HOME/.config/matugen"
@@ -91,15 +103,15 @@ input_path = '/home/dzhon/Documents/dotfileSway/templates/dunstrc'
 output_path = '/home/dzhon/.config/dunst/dunstrc'
 EOF
 
-# ── 4. Ejecutar Matugen standalone ──────────────────────────────
-matugen image "$TARGET_WALLPAPER" -m dark --source-color-index 0 --import-json /tmp/dank16.json
+# ── 4. Ejecutar Matugen standalone importando dank16.json ───────
+matugen image "$CONVERTED_PNG" -m dark --source-color-index 0 --import-json /tmp/dank16.json
 
 # ── 5. Vincular gtk.css en GTK 3 y GTK 4 ─────────────────────────
 rm -f "$HOME/.config/gtk-3.0/gtk.css" "$HOME/.config/gtk-4.0/gtk.css"
 echo '@import url("dank-colors.css");' > "$HOME/.config/gtk-3.0/gtk.css"
 echo '@import url("dank-colors.css");' > "$HOME/.config/gtk-4.0/gtk.css"
 
-# ── 6. Sincronizar color de iconos con la paleta actual ─────────
+# ── 6. Sincronizar color de iconos con la paleta de Matugen ─────
 if [ -f "$HOME/.local/bin/sync-icon-color.py" ]; then
     python3 "$HOME/.local/bin/sync-icon-color.py" || true
 fi
@@ -134,6 +146,7 @@ if [ -d "$DOTFILES_DIR" ]; then
     cp -f "$HOME/.config/zed/themes/dank-zed-theme.json" "$DOTFILES_DIR/config/zed/themes/dank-zed-theme.json"
     cp -f "$HOME/.config/foot/foot.ini" "$DOTFILES_DIR/config/foot/foot.ini"
     cp -f "$HOME/.local/bin/sync-icon-color.py" "$DOTFILES_DIR/scripts/sync-icon-color.py"
+    cp -f "$HOME/.local/bin/set-wallpaper.sh" "$DOTFILES_DIR/scripts/set-wallpaper.sh" 2>/dev/null || true
 fi
 
 # ── 10. Refrescar GTK e Iconos en tiempo real vía D-Bus ──────────
