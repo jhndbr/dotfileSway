@@ -7,23 +7,23 @@
 @define-color destructive_fg_color #690005;
 @define-color error_bg_color #ffb4ab;
 @define-color error_fg_color #690005;
-@define-color accent_fg_color #472150;
-@define-color accent_bg_color #e9b5ef;
-@define-color accent_color #e9b5ef;
-@define-color window_bg_color #171217;
-@define-color window_fg_color #eadfe7;
-@define-color view_bg_color #171217;
-@define-color view_fg_color #eadfe7;
-@define-color headerbar_bg_color #171217;
-@define-color headerbar_fg_color #eadfe7;
-@define-color sidebar_bg_color #231e23;
-@define-color sidebar_fg_color #eadfe7;
-@define-color card_bg_color #231e23;
-@define-color card_fg_color #eadfe7;
-@define-color popover_bg_color #231e23;
-@define-color popover_fg_color #eadfe7;
-@define-color dialog_bg_color #171217;
-@define-color dialog_fg_color #eadfe7;
+@define-color accent_fg_color #003355;
+@define-color accent_bg_color #9dcbfb;
+@define-color accent_color #9dcbfb;
+@define-color window_bg_color #101418;
+@define-color window_fg_color #e0e2e8;
+@define-color view_bg_color #101418;
+@define-color view_fg_color #e0e2e8;
+@define-color headerbar_bg_color #101418;
+@define-color headerbar_fg_color #e0e2e8;
+@define-color sidebar_bg_color #1d2024;
+@define-color sidebar_fg_color #e0e2e8;
+@define-color card_bg_color #1d2024;
+@define-color card_fg_color #e0e2e8;
+@define-color popover_bg_color #1d2024;
+@define-color popover_fg_color #e0e2e8;
+@define-color dialog_bg_color #101418;
+@define-color dialog_fg_color #e0e2e8;
 
 /*
 * GTK Colors
@@ -7811,11 +7811,11 @@ window.background:not(.solid-csd):not(.csd) > notebook > stack:not(:only-child) 
   background-color: @button_active_bg_color;
 }
 
-@define-color button_bg_color #2e282d;
-@define-color button_fg_color #eadfe7;
-@define-color button_hover_bg_color #393338;
-@define-color button_active_bg_color #603768;
-@define-color button_active_fg_color #fdd6ff;
+@define-color button_bg_color #272a2f;
+@define-color button_fg_color #e0e2e8;
+@define-color button_hover_bg_color #32353a;
+@define-color button_active_bg_color #124a73;
+@define-color button_active_fg_color #cfe5ff;
 
 /* Matugen Colors */
 

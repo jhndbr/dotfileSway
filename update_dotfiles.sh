@@ -29,7 +29,7 @@ mkdir -p "$DOTFILES_DIR/wallpapers"
 mkdir -p "$DOTFILES_DIR/scripts"
 
 # ── 2. Sincronizar configuraciones del entorno ──────────────────
-CONFIGS=(sway waybar wofi dunst foot swaylock kanshi wlogout gammastep gtk-3.0 gtk-4.0 environment.d)
+CONFIGS=(sway waybar wofi dunst foot swaylock kanshi wlogout gammastep gtk-3.0 gtk-4.0 environment.d qt5ct qt6ct matugen zed)
 
 for app in "${CONFIGS[@]}"; do
     if [ -d "$CONFIG_DIR/$app" ]; then

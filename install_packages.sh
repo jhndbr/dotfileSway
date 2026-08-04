@@ -85,12 +85,14 @@ PACKAGES=(
     noto-fonts-emoji
     noto-fonts-cjk
 
-    # GTK / Qt theming
+    # GTK / Qt / Dynamic Theming
     adwaita-icon-theme
     adwaita-cursors
     nwg-look
     qt5ct
     qt6ct
+    matugen
+    python-pywal
 
     # Shell
     zsh

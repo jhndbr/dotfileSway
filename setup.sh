@@ -48,7 +48,7 @@ mkdir -p ~/.local/bin
 echo -e "${YELLOW}📦 Creando backup en $BACKUP_DIR${NC}"
 mkdir -p "$BACKUP_DIR"
 
-CONFIGS=(sway waybar wofi dunst foot swaylock kanshi wlogout gammastep gtk-3.0 gtk-4.0 environment.d)
+CONFIGS=(sway waybar wofi dunst foot swaylock kanshi wlogout gammastep gtk-3.0 gtk-4.0 environment.d qt5ct qt6ct matugen zed)
 
 for item in "${CONFIGS[@]}"; do
     if [ -d "$HOME/.config/$item" ]; then
