@@ -133,6 +133,7 @@ fi
 echo -e "${BLUE}▶ Instalando wlogout y paquetes AUR con yay...${NC}"
 AUR_PACKAGES=(
     wlogout
+    adw-gtk3
     zsh-autosuggestions
     zsh-syntax-highlighting
     papirus-folders-git

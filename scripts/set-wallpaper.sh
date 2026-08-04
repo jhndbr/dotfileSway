@@ -174,14 +174,14 @@ if [ -d "$DOTFILES_DIR" ]; then
     cp -f "$HOME/.local/bin/set-wallpaper.sh" "$DOTFILES_DIR/scripts/set-wallpaper.sh" 2>/dev/null || true
 fi
 
-# ── 10. Refrescar GTK e Iconos en tiempo real vía D-Bus ──────────
+# ── 10. Refrescar GTK, Tipografía e Iconos en tiempo real vía D-Bus ─
 unset GTK_THEME 2>/dev/null || true
+gsettings set org.gnome.desktop.interface font-name 'Inter 10' 2>/dev/null || true
+gsettings set org.gnome.desktop.interface monospace-font-name 'JetBrainsMono Nerd Font 10' 2>/dev/null || true
+gsettings set org.gnome.desktop.interface document-font-name 'Inter 10' 2>/dev/null || true
 gsettings set org.gnome.desktop.interface icon-theme 'Papirus-Dark' 2>/dev/null || true
-gsettings set org.gnome.desktop.interface gtk-theme 'adw-gtk3' 2>/dev/null || true
 gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark' 2>/dev/null || true
-gsettings set org.gnome.desktop.interface gtk-theme 'Adwaita' 2>/dev/null || true
-sleep 0.1
-gsettings set org.gnome.desktop.interface gtk-theme 'adw-gtk3' 2>/dev/null || true
+gsettings set org.gnome.desktop.interface gtk-theme 'adw-gtk3-dark' 2>/dev/null || gsettings set org.gnome.desktop.interface gtk-theme 'adw-gtk3' 2>/dev/null || true
 
 # ── 11. Notificación ──────────────────────────────────────────────
 if command -v dunstify &>/dev/null; then
