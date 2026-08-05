@@ -67,10 +67,14 @@ PACKAGES=(
     # Portales e integración Wayland
     xdg-desktop-portal
     xdg-desktop-portal-wlr
+    xdg-desktop-portal-gtk  # Selector de archivos nativo (Nautilus/Firefox)
 
     # Administrador de archivos
-    thunar
-    gvfs
+    nautilus          # GTK4 - tema dinámico automático
+    gvfs              # Montaje de URIs
+    gvfs-mtp          # Dispositivos Android/MTP
+    gvfs-smb          # Carpetas compartidas de red
+    sushi             # Vista previa rápida (Espacio)
 
     # Filtro de luz azul
     gammastep

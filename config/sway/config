@@ -90,7 +90,7 @@ bindsym $mod+v exec cliphist list | wofi --dmenu --prompt "Clipboard" | cliphist
 bindsym $mod+Return exec $term
 
 # Administrador de archivos
-bindsym $mod+e exec thunar
+bindsym $mod+e exec nautilus
 
 # Drag / Resize con mouse
 floating_modifier $mod normal
@@ -216,8 +216,7 @@ for_window [app_id="pavucontrol"] floating enable, resize set 750 550, move posi
 for_window [app_id="nm-connection-editor"] floating enable, move position center
 for_window [app_id="blueman-manager"] floating enable, move position center
 for_window [app_id="org.gnome.Calculator"] floating enable, move position center
-for_window [app_id="org.gnome.Nautilus"] floating enable, resize set 900 600, move position center
-for_window [app_id="thunar"] floating enable, resize set 900 600, move position center
+for_window [app_id="org.gnome.Nautilus"] floating enable, resize set 1000 650, move position center
 for_window [app_id="imv"] floating enable
 for_window [app_id="mpv"] floating enable, resize set 960 540, move position center
 for_window [app_id="wlogout"] fullscreen enable

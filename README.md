@@ -91,7 +91,7 @@ bash setup.sh
 | `Mod+Return` | Terminal (foot) |
 | `Mod+A` | Lanzador de aplicaciones (Wofi) |
 | `Mod+Q` | Cerrar ventana |
-| `Mod+E` | Administrador de archivos |
+| `Mod+E` | Gestor de archivos (Nautilus) |
 | `Mod+Escape` | Bloquear pantalla |
 | `Mod+Shift+E` | Menú de apagado (wlogout) |
 | `Mod+V` | Historial de portapapeles |
@@ -130,7 +130,7 @@ El script `install_packages.sh` instala todo lo necesario:
 | **Audio** | pipewire, wireplumber, pavucontrol |
 | **Red** | networkmanager, blueman |
 | **Screen** | grim, slurp, wl-clipboard, cliphist |
-| **Archivos** | thunar, gvfs |
+| **Archivos** | nautilus, gvfs, gvfs-mtp, gvfs-smb |
 | **CLI** | bat, eza, fd, ripgrep, zoxide, fzf |
 | **Fuentes** | JetBrains Mono Nerd, Inter, Noto |
 | **Shell** | zsh, oh-my-zsh, powerlevel10k |
