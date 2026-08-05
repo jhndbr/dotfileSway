@@ -68,6 +68,7 @@ tooltip label {
 #custom-media,
 #quicksettings,
 #controls,
+#hardware,
 #tray,
 #custom-power {
     background: @bg_pill;
@@ -85,6 +86,7 @@ tooltip label {
 #custom-media:hover,
 #quicksettings:hover,
 #controls:hover,
+#hardware:hover,
 #custom-power:hover {
     background: @bg_pill_hover;
     border-color: alpha(@accent_color, 0.40);

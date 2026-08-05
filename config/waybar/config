@@ -25,6 +25,7 @@
         "tray",
         "group/quicksettings",
         "group/controls",
+        "group/hardware",
         "custom/power"
     ],
 
@@ -142,15 +143,14 @@
         "tooltip": true
     },
 
-    /* ── Controls Group (Network, Brightness, Audio, Battery, Hardware) ── */
+    /* ── Controls Group (Network, Brightness, Audio, Battery) ─────── */
     "group/controls": {
         "orientation": "horizontal",
         "modules": [
             "group/network",
             "group/backlight",
             "group/audio",
-            "group/battery",
-            "group/hardware"
+            "group/battery"
         ]
     },
 
@@ -283,7 +283,7 @@
         "interval": 10
     },
 
-    /* ── Hardware Drawer Group ───────────────────────────────────── */
+    /* ── Hardware System Info Separate Group ─────────────────────── */
     "group/hardware": {
         "orientation": "horizontal",
         "drawer": {
