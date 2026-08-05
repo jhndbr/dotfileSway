@@ -131,10 +131,12 @@ else
     matugen image "$CONVERTED_PNG" -m dark --source-color-index 0
 fi
 
-# ── 5. Vincular gtk.css en GTK 3 y GTK 4 ─────────────────────────
-rm -f "$HOME/.config/gtk-3.0/gtk.css" "$HOME/.config/gtk-4.0/gtk.css"
+# ── 5. Vincular gtk.css y gtk-dark.css en GTK 3 y GTK 4 ─────────
+rm -f "$HOME/.config/gtk-3.0/gtk.css" "$HOME/.config/gtk-4.0/gtk.css" "$HOME/.config/gtk-4.0/gtk-dark.css"
 echo '@import url("dank-colors.css");' > "$HOME/.config/gtk-3.0/gtk.css"
 echo '@import url("dank-colors.css");' > "$HOME/.config/gtk-4.0/gtk.css"
+echo '@import url("dank-colors.css");' > "$HOME/.config/gtk-4.0/gtk-dark.css"
+
 
 # ── 6. Sincronizar color de iconos con la paleta de Matugen ─────
 if [ -f "$HOME/.local/bin/sync-icon-color.py" ]; then

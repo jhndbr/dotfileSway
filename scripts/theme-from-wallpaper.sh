@@ -60,9 +60,12 @@ if [ -f "$HOME/.config/gtk-4.0/dank-colors.css" ]; then
     echo "$GTK_OVERRIDES" >> "$HOME/.config/gtk-4.0/dank-colors.css"
 fi
 
-# 4. Asegurar que gtk.css en GTK 4 tenga importación directa
+# 4. Asegurar que gtk.css y gtk-dark.css en GTK 4 tengan importación directa
 mkdir -p "$HOME/.config/gtk-4.0"
+rm -f "$HOME/.config/gtk-4.0/gtk-dark.css"
 echo '@import url("dank-colors.css");' > "$HOME/.config/gtk-4.0/gtk.css"
+echo '@import url("dank-colors.css");' > "$HOME/.config/gtk-4.0/gtk-dark.css"
+
 
 # 5. Recarga en tiempo real enviando evento D-Bus vía gsettings
 gsettings set org.gnome.desktop.interface gtk-theme 'Adwaita' 2>/dev/null || true
