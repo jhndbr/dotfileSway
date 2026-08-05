@@ -1,11 +1,11 @@
 /* ╔══════════════════════════════════════════════════════════════╗
-   ║    Wofi Style — Glassmorphism Matching Waybar Aesthetic     ║
+   ║    Wofi Style — Seamless Glassmorphism (No Black Corners)    ║
    ╚══════════════════════════════════════════════════════════════╝ */
 
 @import url("../gtk-3.0/dank-colors.css");
 
 /* ── Palette Aliases & Glass Tokens ──────────────────────────── */
-@define-color bg_card        alpha(@window_bg_color, 0.85);
+@define-color bg_card        alpha(@window_bg_color, 0.88);
 @define-color bg_pill       alpha(@window_fg_color, 0.07);
 @define-color bg_pill_hover alpha(@window_fg_color, 0.16);
 @define-color border_subtle alpha(@window_fg_color, 0.12);
@@ -15,32 +15,37 @@
 
 * {
     font-family: "Inter", "JetBrainsMono Nerd Font", sans-serif;
-    font-size: 13px;
+    font-size: 12.5px;
     font-weight: 500;
 }
 
-/* ── Main Window Container ─────────────────────────────────── */
+/* ── Root Window Container (Transparent to eliminate black corners) ── */
 window {
+    margin: 0px;
+    padding: 0px;
+    background-color: transparent;
+    border: none;
+}
+
+/* ── Outer Box (Applies true glass background & rounded corners) ──── */
+#outer-box {
+    margin: 0px;
+    padding: 12px;
     background-color: @bg_card;
-    border-radius: 12px;
+    border-radius: 6px;
     border: 1px solid alpha(@accent_color, 0.35);
     box-shadow: 0 12px 32px rgba(0, 0, 0, 0.50);
 }
 
-/* ── Outer Box Padding ──────────────────────────────────────── */
-#outer-box {
-    padding: 12px;
-}
-
-/* ── Search Input (Pill Style) ─────────────────────────────── */
+/* ── Search Input (Pill Style matching Waybar) ───────────────── */
 #input {
     margin-bottom: 10px;
-    padding: 10px 14px;
-    border-radius: 8px;
+    padding: 9px 12px;
+    border-radius: 5px;
     border: 1px solid @border_subtle;
     background-color: @bg_pill;
     color: @text_primary;
-    font-size: 13.5px;
+    font-size: 13px;
     outline: none;
     transition: all 0.2s ease;
 }
@@ -64,10 +69,10 @@ window {
     padding: 2px;
 }
 
-/* ── List Entries (Pill items) ──────────────────────────────── */
+/* ── List Entries (Pills matching Waybar radius 6px) ─────────── */
 #entry {
-    padding: 8px 12px;
-    border-radius: 7px;
+    padding: 7px 10px;
+    border-radius: 5px;
     color: @text_primary;
     margin: 2px 0;
     transition: all 0.15s ease;
@@ -83,7 +88,7 @@ window {
     background-color: @accent_color;
     color: @accent_fg_color;
     font-weight: 600;
-    box-shadow: 0 2px 8px alpha(@accent_color, 0.40);
+    box-shadow: 0 2px 6px alpha(@accent_color, 0.40);
 }
 
 #entry image {
