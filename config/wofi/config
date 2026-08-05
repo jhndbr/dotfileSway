@@ -1,9 +1,9 @@
 show=drun
-width=550
-height=400
+width=500
+height=380
 prompt=  Buscar...
 allow_images=true
-image_size=36
+image_size=28
 insensitive=true
 gtk_dark=true
 columns=1

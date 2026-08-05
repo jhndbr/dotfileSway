@@ -1,11 +1,11 @@
 /* ╔══════════════════════════════════════════════════════════════╗
-   ║        Waybar Style — Floating Glassmorphism & Precise Drawers║
+   ║        Waybar Style — Edge-to-Edge Compact Glass Bar         ║
    ╚══════════════════════════════════════════════════════════════╝ */
 
 @import url("../gtk-3.0/dank-colors.css");
 
 /* ── Palette Aliases & Glass Tokens ──────────────────────────── */
-@define-color bg_bar        alpha(@window_bg_color, 0.78);
+@define-color bg_bar        alpha(@window_bg_color, 0.85);
 @define-color bg_pill       alpha(@window_fg_color, 0.07);
 @define-color bg_pill_hover alpha(@window_fg_color, 0.16);
 @define-color bg_active     @accent_bg_color;
@@ -21,19 +21,20 @@
     border: none;
     border-radius: 0;
     font-family: "Inter", "JetBrainsMono Nerd Font", sans-serif;
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 500;
     min-height: 0;
     padding: 0;
     margin: 0;
 }
 
-/* ── Floating Bar Container ────────────────────────────────── */
+/* ── Edge-to-Edge Bar Container ───────────────────────────── */
 window#waybar {
     background: @bg_bar;
-    border: 1px solid @border_subtle;
-    border-radius: 14px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.40);
+    border: none;
+    border-bottom: 1px solid @border_subtle;
+    border-radius: 0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
     transition: all 0.3s ease;
 }
 
@@ -45,18 +46,18 @@ window#waybar.hidden {
 tooltip {
     background: alpha(@window_bg_color, 0.94);
     border: 1px solid alpha(@accent_color, 0.35);
-    border-radius: 12px;
-    padding: 10px 14px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.55);
+    border-radius: 10px;
+    padding: 8px 12px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
 }
 
 tooltip label {
     color: @text_primary;
-    font-size: 12px;
+    font-size: 11.5px;
 }
 
 /* ══════════════════════════════════════════════════════════════
-   ║  ESTILO UNIFORME DE PÍLDORAS (SOLO EN EL CONTENEDOR EXTERNO) ║
+   ║  ESTILO UNIFORME DE PÍLDORAS (CONTENEDORES EXTERNOS)         ║
    ══════════════════════════════════════════════════════════════ */
 
 #audio,
@@ -77,14 +78,14 @@ tooltip label {
 #custom-power {
     background: @bg_pill;
     border: 1px solid @border_pill;
-    border-radius: 10px;
-    padding: 0 8px;
-    margin: 4px 2px;
+    border-radius: 6px;
+    padding: 0 6px;
+    margin: 2px 2px;
     color: @text_primary;
-    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Efecto Hover idéntico para el CONTENEDOR PRINCIPAL únicamente */
+/* Efecto Hover para contenedores */
 #audio:hover,
 #backlight:hover,
 #network:hover,
@@ -102,7 +103,7 @@ tooltip label {
 }
 
 /* ══════════════════════════════════════════════════════════════
-   ║  REMOVER FONDOS Y BORDES INTERNOS Y EN HOVER INTERNO        ║
+   ║  REMOVER FONDOS Y BORDES INTERNOS                            ║
    ══════════════════════════════════════════════════════════════ */
 
 #audio *,
@@ -139,7 +140,7 @@ tooltip label {
     border: none;
     outline: none;
     box-shadow: none;
-    padding: 0 4px;
+    padding: 0 3px;
     margin: 0;
     color: @text_primary;
     font-weight: 500;
@@ -147,40 +148,40 @@ tooltip label {
 
 /* Iconos de disparo a la izquierda */
 #custom-system-icon {
-    font-size: 14px;
+    font-size: 13px;
     color: @accent_color;
-    padding: 0 4px;
+    padding: 0 3px;
 }
 
 #pulseaudio\.icon {
-    font-size: 14px;
+    font-size: 13px;
     color: @accent_color;
-    padding: 0 4px;
+    padding: 0 3px;
 }
 
 #backlight\.icon {
-    font-size: 14px;
+    font-size: 13px;
     color: #ffd60a;
-    padding: 0 4px;
+    padding: 0 3px;
 }
 
 #network\.icon {
-    font-size: 14px;
+    font-size: 13px;
     color: #30d158;
-    padding: 0 4px;
+    padding: 0 3px;
 }
 
 #battery\.icon {
-    font-size: 14px;
+    font-size: 13px;
     color: @accent_color;
-    padding: 0 4px;
+    padding: 0 3px;
 }
 
 /* Submódulos numéricos desplegables a la derecha */
 #cpu, #memory, #temperature,
 #pulseaudio\.text, #backlight\.text, #network\.text, #battery\.text {
-    font-size: 12px;
-    padding: 0 4px;
+    font-size: 11px;
+    padding: 0 3px;
     color: @text_primary;
 }
 
@@ -190,12 +191,12 @@ tooltip label {
 
 #workspaces button {
     color: @text_secondary;
-    padding: 0 8px;
-    margin: 3px 2px;
-    border-radius: 7px;
+    padding: 0 6px;
+    margin: 2px 1px;
+    border-radius: 5px;
     background: transparent;
-    min-width: 22px;
-    font-size: 13px;
+    min-width: 18px;
+    font-size: 11px;
     transition: all 0.2s ease;
 }
 
@@ -208,7 +209,7 @@ tooltip label {
     background: @accent_color;
     color: @text_bright;
     font-weight: 700;
-    box-shadow: 0 2px 8px alpha(@accent_color, 0.45);
+    box-shadow: 0 2px 6px alpha(@accent_color, 0.40);
 }
 
 #workspaces button.urgent {
@@ -220,9 +221,9 @@ tooltip label {
     background: @accent_color;
     color: @text_bright;
     font-weight: 700;
-    border-radius: 8px;
-    margin: 4px 4px;
-    padding: 0 12px;
+    border-radius: 6px;
+    margin: 2px 3px;
+    padding: 0 10px;
 }
 
 #scratchpad {
@@ -233,9 +234,9 @@ tooltip label {
 
 #window {
     color: @text_secondary;
-    font-size: 12px;
+    font-size: 11.5px;
     font-weight: 500;
-    padding: 0 10px;
+    padding: 0 8px;
 }
 
 /* ══════════════════════════════════════════════════════════════
@@ -244,9 +245,9 @@ tooltip label {
 
 #clock {
     font-weight: 700;
-    font-size: 13px;
-    border-radius: 10px;
-    padding: 0 18px;
+    font-size: 12px;
+    border-radius: 6px;
+    padding: 0 14px;
 }
 
 /* ══════════════════════════════════════════════════════════════
@@ -255,7 +256,7 @@ tooltip label {
 
 #custom-media {
     color: @accent_color;
-    font-size: 12px;
+    font-size: 11.5px;
 }
 
 #custom-media.Paused {
@@ -284,7 +285,7 @@ tooltip label {
 }
 
 #tray {
-    padding: 0 8px;
+    padding: 0 6px;
 }
 
 #custom-notification.paused {
@@ -292,8 +293,8 @@ tooltip label {
 }
 
 #custom-power {
-    font-size: 14px;
-    padding: 0 10px;
+    font-size: 13px;
+    padding: 0 8px;
 }
 
 #custom-power:hover {
