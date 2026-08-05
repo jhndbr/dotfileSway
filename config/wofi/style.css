@@ -20,11 +20,15 @@
 }
 
 /* ── Root Window Container (Transparent to eliminate black corners) ── */
-window {
+window,
+#window {
     margin: 0px;
     padding: 0px;
+    background: transparent;
     background-color: transparent;
     border: none;
+    outline: none;
+    box-shadow: none;
 }
 
 /* ── Outer Box (Applies true glass background & rounded corners) ──── */
