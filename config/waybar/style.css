@@ -21,7 +21,7 @@
     border: none;
     border-radius: 0;
     font-family: "Inter", "JetBrainsMono Nerd Font", sans-serif;
-    font-size: 12px;
+    font-size: 11.5px;
     font-weight: 500;
     min-height: 0;
     padding: 0;
@@ -47,70 +47,62 @@ tooltip {
     background: alpha(@window_bg_color, 0.94);
     border: 1px solid alpha(@accent_color, 0.35);
     border-radius: 10px;
-    padding: 8px 12px;
+    padding: 6px 10px;
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
 }
 
 tooltip label {
     color: @text_primary;
-    font-size: 11.5px;
+    font-size: 11px;
 }
 
 /* ══════════════════════════════════════════════════════════════
    ║  ESTILO UNIFORME DE PÍLDORAS (CONTENEDORES EXTERNOS)         ║
    ══════════════════════════════════════════════════════════════ */
 
-#audio,
-#backlight,
-#network,
-#battery,
-#hardware,
 #workspaces,
 #mode,
 #scratchpad,
 #window,
 #clock,
 #custom-media,
-#custom-gammastep,
-#idle_inhibitor,
-#custom-notification,
+#quicksettings,
+#controls,
 #tray,
 #custom-power {
     background: @bg_pill;
     border: 1px solid @border_pill;
     border-radius: 6px;
-    padding: 0 6px;
+    padding: 0 5px;
     margin: 2px 2px;
     color: @text_primary;
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Efecto Hover para contenedores */
-#audio:hover,
-#backlight:hover,
-#network:hover,
-#battery:hover,
-#hardware:hover,
+/* Efecto Hover para contenedores de píldora */
 #workspaces:hover,
 #clock:hover,
 #custom-media:hover,
-#custom-gammastep:hover,
-#idle_inhibitor:hover,
-#custom-notification:hover,
+#quicksettings:hover,
+#controls:hover,
 #custom-power:hover {
     background: @bg_pill_hover;
     border-color: alpha(@accent_color, 0.40);
 }
 
 /* ══════════════════════════════════════════════════════════════
-   ║  REMOVER FONDOS Y BORDES INTERNOS                            ║
+   ║  REMOVER FONDOS Y BORDES INTERNOS EN GRUPOS Y SUBMÓDULOS     ║
    ══════════════════════════════════════════════════════════════ */
 
+#quicksettings *,
+#controls *,
 #audio *,
 #backlight *,
 #network *,
 #battery *,
 #hardware *,
+#quicksettings *:hover,
+#controls *:hover,
 #audio *:hover,
 #backlight *:hover,
 #network *:hover,
@@ -122,6 +114,16 @@ tooltip label {
     border: none;
     outline: none;
     box-shadow: none;
+}
+
+#quicksettings #custom-gammastep,
+#quicksettings #idle_inhibitor,
+#quicksettings #custom-notification {
+    padding: 0 4px;
+    margin: 0;
+    border-radius: 0;
+    border: none;
+    background: transparent;
 }
 
 #audio label,
@@ -148,31 +150,31 @@ tooltip label {
 
 /* Iconos de disparo a la izquierda */
 #custom-system-icon {
-    font-size: 13px;
+    font-size: 12.5px;
     color: @accent_color;
     padding: 0 3px;
 }
 
 #pulseaudio\.icon {
-    font-size: 13px;
+    font-size: 12.5px;
     color: @accent_color;
     padding: 0 3px;
 }
 
 #backlight\.icon {
-    font-size: 13px;
+    font-size: 12.5px;
     color: #ffd60a;
     padding: 0 3px;
 }
 
 #network\.icon {
-    font-size: 13px;
+    font-size: 12.5px;
     color: #30d158;
     padding: 0 3px;
 }
 
 #battery\.icon {
-    font-size: 13px;
+    font-size: 12.5px;
     color: @accent_color;
     padding: 0 3px;
 }
@@ -191,11 +193,11 @@ tooltip label {
 
 #workspaces button {
     color: @text_secondary;
-    padding: 0 6px;
-    margin: 2px 1px;
-    border-radius: 5px;
+    padding: 0 5px;
+    margin: 1px 1px;
+    border-radius: 4px;
     background: transparent;
-    min-width: 18px;
+    min-width: 16px;
     font-size: 11px;
     transition: all 0.2s ease;
 }
@@ -221,9 +223,9 @@ tooltip label {
     background: @accent_color;
     color: @text_bright;
     font-weight: 700;
-    border-radius: 6px;
+    border-radius: 5px;
     margin: 2px 3px;
-    padding: 0 10px;
+    padding: 0 8px;
 }
 
 #scratchpad {
@@ -234,9 +236,9 @@ tooltip label {
 
 #window {
     color: @text_secondary;
-    font-size: 11.5px;
+    font-size: 11px;
     font-weight: 500;
-    padding: 0 8px;
+    padding: 0 6px;
 }
 
 /* ══════════════════════════════════════════════════════════════
@@ -245,9 +247,9 @@ tooltip label {
 
 #clock {
     font-weight: 700;
-    font-size: 12px;
+    font-size: 11.5px;
     border-radius: 6px;
-    padding: 0 14px;
+    padding: 0 12px;
 }
 
 /* ══════════════════════════════════════════════════════════════
@@ -256,7 +258,7 @@ tooltip label {
 
 #custom-media {
     color: @accent_color;
-    font-size: 11.5px;
+    font-size: 11px;
 }
 
 #custom-media.Paused {
@@ -285,7 +287,11 @@ tooltip label {
 }
 
 #tray {
-    padding: 0 6px;
+    padding: 0 5px;
+}
+
+#custom-notification {
+    padding: 0 3px;
 }
 
 #custom-notification.paused {
@@ -293,8 +299,8 @@ tooltip label {
 }
 
 #custom-power {
-    font-size: 13px;
-    padding: 0 8px;
+    font-size: 12.5px;
+    padding: 0 7px;
 }
 
 #custom-power:hover {

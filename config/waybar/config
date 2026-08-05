@@ -1,7 +1,7 @@
 {
     "layer": "top",
     "position": "top",
-    "height": 30,
+    "height": 32,
     "spacing": 0,
     "margin-top": 0,
     "margin-left": 0,
@@ -22,15 +22,9 @@
 
     "modules-right": [
         "custom/media",
-        "custom/gammastep",
-        "idle_inhibitor",
-        "group/audio",
-        "group/backlight",
-        "group/network",
-        "group/battery",
-        "group/hardware",
         "tray",
-        "custom/notification",
+        "group/quicksettings",
+        "group/controls",
         "custom/power"
     ],
 
@@ -105,6 +99,16 @@
         "on-scroll-down": "playerctl volume 0.05-"
     },
 
+    /* ── QuickSettings Group (Gammastep, Idle, Notification) ──────── */
+    "group/quicksettings": {
+        "orientation": "horizontal",
+        "modules": [
+            "custom/gammastep",
+            "idle_inhibitor",
+            "custom/notification"
+        ]
+    },
+
     "custom/gammastep": {
         "format": "{icon}",
         "format-icons": {
@@ -126,6 +130,28 @@
         },
         "tooltip-format-activated": "Idle inhibido (pantalla NO se apagará)",
         "tooltip-format-deactivated": "Idle normal (pantalla se apagará)"
+    },
+
+    "custom/notification": {
+        "format": "{}",
+        "return-type": "json",
+        "exec": "if dunstctl is-paused | grep -q 'true'; then echo '{\"text\": \"󰂛\", \"tooltip\": \"Notificaciones: Pausadas\", \"class\": \"paused\"}'; else echo '{\"text\": \"󰂚\", \"tooltip\": \"Notificaciones: Activas\", \"class\": \"active\"}'; fi",
+        "on-click": "dunstctl set-paused toggle",
+        "on-click-right": "dunstctl history-pop",
+        "interval": 2,
+        "tooltip": true
+    },
+
+    /* ── Controls Group (Network, Brightness, Audio, Battery, Hardware) ── */
+    "group/controls": {
+        "orientation": "horizontal",
+        "modules": [
+            "group/network",
+            "group/backlight",
+            "group/audio",
+            "group/battery",
+            "group/hardware"
+        ]
     },
 
     /* ── Audio Drawer Group ──────────────────────────────────────── */
@@ -301,16 +327,6 @@
     "tray": {
         "icon-size": 14,
         "spacing": 6
-    },
-
-    "custom/notification": {
-        "format": "{}",
-        "return-type": "json",
-        "exec": "if dunstctl is-paused | grep -q 'true'; then echo '{\"text\": \"󰂛\", \"tooltip\": \"Notificaciones: Pausadas\", \"class\": \"paused\"}'; else echo '{\"text\": \"󰂚\", \"tooltip\": \"Notificaciones: Activas\", \"class\": \"active\"}'; fi",
-        "on-click": "dunstctl set-paused toggle",
-        "on-click-right": "dunstctl history-pop",
-        "interval": 2,
-        "tooltip": true
     },
 
     "custom/power": {
