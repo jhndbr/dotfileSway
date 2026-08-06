@@ -17,7 +17,7 @@ title_format   = "Yazi: {cwd}"
 
 [opener]
 edit = [
-    { run = 'zed "$@"', desc = "Zed Editor (GUI)", orphan = true },
+    { run = 'zeditor "$@"', desc = "Zed Editor (GUI)", orphan = true },
     { run = 'nano "$@"', desc = "Nano (CLI)", block = true },
     { run = 'nvim "$@"', desc = "Neovim (CLI)", block = true },
 ]
@@ -40,11 +40,11 @@ open_web = [
     { run = 'xdg-open "$@"', desc = "App Predeterminada (XDG)", orphan = true },
 ]
 open_folder = [
-    { run = 'zed "$1"', desc = "Abrir carpeta en Zed", orphan = true },
+    { run = 'zeditor "$1"', desc = "Abrir carpeta en Zed", orphan = true },
     { run = 'foot --title="yazi" -e yazi "$1"', desc = "Abrir carpeta en nueva terminal Yazi", orphan = true },
 ]
 open_generic = [
-    { run = 'zed "$@"', desc = "Zed Editor", orphan = true },
+    { run = 'zeditor "$@"', desc = "Zed Editor", orphan = true },
     { run = 'nano "$@"', desc = "Nano Editor", block = true },
     { run = 'firefox "$@"', desc = "Firefox Browser", orphan = true },
     { run = 'mpv "$@"', desc = "MPV Player", orphan = true },
