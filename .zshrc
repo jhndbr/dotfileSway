@@ -26,8 +26,8 @@ source $ZSH/oh-my-zsh.sh
 # ╔══════════════════════════════════════════════════════════════╗
 # ║              Variables de entorno                            ║
 # ╚══════════════════════════════════════════════════════════════╝
-export EDITOR="nvim"
-export VISUAL="nvim"
+export EDITOR="nano"
+export VISUAL="nano"
 export BROWSER="firefox"
 export TERMINAL="foot"
 export FILEMANAGER="yazi"

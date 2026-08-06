@@ -18,8 +18,8 @@ title_format   = "Yazi: {cwd}"
 [opener]
 edit = [
     { run = 'zed "$@"', desc = "Zed Editor (GUI)", orphan = true },
-    { run = '${EDITOR:-nano} "$@"', desc = "Editor CLI (Nano/NVim)", block = true },
-    { run = 'xdg-open "$@"', desc = "App Predeterminada (XDG)", orphan = true },
+    { run = 'nano "$@"', desc = "Nano (CLI)", block = true },
+    { run = 'nvim "$@"', desc = "Neovim (CLI)", block = true },
 ]
 play = [
     { run = 'mpv --force-window "$@"', desc = "MPV Media Player", orphan = true },
@@ -39,13 +39,18 @@ open_web = [
     { run = 'firefox "$@"', desc = "Firefox Web Browser", orphan = true },
     { run = 'xdg-open "$@"', desc = "App Predeterminada (XDG)", orphan = true },
 ]
+open_folder = [
+    { run = 'zed "$1"', desc = "Abrir carpeta en Zed", orphan = true },
+    { run = 'foot --title="yazi" -e yazi "$1"', desc = "Abrir carpeta en nueva terminal Yazi", orphan = true },
+]
 open_generic = [
-    { run = 'xdg-open "$@"', desc = "Abrir con XDG Default", orphan = true },
     { run = 'zed "$@"', desc = "Zed Editor", orphan = true },
-    { run = 'firefox "$@"', desc = "Firefox", orphan = true },
-    { run = 'mpv "$@"', desc = "MPV", orphan = true },
-    { run = 'imv "$@"', desc = "imv", orphan = true },
-    { run = 'zathura "$@"', desc = "Zathura", orphan = true },
+    { run = 'nano "$@"', desc = "Nano Editor", block = true },
+    { run = 'firefox "$@"', desc = "Firefox Browser", orphan = true },
+    { run = 'mpv "$@"', desc = "MPV Player", orphan = true },
+    { run = 'imv "$@"', desc = "imv Image Viewer", orphan = true },
+    { run = 'zathura "$@"', desc = "Zathura PDF Reader", orphan = true },
+    { run = 'xdg-open "$@"', desc = "Abrir con XDG Default", orphan = true },
 ]
 open_with_menu = [
     { run = '~/.local/bin/yazi-open-with.sh "$@"', desc = "⚡ Selector Universal de App (Wofi)", orphan = true }
@@ -53,7 +58,8 @@ open_with_menu = [
 
 [open]
 rules = [
-    { name = "*/", use = [ "open_generic", "open_with_menu" ] },
+    { name = "*/", use = [ "open_folder", "open_with_menu" ] },
+    { mime = "inode/directory", use = [ "open_folder", "open_with_menu" ] },
     { mime = "text/*", use = [ "edit", "open_generic", "open_with_menu" ] },
     { mime = "image/*", use = [ "open_image", "edit", "open_with_menu" ] },
     { mime = "{video,audio}/*", use = [ "play", "open_generic", "open_with_menu" ] },
