@@ -2,6 +2,7 @@
 
 # ╔══════════════════════════════════════════════════════════════╗
 # ║  Generador / Sincronizador Dinámico de Color de Iconos Papirus ║
+# ║  100% Sin Sudo / Sin Contraseña (Modo Usuario ~/.local/share)  ║
 # ╚══════════════════════════════════════════════════════════════╝
 
 import json
@@ -67,9 +68,9 @@ def main():
     if not os.path.exists(papirus_bin):
         papirus_bin = "papirus-folders"
 
-    # Usar -o (--once) para evitar requerir sudo y modificar la sesión actual del usuario
-    subprocess.run([papirus_bin, "-C", color_name, "-t", "Papirus-Dark", "-o"], capture_output=True, text=True)
-    subprocess.run([papirus_bin, "-C", color_name, "-t", "Papirus", "-o"], capture_output=True, text=True)
+    # Usar -u (--user) y -o (--once) para forzar modo usuario sin sudo en ~/.local/share/icons
+    subprocess.run([papirus_bin, "-C", color_name, "-t", "Papirus-Dark", "-u", "-o"], capture_output=True, text=True)
+    subprocess.run([papirus_bin, "-C", color_name, "-t", "Papirus", "-u", "-o"], capture_output=True, text=True)
 
 if __name__ == "__main__":
     main()

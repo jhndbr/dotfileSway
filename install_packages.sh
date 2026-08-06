@@ -65,7 +65,6 @@ PACMAN_PACKAGES=(
     foot
     dunst
     kanshi
-    wlogout
     gammastep
 
     # Captura de Pantalla & Portapapeles
@@ -159,7 +158,7 @@ if ! command -v yay &> /dev/null; then
 fi
 
 AUR_PACKAGES=(
-    # Colores Papirus personalizables
+    wlogout
     papirus-folders-git
 )
 
