@@ -58,8 +58,8 @@ open_with_menu = [
 
 [open]
 rules = [
-    { name = "*/", use = [ "open_folder", "open_with_menu" ] },
     { mime = "inode/directory", use = [ "open_folder", "open_with_menu" ] },
+    { url = "*/", use = [ "open_folder", "open_with_menu" ] },
     { mime = "text/*", use = [ "edit", "open_generic", "open_with_menu" ] },
     { mime = "image/*", use = [ "open_image", "edit", "open_with_menu" ] },
     { mime = "{video,audio}/*", use = [ "play", "open_generic", "open_with_menu" ] },
@@ -79,7 +79,8 @@ suppress_preload = false
 
 [plugin]
 previewers = [
-    { name = "*/", run = "folder", sync = true },
+    { mime = "inode/directory", run = "folder", sync = true },
+    { url = "*/", run = "folder", sync = true },
     { mime = "text/*", run = "code" },
     { mime = "application/json", run = "json" },
     { mime = "image/*", run = "image" },
