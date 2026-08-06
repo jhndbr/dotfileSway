@@ -48,13 +48,18 @@ mkdir -p ~/.local/bin
 echo -e "${YELLOW}📦 Creando backup en $BACKUP_DIR${NC}"
 mkdir -p "$BACKUP_DIR"
 
-CONFIGS=(sway waybar wofi dunst foot swaylock kanshi wlogout gammastep gtk-3.0 gtk-4.0 environment.d qt5ct qt6ct matugen zed)
+CONFIGS=(sway waybar wofi dunst foot swaylock kanshi wlogout gammastep gtk-3.0 gtk-4.0 environment.d qt5ct qt6ct matugen zed yazi)
 
 for item in "${CONFIGS[@]}"; do
     if [ -d "$HOME/.config/$item" ]; then
         cp -rf "$HOME/.config/$item" "$BACKUP_DIR/" 2>/dev/null || true
     fi
 done
+
+# Backup mimeapps.list si existe
+if [ -f "$HOME/.config/mimeapps.list" ]; then
+    cp -f "$HOME/.config/mimeapps.list" "$BACKUP_DIR/mimeapps.list" 2>/dev/null || true
+fi
 
 # Backup archivos de home
 for file in .zshrc .zprofile .gitconfig; do
@@ -74,6 +79,20 @@ for item in "${CONFIGS[@]}"; do
         cp -rf "$SCRIPT_DIR/config/$item/"* "$HOME/.config/$item/" 2>/dev/null || true
     fi
 done
+
+# Copiar mimeapps.list
+if [ -f "$SCRIPT_DIR/config/mimeapps.list" ]; then
+    echo -e "  ${GREEN}→${NC} Copiando aplicaciones predeterminadas (${BLUE}mimeapps.list${NC})..."
+    cp -f "$SCRIPT_DIR/config/mimeapps.list" "$HOME/.config/mimeapps.list"
+fi
+
+# Registrar yazi.desktop en ~/.local/share/applications
+if [ -f "$SCRIPT_DIR/config/yazi/yazi.desktop" ]; then
+    echo -e "  ${GREEN}→${NC} Registrando launcher de Yazi (${BLUE}yazi.desktop${NC})..."
+    mkdir -p "$HOME/.local/share/applications"
+    cp -f "$SCRIPT_DIR/config/yazi/yazi.desktop" "$HOME/.local/share/applications/yazi.desktop"
+    update-desktop-database "$HOME/.local/share/applications" 2>/dev/null || true
+fi
 
 if [ -d "$SCRIPT_DIR/templates" ]; then
     echo -e "  ${GREEN}→${NC} Copiando plantillas de Matugen..."

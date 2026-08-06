@@ -30,7 +30,7 @@ export EDITOR="nvim"
 export VISUAL="nvim"
 export BROWSER="firefox"
 export TERMINAL="foot"
-export FILEMANAGER="nautilus"
+export FILEMANAGER="yazi"
 export LANG="es_AR.UTF-8"
 export LC_ALL="es_AR.UTF-8"
 
@@ -95,8 +95,9 @@ alias dotfiles='cd ~/Documentos/Github/dotfileSway'
 alias dots-update='bash ~/Documentos/Github/dotfileSway/update_dotfiles.sh'
 alias dots-apply='bash ~/Documentos/Github/dotfileSway/setup.sh'
 alias wallpaper='~/.local/bin/set-wallpaper.sh'
-alias fm='nautilus'
-alias files='nautilus'
+alias fm='yazi'
+alias files='yazi'
+alias y='yazi'
 
 # Apps personales
 alias tidal='cd ~/Documentos/Github/tuidal && uv run tidal_tui'

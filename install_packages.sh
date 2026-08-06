@@ -67,14 +67,24 @@ PACKAGES=(
     # Portales e integración Wayland
     xdg-desktop-portal
     xdg-desktop-portal-wlr
-    xdg-desktop-portal-gtk  # Selector de archivos nativo (Nautilus/Firefox)
+    xdg-desktop-portal-gtk
+    xdg-utils
 
-    # Administrador de archivos
-    nautilus          # GTK4 - tema dinámico automático
-    gvfs              # Montaje de URIs
-    gvfs-mtp          # Dispositivos Android/MTP
-    gvfs-smb          # Carpetas compartidas de red
-    sushi             # Vista previa rápida (Espacio)
+    # Gestor de Archivos Yazi y Previews CLI
+    yazi              # TUI File Manager hiperrápido
+    ffmpegthumbnailer # Previews de video en Yazi
+    poppler           # Previews de PDF (pdftoppm)
+    chafa             # Previews de imágenes en terminal
+    p7zip             # Soporte para archivos comprimidos (7z/zip/rar)
+    ouch              # Extractor CLI universal
+
+    # Aplicaciones Predeterminadas (Suite Minimal Completa)
+    firefox           # Navegador Web
+    mpv               # Reproductor Audio / Video
+    imv               # Visor de imágenes Wayland
+    zathura           # Visor de documentos PDF
+    zathura-pdf-mupdf # Backend PDF de alto rendimiento para Zathura
+    nano              # Editor de texto CLI fallback
 
     # Filtro de luz azul
     gammastep

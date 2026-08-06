@@ -1,0 +1,13 @@
+# ╔══════════════════════════════════════════════════════════════╗
+# ║                  Yazi Keymap Configuration                  ║
+# ╚══════════════════════════════════════════════════════════════╝
+
+[manager]
+prepend_keymap = [
+    # Presionar 'r' abre el menú interactivo con los abridores definidos para ese archivo
+    { on = [ "r" ], run = "open --interactive", desc = "Abrir con... (Menú de abridores)" },
+    
+    # Presionar 'R' o 'Ctrl+O' abre Wofi con la lista de TODAS las aplicaciones .desktop del sistema
+    { on = [ "R" ], run = 'shell --orphan "~/.local/bin/yazi-open-with.sh \"$1\""', desc = "Abrir con cualquier aplicación (Selector Wofi)" },
+    { on = [ "<C-o>" ], run = 'shell --orphan "~/.local/bin/yazi-open-with.sh \"$1\""', desc = "Abrir con cualquier aplicación (Selector Wofi)" },
+]

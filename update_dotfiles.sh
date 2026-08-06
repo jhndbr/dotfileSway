@@ -29,7 +29,7 @@ mkdir -p "$DOTFILES_DIR/wallpapers"
 mkdir -p "$DOTFILES_DIR/scripts"
 
 # ── 2. Sincronizar configuraciones del entorno ──────────────────
-CONFIGS=(sway waybar wofi dunst foot swaylock kanshi wlogout gammastep gtk-3.0 gtk-4.0 environment.d qt5ct qt6ct matugen zed)
+CONFIGS=(sway waybar wofi dunst foot swaylock kanshi wlogout gammastep gtk-3.0 gtk-4.0 environment.d qt5ct qt6ct matugen zed yazi)
 
 for app in "${CONFIGS[@]}"; do
     if [ -d "$CONFIG_DIR/$app" ]; then
@@ -40,6 +40,12 @@ for app in "${CONFIGS[@]}"; do
         echo -e "  ${YELLOW}⚠${NC}  No encontrado: ${BLUE}$app${NC}"
     fi
 done
+
+# Sincronizar mimeapps.list
+if [ -f "$CONFIG_DIR/mimeapps.list" ]; then
+    echo -e "  ${GREEN}→${NC} Actualizando: ${BLUE}mimeapps.list${NC}"
+    cp -f "$CONFIG_DIR/mimeapps.list" "$DOTFILES_DIR/config/mimeapps.list"
+fi
 
 # ── 3. Sincronizar archivos de home ─────────────────────────────
 echo ""
@@ -57,7 +63,7 @@ done
 if [ -d "$HOME/.local/bin" ]; then
     echo ""
     echo -e "${CYAN}⚡ Sincronizando scripts...${NC}"
-    for script in screenshot.sh volume.sh brightness.sh color-picker.sh swayidle.sh gammastep-toggle.sh set-wallpaper.sh; do
+    for script in screenshot.sh volume.sh brightness.sh color-picker.sh swayidle.sh gammastep-toggle.sh set-wallpaper.sh yazi-open-with.sh; do
         if [ -f "$HOME/.local/bin/$script" ]; then
             echo -e "  ${GREEN}→${NC} Actualizando: ${BLUE}$script${NC}"
             cp -f "$HOME/.local/bin/$script" "$DOTFILES_DIR/scripts/$script"

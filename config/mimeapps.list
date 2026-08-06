@@ -1,0 +1,52 @@
+[Default Applications]
+# Navegador Web
+text/html=firefox.desktop
+x-scheme-handler/http=firefox.desktop
+x-scheme-handler/https=firefox.desktop
+x-scheme-handler/chrome=firefox.desktop
+application/xhtml+xml=firefox.desktop
+
+# Editor de Texto / Código (Zed)
+text/plain=dev.zed.Zed.desktop
+text/markdown=dev.zed.Zed.desktop
+text/x-shellscript=dev.zed.Zed.desktop
+text/x-python=dev.zed.Zed.desktop
+text/x-c=dev.zed.Zed.desktop
+text/x-c++=dev.zed.Zed.desktop
+application/json=dev.zed.Zed.desktop
+application/xml=dev.zed.Zed.desktop
+application/x-yaml=dev.zed.Zed.desktop
+application/toml=dev.zed.Zed.desktop
+
+# Visor de Documentos (Zathura)
+application/pdf=org.pwmt.zathura.desktop
+application/epub+zip=org.pwmt.zathura.desktop
+
+# Visor de Imágenes (imv)
+image/png=imv.desktop
+image/jpeg=imv.desktop
+image/jpg=imv.desktop
+image/gif=imv.desktop
+image/webp=imv.desktop
+image/svg+xml=imv.desktop
+image/bmp=imv.desktop
+image/tiff=imv.desktop
+
+# Reproductor Multimedia (MPV)
+video/mp4=mpv.desktop
+video/mkv=mpv.desktop
+video/webm=mpv.desktop
+video/x-matroska=mpv.desktop
+video/avi=mpv.desktop
+video/quicktime=mpv.desktop
+video/x-flv=mpv.desktop
+audio/mpeg=mpv.desktop
+audio/flac=mpv.desktop
+audio/wav=mpv.desktop
+audio/ogg=mpv.desktop
+audio/aac=mpv.desktop
+audio/m4a=mpv.desktop
+
+# Gestor de Archivos (Yazi en foot)
+inode/directory=yazi.desktop
+application/x-gnome-saved-search=yazi.desktop

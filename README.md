@@ -39,6 +39,7 @@ dotfileSway/
 │   ├── kanshi/         # Multi-monitor
 │   ├── wlogout/        # Menú de apagado
 │   ├── gammastep/      # Filtro luz azul
+│   ├── yazi/           # Gestor de archivos TUI
 │   ├── gtk-3.0/        # Tema GTK 3
 │   ├── gtk-4.0/        # Tema GTK 4
 │   └── environment.d/  # Variables de entorno Qt
@@ -46,7 +47,8 @@ dotfileSway/
 │   ├── screenshot.sh   # Menú de capturas
 │   ├── volume.sh       # Control de volumen + OSD
 │   ├── brightness.sh   # Control de brillo + OSD
-│   └── color-picker.sh # Selector de color
+│   ├── color-picker.sh # Selector de color
+│   └── yazi-open-with.sh # Selector universal de app para Yazi
 ├── wallpapers/         # Fondos de pantalla
 ├── .zshrc              # Configuración de Zsh
 ├── .zprofile           # Variables de entorno Wayland
@@ -91,7 +93,7 @@ bash setup.sh
 | `Mod+Return` | Terminal (foot) |
 | `Mod+A` | Lanzador de aplicaciones (Wofi) |
 | `Mod+Q` | Cerrar ventana |
-| `Mod+E` | Gestor de archivos (Nautilus) |
+| `Mod+E` | Gestor de archivos (Yazi TUI) |
 | `Mod+Escape` | Bloquear pantalla |
 | `Mod+Shift+E` | Menú de apagado (wlogout) |
 | `Mod+V` | Historial de portapapeles |
@@ -130,7 +132,7 @@ El script `install_packages.sh` instala todo lo necesario:
 | **Audio** | pipewire, wireplumber, pavucontrol |
 | **Red** | networkmanager, blueman |
 | **Screen** | grim, slurp, wl-clipboard, cliphist |
-| **Archivos** | nautilus, gvfs, gvfs-mtp, gvfs-smb |
+| **Archivos & Apps** | yazi, ffmpegthumbnailer, poppler, chafa, ouch, firefox, mpv, imv, zathura |
 | **CLI** | bat, eza, fd, ripgrep, zoxide, fzf |
 | **Fuentes** | JetBrains Mono Nerd, Inter, Noto |
 | **Shell** | zsh, oh-my-zsh, powerlevel10k |
