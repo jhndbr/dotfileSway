@@ -8,9 +8,16 @@
 import json
 import os
 import re
-import sys
-import colorsys
+import shutil
 import subprocess
+import colorsys
+
+
+SYSTEM_ICONS_DIR = "/usr/share/icons"
+USER_ICONS_DIR   = os.path.expanduser("~/.local/share/icons")
+
+THEMES = ["Papirus", "Papirus-Dark", "Papirus-Light"]
+
 
 def get_papirus_color(hex_color):
     hex_val = hex_color.lstrip("#")
@@ -39,6 +46,7 @@ def get_papirus_color(hex_color):
     else:
         return "magenta"
 
+
 def get_matugen_accent():
     css_path = os.path.expanduser("~/.config/gtk-3.0/dank-colors.css")
     if os.path.exists(css_path):
@@ -59,12 +67,72 @@ def get_matugen_accent():
 
     return "#3498db"
 
+
+def ensure_user_icons():
+    """
+    Copia los temas Papirus del sistema al directorio del usuario usando hardlinks
+    (cp -rl) para evitar duplicar espacio en disco. Esto permite que papirus-folders
+    opere sobre el directorio del usuario sin necesitar root.
+    """
+    os.makedirs(USER_ICONS_DIR, exist_ok=True)
+    installed = []
+
+    for theme in THEMES:
+        user_path   = os.path.join(USER_ICONS_DIR, theme)
+        system_path = os.path.join(SYSTEM_ICONS_DIR, theme)
+
+        if os.path.exists(user_path):
+            continue  # ya instalado
+
+        if not os.path.isdir(system_path):
+            print(f"⚠ {theme} no encontrado en {SYSTEM_ICONS_DIR}, omitiendo.")
+            continue
+
+        print(f"📦 Instalando {theme} en {USER_ICONS_DIR}...")
+        try:
+            # cp -ra: copia preservando symlinks (-a = archive).
+            # Papirus usa symlinks internos en places/ para los folder icons;
+            # hardlinks (-l) no funcionan para symlinks entre filesystems distintos.
+            result = subprocess.run(
+                ["cp", "-ra", system_path, user_path],
+                capture_output=True, text=True
+            )
+            if result.returncode == 0:
+                print(f"✓ {theme} instalado en {user_path}")
+                installed.append(theme)
+            else:
+                print(f"❌ Error copiando {theme}: {result.stderr.strip()}")
+        except Exception as e:
+            print(f"❌ Error instalando {theme}: {e}")
+
+    return installed
+
+
+def apply_folder_color(papirus_bin, color_name, theme_path):
+    """
+    Aplica color_name al tema en theme_path usando papirus-folders.
+    Al pasar la ruta absoluta con -t, THEME_DIR queda dentro de HOME
+    y _is_user_dir() en papirus-folders devuelve true → nunca pide sudo.
+    No se usa -u (update-caches) porque esa operación requiere root.
+    """
+    result = subprocess.run(
+        [papirus_bin, "-C", color_name, "-t", theme_path, "-o"],
+        capture_output=True, text=True
+    )
+    if result.returncode != 0:
+        print(f"⚠ papirus-folders error en {theme_path}: {result.stderr.strip()}")
+
+
 def main():
-    hex_color = get_matugen_accent()
+    # 1. Asegurar que los iconos Papirus están instalados en el directorio de usuario
+    ensure_user_icons()
+
+    # 2. Determinar el color de acento desde el tema actual
+    hex_color  = get_matugen_accent()
     color_name = get_papirus_color(hex_color)
     print(f"🎨 Color de carpetas/iconos Papirus: {color_name} (hex acento: {hex_color})")
 
-    # Cache para evitar re-ejecutar papirus-folders si el color no cambió
+    # 3. Cache para evitar re-ejecutar papirus-folders si el color no cambió
     cache_file = "/tmp/papirus_last_color"
     if os.path.exists(cache_file):
         try:
@@ -75,21 +143,26 @@ def main():
         except Exception:
             pass
 
+    # 4. Localizar el binario papirus-folders
     papirus_bin = os.path.expanduser("~/.local/bin/papirus-folders")
     if not os.path.exists(papirus_bin):
         papirus_bin = "papirus-folders"
 
-    user_icons = os.path.expanduser("~/.local/share/icons/Papirus-Dark")
-    cmd_flags = ["-u", "-o"] if os.path.exists(user_icons) else ["-o"]
+    # 5. Aplicar el color a cada tema instalado en el directorio de usuario
+    for theme in THEMES:
+        user_path = os.path.join(USER_ICONS_DIR, theme)
+        if os.path.exists(user_path):
+            apply_folder_color(papirus_bin, color_name, user_path)
+        else:
+            print(f"⚠ {theme} no disponible en {USER_ICONS_DIR}, omitiendo.")
 
-    subprocess.run([papirus_bin, "-C", color_name, "-t", "Papirus-Dark"] + cmd_flags, capture_output=True, text=True)
-    subprocess.run([papirus_bin, "-C", color_name, "-t", "Papirus"] + cmd_flags, capture_output=True, text=True)
-
+    # 6. Guardar el color aplicado en cache
     try:
         with open(cache_file, "w") as f:
             f.write(color_name)
     except Exception:
         pass
+
 
 if __name__ == "__main__":
     main()
