@@ -72,8 +72,9 @@ PACMAN_PACKAGES=(
     slurp
     wl-clipboard
     cliphist
+    wtype
 
-    # Audio, Red y Control de Sistema
+    # Audio, Red, Montaje USB y Control de Sistema
     networkmanager
     network-manager-applet
     pipewire
@@ -86,6 +87,8 @@ PACMAN_PACKAGES=(
     bluez
     bluez-utils
     blueman
+    udiskie
+    power-profiles-daemon
 
     # Portales e Integración Wayland / XDG
     xdg-desktop-portal
@@ -117,7 +120,6 @@ PACMAN_PACKAGES=(
     zoxide
     fzf
     jq
-    htop
     btop
     imagemagick
 
@@ -130,7 +132,6 @@ PACMAN_PACKAGES=(
 
     # GTK / Qt / Dynamic Theming & Iconos
     adw-gtk-theme
-    breeze
     papirus-icon-theme
     adwaita-icon-theme
     adwaita-cursors
@@ -139,8 +140,11 @@ PACMAN_PACKAGES=(
     qt6ct
     matugen
 
-    # Shell
+    # Shell & Prompt
     zsh
+    starship
+    zsh-autosuggestions
+    zsh-syntax-highlighting
 )
 
 log_info "Instalando paquetes oficiales con pacman..."
@@ -159,7 +163,6 @@ fi
 
 AUR_PACKAGES=(
     wlogout
-    papirus-folders-git
 )
 
 # Intentar instalar paquetes opcionales de AUR si están disponibles
@@ -175,41 +178,6 @@ if ! command -v papirus-folders &>/dev/null; then
     curl -sSLo "$HOME/.local/bin/papirus-folders" https://raw.githubusercontent.com/PapirusDevelopmentTeam/papirus-folders/master/papirus-folders
     chmod +x "$HOME/.local/bin/papirus-folders"
     log_success "papirus-folders instalado"
-fi
-
-# ── 7. Oh My Zsh & Plugins Integrados ──────────────────────────
-ZSH_CUSTOM="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"
-
-if [ ! -d "$HOME/.oh-my-zsh" ]; then
-    log_info "Instalando Oh My Zsh..."
-    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
-    log_success "Oh My Zsh instalado"
-else
-    log_success "Oh My Zsh ya se encuentra instalado"
-fi
-
-# Tema Powerlevel10k
-P10K_DIR="$ZSH_CUSTOM/themes/powerlevel10k"
-if [ ! -d "$P10K_DIR" ]; then
-    log_info "Instalando Powerlevel10k..."
-    git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "$P10K_DIR"
-    log_success "Powerlevel10k instalado"
-else
-    log_success "Powerlevel10k ya instalado"
-fi
-
-# Plugin zsh-autosuggestions
-if [ ! -d "$ZSH_CUSTOM/plugins/zsh-autosuggestions" ]; then
-    log_info "Instalando plugin zsh-autosuggestions..."
-    git clone https://github.com/zsh-users/zsh-autosuggestions "$ZSH_CUSTOM/plugins/zsh-autosuggestions"
-    log_success "zsh-autosuggestions instalado"
-fi
-
-# Plugin zsh-syntax-highlighting
-if [ ! -d "$ZSH_CUSTOM/plugins/zsh-syntax-highlighting" ]; then
-    log_info "Instalando plugin zsh-syntax-highlighting..."
-    git clone https://github.com/zsh-users/zsh-syntax-highlighting "$ZSH_CUSTOM/plugins/zsh-syntax-highlighting"
-    log_success "zsh-syntax-highlighting instalado"
 fi
 
 # ── 8. Cambiar Shell por Defecto a Zsh ─────────────────────────
@@ -229,6 +197,11 @@ if [ "$CURRENT_SHELL" != "zsh" ] && [ -x "$ZSH_PATH" ]; then
         log_info "Instalación no interactiva detectada: Omitiendo cambio automático de shell"
     fi
 fi
+
+# ── 8.1. Habilitar Servicio Power Profiles ─────────────────────
+log_info "Habilitando servicio power-profiles-daemon..."
+sudo systemctl enable --now power-profiles-daemon.service 2>/dev/null || true
+log_success "Servicio power-profiles-daemon habilitado"
 
 # ── 9. Finalización ─────────────────────────────────────────────
 echo ""

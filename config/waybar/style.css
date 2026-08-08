@@ -120,6 +120,7 @@ tooltip label {
 
 #quicksettings #custom-gammastep,
 #quicksettings #idle_inhibitor,
+#quicksettings #power-profiles-daemon,
 #quicksettings #custom-notification {
     padding: 0 4px;
     margin: 0;
@@ -273,6 +274,21 @@ tooltip label {
 
 #custom-gammastep.on {
     color: #ffd60a;
+}
+
+/* Power Profiles Daemon Estados */
+#power-profiles-daemon {
+    padding: 0 3px;
+    color: @accent_color;
+}
+#power-profiles-daemon.performance {
+    color: #ff453a;
+}
+#power-profiles-daemon.balanced {
+    color: @accent_color;
+}
+#power-profiles-daemon.power-saver {
+    color: #30d158;
 }
 
 /* Batería Estados */

@@ -380,7 +380,7 @@ fi
 
 # ── 7. Asegurar estilo Qt en Fusion, Papirus-Dark y kdeglobals ──
 sed -i 's/^style=.*/style=Fusion/' "$HOME/.config/qt5ct/qt5ct.conf" 2>/dev/null || true
-sed -i 's/^style=.*/style=Breeze/' "$HOME/.config/qt6ct/qt6ct.conf" 2>/dev/null || true
+sed -i 's/^style=.*/style=Fusion/' "$HOME/.config/qt6ct/qt6ct.conf" 2>/dev/null || true
 sed -i 's/^icon_theme=.*/icon_theme=Papirus-Dark/' "$HOME/.config/qt5ct/qt5ct.conf" 2>/dev/null || true
 sed -i 's/^icon_theme=.*/icon_theme=Papirus-Dark/' "$HOME/.config/qt6ct/qt6ct.conf" 2>/dev/null || true
 

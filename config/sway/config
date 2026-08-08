@@ -86,11 +86,15 @@ bindsym $mod+Escape exec $lock
 # Historial de portapapeles (Cliphist)
 bindsym $mod+v exec cliphist list | wofi --dmenu --prompt "Clipboard" | cliphist decode | wl-copy
 
+# Visor de Emojis (Estilo Windows / macOS: Super + Punto)
+bindsym $mod+period exec $scripts/emoji-picker.sh
+
 # Terminal
 bindsym $mod+Return exec $term
 
-# Administrador de archivos (Yazi TUI)
+# Administrador de archivos Yazi (Super + E / Super + Y)
 bindsym $mod+e exec foot --title="yazi" -e yazi
+bindsym $mod+y exec foot --title="yazi" -e yazi
 
 # Drag / Resize con mouse
 floating_modifier $mod normal
@@ -253,8 +257,9 @@ exec gnome-keyring-daemon --start --components=secrets,ssh
 # Notificaciones
 exec dunst
 
-# Portapapeles
+# Portapapeles & Montaje USB
 exec wl-paste --watch cliphist store
+exec udiskie --tray &
 
 # Idle management (bloqueo, apagar pantalla, suspender)
 exec swayidle -w \

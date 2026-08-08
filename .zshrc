@@ -1,31 +1,9 @@
 # ╔══════════════════════════════════════════════════════════════╗
-# ║              Configuración de Zsh                            ║
+# ║        Configuración Minimalista & Rápida de Zsh             ║
+# ║        Zsh + Starship + Autosuggestions + FZF                ║
 # ╚══════════════════════════════════════════════════════════════╝
 
-# Enable Powerlevel10k instant prompt
-if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-fi
-
-export ZSH="$HOME/.oh-my-zsh"
-ZSH_THEME="powerlevel10k/powerlevel10k"
-
-plugins=(
-  git
-  sudo
-  history
-  zsh-autosuggestions
-  zsh-syntax-highlighting
-  colored-man-pages
-  command-not-found
-  extract
-)
-
-source $ZSH/oh-my-zsh.sh
-
-# ╔══════════════════════════════════════════════════════════════╗
-# ║              Variables de entorno                            ║
-# ╚══════════════════════════════════════════════════════════════╝
+# ── 1. Variables de entorno ────────────────────────────────────
 export EDITOR="nano"
 export VISUAL="nano"
 export BROWSER="firefox"
@@ -43,9 +21,16 @@ export XDG_STATE_HOME="$HOME/.local/state"
 # PATH
 export PATH="$HOME/.local/bin:$HOME/.local/share/JetBrains/Toolbox/scripts:$PATH"
 
-# ╔══════════════════════════════════════════════════════════════╗
-# ║              History mejorado                                ║
-# ╚══════════════════════════════════════════════════════════════╝
+# ── 2. Autocompletado nativo y opciones de Zsh ─────────────────
+autoload -Uz compinit
+compinit -d "$XDG_CACHE_HOME/zsh/zcompdump-$ZSH_VERSION"
+
+# Opciones de autocompletado interactivo
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' # Case insensitive
+zstyle ':completion:*' menu select
+zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
+
+# ── 3. Historial Optimizado ────────────────────────────────────
 HISTSIZE=50000
 SAVEHIST=50000
 HISTFILE=~/.zsh_history
@@ -58,21 +43,56 @@ setopt HIST_SAVE_NO_DUPS
 setopt SHARE_HISTORY
 setopt EXTENDED_HISTORY
 
-# ╔══════════════════════════════════════════════════════════════╗
-# ║              Alias                                           ║
-# ╚══════════════════════════════════════════════════════════════╝
+# ── 4. Plugins (Autosuggestions, Syntax Highlighting, FZF) ─────
+# Autosuggestions (sugerencia de comandos en gris basada en el historial)
+if [ -f /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh ]; then
+    source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+elif [ -f ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh ]; then
+    source ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+fi
+
+# Syntax Highlighting (resaltado de comandos: verde ok, rojo error)
+if [ -f /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]; then
+    source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+elif [ -f ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]; then
+    source ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+fi
+
+# Keybindings de FZF (Ctrl+R para búsqueda de historial flotante)
+if [ -f /usr/share/fzf/key-bindings.zsh ]; then
+    source /usr/share/fzf/key-bindings.zsh
+    source /usr/share/fzf/completion.zsh 2>/dev/null || true
+fi
+
+# Zoxide (cd inteligente)
+if command -v zoxide &>/dev/null; then
+    eval "$(zoxide init zsh)"
+fi
+
+# ── 5. Starship Prompt (Inicio Instantáneo) ────────────────────
+if command -v starship &>/dev/null; then
+    eval "$(starship init zsh)"
+fi
+
+# ── 6. Alias ───────────────────────────────────────────────────
 # Navegación
 alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'
 
-# Listado mejorado
-alias ls='ls --color=auto --group-directories-first'
-alias ll='ls -lah'
-alias la='ls -la'
-alias lt='ls --tree'
+# Listado (eza si está disponible, sino ls)
+if command -v eza &>/dev/null; then
+    alias ls='eza --icons --group-directories-first'
+    alias ll='eza -lh --icons --group-directories-first'
+    alias la='eza -lah --icons --group-directories-first'
+    alias lt='eza --tree --icons'
+else
+    alias ls='ls --color=auto --group-directories-first'
+    alias ll='ls -lah'
+    alias la='ls -la'
+fi
 
-# Git shortcuts
+# Git Shortcuts
 alias gs='git status'
 alias gc='git commit'
 alias gp='git push'
@@ -90,7 +110,7 @@ alias free='free -h'
 alias ip='ip -c'
 alias reload='source ~/.zshrc && echo "✅ .zshrc recargado"'
 
-# Dotfiles management
+# Dotfiles Management
 alias dotfiles='cd ~/Documentos/Github/dotfileSway'
 alias dots-update='bash ~/Documentos/Github/dotfileSway/update_dotfiles.sh'
 alias dots-apply='bash ~/Documentos/Github/dotfileSway/setup.sh'
@@ -99,7 +119,7 @@ alias fm='yazi'
 alias files='yazi'
 alias y='yazi'
 
-# Apps personales
+# Aplicaciones Personales
 alias tidal='cd ~/Documentos/Github/tuidal && uv run tidal_tui'
 alias chatia='cd ~/Documentos/Github/chatia && uv run chatia'
 alias anti='~/Aplicaciones/Antigravity/Antigravity-x64/antigravity'
@@ -108,16 +128,11 @@ alias anti='~/Aplicaciones/Antigravity/Antigravity-x64/antigravity'
 alias sway-reload='swaymsg reload'
 alias sway-log='journalctl --user -b -u sway'
 
-# Limpieza de caché
+# Limpieza
 alias cleanup='sudo pacman -Rns $(pacman -Qdtq) 2>/dev/null; yay -Sc --noconfirm'
 alias cache-clear='rm -rf ~/.cache/*'
 
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-
-# ╔══════════════════════════════════════════════════════════════╗
-# ║              Inicio de sesión (Sway en tty1)                 ║
-# ╚══════════════════════════════════════════════════════════════╝
+# ── 7. Inicio de Sesión (Sway en tty1) ─────────────────────────
 if [[ -z $DISPLAY && $(tty) == "/dev/tty1" ]]; then
     exec sway
 fi

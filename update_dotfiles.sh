@@ -41,10 +41,15 @@ for app in "${CONFIGS[@]}"; do
     fi
 done
 
-# Sincronizar mimeapps.list
+# Sincronizar mimeapps.list y starship.toml
 if [ -f "$CONFIG_DIR/mimeapps.list" ]; then
     echo -e "  ${GREEN}→${NC} Actualizando: ${BLUE}mimeapps.list${NC}"
     cp -f "$CONFIG_DIR/mimeapps.list" "$DOTFILES_DIR/config/mimeapps.list"
+fi
+
+if [ -f "$CONFIG_DIR/starship.toml" ]; then
+    echo -e "  ${GREEN}→${NC} Actualizando: ${BLUE}starship.toml${NC}"
+    cp -f "$CONFIG_DIR/starship.toml" "$DOTFILES_DIR/config/starship.toml"
 fi
 
 # ── 3. Sincronizar archivos de home ─────────────────────────────
@@ -63,7 +68,7 @@ done
 if [ -d "$HOME/.local/bin" ]; then
     echo ""
     echo -e "${CYAN}⚡ Sincronizando scripts...${NC}"
-    for script in screenshot.sh volume.sh brightness.sh color-picker.sh swayidle.sh gammastep-toggle.sh set-wallpaper.sh yazi-open-with.sh; do
+    for script in screenshot.sh volume.sh brightness.sh color-picker.sh swayidle.sh gammastep-toggle.sh set-wallpaper.sh yazi-open-with.sh emoji-picker.sh; do
         if [ -f "$HOME/.local/bin/$script" ]; then
             echo -e "  ${GREEN}→${NC} Actualizando: ${BLUE}$script${NC}"
             cp -f "$HOME/.local/bin/$script" "$DOTFILES_DIR/scripts/$script"
