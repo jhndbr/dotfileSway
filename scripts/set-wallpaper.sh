@@ -15,23 +15,14 @@ if [ ! -f "$WALLPAPER_INPUT" ]; then
 fi
 
 TARGET_WALLPAPER="$HOME/Pictures/1.jpg"
-CONVERTED_PNG="/tmp/wallpaper.png"
-
-# ── 1. Normalizar formato de imagen a PNG para evitar fallos en Matugen ──
-if command -v magick &>/dev/null; then
-    magick "$WALLPAPER_INPUT" "$CONVERTED_PNG" 2>/dev/null || cp -f "$WALLPAPER_INPUT" "$CONVERTED_PNG"
-elif command -v convert &>/dev/null; then
-    convert "$WALLPAPER_INPUT" "$CONVERTED_PNG" 2>/dev/null || cp -f "$WALLPAPER_INPUT" "$CONVERTED_PNG"
-else
-    cp -f "$WALLPAPER_INPUT" "$CONVERTED_PNG"
-fi
+CONVERTED_PNG="$WALLPAPER_INPUT"
 
 if [ "$WALLPAPER_INPUT" != "$TARGET_WALLPAPER" ]; then
-    cp -f "$WALLPAPER_INPUT" "$TARGET_WALLPAPER"
+    cp -f "$WALLPAPER_INPUT" "$TARGET_WALLPAPER" &
 fi
 
 if command -v swaymsg &>/dev/null && pgrep -x sway &>/dev/null; then
-    swaymsg "output * bg '$TARGET_WALLPAPER' fill" || true
+    swaymsg "output * bg '$WALLPAPER_INPUT' fill" &
 fi
 
 echo "🎨 Generando paleta de colores dinámicas desde: $WALLPAPER_INPUT..."
@@ -373,9 +364,12 @@ printf '@import url("dank-colors.css");\n%s\n' "$GTK4_FIXES" \
     > "$HOME/.config/gtk-4.0/gtk-dark.css"
 
 
-# ── 6. Sincronizar color de iconos con la paleta de Matugen ─────
+# ── 6. Sincronizar color de iconos en segundo plano ─────
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 if [ -f "$HOME/.local/bin/sync-icon-color.py" ]; then
-    python3 "$HOME/.local/bin/sync-icon-color.py" || true
+    python3 "$HOME/.local/bin/sync-icon-color.py" &>/dev/null &
+elif [ -f "$SCRIPT_DIR/sync-icon-color.py" ]; then
+    python3 "$SCRIPT_DIR/sync-icon-color.py" &>/dev/null &
 fi
 
 # ── 7. Asegurar estilo Qt en Fusion, Papirus-Dark y kdeglobals ──
@@ -387,9 +381,6 @@ sed -i 's/^icon_theme=.*/icon_theme=Papirus-Dark/' "$HOME/.config/qt6ct/qt6ct.co
 # ── 8. Recargar componentes del escritorio y Foot ───────────────
 pkill -SIGUSR2 waybar 2>/dev/null || true
 pkill -SIGUSR1 foot 2>/dev/null || true
-if pgrep -x sway &>/dev/null; then
-    swaymsg reload 2>/dev/null || true
-fi
 if pgrep -x dunst &>/dev/null; then
     killall dunst 2>/dev/null || true
     dunst &>/dev/null &

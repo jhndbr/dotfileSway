@@ -79,15 +79,15 @@
     },
 
     "clock": {
-        "format": "󰥔 {:%H:%M}",
-        "format-alt": "󰃭 {:%A %d de %B, %Y  │  %H:%M:%S}",
+        "format": "{:%H:%M}",
+        "format-alt": "{:%A %d de %B, %Y  │  %H:%M:%S}",
         "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
         "locale": "es_AR.UTF-8",
         "interval": 1
     },
 
     "custom/media": {
-        "format": "{icon} {text}",
+        "format": "{text}",
         "return-type": "json",
         "max-length": 30,
         "format-icons": {

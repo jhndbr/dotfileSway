@@ -64,13 +64,32 @@ def main():
     color_name = get_papirus_color(hex_color)
     print(f"🎨 Color de carpetas/iconos Papirus: {color_name} (hex acento: {hex_color})")
 
+    # Cache para evitar re-ejecutar papirus-folders si el color no cambió
+    cache_file = "/tmp/papirus_last_color"
+    if os.path.exists(cache_file):
+        try:
+            with open(cache_file, "r") as f:
+                if f.read().strip() == color_name:
+                    print(f"⚡ Color de carpetas ya actualizado a '{color_name}'.")
+                    return
+        except Exception:
+            pass
+
     papirus_bin = os.path.expanduser("~/.local/bin/papirus-folders")
     if not os.path.exists(papirus_bin):
         papirus_bin = "papirus-folders"
 
-    # Usar -u (--user) y -o (--once) para forzar modo usuario sin sudo en ~/.local/share/icons
-    subprocess.run([papirus_bin, "-C", color_name, "-t", "Papirus-Dark", "-u", "-o"], capture_output=True, text=True)
-    subprocess.run([papirus_bin, "-C", color_name, "-t", "Papirus", "-u", "-o"], capture_output=True, text=True)
+    user_icons = os.path.expanduser("~/.local/share/icons/Papirus-Dark")
+    cmd_flags = ["-u", "-o"] if os.path.exists(user_icons) else ["-o"]
+
+    subprocess.run([papirus_bin, "-C", color_name, "-t", "Papirus-Dark"] + cmd_flags, capture_output=True, text=True)
+    subprocess.run([papirus_bin, "-C", color_name, "-t", "Papirus"] + cmd_flags, capture_output=True, text=True)
+
+    try:
+        with open(cache_file, "w") as f:
+            f.write(color_name)
+    except Exception:
+        pass
 
 if __name__ == "__main__":
     main()

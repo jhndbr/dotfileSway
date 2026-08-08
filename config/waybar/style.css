@@ -121,12 +121,16 @@ tooltip label {
 #quicksettings #custom-gammastep,
 #quicksettings #idle_inhibitor,
 #quicksettings #power-profiles-daemon,
-#quicksettings #custom-notification {
+#quicksettings #custom-notification,
+#custom-gammastep,
+#idle_inhibitor,
+#custom-notification {
     padding: 0 4px;
     margin: 0;
     border-radius: 0;
     border: none;
     background: transparent;
+    font-size: 14.5px;
 }
 
 #audio label,
@@ -153,31 +157,31 @@ tooltip label {
 
 /* Iconos de disparo a la izquierda */
 #custom-system-icon {
-    font-size: 12.5px;
+    font-size: 14.5px;
     color: @accent_color;
     padding: 0 3px;
 }
 
 #pulseaudio\.icon {
-    font-size: 12.5px;
+    font-size: 14.5px;
     color: @accent_color;
     padding: 0 3px;
 }
 
 #backlight\.icon {
-    font-size: 12.5px;
+    font-size: 14.5px;
     color: #ffd60a;
     padding: 0 3px;
 }
 
 #network\.icon {
-    font-size: 12.5px;
+    font-size: 14.5px;
     color: #30d158;
     padding: 0 3px;
 }
 
 #battery\.icon {
-    font-size: 12.5px;
+    font-size: 14.5px;
     color: @accent_color;
     padding: 0 3px;
 }
