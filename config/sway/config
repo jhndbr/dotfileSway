@@ -52,6 +52,7 @@ workspace_auto_back_and_forth yes
 
 # ── Output ──────────────────────────────────────────────────────
 output * bg ~/Pictures/1.jpg fill
+include ~/.config/sway/outputs.conf
 
 # ── Input ───────────────────────────────────────────────────────
 input type:touchpad {
@@ -103,6 +104,10 @@ bindsym $mod+Shift+c reload
 
 # Menú de apagado / sesión (Wofi nativo)
 bindsym $mod+Shift+e exec $scripts/power-menu.sh
+
+# Gestor de monitores y pantallas
+bindsym $mod+p exec $scripts/monitor-manager.sh menu
+bindsym XF86Display exec $scripts/monitor-manager.sh menu
 
 # ── Navegación ──────────────────────────────────────────────────
 # Navegación con flechas
@@ -158,7 +163,7 @@ bindsym $mod+space focus mode_toggle
 bindsym $mod+s layout stacking
 bindsym $mod+t layout tabbed
 bindsym $mod+d layout toggle split
-bindsym $mod+p focus parent
+bindsym $mod+u focus parent
 bindsym $mod+c focus child
 
 # Scratchpad
@@ -263,9 +268,6 @@ exec udiskie --tray &
 
 # Idle management (bloqueo, apagar pantalla, suspender)
 exec $scripts/swayidle.sh
-
-# Multi-monitor automático
-exec_always kanshi
 
 # Filtro de luz azul (night light)
 exec gammastep

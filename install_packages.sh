@@ -64,7 +64,6 @@ PACMAN_PACKAGES=(
     wofi
     foot
     dunst
-    kanshi
     gammastep
 
     # Captura de Pantalla & Portapapeles

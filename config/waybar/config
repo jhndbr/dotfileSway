@@ -102,15 +102,35 @@
         "on-scroll-down": "playerctl volume 0.05-"
     },
 
-    /* ── QuickSettings Group (Gammastep, Idle, Power Profiles, Notification) ──────── */
+    /* ── QuickSettings Group (Display, Gammastep, Idle, Power Profiles, Notification) ─ */
     "group/quicksettings": {
         "orientation": "horizontal",
         "modules": [
+            "custom/display",
             "custom/gammastep",
             "idle_inhibitor",
             "power-profiles-daemon",
             "custom/notification"
         ]
+    },
+
+    "custom/display": {
+        "format": "{icon}",
+        "format-icons": {
+            "laptop": "󰌢",
+            "single": "󰍹",
+            "dual": "󰍺",
+            "mirror": "󰑈",
+            "connected": "󰍹",
+            "offline": "󰍹",
+            "default": "󰍹"
+        },
+        "return-type": "json",
+        "interval": 2,
+        "exec": "~/.local/bin/monitor-manager.sh waybar",
+        "on-click": "~/.local/bin/monitor-manager.sh menu",
+        "on-click-right": "~/.local/bin/monitor-manager.sh auto",
+        "tooltip": true
     },
 
     "power-profiles-daemon": {

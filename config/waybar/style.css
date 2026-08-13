@@ -118,10 +118,12 @@ tooltip label {
     box-shadow: none;
 }
 
+#quicksettings #custom-display,
 #quicksettings #custom-gammastep,
 #quicksettings #idle_inhibitor,
 #quicksettings #power-profiles-daemon,
 #quicksettings #custom-notification,
+#custom-display,
 #custom-gammastep,
 #idle_inhibitor,
 #custom-notification {
@@ -270,6 +272,20 @@ tooltip label {
 
 #custom-media.Paused {
     color: @text_secondary;
+}
+
+#custom-display.dual,
+#custom-display.mirror {
+    color: @accent_color;
+}
+
+#custom-display.connected {
+    color: #ffd60a;
+}
+
+#custom-display.laptop,
+#custom-display.single {
+    color: @text_primary;
 }
 
 #idle_inhibitor.activated {

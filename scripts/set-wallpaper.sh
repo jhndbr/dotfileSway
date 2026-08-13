@@ -56,6 +56,8 @@ mkdir -p "$HOME/.config/kitty" "$HOME/.config/foot"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 if [ -d "$SCRIPT_DIR/../templates" ]; then
     cp -rf "$SCRIPT_DIR/../templates/"* "$TEMPLATES_DIR/" 2>/dev/null || true
+elif [ -d "$HOME/Documents/dotfileSway/templates" ]; then
+    cp -rf "$HOME/Documents/dotfileSway/templates/"* "$TEMPLATES_DIR/" 2>/dev/null || true
 elif [ -d "$HOME/Documentos/Github/dotfileSway/templates" ]; then
     cp -rf "$HOME/Documentos/Github/dotfileSway/templates/"* "$TEMPLATES_DIR/" 2>/dev/null || true
 elif [ -d "$HOME/dotfileSway/templates" ]; then

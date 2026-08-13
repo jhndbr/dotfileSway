@@ -18,12 +18,12 @@ Dotfiles minimalistas, elegantes y funcionales para un entorno de escritorio bas
 - **Foot** — Terminal rápida con colores pastel
 - **Swaylock** — Pantalla de bloqueo monocromática
 - **Swayidle** — Gestión de inactividad (bloqueo, dpms, suspensión)
-- **Kanshi** — Gestión automática de monitores
+- **Gestor de Monitores** — Control de pantallas, modo dual/espejo y resoluciones integrado en Waybar
 - **Wlogout** — Menú de apagado visual con glassmorphism
 - **Gammastep** — Filtro de luz azul automático
 - **GTK 3/4 y Qt 5/6** — Tema oscuro dinámico basado en Adwaita y Fusion
 - **Zsh** — Shell con Oh My Zsh + Starship / Powerlevel10k + FZF
-- **Scripts** — Wallpaper dinámico, capturas de pantalla, volumen, brillo, selector de color y emojis
+- **Scripts** — Wallpaper dinámico, gestión de monitores, capturas de pantalla, volumen, brillo, selector de color y emojis
 
 ---
 
@@ -38,8 +38,6 @@ dotfileSway/
 │   ├── dunst/          # Notificaciones
 │   ├── foot/           # Terminal
 │   ├── swaylock/       # Pantalla de bloqueo
-│   ├── kanshi/         # Multi-monitor
-
 │   ├── gammastep/      # Filtro luz azul
 │   ├── yazi/           # Gestor de archivos TUI
 │   ├── gtk-3.0/        # Tema GTK 3
@@ -48,6 +46,7 @@ dotfileSway/
 │   ├── qt6ct/          # Configuración de estilo Qt6
 │   └── environment.d/  # Variables de entorno Qt
 ├── scripts/
+│   ├── monitor-manager.sh # Gestor interactivo de monitores y resoluciones
 │   ├── set-wallpaper.sh # Gestor de wallpaper y tema dinámico
 │   ├── screenshot.sh   # Menú de capturas
 │   ├── volume.sh       # Control de volumen + OSD
@@ -149,6 +148,7 @@ bash ~/.local/bin/set-wallpaper.sh /ruta/a/tu/imagen.jpg
 | `Mod+Print` | Capturar área (Guardar y copiar) |
 | `Mod+Shift+S` | Capturar área (Solo copiar al portapapeles) |
 | `Mod+Shift+Print` | Menú interactivo de screenshots |
+| `Mod+P` / `XF86Display` | Menú de gestión de monitores (Extender, resoluciones, escala) |
 | `Mod+Shift+P` | Selector de color (Color Picker) |
 | `Teclas Multimedia` | Control de volumen, brillo y reproducción multimedia |
 
