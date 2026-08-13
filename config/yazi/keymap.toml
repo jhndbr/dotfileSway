@@ -6,7 +6,8 @@
 prepend_keymap = [
     # ── Navegación & Control Intuitivo ──────────────────────────
     { on = [ "<Backspace>" ], run = "leave", desc = "Volver al directorio anterior" },
-    { on = [ "!" ], run = 'shell "$SHELL" --block', desc = "Abrir terminal interactiva aquí" },
+    { on = [ "!" ], run = 'shell --orphan "foot -D \"$PWD\""', desc = "Abrir nueva ventana de terminal (Foot) aquí" },
+    { on = [ "<Enter>" ], run = "open --interactive", desc = "Abrir con... (Menú interactivo de abridores)" },
 
     # ── Operaciones de Archivo ─────────────────────────────────
     { on = [ "r" ], run = "rename", desc = "Renombrar archivo o carpeta" },
@@ -15,8 +16,8 @@ prepend_keymap = [
     { on = [ "<C-o>" ], run = 'shell --orphan "~/.local/bin/yazi-open-with.sh \"$1\""', desc = "Abrir con cualquier aplicación (Selector Wofi)" },
 
     # ── Extracción y Compresión con Ouch ───────────────────────
-    { on = [ "e" ], run = 'shell \'ouch decompress "$@"\' --confirm', desc = "Extraer archivo(s) con ouch" },
-    { on = [ "E" ], run = 'shell \'ouch compress "$@" "${1%.*}.tar.gz"\' --confirm', desc = "Comprimir archivo(s) a .tar.gz con ouch" },
+    { on = [ "e" ], run = "shell 'ouch decompress \"$@\"' --confirm", desc = "Extraer archivo(s) con ouch" },
+    { on = [ "E" ], run = "shell 'ouch compress \"$@\" \"${1%.*}.tar.gz\"' --confirm", desc = "Comprimir archivo(s) a .tar.gz con ouch" },
 
     # ── Saltos Rápidos de Carpetas (Go to) ─────────────────────
     { on = [ "g", "h" ], run = "cd ~", desc = "Ir a Home" },

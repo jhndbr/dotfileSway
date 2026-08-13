@@ -47,10 +47,11 @@ open_archive = [
     { run = 'ouch decompress "$@"', desc = "Extraer con ouch", block = true },
 ]
 
-# 7. Abrir carpeta externamente (Zed / Nueva terminal Yazi)
+# 7. Abrir carpeta externamente (Terminal / Zed / Selector Wofi)
 open_folder = [
-    { run = 'zeditor "$1"', desc = "Abrir carpeta en Zed", orphan = true },
-    { run = 'foot --title="yazi" -e yazi "$1"', desc = "Abrir carpeta en nueva terminal", orphan = true },
+    { run = 'foot -D "$1"', desc = "Abrir terminal aquí (Foot)", orphan = true },
+    { run = 'zeditor "$1"', desc = "Abrir carpeta en Zed Editor", orphan = true },
+    { run = '~/.local/bin/yazi-open-with.sh "$1"', desc = "⚡ Abrir con... (Selector Wofi)", orphan = true },
 ]
 
 # 8. Selector Universal de Aplicaciones (Wofi dmenu)
