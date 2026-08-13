@@ -14,18 +14,17 @@ set $menu wofi --show drun
 set $lock swaylock -f
 set $scripts ~/.local/bin
 
-# Dynamic Palette from Matugen (fallback to default)
-include ~/.config/sway/dank-colors
-
-# Default fallback values
+# Default fallback values (sobreescritos por Matugen si dank-colors existe)
 set $bg_dark      #141414
 set $bg_surface   #1c1c1e
-set $bg_overlay   #2c2c2e
 set $border_focus #ffffff
 set $border_unfocus #2c2c2e
 set $text_main    #ffffff
 set $text_muted   #8e8e93
 set $accent_red   #ff453a
+
+# Dynamic Palette from Matugen (sobreescribe los fallbacks)
+include ~/.config/sway/dank-colors
 
 # ── Apariencia Monocromática ────────────────────────────────────
 # class                  border          bg           text        indicator       child_border
@@ -102,8 +101,8 @@ floating_modifier $mod normal
 # Reload config
 bindsym $mod+Shift+c reload
 
-# Menú de apagado (wlogout)
-bindsym $mod+Shift+e exec wlogout -p layer-shell -b 3 -c 16 -r 16 -T 240 -B 240 -L 280 -R 280
+# Menú de apagado / sesión (Wofi nativo)
+bindsym $mod+Shift+e exec $scripts/power-menu.sh
 
 # ── Navegación ──────────────────────────────────────────────────
 # Navegación con flechas
@@ -225,7 +224,7 @@ for_window [title="yazi"] floating enable, resize set 1050 680, move position ce
 for_window [app_id="imv"] floating enable
 for_window [app_id="org.pwmt.zathura"] floating enable, resize set 900 700, move position center
 for_window [app_id="mpv"] floating enable, resize set 960 540, move position center
-for_window [app_id="wlogout"] fullscreen enable
+
 for_window [app_id="wofi"] border none, floating enable
 for_window [window_type="dialog"] floating enable, move position center
 for_window [window_role="dialog"] floating enable, move position center
@@ -246,9 +245,10 @@ bar {
     swaybar_command waybar
 }
 
-# D-Bus / Entorno
-exec dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway QT_QPA_PLATFORMTHEME=qt6ct
-exec systemctl --user set-environment QT_QPA_PLATFORMTHEME=qt6ct
+# D-Bus / Entorno & Portales XDG (Compartir pantalla)
+exec systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP XDG_SESSION_TYPE
+exec dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway XDG_SESSION_TYPE=wayland QT_QPA_PLATFORMTHEME=qt6ct
+exec systemctl --user set-environment QT_QPA_PLATFORMTHEME=qt6ct XDG_SESSION_TYPE=wayland XDG_CURRENT_DESKTOP=sway
 
 # Servicios del sistema
 exec /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
@@ -262,13 +262,7 @@ exec wl-paste --watch cliphist store
 exec udiskie --tray &
 
 # Idle management (bloqueo, apagar pantalla, suspender)
-exec swayidle -w \
-    timeout 300 'swaylock -f' \
-    timeout 600 'swaymsg "output * dpms off"' \
-    resume 'swaymsg "output * dpms on"' \
-    timeout 1800 'systemctl suspend' \
-    before-sleep 'swaylock -f' \
-    lock 'swaylock -f'
+exec $scripts/swayidle.sh
 
 # Multi-monitor automático
 exec_always kanshi

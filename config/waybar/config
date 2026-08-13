@@ -347,7 +347,7 @@
     "custom/power": {
         "format": "⏻",
         "tooltip-format": "Menú de apagado",
-        "on-click": "wlogout -p layer-shell -b 3 -c 16 -r 16 -T 240 -B 240 -L 280 -R 280",
+        "on-click": "~/.local/bin/power-menu.sh",
         "tooltip": true
     }
 }

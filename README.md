@@ -39,7 +39,7 @@ dotfileSway/
 │   ├── foot/           # Terminal
 │   ├── swaylock/       # Pantalla de bloqueo
 │   ├── kanshi/         # Multi-monitor
-│   ├── wlogout/        # Menú de apagado
+
 │   ├── gammastep/      # Filtro luz azul
 │   ├── yazi/           # Gestor de archivos TUI
 │   ├── gtk-3.0/        # Tema GTK 3
@@ -60,7 +60,6 @@ dotfileSway/
 ├── .zprofile           # Variables de entorno Wayland
 ├── .gitconfig          # Configuración de Git
 ├── setup.sh            # Instalar dotfiles
-├── update_dotfiles.sh  # Sincronizar desde ~/.config
 ├── install_packages.sh # Instalar dependencias
 └── README.md
 ```
@@ -155,17 +154,7 @@ bash ~/.local/bin/set-wallpaper.sh /ruta/a/tu/imagen.jpg
 
 ---
 
-## Sincronización
 
-Para actualizar los dotfiles del repositorio con las modificaciones que realices en `~/.config`:
-
-```bash
-bash update_dotfiles.sh
-```
-
-Este script copia las configuraciones actuales al repositorio y opcionalmente realiza commit + push.
-
----
 
 ## Dependencias
 
@@ -174,7 +163,7 @@ El script `install_packages.sh` instala las siguientes dependencias necesarias:
 | Categoría | Paquetes |
 |---|---|
 | **WM** | sway, swaybg, swaylock, swayidle |
-| **UI** | waybar, wofi, dunst, wlogout |
+| **UI** | waybar, wofi, dunst |
 | **Terminal** | foot |
 | **Audio** | pipewire, wireplumber, pavucontrol |
 | **Red** | networkmanager, blueman |

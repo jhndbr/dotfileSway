@@ -111,13 +111,26 @@ alias ip='ip -c'
 alias reload='source ~/.zshrc && echo "✅ .zshrc recargado"'
 
 # Dotfiles Management
-alias dotfiles='cd ~/Documentos/Github/dotfileSway'
-alias dots-update='bash ~/Documentos/Github/dotfileSway/update_dotfiles.sh'
-alias dots-apply='bash ~/Documentos/Github/dotfileSway/setup.sh'
+alias dotfiles='cd ~/Documents/dotfileSway'
+alias dots-apply='bash ~/Documents/dotfileSway/setup.sh'
 alias wallpaper='~/.local/bin/set-wallpaper.sh'
 alias fm='yazi'
 alias files='yazi'
 alias y='yazi'
+
+# Ouch — Compresión y Descompresión Inteligente
+alias extract='ouch decompress'
+alias compress='ouch compress'
+alias lszip='ouch list'
+
+# Wrapper para descomprimir rápido sin complicaciones: x 'archivo(1).tar.gz'
+x() {
+    if [ $# -eq 0 ]; then
+        echo "Uso: x <archivo(s)>"
+        return 1
+    fi
+    ouch decompress "$@"
+}
 
 # Aplicaciones Personales
 alias tidal='cd ~/Documentos/Github/tuidal && uv run tidal_tui'

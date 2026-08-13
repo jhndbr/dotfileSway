@@ -4,10 +4,30 @@
 
 [manager]
 prepend_keymap = [
-    # Presionar 'r' abre el menú interactivo con los abridores definidos para ese archivo
-    { on = [ "r" ], run = "open --interactive", desc = "Abrir con... (Menú de abridores)" },
-    
-    # Presionar 'R' o 'Ctrl+O' abre Wofi con la lista de TODAS las aplicaciones .desktop del sistema
+    # ── Navegación & Control Intuitivo ──────────────────────────
+    { on = [ "<Backspace>" ], run = "leave", desc = "Volver al directorio anterior" },
+    { on = [ "!" ], run = 'shell "$SHELL" --block', desc = "Abrir terminal interactiva aquí" },
+
+    # ── Operaciones de Archivo ─────────────────────────────────
+    { on = [ "r" ], run = "rename", desc = "Renombrar archivo o carpeta" },
+    { on = [ "O" ], run = "open --interactive", desc = "Abrir con... (Menú de abridores)" },
     { on = [ "R" ], run = 'shell --orphan "~/.local/bin/yazi-open-with.sh \"$1\""', desc = "Abrir con cualquier aplicación (Selector Wofi)" },
     { on = [ "<C-o>" ], run = 'shell --orphan "~/.local/bin/yazi-open-with.sh \"$1\""', desc = "Abrir con cualquier aplicación (Selector Wofi)" },
+
+    # ── Extracción y Compresión con Ouch ───────────────────────
+    { on = [ "e" ], run = 'shell \'ouch decompress "$@"\' --confirm', desc = "Extraer archivo(s) con ouch" },
+    { on = [ "E" ], run = 'shell \'ouch compress "$@" "${1%.*}.tar.gz"\' --confirm', desc = "Comprimir archivo(s) a .tar.gz con ouch" },
+
+    # ── Saltos Rápidos de Carpetas (Go to) ─────────────────────
+    { on = [ "g", "h" ], run = "cd ~", desc = "Ir a Home" },
+    { on = [ "g", "d" ], run = "cd ~/Descargas", desc = "Ir a Descargas" },
+    { on = [ "g", "D" ], run = "cd ~/Downloads", desc = "Ir a Downloads" },
+    { on = [ "g", "o" ], run = "cd ~/Documentos", desc = "Ir a Documentos" },
+    { on = [ "g", "p" ], run = "cd ~/Pictures", desc = "Ir a Imágenes / Pictures" },
+    { on = [ "g", "P" ], run = "cd ~/Imágenes", desc = "Ir a Imágenes" },
+    { on = [ "g", "v" ], run = "cd ~/Vídeos", desc = "Ir a Vídeos" },
+    { on = [ "g", "V" ], run = "cd ~/Videos", desc = "Ir a Videos" },
+    { on = [ "g", "." ], run = "cd ~/Documents/dotfileSway", desc = "Ir a Dotfiles" },
+    { on = [ "g", "c" ], run = "cd ~/.config", desc = "Ir a ~/.config" },
+    { on = [ "g", "t" ], run = "cd /tmp", desc = "Ir a /tmp" },
 ]

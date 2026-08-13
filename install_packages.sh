@@ -2,7 +2,7 @@
 
 # ╔══════════════════════════════════════════════════════════════╗
 # ║        Instalador de Dependencias Entorno Sway WM            ║
-# ║        Optimizado & Robusto para Arch Linux (pacman/yay)     ║
+# ║        Optimizado & Robusto para Arch Linux (pacman)         ║
 # ╚══════════════════════════════════════════════════════════════╝
 
 set -eo pipefail
@@ -151,25 +151,10 @@ log_info "Instalando paquetes oficiales con pacman..."
 sudo pacman -S --needed --noconfirm "${PACMAN_PACKAGES[@]}"
 log_success "Paquetes oficiales instalados con éxito"
 
-# ── 5. Helper de AUR (yay) & Paquetes AUR ───────────────────────
-if ! command -v yay &> /dev/null; then
-    log_warn "AUR helper 'yay' no encontrado. Instalando yay-bin desde AUR..."
-    rm -rf /tmp/yay-bin
-    git clone https://aur.archlinux.org/yay-bin.git /tmp/yay-bin
-    (cd /tmp/yay-bin && makepkg -si --noconfirm)
-    rm -rf /tmp/yay-bin
-    log_success "yay instalado correctamente"
-fi
+log_info "Actualizando caché de fuentes del sistema..."
+fc-cache -f > /dev/null 2>&1 || true
+log_success "Caché de fuentes actualizada"
 
-AUR_PACKAGES=(
-    wlogout
-)
-
-# Intentar instalar paquetes opcionales de AUR si están disponibles
-if [ ${#AUR_PACKAGES[@]} -gt 0 ]; then
-    log_info "Instalando paquetes desde AUR con yay..."
-    yay -S --needed --noconfirm "${AUR_PACKAGES[@]}" || log_warn "Algunos paquetes de AUR se omitieron"
-fi
 
 # ── 6. Helper Script papirus-folders ───────────────────────────
 if ! command -v papirus-folders &>/dev/null; then
@@ -198,10 +183,18 @@ if [ "$CURRENT_SHELL" != "zsh" ] && [ -x "$ZSH_PATH" ]; then
     fi
 fi
 
-# ── 8.1. Habilitar Servicio Power Profiles ─────────────────────
+# ── 8.1. Habilitar Servicios del Sistema & Usuario ─────────────
 log_info "Habilitando servicio power-profiles-daemon..."
 sudo systemctl enable --now power-profiles-daemon.service 2>/dev/null || true
 log_success "Servicio power-profiles-daemon habilitado"
+
+log_info "Habilitando servicio de Bluetooth..."
+sudo systemctl enable --now bluetooth.service 2>/dev/null || true
+log_success "Servicio bluetooth habilitado"
+
+log_info "Habilitando servicios de audio Pipewire & Wireplumber..."
+systemctl --user enable --now pipewire.service pipewire-pulse.service wireplumber.service 2>/dev/null || true
+log_success "Servicios de audio habilitados"
 
 # ── 9. Finalización ─────────────────────────────────────────────
 echo ""
