@@ -1,31 +1,44 @@
 /* ╔══════════════════════════════════════════════════════════════╗
-   ║     Waybar Style — macOS & Linux Frosted Glass Theme         ║
-   ║     Uniform Pill Architecture & Dynamic Material Palette     ║
+   ║     Waybar — macOS-Inspired Frosted Glass Bar for Linux      ║
+   ║     Uniform Island Architecture · Dynamic Material Palette   ║
    ╚══════════════════════════════════════════════════════════════╝ */
 
 @import url("../gtk-3.0/dank-colors.css");
 
-/* ── Palette Aliases & Glass Tokens ──────────────────────────── */
-@define-color bg_bar            alpha(@window_bg_color, 0.82);
-@define-color bg_pill           alpha(@window_fg_color, 0.07);
-@define-color bg_pill_hover     alpha(@window_fg_color, 0.14);
-@define-color bg_active         @accent_bg_color;
-@define-color border_bar        alpha(@window_fg_color, 0.08);
-@define-color border_pill       alpha(@window_fg_color, 0.09);
-@define-color border_pill_hover alpha(@accent_bg_color, 0.45);
-@define-color text_primary      @window_fg_color;
-@define-color text_secondary    alpha(@window_fg_color, 0.65);
-@define-color text_muted        alpha(@window_fg_color, 0.40);
-@define-color text_bright       @accent_fg_color;
-@define-color accent_color      @accent_bg_color;
+/* ══════════════════════════════════════════════════════════════
+   ║  DESIGN TOKENS — Derived from Matugen Dynamic Palette       ║
+   ══════════════════════════════════════════════════════════════ */
 
-/* Colores Semánticos macOS */
-@define-color green_apple       #30d158;
-@define-color yellow_apple      #ffd60a;
-@define-color red_apple         #ff453a;
-@define-color blue_apple        #0a84ff;
+/* Bar Surface */
+@define-color bg_bar             alpha(@window_bg_color, 0.80);
+@define-color border_bar         alpha(@window_fg_color, 0.06);
 
-/* ── Global Reset & Typography ──────────────────────────────── */
+/* Island / Pill Surfaces */
+@define-color bg_pill            alpha(@window_fg_color, 0.06);
+@define-color bg_pill_hover      alpha(@window_fg_color, 0.12);
+@define-color bg_pill_active     alpha(@accent_bg_color, 0.18);
+@define-color border_pill        alpha(@window_fg_color, 0.08);
+@define-color border_pill_hover  alpha(@accent_bg_color, 0.35);
+
+/* Text Hierarchy */
+@define-color text_primary       @window_fg_color;
+@define-color text_secondary     alpha(@window_fg_color, 0.60);
+@define-color text_muted         alpha(@window_fg_color, 0.38);
+@define-color text_on_accent     @accent_fg_color;
+
+/* Accent — all from system palette */
+@define-color accent             @accent_bg_color;
+@define-color accent_dim         alpha(@accent_bg_color, 0.65);
+
+/* Semantic — derived from system, not hardcoded */
+@define-color semantic_success   alpha(@accent_bg_color, 0.85);
+@define-color semantic_warning   @button_active_bg_color;
+@define-color semantic_danger    @destructive_bg_color;
+
+/* ══════════════════════════════════════════════════════════════
+   ║  GLOBAL RESET & TYPOGRAPHY                                  ║
+   ══════════════════════════════════════════════════════════════ */
+
 * {
     border: none;
     border-radius: 0;
@@ -37,13 +50,17 @@
     margin: 0;
 }
 
-/* ── Barra Superior Transparente / Frosted Glass ───────────── */
+/* ══════════════════════════════════════════════════════════════
+   ║  BAR CONTAINER — Frosted Glass Edge-to-Edge                 ║
+   ══════════════════════════════════════════════════════════════ */
+
 window#waybar {
     background: @bg_bar;
     border: none;
     border-bottom: 1px solid @border_bar;
     border-radius: 0;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.12),
+                0 2px 16px rgba(0, 0, 0, 0.08);
     transition: all 0.3s ease;
 }
 
@@ -51,23 +68,26 @@ window#waybar.hidden {
     opacity: 0;
 }
 
-/* ── Tooltips ──────────────────────────────────────────────── */
+/* ══════════════════════════════════════════════════════════════
+   ║  TOOLTIPS                                                   ║
+   ══════════════════════════════════════════════════════════════ */
+
 tooltip {
     background: alpha(@window_bg_color, 0.94);
-    border: 1px solid alpha(@accent_color, 0.30);
-    border-radius: 10px;
-    padding: 8px 12px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+    border: 1px solid alpha(@window_fg_color, 0.10);
+    border-radius: 8px;
+    padding: 6px 10px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
 }
 
 tooltip label {
     color: @text_primary;
     font-size: 11px;
-    font-weight: 500;
 }
 
 /* ══════════════════════════════════════════════════════════════
-   ║  ARQUITECTURA UNIFORME DE ISLAS / PÍLDORAS (CONTENEDORES)   ║
+   ║  UNIFORM ISLAND / PILL ARCHITECTURE                         ║
+   ║  Every module container shares the same base geometry        ║
    ══════════════════════════════════════════════════════════════ */
 
 #custom-menu,
@@ -89,10 +109,10 @@ tooltip label {
     margin: 3px 2px;
     min-height: 24px;
     color: @text_primary;
-    transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
-/* Efecto Hover uniforme en píldoras */
+/* Uniform hover for all interactive pills */
 #custom-menu:hover,
 #workspaces:hover,
 #scratchpad:hover,
@@ -101,24 +121,22 @@ tooltip label {
 #custom-quicksettings:hover,
 #controls:hover,
 #hardware:hover,
-#tray:hover,
-#custom-power:hover {
+#tray:hover {
     background: @bg_pill_hover;
     border-color: @border_pill_hover;
 }
 
 /* ══════════════════════════════════════════════════════════════
-   ║  REMOVER FONDOS Y BORDES INTERNOS EN GRUPOS Y SUBMÓDULOS     ║
+   ║  TRANSPARENT RESET FOR GROUP CHILDREN & DRAWERS             ║
+   ║  Ensures no double-backgrounds inside pill containers        ║
    ══════════════════════════════════════════════════════════════ */
 
-#quicksettings *,
 #controls *,
 #audio *,
 #backlight *,
 #network *,
 #battery *,
 #hardware *,
-#quicksettings *:hover,
 #controls *:hover,
 #audio *:hover,
 #backlight *:hover,
@@ -133,19 +151,13 @@ tooltip label {
     box-shadow: none;
 }
 
+/* Labels inside groups — consistent typography */
 #audio label,
 #backlight label,
 #network label,
 #battery label,
-#hardware label,
-#audio label:hover,
-#backlight label:hover,
-#network label:hover,
-#battery label:hover,
-#hardware label:hover {
+#hardware label {
     background: transparent;
-    background-color: transparent;
-    background-image: none;
     border: none;
     outline: none;
     box-shadow: none;
@@ -153,80 +165,36 @@ tooltip label {
     margin: 0;
     color: @text_primary;
     font-weight: 500;
-}
-
-/* ── Menú de Inicio / Apple-like Distro Icon ────────────────── */
-#custom-menu {
-    font-size: 13.5px;
-    color: @accent_color;
-    padding: 0 7px;
-    margin-left: 4px;
-}
-
-/* ── Iconos de Disparo y Centro de Control ───────────────────── */
-#custom-quicksettings {
-    font-size: 13.5px;
-    color: @accent_color;
-    padding: 0 6px;
-}
-
-#custom-system-icon {
-    font-size: 13.5px;
-    color: @accent_color;
-    padding: 0 3px;
-}
-
-#pulseaudio\.icon {
-    font-size: 13.5px;
-    color: @accent_color;
-    padding: 0 3px;
-}
-
-#backlight\.icon {
-    font-size: 13.5px;
-    color: @yellow_apple;
-    padding: 0 3px;
-}
-
-#network\.icon {
-    font-size: 13.5px;
-    color: @green_apple;
-    padding: 0 3px;
-}
-
-#battery\.icon {
-    font-size: 13.5px;
-    color: @accent_color;
-    padding: 0 3px;
-}
-
-/* Submódulos numéricos desplegables a la derecha */
-#cpu, #memory, #temperature,
-#pulseaudio\.text, #backlight\.text, #network\.text, #battery\.text {
     font-size: 11px;
-    font-weight: 500;
-    padding: 0 2px;
-    color: @text_primary;
 }
 
 /* ══════════════════════════════════════════════════════════════
-   ║  WORKSPACES Y BOTONES                                       ║
+   ║  LEFT — Menu · Workspaces · Window Title                    ║
    ══════════════════════════════════════════════════════════════ */
 
+/* Distro launcher icon (Apple-like) */
+#custom-menu {
+    font-size: 14px;
+    color: @accent;
+    padding: 0 6px;
+    margin-left: 4px;
+}
+
+/* Workspaces — numbered capsules */
 #workspaces {
-    padding: 0 3px;
+    padding: 0 2px;
 }
 
 #workspaces button {
-    color: @text_secondary;
+    color: @text_muted;
     padding: 0 6px;
     margin: 2px 1px;
     border-radius: 6px;
     background: transparent;
-    min-width: 18px;
+    min-width: 20px;
     font-size: 11px;
     font-weight: 600;
-    transition: all 0.2s ease;
+    transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 #workspaces button:hover {
@@ -235,132 +203,195 @@ tooltip label {
 }
 
 #workspaces button.focused {
-    background: @accent_color;
-    color: @text_bright;
+    background: @accent;
+    color: @text_on_accent;
     font-weight: 700;
-    box-shadow: 0 2px 8px alpha(@accent_color, 0.40);
+    box-shadow: 0 1px 4px alpha(@accent, 0.35);
 }
 
 #workspaces button.urgent {
-    background: alpha(@destructive_bg_color, 0.40);
-    color: @destructive_bg_color;
+    background: alpha(@semantic_danger, 0.35);
+    color: @semantic_danger;
 }
 
-/* ── Modo Sway / Resize ─────────────────────────────────────── */
+/* Sway mode indicator (resize, etc.) */
 #mode {
-    background: @accent_color;
-    color: @text_bright;
+    background: @accent;
+    color: @text_on_accent;
     font-weight: 700;
     border-radius: 6px;
-    margin: 3px 2px;
-    padding: 0 8px;
+    padding: 0 10px;
 }
 
-/* ── Scratchpad ─────────────────────────────────────────────── */
+/* Scratchpad counter */
 #scratchpad {
-    color: @text_primary;
+    color: @accent;
     padding: 0 6px;
 }
 
-/* ── Título de la Ventana Activa (macOS Application Title) ──── */
+/* Active window title — stays in pill system but de-emphasized */
 #window {
     color: @text_secondary;
-    font-size: 11.5px;
+    font-size: 11px;
     font-weight: 500;
     padding: 0 8px;
-    background: transparent;
-    border-color: transparent;
 }
 
 /* ══════════════════════════════════════════════════════════════
-   ║  CENTRO — Reloj macOS                                      ║
+   ║  CENTER — Clock (macOS menu bar style)                      ║
    ══════════════════════════════════════════════════════════════ */
 
 #clock {
     font-weight: 600;
     font-size: 11.5px;
-    border-radius: 8px;
-    padding: 0 12px;
+    letter-spacing: 0.3px;
+    padding: 0 14px;
     color: @text_primary;
 }
 
 /* ══════════════════════════════════════════════════════════════
-   ║  ESTADOS ESPECÍFICOS Y MÓDULOS MULTIMEDIA                   ║
+   ║  RIGHT — Media · Tray · Controls · Hardware · Power         ║
    ══════════════════════════════════════════════════════════════ */
 
+/* Media player — subtle when playing, dimmed when paused */
 #custom-media {
     color: @text_primary;
     font-size: 11px;
-    font-weight: 500;
-    padding: 0 10px;
+    padding: 0 8px;
 }
 
 #custom-media.Paused {
+    color: @text_muted;
+}
+
+/* Control Center button */
+#custom-quicksettings {
+    font-size: 14px;
     color: @text_secondary;
-    opacity: 0.8;
+    padding: 0 4px;
 }
 
-#idle_inhibitor.activated {
-    color: @accent_color;
+#custom-quicksettings:hover {
+    color: @accent;
 }
 
-#custom-gammastep.on {
-    color: @yellow_apple;
+/* ── Drawer trigger icons — all monochrome @text_secondary ──── */
+/* macOS uses monochrome SF Symbols; we do the same for cohesion */
+
+#custom-system-icon {
+    font-size: 14px;
+    color: @text_secondary;
+    padding: 0 3px;
 }
 
-/* Power Profiles Daemon Estados */
+#pulseaudio\.icon {
+    font-size: 14px;
+    color: @text_secondary;
+    padding: 0 3px;
+}
+
+#backlight\.icon {
+    font-size: 14px;
+    color: @text_secondary;
+    padding: 0 3px;
+}
+
+#network\.icon {
+    font-size: 14px;
+    color: @text_secondary;
+    padding: 0 3px;
+}
+
+#battery\.icon {
+    font-size: 14px;
+    color: @text_secondary;
+    padding: 0 3px;
+}
+
+/* Drawer numeric readouts */
+#cpu, #memory, #temperature,
+#pulseaudio\.text, #backlight\.text, #network\.text, #battery\.text {
+    font-size: 11px;
+    font-weight: 500;
+    padding: 0 2px;
+    color: @text_secondary;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   ║  SEMANTIC STATES — Battery, Power Profiles, Notifications   ║
+   ══════════════════════════════════════════════════════════════ */
+
+/* Battery states */
+#battery\.icon.warning,
+#battery\.text.warning {
+    color: @semantic_warning;
+}
+
+#battery\.icon.critical,
+#battery\.text.critical {
+    color: @semantic_danger;
+}
+
+#battery\.icon.charging,
+#battery\.icon.plugged {
+    color: @accent;
+}
+
+/* Power Profiles */
 #power-profiles-daemon {
     padding: 0 3px;
-    color: @accent_color;
+    color: @text_secondary;
 }
+
 #power-profiles-daemon.performance {
-    color: @red_apple;
+    color: @semantic_danger;
 }
+
 #power-profiles-daemon.balanced {
-    color: @accent_color;
+    color: @accent;
 }
+
 #power-profiles-daemon.power-saver {
-    color: @green_apple;
+    color: @semantic_success;
 }
 
-/* Batería Estados */
-#battery\.icon.warning, #battery\.text.warning {
-    color: @yellow_apple;
+/* Idle inhibitor */
+#idle_inhibitor.activated {
+    color: @accent;
 }
 
-#battery\.icon.critical, #battery\.text.critical {
-    color: @destructive_bg_color;
+/* Night light */
+#custom-gammastep.on {
+    color: @semantic_warning;
 }
 
-#battery\.icon.charging, #battery\.icon.plugged {
-    color: @green_apple;
-}
-
-/* Bandeja del Sistema (Tray) */
-#tray {
-    padding: 0 6px;
-}
-
+/* Notifications */
 #custom-notification {
     padding: 0 3px;
 }
 
 #custom-notification.paused {
-    color: @yellow_apple;
+    color: @semantic_warning;
 }
 
-/* Botón de Apagado / Sesión */
+/* System tray */
+#tray {
+    padding: 0 6px;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   ║  POWER BUTTON — Danger on hover                             ║
+   ══════════════════════════════════════════════════════════════ */
+
 #custom-power {
     font-size: 13px;
-    padding: 0 8px;
-    color: @text_secondary;
+    padding: 0 7px;
+    color: @text_muted;
     margin-right: 4px;
 }
 
 #custom-power:hover {
-    background: alpha(@destructive_bg_color, 0.25);
-    border-color: @destructive_bg_color;
-    color: @destructive_bg_color;
-    box-shadow: 0 2px 8px alpha(@destructive_bg_color, 0.35);
+    background: alpha(@semantic_danger, 0.18);
+    border-color: alpha(@semantic_danger, 0.45);
+    color: @semantic_danger;
 }
-

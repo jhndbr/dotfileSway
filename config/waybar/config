@@ -62,27 +62,26 @@
 
     "sway/window": {
         "format": "{}",
-        "max-length": 45,
+        "max-length": 40,
         "rewrite": {
-            "(.*) — Mozilla Firefox": "󰈹 $1",
-            "(.*) - foot": "󰞷 $1",
-            "(.*) — yazi": "󰝰 $1",
-            "yazi": "󰝰 Yazi",
-            "(.*) - Visual Studio Code": "󰨞 $1",
-            "(.*) - Code": "󰨞 $1",
-            "(.*) - Zed": "󰅩 $1",
-            "(.*) — Spotify": "󰓇 $1",
-            "Volume Control": "󰕾 Pavucontrol",
-            "Bluetooth Devices": "󰂯 Blueman",
-            "^$": "󰣇 Desktop"
+            "(.*) — Mozilla Firefox": "󰈹  $1",
+            "(.*) - foot": "󰞷  $1",
+            "(.*) — yazi": "󰝰  $1",
+            "yazi": "󰝰  Yazi",
+            "(.*) - Visual Studio Code": "󰨞  $1",
+            "(.*) - Code": "󰨞  $1",
+            "(.*) - Zed": "󰅩  $1",
+            "(.*) — Spotify": "󰓇  $1",
+            "Volume Control": "󰕾  Pavucontrol",
+            "Bluetooth Devices": "󰂯  Blueman"
         },
         "tooltip": false
     },
 
     /* ── Reloj y Fecha (Estilo Barra de Menú macOS) ──────────────── */
     "clock": {
-        "format": "󰃭 {:%a %d %b   󰥔 %H:%M}",
-        "format-alt": "󰃭 {:%A, %d de %B de %Y  │  󰥔 %H:%M:%S}",
+        "format": "{:%a %d %b  %H:%M}",
+        "format-alt": "{:%A %d de %B, %Y  ·  %H:%M:%S}",
         "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
         "locale": "es_AR.UTF-8",
         "interval": 1
