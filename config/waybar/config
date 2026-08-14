@@ -107,7 +107,7 @@
     /* ── Centro de Control (QuickSettings Wofi) ──────────────────── */
     "custom/quicksettings": {
         "format": "󰒓",
-        "tooltip-format": "Centro de Control & Herramientas\n(Pantallas, Luz Cálida, Notificaciones, etc.)",
+        "tooltip-format": "Centro de Control &amp; Herramientas\n(Pantallas, Luz Cálida, Notificaciones, etc.)",
         "on-click": "~/.local/bin/quicksettings-menu.sh",
         "tooltip": true
     },
