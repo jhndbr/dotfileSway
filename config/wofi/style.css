@@ -31,21 +31,21 @@ window,
     box-shadow: none;
 }
 
-/* ── Outer Box (Applies true glass background & rounded corners) ──── */
+/* ── Outer Box (Applies true glass background) ──────────────────── */
 #outer-box {
     margin: 0px;
     padding: 12px;
     background-color: @bg_card;
-    border-radius: 6px;
+    border-radius: 0;
     border: 1px solid alpha(@accent_color, 0.35);
-    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.50);
+    box-shadow: none;
 }
 
-/* ── Search Input (Pill Style matching Waybar) ───────────────── */
+/* ── Search Input ─────────────────────────────────────── */
 #input {
     margin-bottom: 10px;
     padding: 9px 12px;
-    border-radius: 5px;
+    border-radius: 0;
     border: 1px solid @border_subtle;
     background-color: @bg_pill;
     color: @text_primary;
@@ -57,7 +57,7 @@ window,
 #input:focus {
     border-color: @accent_color;
     background-color: @bg_pill_hover;
-    box-shadow: 0 0 0 2px alpha(@accent_color, 0.25);
+    box-shadow: none;
 }
 
 #input::placeholder {
@@ -73,10 +73,10 @@ window,
     padding: 2px;
 }
 
-/* ── List Entries (Pills matching Waybar radius 6px) ─────────── */
+/* ── List Entries ─────────────────────────────────────────── */
 #entry {
     padding: 7px 10px;
-    border-radius: 5px;
+    border-radius: 0;
     color: @text_primary;
     margin: 2px 0;
     transition: all 0.15s ease;
@@ -92,7 +92,7 @@ window,
     background-color: @accent_color;
     color: @accent_fg_color;
     font-weight: 600;
-    box-shadow: 0 2px 6px alpha(@accent_color, 0.40);
+    box-shadow: none;
 }
 
 #entry image {

@@ -75,9 +75,9 @@ window#waybar.hidden {
 tooltip {
     background: alpha(@window_bg_color, 0.94);
     border: 1px solid alpha(@window_fg_color, 0.10);
-    border-radius: 8px;
-    padding: 6px 10px;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+    border-radius: 6px;
+    padding: 5px 9px;
+    box-shadow: none;
 }
 
 tooltip label {
@@ -106,8 +106,8 @@ tooltip label {
     border: 1px solid @border_pill;
     border-radius: 8px;
     padding: 0 8px;
-    margin: 3px 2px;
-    min-height: 24px;
+    margin: 4px 2px;
+    min-height: 26px;
     color: @text_primary;
     transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
@@ -151,7 +151,7 @@ tooltip label {
     box-shadow: none;
 }
 
-/* Labels inside groups — consistent typography */
+/* Labels inside groups — consistent typography & vertical centering */
 #audio label,
 #backlight label,
 #network label,
@@ -161,11 +161,12 @@ tooltip label {
     border: none;
     outline: none;
     box-shadow: none;
-    padding: 0 2px;
+    padding: 0;
     margin: 0;
     color: @text_primary;
     font-weight: 500;
     font-size: 11px;
+    min-width: 0;
 }
 
 /* ══════════════════════════════════════════════════════════════
@@ -268,7 +269,7 @@ tooltip label {
 #custom-quicksettings {
     font-size: 14px;
     color: @text_secondary;
-    padding: 0 4px;
+    padding: 0 8px;
 }
 
 #custom-quicksettings:hover {
@@ -281,40 +282,46 @@ tooltip label {
 #custom-system-icon {
     font-size: 14px;
     color: @text_secondary;
-    padding: 0 3px;
+    padding: 0 5px;
+    min-width: 20px;
 }
 
 #pulseaudio\.icon {
     font-size: 14px;
     color: @text_secondary;
-    padding: 0 3px;
+    padding: 0 5px;
+    min-width: 20px;
 }
 
 #backlight\.icon {
     font-size: 14px;
     color: @text_secondary;
-    padding: 0 3px;
+    padding: 0 5px;
+    min-width: 20px;
 }
 
 #network\.icon {
     font-size: 14px;
     color: @text_secondary;
-    padding: 0 3px;
+    padding: 0 5px;
+    min-width: 20px;
 }
 
 #battery\.icon {
     font-size: 14px;
     color: @text_secondary;
-    padding: 0 3px;
+    padding: 0 5px;
+    min-width: 20px;
 }
 
-/* Drawer numeric readouts */
+/* Drawer numeric readouts — uniform spacing */
 #cpu, #memory, #temperature,
 #pulseaudio\.text, #backlight\.text, #network\.text, #battery\.text {
     font-size: 11px;
     font-weight: 500;
-    padding: 0 2px;
+    padding: 0 5px;
     color: @text_secondary;
+    min-width: 28px;
 }
 
 /* ══════════════════════════════════════════════════════════════
@@ -385,7 +392,7 @@ tooltip label {
 
 #custom-power {
     font-size: 13px;
-    padding: 0 7px;
+    padding: 0 8px;
     color: @text_muted;
     margin-right: 4px;
 }
