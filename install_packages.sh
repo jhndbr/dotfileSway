@@ -81,6 +81,8 @@ PACMAN_PACKAGES=(
     wireplumber
     pavucontrol
     polkit-gnome
+    gnome-keyring
+    libsecret
     brightnessctl
     playerctl
     bluez

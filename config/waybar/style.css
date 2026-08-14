@@ -66,7 +66,7 @@ tooltip label {
 #window,
 #clock,
 #custom-media,
-#quicksettings,
+#custom-quicksettings,
 #controls,
 #hardware,
 #tray,
@@ -84,7 +84,7 @@ tooltip label {
 #workspaces:hover,
 #clock:hover,
 #custom-media:hover,
-#quicksettings:hover,
+#custom-quicksettings:hover,
 #controls:hover,
 #hardware:hover,
 #custom-power:hover {
@@ -118,21 +118,11 @@ tooltip label {
     box-shadow: none;
 }
 
-#quicksettings #custom-display,
-#quicksettings #custom-gammastep,
-#quicksettings #idle_inhibitor,
-#quicksettings #power-profiles-daemon,
-#quicksettings #custom-notification,
-#custom-display,
-#custom-gammastep,
-#idle_inhibitor,
-#custom-notification {
+#custom-quicksettings {
     padding: 0 4px;
     margin: 0;
-    border-radius: 0;
-    border: none;
-    background: transparent;
     font-size: 14.5px;
+    color: @accent_color;
 }
 
 #audio label,

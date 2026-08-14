@@ -105,6 +105,9 @@ bindsym $mod+Shift+c reload
 # Menú de apagado / sesión (Wofi nativo)
 bindsym $mod+Shift+e exec $scripts/power-menu.sh
 
+# Centro de Control / Quick Settings (Mod + X)
+bindsym $mod+x exec $scripts/quicksettings-menu.sh
+
 # Gestor de monitores y pantallas
 bindsym $mod+p exec $scripts/monitor-manager.sh menu
 bindsym XF86Display exec $scripts/monitor-manager.sh menu
@@ -250,21 +253,20 @@ bar {
     swaybar_command waybar
 }
 
-# D-Bus / Entorno & Portales XDG (Compartir pantalla)
-exec systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP XDG_SESSION_TYPE
+# D-Bus / Entorno & Portales XDG
 exec dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway XDG_SESSION_TYPE=wayland QT_QPA_PLATFORMTHEME=qt6ct
-exec systemctl --user set-environment QT_QPA_PLATFORMTHEME=qt6ct XDG_SESSION_TYPE=wayland XDG_CURRENT_DESKTOP=sway
+exec systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP XDG_SESSION_TYPE QT_QPA_PLATFORMTHEME
 
-# Servicios del sistema
+# Servicios de autenticación, llaves y secretos (Polkit & Keyring)
 exec /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
-exec gnome-keyring-daemon --start --components=secrets,ssh
+exec --no-startup-id gnome-keyring-daemon --start --components=secrets,ssh,pkcs11
 
 # Notificaciones
 exec dunst
 
-# Portapapeles & Montaje USB
+# Portapapeles & Automontaje USB liviano (headless, sin overhead gráfico de bandeja)
 exec wl-paste --watch cliphist store
-exec udiskie --tray &
+exec udiskie -N &
 
 # Idle management (bloqueo, apagar pantalla, suspender)
 exec $scripts/swayidle.sh

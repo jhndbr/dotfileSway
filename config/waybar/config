@@ -23,7 +23,7 @@
     "modules-right": [
         "custom/media",
         "tray",
-        "group/quicksettings",
+        "custom/quicksettings",
         "group/controls",
         "group/hardware",
         "custom/power"
@@ -102,79 +102,11 @@
         "on-scroll-down": "playerctl volume 0.05-"
     },
 
-    /* ── QuickSettings Group (Display, Gammastep, Idle, Power Profiles, Notification) ─ */
-    "group/quicksettings": {
-        "orientation": "horizontal",
-        "modules": [
-            "custom/display",
-            "custom/gammastep",
-            "idle_inhibitor",
-            "power-profiles-daemon",
-            "custom/notification"
-        ]
-    },
-
-    "custom/display": {
-        "format": "{icon}",
-        "format-icons": {
-            "laptop": "󰌢",
-            "single": "󰍹",
-            "dual": "󰍺",
-            "mirror": "󰑈",
-            "connected": "󰍹",
-            "offline": "󰍹",
-            "default": "󰍹"
-        },
-        "return-type": "json",
-        "interval": 2,
-        "exec": "~/.local/bin/monitor-manager.sh waybar",
-        "on-click": "~/.local/bin/monitor-manager.sh menu",
-        "on-click-right": "~/.local/bin/monitor-manager.sh auto",
-        "tooltip": true
-    },
-
-    "power-profiles-daemon": {
-        "format": "{icon}",
-        "tooltip-format": "Perfil de Energía: {profile}\nProveedor: {driver}",
-        "tooltip": true,
-        "format-icons": {
-            "default": "󰓅",
-            "performance": "󰓅",
-            "balanced": "󰾅",
-            "power-saver": "󰾆"
-        }
-    },
-
-    "custom/gammastep": {
-        "format": "{icon}",
-        "format-icons": {
-            "on": "󰌵",
-            "off": "󰌶"
-        },
-        "return-type": "json",
-        "interval": 2,
-        "exec": "if pgrep -x gammastep > /dev/null; then echo '{\"alt\": \"on\", \"tooltip\": \"Luz Cálida: ACTIVADA\", \"class\": \"on\"}'; else echo '{\"alt\": \"off\", \"tooltip\": \"Luz Cálida: DESACTIVADA\", \"class\": \"off\"}'; fi",
-        "on-click": "~/.local/bin/gammastep-toggle.sh",
-        "tooltip": true
-    },
-
-    "idle_inhibitor": {
-        "format": "{icon}",
-        "format-icons": {
-            "activated": "󰅶",
-            "deactivated": "󰾪"
-        },
-        "tooltip-format-activated": "Idle inhibido (pantalla NO se apagará)",
-        "tooltip-format-deactivated": "Idle normal (pantalla se apagará)"
-    },
-
-    "custom/notification": {
-        "format": "{}",
-        "return-type": "json",
-        "exec": "if dunstctl is-paused | grep -q 'true'; then echo '{\"text\": \"󰂛\", \"tooltip\": \"Notificaciones: Pausadas\", \"class\": \"paused\"}'; else echo '{\"text\": \"󰂚\", \"tooltip\": \"Notificaciones: Activas\", \"class\": \"active\"}'; fi",
-        "on-click": "dunstctl set-paused toggle",
-        "on-click-right": "dunstctl history-pop",
-        "interval": 2,
+    /* ── QuickSettings / Control Center (Wofi Menu) ─────────────── */
+    "custom/quicksettings": {
+        "format": "󰒓",
+        "tooltip-format": "Centro de Control & Herramientas\n(Pantallas, Luz Cálida, Notificaciones, etc.)",
+        "on-click": "~/.local/bin/quicksettings-menu.sh",
         "tooltip": true
     },
 
