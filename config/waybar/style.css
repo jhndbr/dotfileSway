@@ -107,7 +107,7 @@ tooltip label {
     border-radius: 8px;
     padding: 0 10px;
     margin: 5px 2px;
-    min-height: 0;
+    min-height: 28px;
     color: @text_primary;
     transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
@@ -152,49 +152,50 @@ tooltip label {
 }
 
 /* Labels inside groups — strip everything, GTK3 centers naturally */
+#controls label,
+#hardware label,
 #audio label,
 #backlight label,
 #network label,
-#battery label,
-#hardware label {
+#battery label {
     background: transparent;
     border: none;
     outline: none;
     box-shadow: none;
     padding: 0;
     margin: 0;
-    color: @text_primary;
+    color: inherit;
     font-weight: 500;
-    font-size: 11px;
-    min-width: 0;
-    min-height: 0;
 }
 
 /* ══════════════════════════════════════════════════════════════
    ║  LEFT — Menu · Workspaces · Window Title                    ║
    ══════════════════════════════════════════════════════════════ */
 
-/* Distro launcher icon (Apple-like) */
+/* Distro launcher icon (Perfect square & centered) */
 #custom-menu {
-    font-size: 14px;
+    font-family: "JetBrainsMono Nerd Font", "Symbols Nerd Font", monospace;
+    font-size: 15px;
     color: @accent;
-    padding: 0 6px;
-    margin-left: 4px;
+    padding: 0;
+    margin: 5px 2px 5px 4px;
+    min-width: 28px;
+    min-height: 28px;
 }
 
 /* Workspaces — numbered capsules */
 #workspaces {
-    padding: 0 2px;
+    padding: 0 3px;
 }
 
 #workspaces button {
     color: @text_muted;
-    padding: 2px 8px;
-    margin: 2px 1px;
+    padding: 0 7px;
+    margin: 3px 2px;
     border-radius: 6px;
     background: transparent;
-    min-width: 22px;
-    min-height: 0;
+    min-width: 20px;
+    min-height: 22px;
     font-size: 11px;
     font-weight: 600;
     transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
@@ -229,7 +230,7 @@ tooltip label {
 /* Scratchpad counter */
 #scratchpad {
     color: @accent;
-    padding: 0 6px;
+    padding: 0 8px;
 }
 
 /* Active window title — stays in pill system but de-emphasized */
@@ -237,7 +238,7 @@ tooltip label {
     color: @text_secondary;
     font-size: 11px;
     font-weight: 500;
-    padding: 0 8px;
+    padding: 0 10px;
 }
 
 /* ══════════════════════════════════════════════════════════════
@@ -260,46 +261,79 @@ tooltip label {
 #custom-media {
     color: @text_primary;
     font-size: 11px;
-    padding: 0 8px;
+    padding: 0 10px;
 }
 
 #custom-media.Paused {
     color: @text_muted;
 }
 
-/* Control Center button */
+/* Control Center button (Perfect square & centered) */
 #custom-quicksettings {
+    font-family: "JetBrainsMono Nerd Font", "Symbols Nerd Font", monospace;
     font-size: 14px;
     color: @text_secondary;
-    padding: 0 8px;
+    padding: 0;
+    margin: 5px 2px;
+    min-width: 28px;
+    min-height: 28px;
 }
 
 #custom-quicksettings:hover {
     color: @accent;
 }
 
-/* ── Drawer trigger icons — uniform padding, sin min-height/min-width ── */
-#custom-system-icon,
-#pulseaudio\.icon,
-#backlight\.icon,
-#network\.icon,
-#battery\.icon {
-    font-size: 14px;
-    color: @text_secondary;
+/* ── Group Containers (Controls & Hardware) ──────────────────── */
+#controls {
     padding: 0 6px;
-    min-height: 0;
-    min-width: 0;
 }
 
-/* Drawer numeric readouts — mismo padding que iconos, sin min-width forzado */
-#cpu, #memory, #temperature,
-#pulseaudio\.text, #backlight\.text, #network\.text, #battery\.text {
+#hardware {
+    padding: 0 6px;
+}
+
+/* Sub-drawers inside Controls group — distinct separation */
+#network,
+#backlight,
+#audio,
+#battery {
+    margin: 0 3px;
+    padding: 0;
+}
+
+/* ── Drawer trigger icons — uniform padding & clear icon sizes ── */
+#custom-system-icon,
+#pulseaudio.icon,
+#backlight.icon,
+#network.icon,
+#battery.icon {
+    font-family: "JetBrainsMono Nerd Font", "Symbols Nerd Font", monospace;
+    font-size: 13.5px;
+    color: @text_secondary;
+    padding: 0 5px;
+    min-width: 18px;
+}
+
+#pulseaudio.icon:hover,
+#backlight.icon:hover,
+#network.icon:hover,
+#battery.icon:hover,
+#custom-system-icon:hover {
+    color: @text_primary;
+}
+
+/* Drawer numeric readouts */
+#cpu,
+#memory,
+#temperature,
+#pulseaudio.text,
+#backlight.text,
+#network.text,
+#battery.text {
     font-size: 11px;
     font-weight: 500;
-    padding: 0 6px;
+    padding: 0 5px;
     color: @text_secondary;
-    min-height: 0;
-    min-width: 0;
 }
 
 /* ══════════════════════════════════════════════════════════════
@@ -307,24 +341,28 @@ tooltip label {
    ══════════════════════════════════════════════════════════════ */
 
 /* Battery states */
-#battery\.icon.warning,
-#battery\.text.warning {
+#battery.warning,
+#battery.icon.warning,
+#battery.text.warning {
     color: @semantic_warning;
 }
 
-#battery\.icon.critical,
-#battery\.text.critical {
+#battery.critical,
+#battery.icon.critical,
+#battery.text.critical {
     color: @semantic_danger;
 }
 
-#battery\.icon.charging,
-#battery\.icon.plugged {
+#battery.charging,
+#battery.plugged,
+#battery.icon.charging,
+#battery.icon.plugged {
     color: @accent;
 }
 
 /* Power Profiles */
 #power-profiles-daemon {
-    padding: 0 3px;
+    padding: 0 5px;
     color: @text_secondary;
 }
 
@@ -352,7 +390,7 @@ tooltip label {
 
 /* Notifications */
 #custom-notification {
-    padding: 0 3px;
+    padding: 0 5px;
 }
 
 #custom-notification.paused {
@@ -361,7 +399,7 @@ tooltip label {
 
 /* System tray */
 #tray {
-    padding: 0 6px;
+    padding: 0 8px;
 }
 
 /* ══════════════════════════════════════════════════════════════
@@ -369,10 +407,13 @@ tooltip label {
    ══════════════════════════════════════════════════════════════ */
 
 #custom-power {
+    font-family: "JetBrainsMono Nerd Font", "Symbols Nerd Font", monospace;
     font-size: 13px;
-    padding: 0 8px;
+    padding: 0;
     color: @text_muted;
-    margin-right: 4px;
+    margin: 5px 4px 5px 2px;
+    min-width: 28px;
+    min-height: 28px;
 }
 
 #custom-power:hover {
