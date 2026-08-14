@@ -15,7 +15,7 @@ else
 fi
 
 # 2. Detectar estado de Notificaciones (Dunst)
-if command -v dunstctl &>/dev/null && dunstctl is-paused | grep -q 'true'; then
+if command -v dunstctl &>/dev/null && timeout 2 dunstctl is-paused 2>/dev/null | grep -q 'true'; then
     NOTIF_TEXT="󰂛 Modo Silencio [PAUSADAS - Click para activar]"
 else
     NOTIF_TEXT="󰂚 Notificaciones [ACTIVAS - Click para pausar]"
@@ -23,8 +23,8 @@ fi
 
 # 3. Detectar estado de Bluetooth
 BT_STATUS="󰂲 Bluetooth [Apagado]"
-if command -v bluetoothctl &>/dev/null && bluetoothctl show 2>/dev/null | grep -q "Powered: yes"; then
-    CONNECTED_DEV=$(bluetoothctl devices Connected 2>/dev/null | head -n 1 | cut -d ' ' -f 3-)
+if command -v bluetoothctl &>/dev/null && timeout 2 bluetoothctl show 2>/dev/null | grep -q "Powered: yes"; then
+    CONNECTED_DEV=$(timeout 2 bluetoothctl devices Connected 2>/dev/null | head -n 1 | cut -d ' ' -f 3-)
     if [ -n "$CONNECTED_DEV" ]; then
         BT_STATUS="󰂱 Bluetooth [Conectado: $CONNECTED_DEV]"
     else
@@ -35,7 +35,7 @@ fi
 # 4. Detectar perfil de energía
 POWER_TEXT=""
 if command -v powerprofilesctl &>/dev/null; then
-    CURRENT_PROFILE=$(powerprofilesctl get 2>/dev/null || echo "balanced")
+    CURRENT_PROFILE=$(timeout 2 powerprofilesctl get 2>/dev/null || echo "balanced")
     POWER_TEXT="󰓅 Perfil de Energía [Actual: $CURRENT_PROFILE]"
 fi
 
