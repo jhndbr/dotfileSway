@@ -7,7 +7,7 @@
 
 SCRIPTS_DIR="$HOME/.local/bin"
 
-# Función para formatear líneas con espacio uniforme y corchetes alineados a la derecha
+# Función para formatear líneas con espacio uniforme y corchetes alineados
 format_item() {
     local icon="$1"
     local label="$2"
@@ -20,7 +20,7 @@ format_item() {
     spaces=$(printf '%*s' "$pad" '')
     
     if [ -n "$tag" ]; then
-        echo "$icon    $label$spaces<span alpha='55%'>[$tag]</span>"
+        echo "$icon    $label$spaces[$tag]"
     else
         echo "$icon    $label"
     fi
@@ -58,7 +58,7 @@ if command -v powerprofilesctl &>/dev/null; then
 fi
 
 # ── 2. Lista de Opciones Formateada ────────────────────────────
-OPCIONES="$(format_item "󰍹" "Pantallas & Monitores" "Configurar")
+OPCIONES="$(format_item "󰍹" "Pantallas y Monitores" "Configurar")
 $ITEM_BT
 $(format_item "󰕾" "Salida de Audio" "Cambiar")
 $ITEM_GAMMA
@@ -76,10 +76,9 @@ $(format_item "󰄀" "Captura de Pantalla" "Menú")
 $(format_item "󰞅" "Selector de Emojis" "Copiar")
 $(format_item "󰅖" "Limpiar Portapapeles" "Vaciar")"
 
-# ── 3. Lanzar Wofi con soporte de Pango Markup ─────────────────
+# ── 3. Lanzar Wofi ──────────────────────────────────────────────
 SELECCION=$(echo -e "$OPCIONES" | wofi --dmenu \
-    --prompt "  󰒓 Centro de Control" \
-    --allow-markup \
+    --prompt "  󰒓  Centro de Control" \
     --cache-file /dev/null \
     --insensitive \
     --width 500 \
@@ -91,7 +90,7 @@ SELECCION=$(echo -e "$OPCIONES" | wofi --dmenu \
 
 # ── 4. Ejecución de Acciones ────────────────────────────────────
 case "$SELECCION" in
-    *"Pantallas & Monitores"*)
+    *"Pantallas y Monitores"*)
         "$SCRIPTS_DIR/monitor-manager.sh" menu
         ;;
     *"Bluetooth"*)
@@ -113,7 +112,7 @@ $PAIRED_DEVICES"
             fi
         fi
 
-        BT_SEL=$(echo -e "$BT_MENU" | wofi --dmenu --prompt "  󰂯 Bluetooth" --allow-markup --width 420 --height 280 --lines 6)
+        BT_SEL=$(echo -e "$BT_MENU" | wofi --dmenu --prompt "  󰂯  Bluetooth" --width 420 --height 280 --lines 6)
         case "$BT_SEL" in
             *"Desactivar Bluetooth"*)
                 rfkill block bluetooth 2>/dev/null || bluetoothctl power off
@@ -137,7 +136,7 @@ $PAIRED_DEVICES"
     *"Salida de Audio"*)
         SINKS=$(pactl list short sinks 2>/dev/null | awk '{print "󰕾    " $1 ": " $2}')
         if [ -n "$SINKS" ]; then
-            SINK_SEL=$(echo -e "$SINKS" | wofi --dmenu --prompt "  󰕾 Salida de Audio" --allow-markup --width 480 --height 220 --lines 4)
+            SINK_SEL=$(echo -e "$SINKS" | wofi --dmenu --prompt "  󰕾  Salida de Audio" --width 480 --height 220 --lines 4)
             if [ -n "$SINK_SEL" ]; then
                 SINK_ID=$(echo "$SINK_SEL" | awk '{print $2}' | tr -d ':')
                 pactl set-default-sink "$SINK_ID"
@@ -162,7 +161,7 @@ $PAIRED_DEVICES"
         PROFILES="$(format_item "󰓅" "performance" "Alto Rendimiento")
 $(format_item "󰾅" "balanced" "Equilibrado")
 $(format_item "󰾆" "power-saver" "Ahorro de Batería")"
-        PERFIL_SEL=$(echo -e "$PROFILES" | wofi --dmenu --prompt "  󰓅 Perfil de Energía" --allow-markup --width 400 --height 200 --lines 3)
+        PERFIL_SEL=$(echo -e "$PROFILES" | wofi --dmenu --prompt "  󰓅  Perfil de Energía" --width 400 --height 200 --lines 3)
         case "$PERFIL_SEL" in
             *"performance"*) powerprofilesctl set performance && dunstify -a "Energía" -r 9933 -u low "󰓅 Rendimiento" "Perfil: Rendimiento" ;;
             *"balanced"*) powerprofilesctl set balanced && dunstify -a "Energía" -r 9933 -u low "󰾅 Rendimiento" "Perfil: Equilibrado" ;;
