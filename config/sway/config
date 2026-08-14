@@ -14,6 +14,9 @@ set $menu wofi --show drun
 set $lock swaylock -f
 set $scripts ~/.local/bin
 
+# Pure Wayland (Desactivar servidor X11/Xwayland para ahorrar ~60MB RAM)
+xwayland disable
+
 # Default fallback values (sobreescritos por Matugen si dank-colors existe)
 set $bg_dark      #141414
 set $bg_surface   #1c1c1e
@@ -68,6 +71,12 @@ input type:keyboard {
     repeat_delay 300
     repeat_rate 50
 }
+
+# ── Gestos Táctiles Touchpad (Swipe) ────────────────────────────
+bindgesture swipe:3:right workspace next
+bindgesture swipe:3:left workspace prev
+bindgesture swipe:4:up floating toggle
+bindgesture swipe:4:down focus mode_toggle
 
 # ── Keybindings Principales ─────────────────────────────────────
 # Cerrar ventana
@@ -268,8 +277,9 @@ exec dunst
 exec wl-paste --watch cliphist store
 exec udiskie -N &
 
-# Idle management (bloqueo, apagar pantalla, suspender)
+# Idle management & Alerta de batería baja
 exec $scripts/swayidle.sh
+exec $scripts/battery-alert.sh
 
 # Filtro de luz azul (night light)
 exec gammastep

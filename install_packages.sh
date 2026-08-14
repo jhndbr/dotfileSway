@@ -113,7 +113,7 @@ PACMAN_PACKAGES=(
     zathura-pdf-mupdf
     nano
 
-    # Herramientas CLI Modernas
+    # Herramientas CLI & Optimización del Sistema
     bat
     eza
     fd
@@ -123,6 +123,7 @@ PACMAN_PACKAGES=(
     jq
     btop
     imagemagick
+    zram-generator
 
     # Fuentes Tipográficas
     ttf-jetbrains-mono-nerd
@@ -196,6 +197,29 @@ log_success "Servicio bluetooth habilitado"
 log_info "Habilitando servicios de audio Pipewire & Wireplumber..."
 systemctl --user enable --now pipewire.service pipewire-pulse.service wireplumber.service 2>/dev/null || true
 log_success "Servicios de audio habilitados"
+
+# ── 8.2. Optimización de Memoria & Logs (ZRAM & Journald) ──────
+log_info "Configurando compresión de memoria en tiempo real (ZRAM)..."
+sudo tee /etc/systemd/zram-generator.conf > /dev/null << 'EOF'
+[zram0]
+zram-size = ram
+compression-algorithm = zstd
+swap-priority = 100
+fs-type = swap
+EOF
+sudo systemctl daemon-reload 2>/dev/null || true
+sudo systemctl start systemd-zram-setup@zram0.service 2>/dev/null || true
+log_success "ZRAM configurado y activado"
+
+log_info "Configurando límites de tamaño para systemd-journald (Ahorro de RAM/Disco)..."
+sudo mkdir -p /etc/systemd/journald.conf.d
+sudo tee /etc/systemd/journald.conf.d/00-limit-size.conf > /dev/null << 'EOF'
+[Journal]
+SystemMaxUse=50M
+RuntimeMaxUse=20M
+EOF
+sudo systemctl restart systemd-journald 2>/dev/null || true
+log_success "Límites de systemd-journald aplicados"
 
 # ── 9. Finalización ─────────────────────────────────────────────
 echo ""

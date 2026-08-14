@@ -21,9 +21,14 @@ export XDG_STATE_HOME="$HOME/.local/state"
 # PATH
 export PATH="$HOME/.local/bin:$HOME/.local/share/JetBrains/Toolbox/scripts:$PATH"
 
-# ── 2. Autocompletado nativo y opciones de Zsh ─────────────────
+# ── 2. Autocompletado nativo ultra rápido (Caché 24h) ──────────
 autoload -Uz compinit
-compinit -d "$XDG_CACHE_HOME/zsh/zcompdump-$ZSH_VERSION"
+mkdir -p "$XDG_CACHE_HOME/zsh"
+if [[ -n "$XDG_CACHE_HOME/zsh/zcompdump-$ZSH_VERSION"(#qN.mh+24) ]]; then
+    compinit -d "$XDG_CACHE_HOME/zsh/zcompdump-$ZSH_VERSION"
+else
+    compinit -C -d "$XDG_CACHE_HOME/zsh/zcompdump-$ZSH_VERSION"
+fi
 
 # Opciones de autocompletado interactivo
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' # Case insensitive
