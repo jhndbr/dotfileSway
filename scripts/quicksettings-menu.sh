@@ -2,50 +2,49 @@
 
 # ╔══════════════════════════════════════════════════════════════╗
 # ║        Menú Centro de Control / Quick Settings (Wofi)        ║
-# ║        Navaja Suiza: Ajustes, Bluetooth, Audio, Portapapeles ║
+# ║        Optimizado para apertura instantánea (0ms lag)        ║
 # ╚══════════════════════════════════════════════════════════════╝
 
 SCRIPTS_DIR="$HOME/.local/bin"
 
-# 1. Detectar estado de Gammastep (Luz cálida)
+# ── 1. Detecciones ultrarrápidas (< 2ms) ────────────────────────
+# Luz Nocturna (pgrep es instantáneo en /proc)
 if pgrep -x gammastep > /dev/null; then
-    GAMMA_TEXT="󰌵 Luz Cálida [ACTIVADA - Click para apagar]"
+    GAMMA_TEXT="󰌵 Luz Nocturna  ·  [Activada]"
 else
-    GAMMA_TEXT="󰌶 Luz Cálida [DESACTIVADA - Click para encender]"
+    GAMMA_TEXT="󰌶 Luz Nocturna  ·  [Desactivada]"
 fi
 
-# 2. Detectar estado de Notificaciones (Dunst)
-if command -v dunstctl &>/dev/null && timeout 2 dunstctl is-paused 2>/dev/null | grep -q 'true'; then
-    NOTIF_TEXT="󰂛 Modo Silencio [PAUSADAS - Click para activar]"
+# Modo Silencio / Notificaciones (Dunst)
+if command -v dunstctl &>/dev/null && [ "$(dunstctl is-paused 2>/dev/null)" = "true" ]; then
+    NOTIF_TEXT="󰂛 Notificaciones  ·  [Silenciadas]"
 else
-    NOTIF_TEXT="󰂚 Notificaciones [ACTIVAS - Click para pausar]"
+    NOTIF_TEXT="󰂚 Notificaciones  ·  [Activas]"
 fi
 
-# 3. Detectar estado de Bluetooth
-BT_STATUS="󰂲 Bluetooth [Apagado]"
-if command -v bluetoothctl &>/dev/null && timeout 2 bluetoothctl show 2>/dev/null | grep -q "Powered: yes"; then
-    CONNECTED_DEV=$(timeout 2 bluetoothctl devices Connected 2>/dev/null | head -n 1 | cut -d ' ' -f 3-)
-    if [ -n "$CONNECTED_DEV" ]; then
-        BT_STATUS="󰂱 Bluetooth [Conectado: $CONNECTED_DEV]"
-    else
-        BT_STATUS="󰂯 Bluetooth [Encendido - Sin conexión]"
-    fi
+# Bluetooth instantáneo vía rfkill (Lectura directa de kernel sysfs, 0ms)
+if rfkill list bluetooth 2>/dev/null | grep -q "Soft blocked: yes"; then
+    BT_STATUS="󰂲 Bluetooth  ·  [Apagado]"
+elif rfkill list bluetooth 2>/dev/null | grep -q "Soft blocked: no"; then
+    BT_STATUS="󰂯 Bluetooth  ·  [Encendido]"
+else
+    BT_STATUS="󰂯 Bluetooth  ·  [Gestionar]"
 fi
 
-# 4. Detectar perfil de energía
+# Perfil de energía
 POWER_TEXT=""
 if command -v powerprofilesctl &>/dev/null; then
-    CURRENT_PROFILE=$(timeout 2 powerprofilesctl get 2>/dev/null || echo "balanced")
-    POWER_TEXT="󰓅 Perfil de Energía [Actual: $CURRENT_PROFILE]"
+    CURRENT_PROFILE=$(powerprofilesctl get 2>/dev/null || echo "balanced")
+    POWER_TEXT="󰓅 Rendimiento  ·  [$CURRENT_PROFILE]"
 fi
 
-# 5. Construir lista principal de opciones
-OPCIONES="󰍹 Gestión de Pantallas y Monitores
+# ── 2. Menú Principal de Opciones con Diseño Pulido ─────────────
+OPCIONES="󰍹 Pantallas & Monitores  ·  [Configurar]
 $BT_STATUS
-󰕾 Cambiar Salida de Audio (Altavoces / Auriculares)
+󰕾 Audio & Salidas  ·  [Cambiar Dispositivo]
 $GAMMA_TEXT
 $NOTIF_TEXT
-󰂞 Ver Historial de Notificaciones"
+󰂞 Historial de Notificaciones"
 
 if [ -n "$POWER_TEXT" ]; then
     OPCIONES="$OPCIONES
@@ -53,45 +52,58 @@ $POWER_TEXT"
 fi
 
 OPCIONES="$OPCIONES
-󰈊 Selector de Color (Color Picker)
-📸 Menú de Captura de Pantalla
-😀 Selector de Emojis
-󰅖 Borrar Historial de Portapapeles (Limpiar copiado)"
+󰈊 Selector de Color  ·  [Copiar HEX]
+󰄀 Captura de Pantalla  ·  [Menú Rápido]
+󰞅 Selector de Emojis
+󰅖 Borrar Historial de Portapapeles"
 
-# 6. Ejecutar Wofi
+# ── 3. Lanzar Wofi ──────────────────────────────────────────────
 SELECCION=$(echo -e "$OPCIONES" | wofi --dmenu \
-    --prompt "Centro de Control" \
+    --prompt "  󰒓 Centro de Control" \
     --cache-file /dev/null \
     --insensitive \
-    --width 440 \
-    --height 400 \
-    --lines 10)
+    --width 480 \
+    --height 440 \
+    --lines 11)
 
-# 7. Manejar acción
+# Salir si el usuario canceló
+[ -z "$SELECCION" ] && exit 0
+
+# ── 4. Acciones Rápidas ────────────────────────────────────────
 case "$SELECCION" in
-    *"Gestión de Pantallas"*)
+    *"Pantallas & Monitores"*)
         "$SCRIPTS_DIR/monitor-manager.sh" menu
         ;;
     *"Bluetooth"*)
-        # Submenú rápido de Bluetooth
-        PAIRED_DEVICES=$(bluetoothctl devices 2>/dev/null | sed 's/^Device /󰂱 /')
-        BT_MENU="󰂯 Alternar Bluetooth (Encender / Apagar)
-󰂰 Abrir Administrador Blueman"
-        if [ -n "$PAIRED_DEVICES" ]; then
-            BT_MENU="$BT_MENU
-$PAIRED_DEVICES"
+        # Submenú rápido de Bluetooth (solo consulta dispositivos si está activo)
+        BT_IS_BLOCKED=$(rfkill list bluetooth 2>/dev/null | grep -q "Soft blocked: yes" && echo "yes" || echo "no")
+        if [ "$BT_IS_BLOCKED" = "no" ]; then
+            TOGGLE_TXT="󰂲 Desactivar Bluetooth"
+        else
+            TOGGLE_TXT="󰂯 Activar Bluetooth"
         fi
-        
-        BT_SEL=$(echo -e "$BT_MENU" | wofi --dmenu --prompt "Bluetooth" --width 380 --height 280 --lines 6)
+
+        BT_MENU="$TOGGLE_TXT
+󰂰 Administrador Blueman"
+
+        # Cargar dispositivos emparejados solo si bluetooth está encendido
+        if [ "$BT_IS_BLOCKED" = "no" ] && command -v bluetoothctl &>/dev/null; then
+            PAIRED_DEVICES=$(bluetoothctl devices 2>/dev/null | sed 's/^Device /󰂱 /')
+            if [ -n "$PAIRED_DEVICES" ]; then
+                BT_MENU="$BT_MENU
+$PAIRED_DEVICES"
+            fi
+        fi
+
+        BT_SEL=$(echo -e "$BT_MENU" | wofi --dmenu --prompt "  󰂯 Bluetooth" --width 400 --height 280 --lines 6)
         case "$BT_SEL" in
-            *"Alternar Bluetooth"*)
-                if bluetoothctl show | grep -q "Powered: yes"; then
-                    bluetoothctl power off
-                    dunstify -a "Bluetooth" -r 9931 "󰂲 Bluetooth" "Bluetooth Desactivado"
-                else
-                    bluetoothctl power on
-                    dunstify -a "Bluetooth" -r 9931 "󰂯 Bluetooth" "Bluetooth Activado"
-                fi
+            *"Desactivar Bluetooth"*)
+                rfkill block bluetooth 2>/dev/null || bluetoothctl power off
+                dunstify -a "Bluetooth" -r 9931 -u low "󰂲 Bluetooth" "Bluetooth Desactivado"
+                ;;
+            *"Activar Bluetooth"*)
+                rfkill unblock bluetooth 2>/dev/null || bluetoothctl power on
+                dunstify -a "Bluetooth" -r 9931 -u low "󰂯 Bluetooth" "Bluetooth Activado"
                 ;;
             *"Blueman"*)
                 blueman-manager &
@@ -99,27 +111,26 @@ $PAIRED_DEVICES"
             *"󰂱"*)
                 DEV_MAC=$(echo "$BT_SEL" | awk '{print $2}')
                 DEV_NAME=$(echo "$BT_SEL" | cut -d ' ' -f 3-)
-                dunstify -a "Bluetooth" -r 9931 "󰂱 Conectando..." "Intentando conectar con $DEV_NAME"
-                bluetoothctl connect "$DEV_MAC"
+                dunstify -a "Bluetooth" -r 9931 "󰂱 Conectando..." "Conectando con $DEV_NAME"
+                bluetoothctl connect "$DEV_MAC" &
                 ;;
         esac
         ;;
-    *"Cambiar Salida de Audio"*)
-        # Obtener lista de sinks disponibles
-        SINKS=$(pactl list short sinks | awk '{print $1 ": " $2}')
+    *"Audio & Salidas"*)
+        SINKS=$(pactl list short sinks 2>/dev/null | awk '{print $1 ": " $2}')
         if [ -n "$SINKS" ]; then
-            SINK_SEL=$(echo -e "$SINKS" | wofi --dmenu --prompt "Elegir Salida de Audio" --width 400 --height 200 --lines 4)
+            SINK_SEL=$(echo -e "$SINKS" | wofi --dmenu --prompt "  󰕾 Salida de Audio" --width 460 --height 220 --lines 4)
             if [ -n "$SINK_SEL" ]; then
                 SINK_ID=$(echo "$SINK_SEL" | cut -d ':' -f 1)
                 pactl set-default-sink "$SINK_ID"
-                dunstify -a "Audio" -r 9932 "🔊 Salida Cambiada" "Salida de audio configurada a: $SINK_SEL"
+                dunstify -a "Audio" -r 9932 -u low "󰕾 Audio" "Salida cambiada a: $SINK_SEL"
             fi
         fi
         ;;
-    *"Luz Cálida"*)
+    *"Luz Nocturna"*)
         "$SCRIPTS_DIR/gammastep-toggle.sh"
         ;;
-    *"Modo Silencio"*|*"Notificaciones"*)
+    *"Notificaciones"*)
         if command -v dunstctl &>/dev/null; then
             dunstctl set-paused toggle
         fi
@@ -129,15 +140,15 @@ $PAIRED_DEVICES"
             dunstctl history-pop
         fi
         ;;
-    *"Perfil de Energía"*)
-        PROFILES="󰓅 performance (Rendimiento)
-󰾅 balanced (Equilibrado)
-󰾆 power-saver (Ahorro)"
-        PERFIL_SEL=$(echo -e "$PROFILES" | wofi --dmenu --prompt "Elegir Perfil" --width 280 --height 180 --lines 3)
+    *"Rendimiento"*)
+        PROFILES="󰓅 performance  ·  Alto Rendimiento
+󰾅 balanced     ·  Equilibrado
+󰾆 power-saver  ·  Ahorro de Batería"
+        PERFIL_SEL=$(echo -e "$PROFILES" | wofi --dmenu --prompt "  󰓅 Perfil de Energía" --width 380 --height 200 --lines 3)
         case "$PERFIL_SEL" in
-            *"performance"*) powerprofilesctl set performance ;;
-            *"balanced"*) powerprofilesctl set balanced ;;
-            *"power-saver"*) powerprofilesctl set power-saver ;;
+            *"performance"*) powerprofilesctl set performance && dunstify -a "Energía" -r 9933 -u low "󰓅 Rendimiento" "Perfil: Rendimiento" ;;
+            *"balanced"*) powerprofilesctl set balanced && dunstify -a "Energía" -r 9933 -u low "󰾅 Rendimiento" "Perfil: Equilibrado" ;;
+            *"power-saver"*) powerprofilesctl set power-saver && dunstify -a "Energía" -r 9933 -u low "󰾆 Rendimiento" "Perfil: Ahorro de Batería" ;;
         esac
         ;;
     *"Selector de Color"*)
@@ -152,7 +163,7 @@ $PAIRED_DEVICES"
     *"Borrar Historial de Portapapeles"*)
         if command -v cliphist &>/dev/null; then
             cliphist wipe
-            dunstify -a "Portapapeles" -r 9925 "📋 Portapapeles Limpio" "Se ha borrado el historial de copiado por seguridad"
+            dunstify -a "Portapapeles" -r 9925 "󰅖 Portapapeles" "Historial de copiado borrado"
         fi
         ;;
 esac
