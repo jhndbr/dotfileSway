@@ -2,100 +2,118 @@
 
 # ╔══════════════════════════════════════════════════════════════╗
 # ║        Menú Centro de Control / Quick Settings (Wofi)        ║
-# ║        Optimizado para apertura instantánea (0ms lag)        ║
+# ║        Alineación precisa, espaciado óptico y 0ms lag        ║
 # ╚══════════════════════════════════════════════════════════════╝
 
 SCRIPTS_DIR="$HOME/.local/bin"
 
+# Función para formatear líneas con espacio uniforme y corchetes alineados a la derecha
+format_item() {
+    local icon="$1"
+    local label="$2"
+    local tag="$3"
+    local target_width=30
+    local len=${#label}
+    local pad=$(( target_width - len ))
+    [ $pad -lt 2 ] && pad=2
+    local spaces
+    spaces=$(printf '%*s' "$pad" '')
+    
+    if [ -n "$tag" ]; then
+        echo "$icon    $label$spaces<span alpha='55%'>[$tag]</span>"
+    else
+        echo "$icon    $label"
+    fi
+}
+
 # ── 1. Detecciones ultrarrápidas (< 2ms) ────────────────────────
-# Luz Nocturna (pgrep es instantáneo en /proc)
+# Luz Nocturna (Gammastep)
 if pgrep -x gammastep > /dev/null; then
-    GAMMA_TEXT="󰌵 Luz Nocturna  ·  [Activada]"
+    ITEM_GAMMA=$(format_item "󰌵" "Luz Nocturna" "Activada")
 else
-    GAMMA_TEXT="󰌶 Luz Nocturna  ·  [Desactivada]"
+    ITEM_GAMMA=$(format_item "󰌶" "Luz Nocturna" "Desactivada")
 fi
 
-# Modo Silencio / Notificaciones (Dunst)
+# Notificaciones (Dunst)
 if command -v dunstctl &>/dev/null && [ "$(dunstctl is-paused 2>/dev/null)" = "true" ]; then
-    NOTIF_TEXT="󰂛 Notificaciones  ·  [Silenciadas]"
+    ITEM_NOTIF=$(format_item "󰂛" "Notificaciones" "Silenciadas")
 else
-    NOTIF_TEXT="󰂚 Notificaciones  ·  [Activas]"
+    ITEM_NOTIF=$(format_item "󰂚" "Notificaciones" "Activas")
 fi
 
-# Bluetooth instantáneo vía rfkill (Lectura directa de kernel sysfs, 0ms)
+# Bluetooth (vía rfkill directo del kernel)
 if rfkill list bluetooth 2>/dev/null | grep -q "Soft blocked: yes"; then
-    BT_STATUS="󰂲 Bluetooth  ·  [Apagado]"
+    ITEM_BT=$(format_item "󰂲" "Bluetooth" "Apagado")
 elif rfkill list bluetooth 2>/dev/null | grep -q "Soft blocked: no"; then
-    BT_STATUS="󰂯 Bluetooth  ·  [Encendido]"
+    ITEM_BT=$(format_item "󰂯" "Bluetooth" "Encendido")
 else
-    BT_STATUS="󰂯 Bluetooth  ·  [Gestionar]"
+    ITEM_BT=$(format_item "󰂯" "Bluetooth" "Ajustes")
 fi
 
-# Perfil de energía
-POWER_TEXT=""
+# Perfil de Energía
+ITEM_POWER=""
 if command -v powerprofilesctl &>/dev/null; then
     CURRENT_PROFILE=$(powerprofilesctl get 2>/dev/null || echo "balanced")
-    POWER_TEXT="󰓅 Rendimiento  ·  [$CURRENT_PROFILE]"
+    ITEM_POWER=$(format_item "󰓅" "Perfil de Rendimiento" "$CURRENT_PROFILE")
 fi
 
-# ── 2. Menú Principal de Opciones con Diseño Pulido ─────────────
-OPCIONES="󰍹 Pantallas & Monitores  ·  [Configurar]
-$BT_STATUS
-󰕾 Audio & Salidas  ·  [Cambiar Dispositivo]
-$GAMMA_TEXT
-$NOTIF_TEXT
-󰂞 Historial de Notificaciones"
+# ── 2. Lista de Opciones Formateada ────────────────────────────
+OPCIONES="$(format_item "󰍹" "Pantallas & Monitores" "Configurar")
+$ITEM_BT
+$(format_item "󰕾" "Salida de Audio" "Cambiar")
+$ITEM_GAMMA
+$ITEM_NOTIF
+$(format_item "󰂞" "Historial de Notificaciones" "Ver")"
 
-if [ -n "$POWER_TEXT" ]; then
+if [ -n "$ITEM_POWER" ]; then
     OPCIONES="$OPCIONES
-$POWER_TEXT"
+$ITEM_POWER"
 fi
 
 OPCIONES="$OPCIONES
-󰈊 Selector de Color  ·  [Copiar HEX]
-󰄀 Captura de Pantalla  ·  [Menú Rápido]
-󰞅 Selector de Emojis
-󰅖 Borrar Historial de Portapapeles"
+$(format_item "󰈊" "Selector de Color" "HEX")
+$(format_item "󰄀" "Captura de Pantalla" "Menú")
+$(format_item "󰞅" "Selector de Emojis" "Copiar")
+$(format_item "󰅖" "Limpiar Portapapeles" "Vaciar")"
 
-# ── 3. Lanzar Wofi ──────────────────────────────────────────────
+# ── 3. Lanzar Wofi con soporte de Pango Markup ─────────────────
 SELECCION=$(echo -e "$OPCIONES" | wofi --dmenu \
     --prompt "  󰒓 Centro de Control" \
+    --allow-markup \
     --cache-file /dev/null \
     --insensitive \
-    --width 480 \
+    --width 500 \
     --height 440 \
     --lines 11)
 
-# Salir si el usuario canceló
+# Salir si se canceló
 [ -z "$SELECCION" ] && exit 0
 
-# ── 4. Acciones Rápidas ────────────────────────────────────────
+# ── 4. Ejecución de Acciones ────────────────────────────────────
 case "$SELECCION" in
     *"Pantallas & Monitores"*)
         "$SCRIPTS_DIR/monitor-manager.sh" menu
         ;;
     *"Bluetooth"*)
-        # Submenú rápido de Bluetooth (solo consulta dispositivos si está activo)
         BT_IS_BLOCKED=$(rfkill list bluetooth 2>/dev/null | grep -q "Soft blocked: yes" && echo "yes" || echo "no")
         if [ "$BT_IS_BLOCKED" = "no" ]; then
-            TOGGLE_TXT="󰂲 Desactivar Bluetooth"
+            TOGGLE_TXT="󰂲    Desactivar Bluetooth"
         else
-            TOGGLE_TXT="󰂯 Activar Bluetooth"
+            TOGGLE_TXT="󰂯    Activar Bluetooth"
         fi
 
         BT_MENU="$TOGGLE_TXT
-󰂰 Administrador Blueman"
+󰂰    Administrador Blueman"
 
-        # Cargar dispositivos emparejados solo si bluetooth está encendido
         if [ "$BT_IS_BLOCKED" = "no" ] && command -v bluetoothctl &>/dev/null; then
-            PAIRED_DEVICES=$(bluetoothctl devices 2>/dev/null | sed 's/^Device /󰂱 /')
+            PAIRED_DEVICES=$(bluetoothctl devices 2>/dev/null | sed 's/^Device /󰂱    /')
             if [ -n "$PAIRED_DEVICES" ]; then
                 BT_MENU="$BT_MENU
 $PAIRED_DEVICES"
             fi
         fi
 
-        BT_SEL=$(echo -e "$BT_MENU" | wofi --dmenu --prompt "  󰂯 Bluetooth" --width 400 --height 280 --lines 6)
+        BT_SEL=$(echo -e "$BT_MENU" | wofi --dmenu --prompt "  󰂯 Bluetooth" --allow-markup --width 420 --height 280 --lines 6)
         case "$BT_SEL" in
             *"Desactivar Bluetooth"*)
                 rfkill block bluetooth 2>/dev/null || bluetoothctl power off
@@ -116,14 +134,14 @@ $PAIRED_DEVICES"
                 ;;
         esac
         ;;
-    *"Audio & Salidas"*)
-        SINKS=$(pactl list short sinks 2>/dev/null | awk '{print $1 ": " $2}')
+    *"Salida de Audio"*)
+        SINKS=$(pactl list short sinks 2>/dev/null | awk '{print "󰕾    " $1 ": " $2}')
         if [ -n "$SINKS" ]; then
-            SINK_SEL=$(echo -e "$SINKS" | wofi --dmenu --prompt "  󰕾 Salida de Audio" --width 460 --height 220 --lines 4)
+            SINK_SEL=$(echo -e "$SINKS" | wofi --dmenu --prompt "  󰕾 Salida de Audio" --allow-markup --width 480 --height 220 --lines 4)
             if [ -n "$SINK_SEL" ]; then
-                SINK_ID=$(echo "$SINK_SEL" | cut -d ':' -f 1)
+                SINK_ID=$(echo "$SINK_SEL" | awk '{print $2}' | tr -d ':')
                 pactl set-default-sink "$SINK_ID"
-                dunstify -a "Audio" -r 9932 -u low "󰕾 Audio" "Salida cambiada a: $SINK_SEL"
+                dunstify -a "Audio" -r 9932 -u low "󰕾 Audio" "Salida: $SINK_SEL"
             fi
         fi
         ;;
@@ -140,11 +158,11 @@ $PAIRED_DEVICES"
             dunstctl history-pop
         fi
         ;;
-    *"Rendimiento"*)
-        PROFILES="󰓅 performance  ·  Alto Rendimiento
-󰾅 balanced     ·  Equilibrado
-󰾆 power-saver  ·  Ahorro de Batería"
-        PERFIL_SEL=$(echo -e "$PROFILES" | wofi --dmenu --prompt "  󰓅 Perfil de Energía" --width 380 --height 200 --lines 3)
+    *"Perfil de Rendimiento"*)
+        PROFILES="$(format_item "󰓅" "performance" "Alto Rendimiento")
+$(format_item "󰾅" "balanced" "Equilibrado")
+$(format_item "󰾆" "power-saver" "Ahorro de Batería")"
+        PERFIL_SEL=$(echo -e "$PROFILES" | wofi --dmenu --prompt "  󰓅 Perfil de Energía" --allow-markup --width 400 --height 200 --lines 3)
         case "$PERFIL_SEL" in
             *"performance"*) powerprofilesctl set performance && dunstify -a "Energía" -r 9933 -u low "󰓅 Rendimiento" "Perfil: Rendimiento" ;;
             *"balanced"*) powerprofilesctl set balanced && dunstify -a "Energía" -r 9933 -u low "󰾅 Rendimiento" "Perfil: Equilibrado" ;;
@@ -160,7 +178,7 @@ $PAIRED_DEVICES"
     *"Selector de Emojis"*)
         "$SCRIPTS_DIR/emoji-picker.sh"
         ;;
-    *"Borrar Historial de Portapapeles"*)
+    *"Limpiar Portapapeles"*)
         if command -v cliphist &>/dev/null; then
             cliphist wipe
             dunstify -a "Portapapeles" -r 9925 "󰅖 Portapapeles" "Historial de copiado borrado"
