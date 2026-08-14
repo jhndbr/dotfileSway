@@ -45,7 +45,7 @@
     font-family: "Inter", "SF Pro Display", "JetBrainsMono Nerd Font", sans-serif;
     font-size: 11.5px;
     font-weight: 500;
-    min-height: 26px;
+    min-height: 0;
     padding: 0;
     margin: 0;
 }
@@ -107,7 +107,7 @@ tooltip label {
     border-radius: 8px;
     padding: 0 10px;
     margin: 5px 2px;
-    min-height: 26px;
+    min-height: 0;
     color: @text_primary;
     transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
@@ -151,7 +151,7 @@ tooltip label {
     box-shadow: none;
 }
 
-/* Labels inside groups — consistent typography & vertical centering */
+/* Labels inside groups — strip everything, GTK3 centers naturally */
 #audio label,
 #backlight label,
 #network label,
@@ -167,7 +167,7 @@ tooltip label {
     font-weight: 500;
     font-size: 11px;
     min-width: 0;
-    min-height: 26px;
+    min-height: 0;
 }
 
 /* ══════════════════════════════════════════════════════════════
@@ -189,12 +189,12 @@ tooltip label {
 
 #workspaces button {
     color: @text_muted;
-    padding: 0 8px;
-    margin: 3px 1px;
+    padding: 2px 8px;
+    margin: 2px 1px;
     border-radius: 6px;
     background: transparent;
-    min-width: 20px;
-    min-height: 20px;
+    min-width: 22px;
+    min-height: 0;
     font-size: 11px;
     font-weight: 600;
     transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
@@ -278,58 +278,28 @@ tooltip label {
     color: @accent;
 }
 
-/* ── Drawer trigger icons — all monochrome @text_secondary ──── */
-/* macOS uses monochrome SF Symbols; we do the same for cohesion */
-
-#custom-system-icon {
-    font-size: 14px;
-    color: @text_secondary;
-    padding: 0 7px;
-    min-width: 22px;
-    min-height: 26px;
-}
-
-#pulseaudio\.icon {
-    font-size: 14px;
-    color: @text_secondary;
-    padding: 0 7px;
-    min-width: 22px;
-    min-height: 26px;
-}
-
-#backlight\.icon {
-    font-size: 14px;
-    color: @text_secondary;
-    padding: 0 7px;
-    min-width: 22px;
-    min-height: 26px;
-}
-
-#network\.icon {
-    font-size: 14px;
-    color: @text_secondary;
-    padding: 0 7px;
-    min-width: 22px;
-    min-height: 26px;
-}
-
+/* ── Drawer trigger icons — uniform padding, sin min-height/min-width ── */
+#custom-system-icon,
+#pulseaudio\.icon,
+#backlight\.icon,
+#network\.icon,
 #battery\.icon {
     font-size: 14px;
     color: @text_secondary;
-    padding: 0 7px;
-    min-width: 22px;
-    min-height: 26px;
+    padding: 0 6px;
+    min-height: 0;
+    min-width: 0;
 }
 
-/* Drawer numeric readouts — uniform spacing */
+/* Drawer numeric readouts — mismo padding que iconos, sin min-width forzado */
 #cpu, #memory, #temperature,
 #pulseaudio\.text, #backlight\.text, #network\.text, #battery\.text {
     font-size: 11px;
     font-weight: 500;
-    padding: 0 7px;
+    padding: 0 6px;
     color: @text_secondary;
-    min-width: 30px;
-    min-height: 26px;
+    min-height: 0;
+    min-width: 0;
 }
 
 /* ══════════════════════════════════════════════════════════════
