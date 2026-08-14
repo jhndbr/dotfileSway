@@ -172,15 +172,20 @@ tooltip label {
    ║  LEFT — Menu · Workspaces · Window Title                    ║
    ══════════════════════════════════════════════════════════════ */
 
-/* Distro launcher icon (Perfect square & centered) */
+/* Distro launcher icon (Perfect square & optical center) */
 #custom-menu {
     font-family: "JetBrainsMono Nerd Font", "Symbols Nerd Font", monospace;
     font-size: 15px;
     color: @accent;
-    padding: 0;
+    padding: 0 1px 0 0;
     margin: 5px 2px 5px 4px;
     min-width: 28px;
     min-height: 28px;
+}
+
+#custom-menu label {
+    margin-right: 1px;
+    padding: 0;
 }
 
 /* Workspaces — numbered capsules */
@@ -268,15 +273,20 @@ tooltip label {
     color: @text_muted;
 }
 
-/* Control Center button (Perfect square & centered) */
+/* Control Center button (Perfect square & optical center) */
 #custom-quicksettings {
     font-family: "JetBrainsMono Nerd Font", "Symbols Nerd Font", monospace;
     font-size: 14px;
     color: @text_secondary;
-    padding: 0;
+    padding: 0 1px 0 0;
     margin: 5px 2px;
     min-width: 28px;
     min-height: 28px;
+}
+
+#custom-quicksettings label {
+    margin-right: 1px;
+    padding: 0;
 }
 
 #custom-quicksettings:hover {
@@ -285,23 +295,23 @@ tooltip label {
 
 /* ── Group Containers (Controls & Hardware) ──────────────────── */
 #controls {
-    padding: 0 6px;
+    padding: 0 4px;
 }
 
 #hardware {
-    padding: 0 6px;
+    padding: 0 4px;
 }
 
-/* Sub-drawers inside Controls group — distinct separation */
+/* Sub-drawers inside Controls group — compact & balanced */
 #network,
 #backlight,
 #audio,
 #battery {
-    margin: 0 3px;
+    margin: 0 1px;
     padding: 0;
 }
 
-/* ── Drawer trigger icons — uniform padding & clear icon sizes ── */
+/* ── Drawer trigger icons — compact padding for ideal icon density ── */
 #custom-system-icon,
 #pulseaudio.icon,
 #backlight.icon,
@@ -310,8 +320,8 @@ tooltip label {
     font-family: "JetBrainsMono Nerd Font", "Symbols Nerd Font", monospace;
     font-size: 13.5px;
     color: @text_secondary;
-    padding: 0 5px;
-    min-width: 18px;
+    padding: 0 3px;
+    min-width: 14px;
 }
 
 #pulseaudio.icon:hover,
@@ -322,17 +332,23 @@ tooltip label {
     color: @text_primary;
 }
 
-/* Drawer numeric readouts */
-#cpu,
-#memory,
-#temperature,
+/* Drawer numeric readouts — tight coupling with icon when drawer opens */
 #pulseaudio.text,
 #backlight.text,
 #network.text,
 #battery.text {
     font-size: 11px;
     font-weight: 500;
-    padding: 0 5px;
+    padding: 0 3px 0 1px;
+    color: @text_secondary;
+}
+
+#cpu,
+#memory,
+#temperature {
+    font-size: 11px;
+    font-weight: 500;
+    padding: 0 3px;
     color: @text_secondary;
 }
 
@@ -409,11 +425,16 @@ tooltip label {
 #custom-power {
     font-family: "JetBrainsMono Nerd Font", "Symbols Nerd Font", monospace;
     font-size: 13px;
-    padding: 0;
+    padding: 0 1px 0 0;
     color: @text_muted;
     margin: 5px 4px 5px 2px;
     min-width: 28px;
     min-height: 28px;
+}
+
+#custom-power label {
+    margin-right: 1px;
+    padding: 0;
 }
 
 #custom-power:hover {

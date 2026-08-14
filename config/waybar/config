@@ -115,7 +115,7 @@
     /* ── Grupo Unificado de Controles de Hardware ────────────────── */
     "group/controls": {
         "orientation": "horizontal",
-        "spacing": 4,
+        "spacing": 0,
         "modules": [
             "group/network",
             "group/backlight",
@@ -256,7 +256,7 @@
     /* ── Monitor de Sistema / Hardware Drawer ────────────────────── */
     "group/hardware": {
         "orientation": "horizontal",
-        "spacing": 4,
+        "spacing": 0,
         "drawer": {
             "transition-duration": 350,
             "transition-left-to-right": true
