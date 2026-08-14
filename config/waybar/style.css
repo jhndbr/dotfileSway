@@ -1,26 +1,35 @@
 /* ╔══════════════════════════════════════════════════════════════╗
-   ║        Waybar Style — Edge-to-Edge Compact Glass Bar         ║
+   ║     Waybar Style — macOS & Linux Frosted Glass Theme         ║
+   ║     Uniform Pill Architecture & Dynamic Material Palette     ║
    ╚══════════════════════════════════════════════════════════════╝ */
 
 @import url("../gtk-3.0/dank-colors.css");
 
 /* ── Palette Aliases & Glass Tokens ──────────────────────────── */
-@define-color bg_bar        alpha(@window_bg_color, 0.85);
-@define-color bg_pill       alpha(@window_fg_color, 0.07);
-@define-color bg_pill_hover alpha(@window_fg_color, 0.16);
-@define-color bg_active     @accent_bg_color;
-@define-color border_subtle alpha(@window_fg_color, 0.12);
-@define-color border_pill   alpha(@window_fg_color, 0.09);
-@define-color text_primary  @window_fg_color;
-@define-color text_secondary alpha(@window_fg_color, 0.65);
-@define-color text_bright   @accent_fg_color;
-@define-color accent_color  @accent_bg_color;
+@define-color bg_bar            alpha(@window_bg_color, 0.82);
+@define-color bg_pill           alpha(@window_fg_color, 0.07);
+@define-color bg_pill_hover     alpha(@window_fg_color, 0.14);
+@define-color bg_active         @accent_bg_color;
+@define-color border_bar        alpha(@window_fg_color, 0.08);
+@define-color border_pill       alpha(@window_fg_color, 0.09);
+@define-color border_pill_hover alpha(@accent_bg_color, 0.45);
+@define-color text_primary      @window_fg_color;
+@define-color text_secondary    alpha(@window_fg_color, 0.65);
+@define-color text_muted        alpha(@window_fg_color, 0.40);
+@define-color text_bright       @accent_fg_color;
+@define-color accent_color      @accent_bg_color;
 
-/* ── Global Reset ──────────────────────────────────────────── */
+/* Colores Semánticos macOS */
+@define-color green_apple       #30d158;
+@define-color yellow_apple      #ffd60a;
+@define-color red_apple         #ff453a;
+@define-color blue_apple        #0a84ff;
+
+/* ── Global Reset & Typography ──────────────────────────────── */
 * {
     border: none;
     border-radius: 0;
-    font-family: "Inter", "JetBrainsMono Nerd Font", sans-serif;
+    font-family: "Inter", "SF Pro Display", "JetBrainsMono Nerd Font", sans-serif;
     font-size: 11.5px;
     font-weight: 500;
     min-height: 0;
@@ -28,13 +37,13 @@
     margin: 0;
 }
 
-/* ── Edge-to-Edge Bar Container ───────────────────────────── */
+/* ── Barra Superior Transparente / Frosted Glass ───────────── */
 window#waybar {
     background: @bg_bar;
     border: none;
-    border-bottom: 1px solid @border_subtle;
+    border-bottom: 1px solid @border_bar;
     border-radius: 0;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
     transition: all 0.3s ease;
 }
 
@@ -45,21 +54,23 @@ window#waybar.hidden {
 /* ── Tooltips ──────────────────────────────────────────────── */
 tooltip {
     background: alpha(@window_bg_color, 0.94);
-    border: 1px solid alpha(@accent_color, 0.35);
+    border: 1px solid alpha(@accent_color, 0.30);
     border-radius: 10px;
-    padding: 6px 10px;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+    padding: 8px 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
 }
 
 tooltip label {
     color: @text_primary;
     font-size: 11px;
+    font-weight: 500;
 }
 
 /* ══════════════════════════════════════════════════════════════
-   ║  ESTILO UNIFORME DE PÍLDORAS (CONTENEDORES EXTERNOS)         ║
+   ║  ARQUITECTURA UNIFORME DE ISLAS / PÍLDORAS (CONTENEDORES)   ║
    ══════════════════════════════════════════════════════════════ */
 
+#custom-menu,
 #workspaces,
 #mode,
 #scratchpad,
@@ -73,23 +84,27 @@ tooltip label {
 #custom-power {
     background: @bg_pill;
     border: 1px solid @border_pill;
-    border-radius: 6px;
-    padding: 0 5px;
-    margin: 2px 2px;
+    border-radius: 8px;
+    padding: 0 8px;
+    margin: 3px 2px;
+    min-height: 24px;
     color: @text_primary;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Efecto Hover para contenedores de píldora */
+/* Efecto Hover uniforme en píldoras */
+#custom-menu:hover,
 #workspaces:hover,
+#scratchpad:hover,
 #clock:hover,
 #custom-media:hover,
 #custom-quicksettings:hover,
 #controls:hover,
 #hardware:hover,
+#tray:hover,
 #custom-power:hover {
     background: @bg_pill_hover;
-    border-color: alpha(@accent_color, 0.40);
+    border-color: @border_pill_hover;
 }
 
 /* ══════════════════════════════════════════════════════════════
@@ -118,13 +133,6 @@ tooltip label {
     box-shadow: none;
 }
 
-#custom-quicksettings {
-    padding: 0 4px;
-    margin: 0;
-    font-size: 14.5px;
-    color: @accent_color;
-}
-
 #audio label,
 #backlight label,
 #network label,
@@ -141,39 +149,53 @@ tooltip label {
     border: none;
     outline: none;
     box-shadow: none;
-    padding: 0 3px;
+    padding: 0 2px;
     margin: 0;
     color: @text_primary;
     font-weight: 500;
 }
 
-/* Iconos de disparo a la izquierda */
+/* ── Menú de Inicio / Apple-like Distro Icon ────────────────── */
+#custom-menu {
+    font-size: 13.5px;
+    color: @accent_color;
+    padding: 0 7px;
+    margin-left: 4px;
+}
+
+/* ── Iconos de Disparo y Centro de Control ───────────────────── */
+#custom-quicksettings {
+    font-size: 13.5px;
+    color: @accent_color;
+    padding: 0 6px;
+}
+
 #custom-system-icon {
-    font-size: 14.5px;
+    font-size: 13.5px;
     color: @accent_color;
     padding: 0 3px;
 }
 
 #pulseaudio\.icon {
-    font-size: 14.5px;
+    font-size: 13.5px;
     color: @accent_color;
     padding: 0 3px;
 }
 
 #backlight\.icon {
-    font-size: 14.5px;
-    color: #ffd60a;
+    font-size: 13.5px;
+    color: @yellow_apple;
     padding: 0 3px;
 }
 
 #network\.icon {
-    font-size: 14.5px;
-    color: #30d158;
+    font-size: 13.5px;
+    color: @green_apple;
     padding: 0 3px;
 }
 
 #battery\.icon {
-    font-size: 14.5px;
+    font-size: 13.5px;
     color: @accent_color;
     padding: 0 3px;
 }
@@ -182,7 +204,8 @@ tooltip label {
 #cpu, #memory, #temperature,
 #pulseaudio\.text, #backlight\.text, #network\.text, #battery\.text {
     font-size: 11px;
-    padding: 0 3px;
+    font-weight: 500;
+    padding: 0 2px;
     color: @text_primary;
 }
 
@@ -190,14 +213,19 @@ tooltip label {
    ║  WORKSPACES Y BOTONES                                       ║
    ══════════════════════════════════════════════════════════════ */
 
+#workspaces {
+    padding: 0 3px;
+}
+
 #workspaces button {
     color: @text_secondary;
-    padding: 0 5px;
-    margin: 1px 1px;
-    border-radius: 4px;
+    padding: 0 6px;
+    margin: 2px 1px;
+    border-radius: 6px;
     background: transparent;
-    min-width: 16px;
+    min-width: 18px;
     font-size: 11px;
+    font-weight: 600;
     transition: all 0.2s ease;
 }
 
@@ -210,72 +238,66 @@ tooltip label {
     background: @accent_color;
     color: @text_bright;
     font-weight: 700;
-    box-shadow: 0 2px 6px alpha(@accent_color, 0.40);
+    box-shadow: 0 2px 8px alpha(@accent_color, 0.40);
 }
 
 #workspaces button.urgent {
-    background: alpha(@destructive_bg_color, 0.35);
+    background: alpha(@destructive_bg_color, 0.40);
     color: @destructive_bg_color;
 }
 
+/* ── Modo Sway / Resize ─────────────────────────────────────── */
 #mode {
     background: @accent_color;
     color: @text_bright;
     font-weight: 700;
-    border-radius: 5px;
-    margin: 2px 3px;
+    border-radius: 6px;
+    margin: 3px 2px;
     padding: 0 8px;
 }
 
+/* ── Scratchpad ─────────────────────────────────────────────── */
 #scratchpad {
-    background: @bg_pill;
-    border: 1px solid @border_pill;
     color: @text_primary;
-}
-
-#window {
-    color: @text_secondary;
-    font-size: 11px;
-    font-weight: 500;
     padding: 0 6px;
 }
 
-/* ══════════════════════════════════════════════════════════════
-   ║  CENTRO — Reloj                                            ║
-   ══════════════════════════════════════════════════════════════ */
-
-#clock {
-    font-weight: 700;
+/* ── Título de la Ventana Activa (macOS Application Title) ──── */
+#window {
+    color: @text_secondary;
     font-size: 11.5px;
-    border-radius: 6px;
-    padding: 0 12px;
+    font-weight: 500;
+    padding: 0 8px;
+    background: transparent;
+    border-color: transparent;
 }
 
 /* ══════════════════════════════════════════════════════════════
-   ║  ESTADOS ESPECÍFICOS                                       ║
+   ║  CENTRO — Reloj macOS                                      ║
+   ══════════════════════════════════════════════════════════════ */
+
+#clock {
+    font-weight: 600;
+    font-size: 11.5px;
+    border-radius: 8px;
+    padding: 0 12px;
+    color: @text_primary;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   ║  ESTADOS ESPECÍFICOS Y MÓDULOS MULTIMEDIA                   ║
    ══════════════════════════════════════════════════════════════ */
 
 #custom-media {
-    color: @accent_color;
+    color: @text_primary;
     font-size: 11px;
+    font-weight: 500;
+    padding: 0 10px;
 }
 
 #custom-media.Paused {
     color: @text_secondary;
-}
-
-#custom-display.dual,
-#custom-display.mirror {
-    color: @accent_color;
-}
-
-#custom-display.connected {
-    color: #ffd60a;
-}
-
-#custom-display.laptop,
-#custom-display.single {
-    color: @text_primary;
+    opacity: 0.8;
 }
 
 #idle_inhibitor.activated {
@@ -283,7 +305,7 @@ tooltip label {
 }
 
 #custom-gammastep.on {
-    color: #ffd60a;
+    color: @yellow_apple;
 }
 
 /* Power Profiles Daemon Estados */
@@ -292,18 +314,18 @@ tooltip label {
     color: @accent_color;
 }
 #power-profiles-daemon.performance {
-    color: #ff453a;
+    color: @red_apple;
 }
 #power-profiles-daemon.balanced {
     color: @accent_color;
 }
 #power-profiles-daemon.power-saver {
-    color: #30d158;
+    color: @green_apple;
 }
 
 /* Batería Estados */
 #battery\.icon.warning, #battery\.text.warning {
-    color: #ffd60a;
+    color: @yellow_apple;
 }
 
 #battery\.icon.critical, #battery\.text.critical {
@@ -311,11 +333,12 @@ tooltip label {
 }
 
 #battery\.icon.charging, #battery\.icon.plugged {
-    color: #30d158;
+    color: @green_apple;
 }
 
+/* Bandeja del Sistema (Tray) */
 #tray {
-    padding: 0 5px;
+    padding: 0 6px;
 }
 
 #custom-notification {
@@ -323,16 +346,21 @@ tooltip label {
 }
 
 #custom-notification.paused {
-    color: #ffd60a;
+    color: @yellow_apple;
 }
 
+/* Botón de Apagado / Sesión */
 #custom-power {
-    font-size: 12.5px;
-    padding: 0 7px;
+    font-size: 13px;
+    padding: 0 8px;
+    color: @text_secondary;
+    margin-right: 4px;
 }
 
 #custom-power:hover {
     background: alpha(@destructive_bg_color, 0.25);
     border-color: @destructive_bg_color;
     color: @destructive_bg_color;
+    box-shadow: 0 2px 8px alpha(@destructive_bg_color, 0.35);
 }
+
