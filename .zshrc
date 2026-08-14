@@ -145,12 +145,14 @@ alias anti='~/Aplicaciones/Antigravity/Antigravity-x64/antigravity'
 # Sway
 alias sway-reload='swaymsg reload'
 alias sway-log='journalctl --user -b -u sway'
+alias sway-error='cat ~/.sway_error.log | grep -E "(ERROR|WARN)" | tail -n 40'
+alias sway-log-full='cat ~/.sway_error.log'
 
 # Limpieza
 alias cleanup='sudo pacman -Rns $(pacman -Qdtq) 2>/dev/null; yay -Sc --noconfirm'
 alias cache-clear='rm -rf ~/.cache/*'
 
-# ── 7. Inicio de Sesión (Sway en tty1) ─────────────────────────
+# ── 7. Inicio de Sesión (Sway en tty1 con log de errores) ─────
 if [[ -z $DISPLAY && $(tty) == "/dev/tty1" ]]; then
-    exec sway
+    exec sway -d 2> ~/.sway_error.log
 fi
