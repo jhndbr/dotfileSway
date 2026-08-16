@@ -1,5 +1,5 @@
 /* ╔══════════════════════════════════════════════════════════════╗
-   ║    Wofi Style — Seamless Glassmorphism (No Black Corners)    ║
+   ║    Wofi Style — Flat Rectilinear Launcher for Sway           ║
    ╚══════════════════════════════════════════════════════════════╝ */
 
 @define-color window_bg_color #12140e;
@@ -58,7 +58,8 @@ window,
 }
 
 #input:focus {
-    border-color: @accent_color;
+    border-color: @border_subtle;
+    border-bottom: 2px solid @accent_color;
     background-color: @bg_pill_hover;
     box-shadow: none;
 }
@@ -86,11 +87,12 @@ window,
     color: @text_primary;
 }
 
-/* Selected item with dynamic accent color */
+/* Selected item with dynamic accent indicator */
 #entry:selected {
     background-color: @accent_color;
     color: @accent_fg_color;
     font-weight: 600;
+    border-left: 3px solid @accent_fg_color;
     box-shadow: none;
 }
 

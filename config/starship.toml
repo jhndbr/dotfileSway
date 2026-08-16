@@ -1,6 +1,6 @@
 # ╔══════════════════════════════════════════════════════════════╗
 # ║           Configuración Minimalista de Starship              ║
-# ║           Estilo macOS Monocromático & Limpio                ║
+# ║           Colores ANSI dinámicos vía Foot/Matugen            ║
 # ╚══════════════════════════════════════════════════════════════╝
 
 add_newline = false
@@ -15,7 +15,7 @@ $line_break\
 $character"""
 
 [directory]
-style = "bold white"
+style = "bold blue"
 truncation_length = 3
 truncation_symbol = "…/"
 read_only = " 🔒"
@@ -23,11 +23,11 @@ format = "[$path]($style)[$read_only]($read_only_style) "
 
 [git_branch]
 symbol = "󰘬 "
-style = "bold dimmed white"
+style = "dimmed cyan"
 format = "on [$symbol$branch]($style) "
 
 [git_status]
-style = "bold dimmed red"
+style = "bold red"
 format = "([$all_status$ahead_behind]($style) )"
 conflicted = "="
 ahead = "⇡${count}"
@@ -46,5 +46,5 @@ style = "dimmed yellow"
 format = "took [$duration]($style) "
 
 [character]
-success_symbol = "[❯](bold white)"
+success_symbol = "[❯](bold blue)"
 error_symbol = "[❯](bold red)"

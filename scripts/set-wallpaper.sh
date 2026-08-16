@@ -210,7 +210,7 @@ popover contents {
   color: @popover_fg_color;
   border-style: solid;
   border-width: 1px;
-  border-color: alpha(@accent_bg_color, 0.35);
+  border-color: alpha(@accent_bg_color, 0.40);
   border-radius: 0px;
   box-shadow: none;
   padding: 4px;
@@ -352,7 +352,7 @@ menu,
   color: @popover_fg_color;
   border-style: solid;
   border-width: 1px;
-  border-color: alpha(@accent_bg_color, 0.35);
+  border-color: alpha(@accent_bg_color, 0.40);
   border-radius: 0px;
   box-shadow: none;
   padding: 4px;

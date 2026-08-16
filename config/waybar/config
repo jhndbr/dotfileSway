@@ -275,7 +275,7 @@
     },
 
     "cpu": {
-        "format": "󰻠 {usage}%",
+        "format": "{usage}%",
         "interval": 2,
         "states": {
             "warning": 70,
@@ -286,7 +286,7 @@
     },
 
     "memory": {
-        "format": "󰘚 {percentage}%",
+        "format": "{percentage}%",
         "interval": 3,
         "states": {
             "warning": 75,
@@ -298,8 +298,8 @@
 
     "temperature": {
         "critical-threshold": 80,
-        "format": "󰔏 {temperatureC}°C",
-        "format-critical": "󰔏 {temperatureC}°C",
+        "format": "{temperatureC}°",
+        "format-critical": "{temperatureC}°",
         "tooltip-format": "Temperatura: {temperatureC}°C"
     },
 

@@ -4,7 +4,7 @@
     width = (300, 400)
     height = (0, 300)
     origin = top-right
-    offset = (16, 48)
+    offset = (8, 46)
     notification_limit = 5
     indicate_hidden = yes
 
@@ -20,8 +20,8 @@
     padding = 14
     horizontal_padding = 16
     text_icon_padding = 14
-    frame_width = 1
-    gap_size = 8
+    frame_width = 2
+    gap_size = 6
     separator_color = frame
     sort = yes
     idle_threshold = 120

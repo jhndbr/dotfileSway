@@ -1,6 +1,6 @@
 # ╔══════════════════════════════════════════════════════════════╗
-# ║                    Sway Configuration                       ║
-# ║                    macOS Monochromatic Style                ║
+# ║              Sway Configuration                         ║
+# ║              Flat Rectilinear · Dynamic Material Palette  ║
 # ╚══════════════════════════════════════════════════════════════╝
 
 ### Variables
@@ -29,7 +29,7 @@ set $accent_red   #ff453a
 # Dynamic Palette from Matugen (sobreescribe los fallbacks)
 include ~/.config/sway/dank-colors
 
-# ── Apariencia Monocromática ────────────────────────────────────
+# ── Apariencia Rectilineal Dinámica ──────────────────────────────────
 # class                  border          bg           text        indicator       child_border
 client.focused           $border_focus   $bg_surface  $text_main  $border_focus   $border_focus
 client.focused_inactive  $border_unfocus $bg_surface  $text_muted $border_unfocus $border_unfocus

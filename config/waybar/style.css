@@ -1,5 +1,5 @@
 /* ╔══════════════════════════════════════════════════════════════╗
-   ║     Waybar — macOS-Inspired Frosted Glass Bar for Linux      ║
+   ║     Waybar — Flat Rectilinear Bar for Sway                  ║
    ║     Uniform Island Architecture · Dynamic Material Palette   ║
    ╚══════════════════════════════════════════════════════════════╝ */
 
@@ -42,7 +42,7 @@
 * {
     border: none;
     border-radius: 0;
-    font-family: "Inter", "SF Pro Display", "JetBrainsMono Nerd Font", sans-serif;
+    font-family: "Inter", "JetBrainsMono Nerd Font", sans-serif;
     font-size: 11.5px;
     font-weight: 500;
     min-height: 0;
@@ -274,7 +274,7 @@ tooltip label {
     color: @text_muted;
 }
 
-/* Control Center button (Perfect square & optical center) */
+/* Control Center button (Flat square & optical center) */
 #custom-quicksettings {
     font-family: "JetBrainsMono Nerd Font", "Symbols Nerd Font", monospace;
     font-size: 14px;
@@ -283,6 +283,7 @@ tooltip label {
     margin: 5px 2px;
     min-width: 28px;
     min-height: 28px;
+    border-left: 1px solid alpha(@window_fg_color, 0.10);
 }
 
 #custom-quicksettings label {
@@ -349,7 +350,7 @@ tooltip label {
 #temperature {
     font-size: 11px;
     font-weight: 500;
-    padding: 0 3px;
+    padding: 0 3px 0 1px;
     color: @text_secondary;
 }
 
@@ -442,6 +443,7 @@ tooltip label {
     margin: 5px 4px 5px 2px;
     min-width: 28px;
     min-height: 28px;
+    border-left: 1px solid alpha(@window_fg_color, 0.10);
 }
 
 #custom-power label {
