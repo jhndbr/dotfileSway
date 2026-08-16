@@ -47,3 +47,8 @@ output_path = '~/.config/sway/dank-colors'
 [templates.dunst]
 input_path = '~/.config/matugen/templates/dunstrc'
 output_path = '~/.config/dunst/dunstrc'
+
+[templates.wofi]
+input_path = '~/.config/matugen/templates/wofi-style.css'
+output_path = '~/.config/wofi/style.css'
+

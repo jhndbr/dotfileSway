@@ -50,7 +50,7 @@ mkdir -p "$HOME/.config/matugen"
 mkdir -p "$HOME/.config/gtk-3.0" "$HOME/.config/gtk-4.0"
 mkdir -p "$HOME/.config/zed/themes"
 mkdir -p "$HOME/.config/qt5ct/colors" "$HOME/.config/qt6ct/colors"
-mkdir -p "$HOME/.config/kitty" "$HOME/.config/foot"
+mkdir -p "$HOME/.config/kitty" "$HOME/.config/foot" "$HOME/.config/wofi"
 
 # Sincronizar plantillas a ~/.config/matugen/templates desde las ubicaciones posibles
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -115,6 +115,10 @@ output_path = '$HOME/.config/sway/dank-colors'
 [templates.dunst]
 input_path = '$TEMPLATES_DIR/dunstrc'
 output_path = '$HOME/.config/dunst/dunstrc'
+
+[templates.wofi]
+input_path = '$TEMPLATES_DIR/wofi-style.css'
+output_path = '$HOME/.config/wofi/style.css'
 EOF
 
 # ── 4. Ejecutar Matugen standalone importando dank16.json si existe ───────
@@ -380,9 +384,12 @@ sed -i 's/^style=.*/style=Fusion/' "$HOME/.config/qt6ct/qt6ct.conf" 2>/dev/null 
 sed -i 's/^icon_theme=.*/icon_theme=Papirus-Dark/' "$HOME/.config/qt5ct/qt5ct.conf" 2>/dev/null || true
 sed -i 's/^icon_theme=.*/icon_theme=Papirus-Dark/' "$HOME/.config/qt6ct/qt6ct.conf" 2>/dev/null || true
 
-# ── 8. Recargar componentes del escritorio y Foot ───────────────
+# ── 8. Recargar componentes del escritorio, Sway y Foot ───────────────
 pkill -SIGUSR2 waybar 2>/dev/null || true
 pkill -SIGUSR1 foot 2>/dev/null || true
+if command -v swaymsg &>/dev/null && pgrep -x sway &>/dev/null; then
+    swaymsg reload 2>/dev/null || true
+fi
 if pgrep -x dunst &>/dev/null; then
     killall dunst 2>/dev/null || true
     dunst &>/dev/null &
@@ -391,7 +398,7 @@ fi
 # ── 9. Sincronizar copias en el repositorio de dotfiles ──────────
 DOTFILES_DIR="$SCRIPT_DOTFILES"
 if [ -d "$DOTFILES_DIR" ]; then
-    mkdir -p "$DOTFILES_DIR/config/gtk-3.0" "$DOTFILES_DIR/config/gtk-4.0" "$DOTFILES_DIR/config/zed/themes" "$DOTFILES_DIR/config/foot" "$DOTFILES_DIR/scripts" "$DOTFILES_DIR/config/qt5ct" "$DOTFILES_DIR/config/qt6ct"
+    mkdir -p "$DOTFILES_DIR/config/gtk-3.0" "$DOTFILES_DIR/config/gtk-4.0" "$DOTFILES_DIR/config/zed/themes" "$DOTFILES_DIR/config/foot" "$DOTFILES_DIR/config/wofi" "$DOTFILES_DIR/scripts" "$DOTFILES_DIR/config/qt5ct" "$DOTFILES_DIR/config/qt6ct"
     cp -f "$HOME/.config/gtk-3.0/dank-colors.css" "$DOTFILES_DIR/config/gtk-3.0/dank-colors.css"
     cp -f "$HOME/.config/gtk-4.0/dank-colors.css" "$DOTFILES_DIR/config/gtk-4.0/dank-colors.css"
     cp -f "$HOME/.config/gtk-3.0/settings.ini" "$DOTFILES_DIR/config/gtk-3.0/settings.ini"
@@ -400,6 +407,7 @@ if [ -d "$DOTFILES_DIR" ]; then
     cp -f "$HOME/.config/qt6ct/qt6ct.conf" "$DOTFILES_DIR/config/qt6ct/qt6ct.conf"
     cp -f "$HOME/.config/zed/themes/dank-zed-theme.json" "$DOTFILES_DIR/config/zed/themes/dank-zed-theme.json"
     cp -f "$HOME/.config/foot/foot.ini" "$DOTFILES_DIR/config/foot/foot.ini"
+    cp -f "$HOME/.config/wofi/style.css" "$DOTFILES_DIR/config/wofi/style.css" 2>/dev/null || true
     cp -f "$HOME/.local/bin/sync-icon-color.py" "$DOTFILES_DIR/scripts/sync-icon-color.py"
     cp -f "$HOME/.local/bin/set-wallpaper.sh" "$DOTFILES_DIR/scripts/set-wallpaper.sh" 2>/dev/null || true
 fi

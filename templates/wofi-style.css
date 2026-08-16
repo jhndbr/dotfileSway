@@ -2,12 +2,12 @@
    ║    Wofi Style — Seamless Glassmorphism (No Black Corners)    ║
    ╚══════════════════════════════════════════════════════════════╝ */
 
-/* ── Palette Aliases & Glass Tokens ──────────────────────────── */
-@define-color window_bg_color #191c1e;
-@define-color window_fg_color #e0e2e5;
-@define-color accent_bg_color #85cfff;
-@define-color accent_fg_color #00344d;
+@define-color window_bg_color {{colors.surface.default.hex}};
+@define-color window_fg_color {{colors.on_surface.default.hex}};
+@define-color accent_bg_color {{colors.primary.default.hex}};
+@define-color accent_fg_color {{colors.on_primary.default.hex}};
 
+/* ── Palette Aliases & Glass Tokens ──────────────────────────── */
 @define-color bg_card        alpha(@window_bg_color, 0.88);
 @define-color bg_pill       alpha(@window_fg_color, 0.07);
 @define-color bg_pill_hover alpha(@window_fg_color, 0.16);

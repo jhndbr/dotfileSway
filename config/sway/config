@@ -42,7 +42,7 @@ default_floating_border pixel 2
 gaps inner 8
 gaps outer 4
 smart_gaps on
-smart_borders on
+smart_borders no_gaps
 
 # Tipografía elegante
 font pango:Inter, SF Pro Display, JetBrainsMono Nerd Font 10
@@ -236,7 +236,6 @@ for_window [app_id="pavucontrol"] floating enable, resize set 750 550, move posi
 for_window [app_id="nm-connection-editor"] floating enable, move position center
 for_window [app_id="blueman-manager"] floating enable, move position center
 for_window [app_id="org.gnome.Calculator"] floating enable, move position center
-for_window [app_id="foot" title="yazi"] floating enable, resize set 1050 680, move position center
 for_window [title="yazi"] floating enable, resize set 1050 680, move position center
 for_window [app_id="imv"] floating enable
 for_window [app_id="org.pwmt.zathura"] floating enable, resize set 900 700, move position center
@@ -268,7 +267,7 @@ exec systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP XDG
 
 # Servicios de autenticación, llaves y secretos (Polkit & Keyring)
 exec /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
-exec --no-startup-id gnome-keyring-daemon --start --components=secrets,ssh,pkcs11
+exec gnome-keyring-daemon --start --components="secrets,ssh,pkcs11"
 
 # Notificaciones
 exec dunst
@@ -287,4 +286,6 @@ exec gammastep
 # Gestor de pantalla de fondo (redundante con output * bg, pero útil para cambios dinámicos)
 # exec swaybg -i ~/Pictures/1.jpg -m fill
 
-include /etc/sway/config.d/*
+# Configuraciones globales del sistema (descomentar si tu distribución lo requiere)
+# Nota: Desactivado por defecto para evitar doble ejecución de import-environment de /etc/sway/config.d/50-systemd-user.conf
+# include /etc/sway/config.d/*
