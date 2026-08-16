@@ -51,7 +51,7 @@
 }
 
 /* ══════════════════════════════════════════════════════════════
-   ║  BAR CONTAINER — Frosted Glass Edge-to-Edge                 ║
+   ║  BAR CONTAINER — Flat Minimalist Edge-to-Edge               ║
    ══════════════════════════════════════════════════════════════ */
 
 window#waybar {
@@ -59,9 +59,8 @@ window#waybar {
     border: none;
     border-bottom: 1px solid @border_bar;
     border-radius: 0;
-    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.12),
-                0 2px 16px rgba(0, 0, 0, 0.08);
-    transition: all 0.3s ease;
+    box-shadow: none;
+    transition: none;
 }
 
 window#waybar.hidden {
@@ -73,9 +72,9 @@ window#waybar.hidden {
    ══════════════════════════════════════════════════════════════ */
 
 tooltip {
-    background: alpha(@window_bg_color, 0.94);
-    border: 1px solid alpha(@window_fg_color, 0.10);
-    border-radius: 6px;
+    background: alpha(@window_bg_color, 0.96);
+    border: 1px solid alpha(@window_fg_color, 0.15);
+    border-radius: 0px;
     padding: 5px 9px;
     box-shadow: none;
 }
@@ -86,8 +85,8 @@ tooltip label {
 }
 
 /* ══════════════════════════════════════════════════════════════
-   ║  UNIFORM ISLAND / PILL ARCHITECTURE                         ║
-   ║  Every module container shares the same base geometry        ║
+   ║  UNIFORM FLAT ISLAND ARCHITECTURE                           ║
+   ║  Crisp 1px borders, zero radius, no heavy shadows            ║
    ══════════════════════════════════════════════════════════════ */
 
 #custom-menu,
@@ -104,13 +103,13 @@ tooltip label {
 #custom-power {
     background: @bg_pill;
     border: 1px solid @border_pill;
-    border-radius: 8px;
+    border-radius: 0px;
     padding: 0 10px;
     margin: 5px 2px;
     min-height: 28px;
     color: @text_primary;
-    box-shadow: inset 0 1px 0 alpha(@window_fg_color, 0.04);
-    transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    box-shadow: none;
+    transition: none;
 }
 
 /* Uniform hover for all interactive pills */
@@ -125,7 +124,7 @@ tooltip label {
 #tray:hover {
     background: @bg_pill_hover;
     border-color: @border_pill_hover;
-    box-shadow: inset 0 1px 0 alpha(@window_fg_color, 0.08);
+    box-shadow: none;
 }
 
 /* ══════════════════════════════════════════════════════════════
@@ -174,7 +173,7 @@ tooltip label {
    ║  LEFT — Menu · Workspaces · Window Title                    ║
    ══════════════════════════════════════════════════════════════ */
 
-/* Distro launcher icon (Perfect square & optical center) */
+/* Distro launcher icon (Flat square & optical center) */
 #custom-menu {
     font-family: "JetBrainsMono Nerd Font", "Symbols Nerd Font", monospace;
     font-size: 15px;
@@ -190,22 +189,22 @@ tooltip label {
     padding: 0;
 }
 
-/* Workspaces — numbered capsules */
+/* Workspaces — numbered flat badges */
 #workspaces {
-    padding: 0 3px;
+    padding: 0 2px;
 }
 
 #workspaces button {
     color: @text_muted;
-    padding: 0 7px;
-    margin: 3px 2px;
-    border-radius: 6px;
+    padding: 0 6px;
+    margin: 3px 1px;
+    border-radius: 0px;
     background: transparent;
     min-width: 20px;
     min-height: 22px;
     font-size: 11px;
     font-weight: 600;
-    transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    transition: none;
 }
 
 #workspaces button:hover {
@@ -217,7 +216,7 @@ tooltip label {
     background: @accent;
     color: @text_on_accent;
     font-weight: 700;
-    box-shadow: 0 1px 4px alpha(@accent, 0.35);
+    box-shadow: none;
 }
 
 #workspaces button.urgent {
@@ -230,7 +229,7 @@ tooltip label {
     background: @accent;
     color: @text_on_accent;
     font-weight: 700;
-    border-radius: 6px;
+    border-radius: 0px;
     padding: 0 10px;
 }
 

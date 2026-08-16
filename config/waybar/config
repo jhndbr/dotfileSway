@@ -128,7 +128,7 @@
     "group/audio": {
         "orientation": "horizontal",
         "drawer": {
-            "transition-duration": 300,
+            "transition-duration": 150,
             "transition-left-to-right": true
         },
         "modules": [
@@ -167,7 +167,7 @@
     "group/backlight": {
         "orientation": "horizontal",
         "drawer": {
-            "transition-duration": 300,
+            "transition-duration": 150,
             "transition-left-to-right": true
         },
         "modules": [
@@ -191,7 +191,7 @@
     "group/network": {
         "orientation": "horizontal",
         "drawer": {
-            "transition-duration": 300,
+            "transition-duration": 150,
             "transition-left-to-right": true
         },
         "modules": [
@@ -225,7 +225,7 @@
     "group/battery": {
         "orientation": "horizontal",
         "drawer": {
-            "transition-duration": 300,
+            "transition-duration": 150,
             "transition-left-to-right": true
         },
         "modules": [
@@ -258,7 +258,7 @@
         "orientation": "horizontal",
         "spacing": 0,
         "drawer": {
-            "transition-duration": 350,
+            "transition-duration": 150,
             "transition-left-to-right": true
         },
         "modules": [

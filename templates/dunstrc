@@ -13,7 +13,7 @@
     progress_bar_frame_width = 0
     progress_bar_min_width = 150
     progress_bar_max_width = 300
-    progress_bar_corner_radius = 2
+    progress_bar_corner_radius = 0
 
     transparency = 10
     separator_height = 1
@@ -45,7 +45,7 @@
     min_icon_size = 32
     max_icon_size = 48
 
-    corner_radius = 10
+    corner_radius = 0
     sticky_history = yes
     history_length = 20
     browser = /usr/bin/xdg-open

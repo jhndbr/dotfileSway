@@ -39,13 +39,13 @@ client.urgent            $accent_red     $bg_surface  $text_main  $accent_red   
 # Bordes y gaps
 default_border pixel 2
 default_floating_border pixel 2
-gaps inner 8
-gaps outer 4
+gaps inner 6
+gaps outer 3
 smart_gaps on
 smart_borders no_gaps
 
 # Tipografía elegante
-font pango:Inter, SF Pro Display, JetBrainsMono Nerd Font 10
+font pango:Inter, JetBrainsMono Nerd Font 10
 
 # Comportamiento
 focus_follows_mouse yes

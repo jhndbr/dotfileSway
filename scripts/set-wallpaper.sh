@@ -210,9 +210,9 @@ popover contents {
   color: @popover_fg_color;
   border-style: solid;
   border-width: 1px;
-  border-color: alpha(@accent_bg_color, 0.25);
-  border-radius: 10px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  border-color: alpha(@accent_bg_color, 0.35);
+  border-radius: 0px;
+  box-shadow: none;
   padding: 4px;
 }
 
@@ -248,8 +248,8 @@ navigation-sidebar row,
 placessidebar row,
 .placessidebar row {
   background-color: transparent;
-  margin: 2px 4px;
-  border-radius: 8px;
+  margin: 1px 2px;
+  border-radius: 0px;
 }
 
 sidebar row:hover,
@@ -288,7 +288,7 @@ flowboxchild,
 flowboxchild:selected,
 .content-view .tile:selected {
   background-color: alpha(currentColor, 0.12);
-  border-radius: 10px;
+  border-radius: 0px;
 }
 '
 
@@ -352,8 +352,9 @@ menu,
   color: @popover_fg_color;
   border-style: solid;
   border-width: 1px;
-  border-color: alpha(@accent_bg_color, 0.25);
-  border-radius: 10px;
+  border-color: alpha(@accent_bg_color, 0.35);
+  border-radius: 0px;
+  box-shadow: none;
   padding: 4px;
 }
 
@@ -367,7 +368,7 @@ placessidebar row,
   outline-style: none;
   outline-width: 0;
   box-shadow: none;
-  border-radius: 8px;
+  border-radius: 0px;
 }
 '
 
