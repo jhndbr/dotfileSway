@@ -109,6 +109,7 @@ tooltip label {
     margin: 5px 2px;
     min-height: 28px;
     color: @text_primary;
+    box-shadow: inset 0 1px 0 alpha(@window_fg_color, 0.04);
     transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
@@ -124,6 +125,7 @@ tooltip label {
 #tray:hover {
     background: @bg_pill_hover;
     border-color: @border_pill_hover;
+    box-shadow: inset 0 1px 0 alpha(@window_fg_color, 0.08);
 }
 
 /* ══════════════════════════════════════════════════════════════
@@ -350,6 +352,17 @@ tooltip label {
     font-weight: 500;
     padding: 0 3px;
     color: @text_secondary;
+}
+
+#cpu.warning,
+#memory.warning {
+    color: @semantic_warning;
+}
+
+#cpu.critical,
+#memory.critical,
+#temperature.critical {
+    color: @semantic_danger;
 }
 
 /* ══════════════════════════════════════════════════════════════

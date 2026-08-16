@@ -39,16 +39,16 @@ window,
     margin: 0px;
     padding: 12px;
     background-color: @bg_card;
-    border-radius: 0;
+    border-radius: 12px;
     border: 1px solid alpha(@accent_color, 0.35);
-    box-shadow: none;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
 }
 
 /* ── Search Input ─────────────────────────────────────── */
 #input {
     margin-bottom: 10px;
     padding: 9px 12px;
-    border-radius: 0;
+    border-radius: 8px;
     border: 1px solid @border_subtle;
     background-color: @bg_pill;
     color: @text_primary;
@@ -74,8 +74,8 @@ window,
 
 /* ── List Entries ─────────────────────────────────────────── */
 #entry {
-    padding: 7px 10px;
-    border-radius: 0;
+    padding: 8px 12px;
+    border-radius: 8px;
     color: @text_primary;
     margin: 2px 0;
     transition: all 0.15s ease;
@@ -91,7 +91,7 @@ window,
     background-color: @accent_color;
     color: @accent_fg_color;
     font-weight: 600;
-    box-shadow: none;
+    box-shadow: 0 2px 8px alpha(@accent_color, 0.3);
 }
 
 #entry image {

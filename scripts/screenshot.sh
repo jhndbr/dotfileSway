@@ -9,34 +9,39 @@ mkdir -p "$DIR"
 FILE="$DIR/$(date +%Y%m%d_%H%M%S).png"
 
 # Opciones para Wofi
-OPCIONES="Pantalla completa\nSeleccionar área\nVentana activa\nÁrea con delay (3s)"
+OPCIONES="󰹑    Pantalla completa\n󰒉    Seleccionar área\n󰖲    Ventana activa\n󱎫    Área con delay (3s)"
 
 # Seleccionar a través de Wofi dmenu
-SELECCION=$(echo -e "$OPCIONES" | wofi --dmenu --prompt "Captura:" -i)
+SELECCION=$(echo -e "$OPCIONES" | wofi --dmenu \
+    --prompt "  󰄀  Captura de Pantalla" \
+    --cache-file /dev/null \
+    --insensitive \
+    --width 360 \
+    --height 230 \
+    --lines 4)
 
 case "$SELECCION" in
-    "Pantalla completa")
+    *"Pantalla completa"*)
         grim "$FILE"
         wl-copy < "$FILE"
-        notify-send "Captura Guardada" "Pantalla completa copiada al portapapeles."
+        dunstify -a "Screenshot" -r 9940 -i "$FILE" "📸 Captura Guardada" "Pantalla completa copiada al portapapeles"
         ;;
-    "Seleccionar área")
-        grim -g "$(slurp)" - | tee "$FILE" | wl-copy
-        notify-send "Captura Guardada" "Área seleccionada copiada al portapapeles."
+    *"Seleccionar área"*)
+        grim -g "$(slurp -d -b 1c1c1eaa -c ffffffff -s ffffff20 -w 1)" - | tee "$FILE" | wl-copy
+        dunstify -a "Screenshot" -r 9940 -i "$FILE" "📸 Captura Guardada" "Área seleccionada copiada al portapapeles"
         ;;
-    "Ventana activa")
-        # Obtener las coordenadas de la ventana enfocada usando swaymsg
+    *"Ventana activa"*)
         GEOMETRY=$(swaymsg -t get_tree | jq -r '.. | select(.focused?) | .rect | "\(.x),\(.y) \(.width)x\(.height)"')
         if [ -n "$GEOMETRY" ]; then
             grim -g "$GEOMETRY" "$FILE"
             wl-copy < "$FILE"
-            notify-send "Captura Guardada" "Ventana activa copiada al portapapeles."
+            dunstify -a "Screenshot" -r 9940 -i "$FILE" "📸 Captura Guardada" "Ventana activa copiada al portapapeles"
         fi
         ;;
-    "Área con delay (3s)")
-        notify-send "Captura de Pantalla" "Selecciona el área en 3 segundos..."
+    *"Área con delay"*)
+        dunstify -a "Screenshot" -r 9940 "⏱️ Captura con Retardo" "Selecciona el área en 3 segundos..."
         sleep 3
-        grim -g "$(slurp)" - | tee "$FILE" | wl-copy
-        notify-send "Captura Guardada" "Área capturada y copiada al portapapeles."
+        grim -g "$(slurp -d -b 1c1c1eaa -c ffffffff -s ffffff20 -w 1)" - | tee "$FILE" | wl-copy
+        dunstify -a "Screenshot" -r 9940 -i "$FILE" "📸 Captura Guardada" "Área capturada y copiada al portapapeles"
         ;;
 esac

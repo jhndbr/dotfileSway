@@ -108,7 +108,13 @@ fiesta 🎉 Fiesta cañón
 ok 👌 Signo OK
 saludo 🖐️ Mano abierta"
 
-SELECTED=$(echo "$EMOJI_LIST" | wofi --dmenu --prompt "Emojis" --lines 12 --width 450)
+SELECTED=$(echo "$EMOJI_LIST" | wofi --dmenu \
+    --prompt "  😀  Emojis" \
+    --cache-file /dev/null \
+    --insensitive \
+    --width 450 \
+    --height 400 \
+    --lines 10)
 
 if [ -n "$SELECTED" ]; then
     EMOJI=$(echo "$SELECTED" | awk '{print $1}')

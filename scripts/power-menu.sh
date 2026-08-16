@@ -6,13 +6,13 @@
 
 LOCK_CMD="swaylock -f"
 
-OPCIONES="  Bloquear\n  Cerrar Sesión\n  Suspender\n  Reiniciar\n  Apagar"
+OPCIONES="󰌾    Bloquear\n󰗽    Cerrar Sesión\n󰒲    Suspender\n󰜉    Reiniciar\n⏻    Apagar"
 
 SELECCION=$(echo -e "$OPCIONES" | wofi --dmenu \
-    --prompt "Sesión" \
+    --prompt "  ⏻  Sesión" \
     --cache-file /dev/null \
     --insensitive \
-    --width 280 \
+    --width 320 \
     --height 260 \
     --lines 5)
 

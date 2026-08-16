@@ -14,11 +14,23 @@ if [ ! -f "$WALLPAPER_INPUT" ]; then
     exit 1
 fi
 
+mkdir -p "$HOME/Pictures"
 TARGET_WALLPAPER="$HOME/Pictures/1.jpg"
-CONVERTED_PNG="$WALLPAPER_INPUT"
+
+TMP_IMG="/tmp/matugen_current_wallpaper"
+MIME_TYPE=$(file -b --mime-type "$WALLPAPER_INPUT" 2>/dev/null || echo "")
+if [[ "$MIME_TYPE" == *"png"* ]]; then
+    TMP_IMG="${TMP_IMG}.png"
+elif [[ "$MIME_TYPE" == *"jpeg"* || "$MIME_TYPE" == *"jpg"* ]]; then
+    TMP_IMG="${TMP_IMG}.jpg"
+else
+    TMP_IMG="${TMP_IMG}.png"
+fi
+cp -f "$WALLPAPER_INPUT" "$TMP_IMG" 2>/dev/null || true
+CONVERTED_PNG="$TMP_IMG"
 
 if [ "$WALLPAPER_INPUT" != "$TARGET_WALLPAPER" ]; then
-    cp -f "$WALLPAPER_INPUT" "$TARGET_WALLPAPER" &
+    cp -f "$WALLPAPER_INPUT" "$TARGET_WALLPAPER" 2>/dev/null || true
 fi
 
 if command -v swaymsg &>/dev/null && pgrep -x sway &>/dev/null; then
@@ -198,9 +210,9 @@ popover contents {
   color: @popover_fg_color;
   border-style: solid;
   border-width: 1px;
-  border-color: rgba(255, 255, 255, 0.15);
-  border-radius: 8px;
-  box-shadow: none;
+  border-color: alpha(@accent_bg_color, 0.25);
+  border-radius: 10px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
   padding: 4px;
 }
 
@@ -237,7 +249,7 @@ placessidebar row,
 .placessidebar row {
   background-color: transparent;
   margin: 2px 4px;
-  border-radius: 6px;
+  border-radius: 8px;
 }
 
 sidebar row:hover,
@@ -276,7 +288,7 @@ flowboxchild,
 flowboxchild:selected,
 .content-view .tile:selected {
   background-color: alpha(currentColor, 0.12);
-  border-radius: 12px;
+  border-radius: 10px;
 }
 '
 
@@ -340,8 +352,8 @@ menu,
   color: @popover_fg_color;
   border-style: solid;
   border-width: 1px;
-  border-color: rgba(255, 255, 255, 0.15);
-  border-radius: 8px;
+  border-color: alpha(@accent_bg_color, 0.25);
+  border-radius: 10px;
   padding: 4px;
 }
 
@@ -355,6 +367,7 @@ placessidebar row,
   outline-style: none;
   outline-width: 0;
   box-shadow: none;
+  border-radius: 8px;
 }
 '
 
@@ -396,19 +409,32 @@ if pgrep -x dunst &>/dev/null; then
 fi
 
 # ── 9. Sincronizar copias en el repositorio de dotfiles ──────────
-DOTFILES_DIR="$SCRIPT_DOTFILES"
-if [ -d "$DOTFILES_DIR" ]; then
-    mkdir -p "$DOTFILES_DIR/config/gtk-3.0" "$DOTFILES_DIR/config/gtk-4.0" "$DOTFILES_DIR/config/zed/themes" "$DOTFILES_DIR/config/foot" "$DOTFILES_DIR/config/wofi" "$DOTFILES_DIR/scripts" "$DOTFILES_DIR/config/qt5ct" "$DOTFILES_DIR/config/qt6ct"
-    cp -f "$HOME/.config/gtk-3.0/dank-colors.css" "$DOTFILES_DIR/config/gtk-3.0/dank-colors.css"
-    cp -f "$HOME/.config/gtk-4.0/dank-colors.css" "$DOTFILES_DIR/config/gtk-4.0/dank-colors.css"
-    cp -f "$HOME/.config/gtk-3.0/settings.ini" "$DOTFILES_DIR/config/gtk-3.0/settings.ini"
-    cp -f "$HOME/.config/gtk-4.0/settings.ini" "$DOTFILES_DIR/config/gtk-4.0/settings.ini"
-    cp -f "$HOME/.config/qt5ct/qt5ct.conf" "$DOTFILES_DIR/config/qt5ct/qt5ct.conf"
-    cp -f "$HOME/.config/qt6ct/qt6ct.conf" "$DOTFILES_DIR/config/qt6ct/qt6ct.conf"
-    cp -f "$HOME/.config/zed/themes/dank-zed-theme.json" "$DOTFILES_DIR/config/zed/themes/dank-zed-theme.json"
-    cp -f "$HOME/.config/foot/foot.ini" "$DOTFILES_DIR/config/foot/foot.ini"
+DOTFILES_DIR=""
+if [ -d "$SCRIPT_DIR/../config" ]; then
+    DOTFILES_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
+elif [ -d "$HOME/Documentos/Github/dotfileSway" ]; then
+    DOTFILES_DIR="$HOME/Documentos/Github/dotfileSway"
+elif [ -d "$HOME/Documents/dotfileSway" ]; then
+    DOTFILES_DIR="$HOME/Documents/dotfileSway"
+elif [ -d "$HOME/dotfileSway" ]; then
+    DOTFILES_DIR="$HOME/dotfileSway"
+fi
+
+if [ -n "$DOTFILES_DIR" ] && [ -d "$DOTFILES_DIR" ]; then
+    mkdir -p "$DOTFILES_DIR/config/gtk-3.0" "$DOTFILES_DIR/config/gtk-4.0" "$DOTFILES_DIR/config/zed/themes" "$DOTFILES_DIR/config/foot" "$DOTFILES_DIR/config/wofi" "$DOTFILES_DIR/config/sway" "$DOTFILES_DIR/config/dunst" "$DOTFILES_DIR/scripts" "$DOTFILES_DIR/config/qt5ct" "$DOTFILES_DIR/config/qt6ct"
+    cp -f "$HOME/.config/gtk-3.0/dank-colors.css" "$DOTFILES_DIR/config/gtk-3.0/dank-colors.css" 2>/dev/null || true
+    cp -f "$HOME/.config/gtk-4.0/dank-colors.css" "$DOTFILES_DIR/config/gtk-4.0/dank-colors.css" 2>/dev/null || true
+    cp -f "$HOME/.config/gtk-3.0/settings.ini" "$DOTFILES_DIR/config/gtk-3.0/settings.ini" 2>/dev/null || true
+    cp -f "$HOME/.config/gtk-4.0/settings.ini" "$DOTFILES_DIR/config/gtk-4.0/settings.ini" 2>/dev/null || true
+    cp -f "$HOME/.config/qt5ct/qt5ct.conf" "$DOTFILES_DIR/config/qt5ct/qt5ct.conf" 2>/dev/null || true
+    cp -f "$HOME/.config/qt6ct/qt6ct.conf" "$DOTFILES_DIR/config/qt6ct/qt6ct.conf" 2>/dev/null || true
+    cp -f "$HOME/.config/zed/themes/dank-zed-theme.json" "$DOTFILES_DIR/config/zed/themes/dank-zed-theme.json" 2>/dev/null || true
+    cp -f "$HOME/.config/foot/foot.ini" "$DOTFILES_DIR/config/foot/foot.ini" 2>/dev/null || true
+    cp -f "$HOME/.config/foot/dank-colors.ini" "$DOTFILES_DIR/config/foot/dank-colors.ini" 2>/dev/null || true
     cp -f "$HOME/.config/wofi/style.css" "$DOTFILES_DIR/config/wofi/style.css" 2>/dev/null || true
-    cp -f "$HOME/.local/bin/sync-icon-color.py" "$DOTFILES_DIR/scripts/sync-icon-color.py"
+    cp -f "$HOME/.config/sway/dank-colors" "$DOTFILES_DIR/config/sway/dank-colors" 2>/dev/null || true
+    cp -f "$HOME/.config/dunst/dunstrc" "$DOTFILES_DIR/config/dunst/dunstrc" 2>/dev/null || true
+    cp -f "$HOME/.local/bin/sync-icon-color.py" "$DOTFILES_DIR/scripts/sync-icon-color.py" 2>/dev/null || true
     cp -f "$HOME/.local/bin/set-wallpaper.sh" "$DOTFILES_DIR/scripts/set-wallpaper.sh" 2>/dev/null || true
 fi
 

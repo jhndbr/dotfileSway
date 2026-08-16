@@ -9,24 +9,24 @@
     indicate_hidden = yes
 
     progress_bar = true
-    progress_bar_height = 6
+    progress_bar_height = 4
     progress_bar_frame_width = 0
     progress_bar_min_width = 150
     progress_bar_max_width = 300
-    progress_bar_corner_radius = 3
+    progress_bar_corner_radius = 2
 
     transparency = 10
     separator_height = 1
-    padding = 16
-    horizontal_padding = 18
-    text_icon_padding = 16
+    padding = 14
+    horizontal_padding = 16
+    text_icon_padding = 14
     frame_width = 1
     gap_size = 8
     separator_color = frame
     sort = yes
     idle_threshold = 120
 
-    font = Inter, SF Pro Text, JetBrainsMono Nerd Font 10
+    font = Inter, JetBrainsMono Nerd Font 10
     line_height = 3
     markup = full
     format = "<b>%s</b>\n%b"
@@ -40,12 +40,12 @@
     show_indicators = yes
 
     enable_recursive_icon_lookup = true
-    icon_theme = "Adwaita"
+    icon_theme = "Papirus-Dark, Adwaita, hicolor"
     icon_position = left
     min_icon_size = 32
     max_icon_size = 48
 
-    corner_radius = 12
+    corner_radius = 10
     sticky_history = yes
     history_length = 20
     browser = /usr/bin/xdg-open

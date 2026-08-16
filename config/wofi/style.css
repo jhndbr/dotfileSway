@@ -2,12 +2,12 @@
    ║    Wofi Style — Seamless Glassmorphism (No Black Corners)    ║
    ╚══════════════════════════════════════════════════════════════╝ */
 
-/* ── Palette Aliases & Glass Tokens ──────────────────────────── */
-@define-color window_bg_color #191c1e;
-@define-color window_fg_color #e0e2e5;
-@define-color accent_bg_color #85cfff;
-@define-color accent_fg_color #00344d;
+@define-color window_bg_color #12140e;
+@define-color window_fg_color #e3e3d8;
+@define-color accent_bg_color #b5d086;
+@define-color accent_fg_color #233600;
 
+/* ── Palette Aliases & Glass Tokens ──────────────────────────── */
 @define-color bg_card        alpha(@window_bg_color, 0.88);
 @define-color bg_pill       alpha(@window_fg_color, 0.07);
 @define-color bg_pill_hover alpha(@window_fg_color, 0.16);
@@ -39,16 +39,16 @@ window,
     margin: 0px;
     padding: 12px;
     background-color: @bg_card;
-    border-radius: 0;
+    border-radius: 12px;
     border: 1px solid alpha(@accent_color, 0.35);
-    box-shadow: none;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
 }
 
 /* ── Search Input ─────────────────────────────────────── */
 #input {
     margin-bottom: 10px;
     padding: 9px 12px;
-    border-radius: 0;
+    border-radius: 8px;
     border: 1px solid @border_subtle;
     background-color: @bg_pill;
     color: @text_primary;
@@ -74,8 +74,8 @@ window,
 
 /* ── List Entries ─────────────────────────────────────────── */
 #entry {
-    padding: 7px 10px;
-    border-radius: 0;
+    padding: 8px 12px;
+    border-radius: 8px;
     color: @text_primary;
     margin: 2px 0;
     transition: all 0.15s ease;
@@ -91,7 +91,7 @@ window,
     background-color: @accent_color;
     color: @accent_fg_color;
     font-weight: 600;
-    box-shadow: none;
+    box-shadow: 0 2px 8px alpha(@accent_color, 0.3);
 }
 
 #entry image {
