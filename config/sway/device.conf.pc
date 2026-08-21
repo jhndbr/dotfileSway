@@ -1,0 +1,7 @@
+# ╔══════════════════════════════════════════════════════════════╗
+# ║        Configuración para PC de Escritorio (Sway)            ║
+# ║        Optimizado sin batería, sin backlight, sin touchpad   ║
+# ╚══════════════════════════════════════════════════════════════╝
+
+# Configuración limpia para PC de escritorio.
+# Monitores gestionados mediante monitor-manager.sh ($mod+p)

@@ -85,10 +85,14 @@ bash install_packages.sh
 ### 3. Aplicar configuraciones
 
 ```bash
+# Instalación estándar (sobrescribe archivos)
 bash setup.sh
+
+# Instalación limpia (elimina configuraciones previas tras crear backup)
+bash setup.sh --clean
 ```
 
-El script crea un backup automático de tus configuraciones actuales antes de sobrescribirlas.
+El script crea siempre un backup automático de tus configuraciones actuales en `~/.config/dotfiles-backup/` antes de realizar cualquier cambio.
 
 ---
 

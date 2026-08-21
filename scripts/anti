@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+TARGET_BIN="$HOME/Aplicaciones/Antigravity-x64/antigravity"
+
+if [ -f "$TARGET_BIN" ]; then
+    exec "$TARGET_BIN" "$@"
+else
+    echo "❌ Ejecutable no encontrado: $TARGET_BIN"
+    exit 1
+fi

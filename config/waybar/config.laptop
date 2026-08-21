@@ -115,13 +115,15 @@
         "tooltip": true
     },
 
-    /* ── Grupo Unificado de Controles de Hardware (PC) ──────────── */
+    /* ── Grupo Unificado de Controles de Hardware ────────────────── */
     "group/controls": {
         "orientation": "horizontal",
         "spacing": 0,
         "modules": [
             "group/network",
-            "group/audio"
+            "group/backlight",
+            "group/audio",
+            "group/battery"
         ]
     },
 

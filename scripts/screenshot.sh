@@ -16,27 +16,26 @@ SELECCION=$(echo -e "$OPCIONES" | wofi --dmenu --prompt "Captura:" -i)
 
 case "$SELECCION" in
     "Pantalla completa")
-        grim "$FILE"
-        wl-copy < "$FILE"
-        notify-send "Captura Guardada" "Pantalla completa copiada al portapapeles."
+        grim "$FILE" && wl-copy < "$FILE" && notify-send -i "$FILE" "📸 Screenshot" "Pantalla completa guardada y copiada al portapapeles."
         ;;
     "Seleccionar área")
-        grim -g "$(slurp)" - | tee "$FILE" | wl-copy
-        notify-send "Captura Guardada" "Área seleccionada copiada al portapapeles."
+        GEOMETRY=$(slurp -d -b 1c1c1eaa -c ffffffff -s ffffff20 -w 1)
+        if [ -n "$GEOMETRY" ]; then
+            grim -g "$GEOMETRY" "$FILE" && wl-copy < "$FILE" && notify-send -i "$FILE" "📸 Screenshot" "Área seleccionada guardada y copiada al portapapeles."
+        fi
         ;;
     "Ventana activa")
-        # Obtener las coordenadas de la ventana enfocada usando swaymsg
         GEOMETRY=$(swaymsg -t get_tree | jq -r '.. | select(.focused?) | .rect | "\(.x),\(.y) \(.width)x\(.height)"')
-        if [ -n "$GEOMETRY" ]; then
-            grim -g "$GEOMETRY" "$FILE"
-            wl-copy < "$FILE"
-            notify-send "Captura Guardada" "Ventana activa copiada al portapapeles."
+        if [ -n "$GEOMETRY" ] && [ "$GEOMETRY" != "null" ]; then
+            grim -g "$GEOMETRY" "$FILE" && wl-copy < "$FILE" && notify-send -i "$FILE" "📸 Screenshot" "Ventana activa guardada y copiada al portapapeles."
         fi
         ;;
     "Área con delay (3s)")
-        notify-send "Captura de Pantalla" "Selecciona el área en 3 segundos..."
+        notify-send "📸 Screenshot" "Selecciona el área en 3 segundos..."
         sleep 3
-        grim -g "$(slurp)" - | tee "$FILE" | wl-copy
-        notify-send "Captura Guardada" "Área capturada y copiada al portapapeles."
+        GEOMETRY=$(slurp -d -b 1c1c1eaa -c ffffffff -s ffffff20 -w 1)
+        if [ -n "$GEOMETRY" ]; then
+            grim -g "$GEOMETRY" "$FILE" && wl-copy < "$FILE" && notify-send -i "$FILE" "📸 Screenshot" "Área capturada y copiada al portapapeles."
+        fi
         ;;
 esac

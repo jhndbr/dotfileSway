@@ -14,8 +14,8 @@ set $menu wofi --show drun
 set $lock swaylock -f
 set $scripts ~/.local/bin
 
-# Pure Wayland (Desactivar servidor X11/Xwayland para ahorrar ~60MB RAM)
-xwayland disable
+# Xwayland support
+xwayland enable
 
 # Default fallback values (sobreescritos por Matugen si dank-colors existe)
 set $bg_dark      #141414
@@ -57,26 +57,14 @@ workspace_auto_back_and_forth yes
 output * bg ~/Pictures/1.jpg fill
 include ~/.config/sway/outputs.conf
 
-# ── Input ───────────────────────────────────────────────────────
-input type:touchpad {
-    dwt enabled
-    tap enabled
-    natural_scroll enabled
-    middle_emulation enabled
-    scroll_factor 0.4
-}
+# ── Input & Teclado (Modular) ───────────────────────────────────
+include ~/.config/sway/inputs.conf
 
-input type:keyboard {
-    xkb_layout "es"
-    repeat_delay 300
-    repeat_rate 50
-}
+# ── Configuración de Dispositivo (PC / Laptop Modular) ─────────
+include ~/.config/sway/device.conf
 
-# ── Gestos Táctiles Touchpad (Swipe) ────────────────────────────
-bindgesture swipe:3:right workspace next
-bindgesture swipe:3:left workspace prev
-bindgesture swipe:4:up floating toggle
-bindgesture swipe:4:down focus mode_toggle
+# Selector de distribución de teclado (Super + Shift + Espacio)
+bindsym $mod+Shift+space exec $scripts/keyboard-layout.sh menu
 
 # ── Keybindings Principales ─────────────────────────────────────
 # Cerrar ventana
@@ -220,9 +208,6 @@ bindsym --locked XF86AudioPause exec playerctl play-pause
 bindsym --locked XF86AudioPrev exec playerctl previous
 bindsym --locked XF86AudioNext exec playerctl next
 
-bindsym --locked XF86MonBrightnessDown exec $scripts/brightness.sh down
-bindsym --locked XF86MonBrightnessUp exec $scripts/brightness.sh up
-
 # ── Asignar Aplicaciones a Workspaces ───────────────────────────
 # Descomentar y ajustar según tus preferencias:
 # assign [app_id="firefox"] workspace number 2
@@ -276,9 +261,8 @@ exec dunst
 exec wl-paste --watch cliphist store
 exec udiskie -N &
 
-# Idle management & Alerta de batería baja
+# Idle management (pantalla y reposo)
 exec $scripts/swayidle.sh
-exec $scripts/battery-alert.sh
 
 # Filtro de luz azul (night light)
 exec gammastep

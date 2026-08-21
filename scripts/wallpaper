@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+if [ -x "$SCRIPT_DIR/set-wallpaper.sh" ]; then
+    exec "$SCRIPT_DIR/set-wallpaper.sh" "$@"
+elif [ -x "$HOME/.local/bin/set-wallpaper.sh" ]; then
+    exec "$HOME/.local/bin/set-wallpaper.sh" "$@"
+else
+    echo "❌ No se encontró set-wallpaper.sh en $HOME/.local/bin"
+    exit 1
+fi
