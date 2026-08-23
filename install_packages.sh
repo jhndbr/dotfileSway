@@ -109,6 +109,7 @@ PACMAN_PACKAGES=(
     firefox
     mpv
     imv
+    swayimg
     zathura
     zathura-pdf-mupdf
     nano

@@ -135,15 +135,22 @@
 
 ---
 
-## 📂 8. Atajos Básicos de Yazi (Explorador)
+## 📂 8. Atajos de Yazi (Explorador de Archivos)
 
-- `h` / `l` o `←` / `→` → Subir nivel / Abrir carpeta o archivo
+- `Enter` / `l` / `→` → Abrir archivo con app predeterminada / Entrar a carpeta
+- `Backspace` / `h` / `←` → Volver al directorio anterior
 - `j` / `k` o `↓` / `↑` → Navegar arriba / abajo
-- `Espacio` → Seleccionar archivo
-- `/` → Buscar archivos
-- `z` → Salto inteligente con fzf / zoxide
+- `o` / `O` → **Abrir con...** (Menú interactivo de abridores de Yazi)
+- `R` / `Ctrl + O` → **Abrir con...** (Selector universal Wofi para cualquier app del sistema)
+- `!` / `Ctrl + T` → Abrir terminal (**Foot**) en la carpeta actual
+- `r` → Renombrar archivo (posiciona el cursor antes de la extensión)
+- `e` / `E` → Extraer archivo(s) / Comprimir a `.tar.gz` con **Ouch**
+- `Espacio` → Seleccionar/deseleccionar archivo
+- `/` → Buscar archivos en la carpeta
+- `z` → Salto inteligente entre carpetas con fzf / zoxide
 - `y` → Copiar
 - `x` → Cortar
 - `p` → Pegar
 - `d` → Enviar a la papelera
+- `g` + `h` / `d` / `o` / `p` / `.` / `c` → Ir a Home / Descargas / Documentos / Imágenes / Dotfiles / .config
 - `q` → Salir de Yazi

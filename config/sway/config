@@ -239,7 +239,8 @@ for_window [app_id="nm-connection-editor"] floating enable, move position center
 for_window [app_id="blueman-manager"] floating enable, move position center
 for_window [app_id="org.gnome.Calculator"] floating enable, move position center
 for_window [title="yazi"] floating enable, resize set 1050 680, move position center
-for_window [app_id="imv"] floating enable
+for_window [app_id="imv.*"] floating enable, resize set 960 640, move position center
+for_window [app_id="swayimg.*"] floating enable, resize set 960 640, move position center
 for_window [app_id="org.pwmt.zathura"] floating enable, resize set 900 700, move position center
 for_window [app_id="mpv"] floating enable, resize set 960 540, move position center
 

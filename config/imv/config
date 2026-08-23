@@ -1,0 +1,34 @@
+# ╔══════════════════════════════════════════════════════════════╗
+# ║                  imv Configuration — Sway WM                 ║
+# ╚══════════════════════════════════════════════════════════════╝
+
+[options]
+background = 1c1c1e
+scaling = shrink
+upscaling = false
+overlay = false
+recursive = false
+loop_input = true
+
+[binds]
+q = quit
+<Escape> = quit
+<Left> = prev
+<Right> = next
+<bracketleft> = prev
+<bracketright> = next
+<Up> = zoom 1
+<Down> = zoom -1
+<Shift+plus> = zoom 1
+<minus> = zoom -1
+i = zoom 1
+o = zoom -1
+a = zoom actual
+r = reset
+f = fullscreen
+d = overlay
+c = center
+s = scaling next
+<Ctrl+r> = rotate by 90
+<space> = toggle_playing
+<period> = next_frame

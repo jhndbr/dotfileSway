@@ -18,62 +18,65 @@ title_format   = "Yazi: {cwd}"
 [opener]
 # 1. Editor de Código y Texto (Zed GUI / Nano CLI)
 edit = [
-    { run = 'zeditor "$@"', desc = "Zed Editor (GUI)", orphan = true },
-    { run = 'nano "$@"', desc = "Nano Editor (CLI)", block = true },
+    { run = 'zeditor %s', desc = "Zed Editor (GUI)", orphan = true, for = "linux" },
+    { run = 'nano %s1', desc = "Nano Editor (CLI)", block = true, for = "linux" },
 ]
 
 # 2. Reproductor Multimedia (MPV)
 play = [
-    { run = 'mpv --force-window "$@"', desc = "MPV Media Player", orphan = true },
+    { run = 'mpv --force-window %s1', desc = "MPV Media Player", orphan = true, for = "linux" },
+    { run = 'xdg-open %s1', desc = "Reproductor predeterminado del sistema", orphan = true, for = "linux" },
 ]
 
-# 3. Visor de Imágenes (imv)
+# 3. Visor de Imágenes (xdg-open / imv / MPV)
 open_image = [
-    { run = 'imv "$@"', desc = "imv Image Viewer", orphan = true },
+    { run = 'xdg-open %s1', desc = "Visor predeterminado del sistema", orphan = true, for = "linux" },
+    { run = 'imv %s', desc = "imv (Visor rápido)", orphan = true, for = "linux" },
+    { run = 'mpv --image-display-duration=inf --force-window %s1', desc = "MPV (Visor universal)", orphan = true, for = "linux" },
 ]
 
 # 4. Visor de PDF (Zathura)
 open_pdf = [
-    { run = 'zathura "$@"', desc = "Zathura PDF Reader", orphan = true },
+    { run = 'zathura %s1', desc = "Zathura PDF Reader", orphan = true, for = "linux" },
+    { run = 'xdg-open %s1', desc = "Visor de PDF del sistema", orphan = true, for = "linux" },
 ]
 
 # 5. Navegador Web (Firefox)
 open_web = [
-    { run = 'firefox "$@"', desc = "Firefox Browser", orphan = true },
+    { run = 'firefox %s1', desc = "Firefox Browser", orphan = true, for = "linux" },
 ]
 
 # 6. Descompresión de Archivos (ouch)
 open_archive = [
-    { run = 'ouch decompress "$@"', desc = "Extraer con ouch", block = true },
+    { run = 'ouch decompress %s', desc = "Extraer aquí con ouch", block = true, for = "linux" },
 ]
 
-# 7. Abrir carpeta externamente (Terminal / Zed / Selector Wofi)
+# 7. Abrir carpeta en terminal o editor
 open_folder = [
-    { run = 'foot -D "$1"', desc = "Abrir terminal aquí (Foot)", orphan = true },
-    { run = 'zeditor "$1"', desc = "Abrir carpeta en Zed Editor", orphan = true },
-    { run = '~/.local/bin/yazi-open-with.sh "$1"', desc = "⚡ Abrir con... (Selector Wofi)", orphan = true },
+    { run = 'foot -D %s1', desc = "Abrir terminal aquí (Foot)", orphan = true, for = "linux" },
+    { run = 'zeditor %s1', desc = "Abrir carpeta en Zed Editor", orphan = true, for = "linux" },
 ]
 
 # 8. Selector Universal de Aplicaciones (Wofi dmenu)
 open_with_menu = [
-    { run = '~/.local/bin/yazi-open-with.sh "$@"', desc = "⚡ Abrir con... (Selector Wofi)", orphan = true }
+    { run = 'python3 ~/.local/bin/yazi-open-with.sh %s', desc = "⚡ Abrir con... (Selector Wofi)", orphan = true, for = "linux" }
 ]
 
 [open]
 rules = [
-    # Directorios: Enter navega por defecto. Si se consulta abridores (r/R), permite abrir en Zed/Terminal.
+    # Directorios
     { mime = "inode/directory", use = [ "open_folder", "open_with_menu" ] },
     { url = "*/", use = [ "open_folder", "open_with_menu" ] },
 
-    # Archivos conocidos con Apps Predeterminadas directas
+    # Tipos específicos con aplicaciones directas
     { mime = "text/*", use = [ "edit", "open_with_menu" ] },
-    { mime = "image/*", use = [ "open_image", "edit", "open_with_menu" ] },
+    { mime = "image/*", use = [ "open_image", "open_with_menu", "edit" ] },
     { mime = "{video,audio}/*", use = [ "play", "open_with_menu" ] },
     { mime = "application/pdf", use = [ "open_pdf", "open_with_menu" ] },
     { mime = "{text/html,application/xhtml+xml}", use = [ "open_web", "edit", "open_with_menu" ] },
     { mime = "application/{zip,rar,7z*,tar,gzip,xz,bzip2,compressed,zstd,zst,lz4,lzma,x-tar,x-bzip*,x-7z-compressed,x-rar,vnd.rar}", use = [ "open_archive", "open_with_menu" ] },
 
-    # Archivos desconocidos / "random": Se despliega automáticamente el selector "Abrir con..."
+    # Archivos desconocidos / genéricos
     { mime = "*", use = [ "open_with_menu", "edit" ] },
 ]
 
@@ -84,6 +87,14 @@ bizarre_retry    = 5
 image_alloc      = 536870912  # 512MB
 image_bound      = [0, 0]
 suppress_preload = false
+
+[preview]
+tab_size        = 2
+max_width       = 1000
+max_height      = 1000
+image_filter    = "triangle"
+image_quality   = 75
+sixel_fraction  = 15
 
 [plugin]
 previewers = [
