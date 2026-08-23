@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # ╔══════════════════════════════════════════════════════════════╗
-# ║        Gestor Simple de Monitores para Sway & Waybar         ║
-# ║        Sin daemons - Rápido, ligero y configurable           ║
+# ║        Gestor Inteligente de Monitores para Sway             ║
+# ║        Netbook siempre principal · Detección Robusta de HDMI ║
 # ╚══════════════════════════════════════════════════════════════╝
 
 set -eo pipefail
@@ -20,6 +20,39 @@ notify() {
 
 get_outputs_json() {
     swaymsg -t get_outputs -r 2>/dev/null || echo "[]"
+}
+
+# Obtiene el nombre de la pantalla integrada (Netbook: eDP-1, LVDS-1, etc.)
+get_internal_output() {
+    local data="$1"
+    local internal
+    internal=$(echo "$data" | jq -r '.[] | select(.name | test("^(eDP|LVDS|DSI)")) | .name' | head -n 1)
+    if [ -z "$internal" ]; then
+        internal=$(echo "$data" | jq -r '.[0].name // empty')
+    fi
+    echo "$internal"
+}
+
+# Obtiene la pantalla externa (HDMI, DP, etc.)
+get_external_output() {
+    local data="$1"
+    local internal="$2"
+    local external
+    external=$(echo "$data" | jq -r --arg int "$internal" '.[] | select(.name != $int and .active == true) | .name' | head -n 1)
+    if [ -z "$external" ]; then
+        external=$(echo "$data" | jq -r --arg int "$internal" '.[] | select(.name != $int) | .name' | head -n 1)
+    fi
+    echo "$external"
+}
+
+# Obtiene el ancho en píxeles de un monitor dado
+get_output_width() {
+    local data="$1"
+    local name="$2"
+    local w
+    w=$(echo "$data" | jq -r --arg n "$name" '.[] | select(.name == $n) | .current_mode.width // .modes[0].width // 1920' | head -n 1)
+    [ -z "$w" ] && w=1920
+    echo "$w"
 }
 
 # ── 1. Salida JSON para Waybar ──────────────────────────────────
@@ -58,9 +91,9 @@ waybar_status() {
         icon="󰍹"
         class="connected"
     else
-        local first_name
-        first_name=$(echo "$data" | jq -r '.[0].name // ""')
-        if [[ "$first_name" =~ ^eDP|^LVDS ]]; then
+        local internal
+        internal=$(get_internal_output "$data")
+        if [ -n "$internal" ]; then
             icon="󰌢"
             class="laptop"
         else
@@ -78,7 +111,7 @@ waybar_status() {
 
     tooltip+=$'\n'"───────────────────────────────"
     tooltip+=$'\n'"󰌌 Clic izquierdo: Menú de opciones"
-    tooltip+=$'\n'"󰌌 Clic derecho: Auto-activar pantallas"
+    tooltip+=$'\n'"󰌌 Clic derecho: Restablecer predeterminado"
 
     jq -c -n \
         --arg text "$icon" \
@@ -89,120 +122,135 @@ waybar_status() {
 }
 
 # ── 2. Acciones de Configuración ────────────────────────────────
-auto_detect() {
+
+# Configuración Predeterminada (Netbook como Principal en 0,0 y Externa a la Derecha)
+action_default() {
     local data
     data=$(get_outputs_json)
-    local count
-    count=$(echo "$data" | jq 'length')
+    local internal external
+    internal=$(get_internal_output "$data")
+    external=$(get_external_output "$data" "$internal")
 
-    if [ "$count" -le 1 ]; then
-        local name
-        name=$(echo "$data" | jq -r '.[0].name // empty')
-        if [ -n "$name" ]; then
-            swaymsg output "$name" enable pos 0 0
-            notify "Monitor Único" "Configurado $name como pantalla principal"
-        fi
-    else
-        # Primer monitor (generalmente integrado eDP-1)
-        local out1 out2
-        out1=$(echo "$data" | jq -r '.[0].name')
-        out2=$(echo "$data" | jq -r '.[1].name')
-        local w1
-        w1=$(echo "$data" | jq -r '.[0].current_mode.width // 1920')
-
-        swaymsg output "$out1" enable pos 0 0
-        swaymsg output "$out2" enable pos "$w1" 0
-        notify "Dual Monitor Activado" "$out1 (0,0) + $out2 ($w1,0)"
+    if [ -z "$internal" ]; then
+        notify "Error" "No se detectó monitor disponible"
+        return
     fi
 
-    # Refrescar fondo de pantalla si existe script
+    swaymsg output "$internal" enable pos 0 0
+
+    if [ -n "$external" ]; then
+        local w_int
+        w_int=$(get_output_width "$data" "$internal")
+        swaymsg output "$external" enable pos "$w_int" 0
+        notify "󰌢 Configuración Predeterminada" "Netbook ($internal) Principal (0,0) + Externa ($external) Derecha"
+    else
+        notify "󰌢 Configuración Predeterminada" "Netbook ($internal) activa como pantalla principal"
+    fi
+
     if [ -f "$HOME/.local/bin/set-wallpaper.sh" ]; then
         bash "$HOME/.local/bin/set-wallpaper.sh" &>/dev/null || true
     fi
 }
 
+# Extender Externa a la Derecha de la Netbook
 action_extend_right() {
     local data
     data=$(get_outputs_json)
-    local out1 out2 w1
-    out1=$(echo "$data" | jq -r '.[0].name')
-    out2=$(echo "$data" | jq -r '.[1].name // empty')
+    local internal external
+    internal=$(get_internal_output "$data")
+    external=$(get_external_output "$data" "$internal")
 
-    if [ -z "$out2" ]; then
-        notify "Aviso" "Solo hay una pantalla conectada"
+    if [ -z "$external" ]; then
+        notify "Aviso" "Solo se detecta la pantalla integrada ($internal)"
         return
     fi
 
-    w1=$(echo "$data" | jq -r '.[0].current_mode.width // 1920')
-    swaymsg output "$out1" enable pos 0 0
-    swaymsg output "$out2" enable pos "$w1" 0
-    notify "Pantallas Extendidas" "Secundaria ($out2) a la derecha de $out1"
+    local w_int
+    w_int=$(get_output_width "$data" "$internal")
+    swaymsg output "$internal" enable pos 0 0
+    swaymsg output "$external" enable pos "$w_int" 0
+    notify "󰍺 Pantallas Extendidas" "Netbook ($internal) en (0,0) | Externa ($external) a la derecha"
 }
 
+# Extender Externa a la Izquierda de la Netbook
 action_extend_left() {
     local data
     data=$(get_outputs_json)
-    local out1 out2 w2
-    out1=$(echo "$data" | jq -r '.[0].name')
-    out2=$(echo "$data" | jq -r '.[1].name // empty')
+    local internal external
+    internal=$(get_internal_output "$data")
+    external=$(get_external_output "$data" "$internal")
 
-    if [ -z "$out2" ]; then
-        notify "Aviso" "Solo hay una pantalla conectada"
+    if [ -z "$external" ]; then
+        notify "Aviso" "Solo se detecta la pantalla integrada ($internal)"
         return
     fi
 
-    w2=$(echo "$data" | jq -r '.[1].current_mode.width // 1920')
-    swaymsg output "$out2" enable pos 0 0
-    swaymsg output "$out1" enable pos "$w2" 0
-    notify "Pantallas Extendidas" "Secundaria ($out2) a la izquierda de $out1"
+    local w_ext
+    w_ext=$(get_output_width "$data" "$external")
+    swaymsg output "$external" enable pos 0 0
+    swaymsg output "$internal" enable pos "$w_ext" 0
+    notify "󰍺 Pantallas Extendidas" "Externa ($external) en (0,0) | Netbook ($internal) a la derecha"
 }
 
+# Modo Espejo (Duplicar Pantallas)
 action_mirror() {
     local data
     data=$(get_outputs_json)
-    local out1 out2
-    out1=$(echo "$data" | jq -r '.[0].name')
-    out2=$(echo "$data" | jq -r '.[1].name // empty')
+    local internal external
+    internal=$(get_internal_output "$data")
+    external=$(get_external_output "$data" "$internal")
 
-    if [ -z "$out2" ]; then
+    if [ -z "$external" ]; then
         notify "Aviso" "Solo hay una pantalla conectada"
         return
     fi
 
-    swaymsg output "$out1" enable pos 0 0
-    swaymsg output "$out2" enable pos 0 0
-    notify "Modo Espejo" "Pantallas duplicadas en posición 0,0"
+    swaymsg output "$internal" enable pos 0 0
+    swaymsg output "$external" enable pos 0 0
+    notify "󰑈 Modo Espejo" "Netbook ($internal) y Externa ($external) duplicadas en (0,0)"
 }
 
-action_only_primary() {
+# Solo Pantalla de Netbook (Apagar Externa)
+action_only_internal() {
     local data
     data=$(get_outputs_json)
-    local out1 out2
-    out1=$(echo "$data" | jq -r '.[0].name')
-    out2=$(echo "$data" | jq -r '.[1].name // empty')
+    local internal
+    internal=$(get_internal_output "$data")
 
-    swaymsg output "$out1" enable pos 0 0
-    if [ -n "$out2" ]; then
-        swaymsg output "$out2" disable
-    fi
-    notify "Solo Pantalla Principal" "Activada: $out1"
-}
-
-action_only_secondary() {
-    local data
-    data=$(get_outputs_json)
-    local out1 out2
-    out1=$(echo "$data" | jq -r '.[0].name')
-    out2=$(echo "$data" | jq -r '.[1].name // empty')
-
-    if [ -z "$out2" ]; then
-        notify "Aviso" "No hay pantalla secundaria conectada"
+    if [ -z "$internal" ]; then
+        notify "Error" "No se detectó pantalla interna"
         return
     fi
 
-    swaymsg output "$out2" enable pos 0 0
-    swaymsg output "$out1" disable
-    notify "Solo Pantalla Secundaria" "Activada: $out2 (Principal desactivada)"
+    swaymsg output "$internal" enable pos 0 0
+
+    while IFS= read -r ext; do
+        if [ -n "$ext" ]; then
+            swaymsg output "$ext" disable
+        fi
+    done < <(echo "$data" | jq -r --arg int "$internal" '.[] | select(.name != $int) | .name')
+
+    notify "󰌢 Solo Netbook" "Pantalla interna ($internal) activa. Pantalla externa apagada"
+}
+
+# Solo Pantalla Externa (Docked / Apagar Netbook)
+action_only_external() {
+    local data
+    data=$(get_outputs_json)
+    local internal external
+    internal=$(get_internal_output "$data")
+    external=$(get_external_output "$data" "$internal")
+
+    if [ -z "$external" ]; then
+        notify "Aviso" "No hay pantalla externa conectada"
+        return
+    fi
+
+    swaymsg output "$external" enable pos 0 0
+    if [ -n "$internal" ]; then
+        swaymsg output "$internal" disable
+    fi
+    notify "󰍹 Solo Pantalla Externa" "Externa ($external) activa. Netbook ($internal) apagada"
 }
 
 action_resolution_menu() {
@@ -216,12 +264,10 @@ action_resolution_menu() {
         return
     fi
 
-    # Seleccionar pantalla
     local chosen_out
-    chosen_out=$(echo "$outputs" | wofi --dmenu --prompt "Seleccionar Monitor" --width 300 --height 200 --lines 4)
+    chosen_out=$(echo "$outputs" | wofi --dmenu --prompt "Seleccionar Monitor" --width 320 --height 200 --lines 4)
     [ -z "$chosen_out" ] && return
 
-    # Listar resoluciones disponibles
     local modes
     modes=$(echo "$data" | jq -r --arg name "$chosen_out" '.[] | select(.name == $name) | .modes[] | "\(.width)x\(.height) @ \((.refresh / 1000 | floor))Hz"' | sort -u -r -V)
 
@@ -231,10 +277,9 @@ action_resolution_menu() {
     fi
 
     local chosen_mode
-    chosen_mode=$(echo "$modes" | wofi --dmenu --prompt "Resolución para $chosen_out" --width 320 --height 300 --lines 8)
+    chosen_mode=$(echo "$modes" | wofi --dmenu --prompt "Resolución para $chosen_out" --width 340 --height 300 --lines 8)
     [ -z "$chosen_mode" ] && return
 
-    # Extraer ancho y alto
     local res
     res=$(echo "$chosen_mode" | awk '{print $1}')
     local hz
@@ -259,7 +304,7 @@ action_scale_menu() {
     [ -z "$outputs" ] && return
 
     local chosen_out
-    chosen_out=$(echo "$outputs" | wofi --dmenu --prompt "Seleccionar Monitor para Escala" --width 300 --height 200 --lines 4)
+    chosen_out=$(echo "$outputs" | wofi --dmenu --prompt "Seleccionar Monitor para Escala" --width 320 --height 200 --lines 4)
     [ -z "$chosen_out" ] && return
 
     local scales="1.0  (100% - Normal)\n1.25 (125% - Escalado sutil)\n1.5  (150% - Escalado medio)\n1.75 (175% - Escalado alto)\n2.0  (200% - HiDPI / 4K)"
@@ -303,20 +348,23 @@ action_reload_sway() {
 menu() {
     local data
     data=$(get_outputs_json)
-    local total
-    total=$(echo "$data" | jq 'length')
+    local internal external
+    internal=$(get_internal_output "$data")
+    external=$(get_external_output "$data" "$internal")
 
     local opciones=""
 
-    if [ "$total" -gt 1 ]; then
-        opciones+="󰍺  Extender a la Derecha (Dual)\n"
-        opciones+="󰍺  Extender a la Izquierda (Dual)\n"
+    if [ -n "$external" ]; then
+        opciones+="󰌢  Predeterminado: Netbook ($internal) Principal + Externa ($external) Derecha\n"
+        opciones+="󰍺  Extender: Externa ($external) a la Izquierda de Netbook\n"
         opciones+="󰑈  Duplicar Pantallas (Modo Espejo)\n"
-        opciones+="󰌢  Solo Pantalla Principal\n"
-        opciones+="󰍹  Solo Pantalla Externa (Docked)\n"
+        opciones+="󰌢  Solo Netbook ($internal) (Apagar Externa)\n"
+        opciones+="󰍹  Solo Pantalla Externa ($external) (Apagar Netbook)\n"
+    else
+        opciones+="󰌢  Restablecer Pantalla Netbook ($internal) como Principal\n"
     fi
 
-    opciones+="󰁨  Auto-configurar / Detectar Pantallas\n"
+    opciones+="󰁨  Auto-detectar Monitores\n"
     opciones+="󰑮  Configurar Resolución y Refresco\n"
     opciones+="󰹑  Configurar Escala (Scaling)\n"
     opciones+="💾  Guardar Configuración Actual\n"
@@ -324,31 +372,31 @@ menu() {
 
     local seleccion
     seleccion=$(echo -e "$opciones" | wofi --dmenu \
-        --prompt "Gestión de Monitores" \
+        --prompt "  󰍹  Gestión de Monitores" \
         --cache-file /dev/null \
         --insensitive \
-        --width 340 \
-        --height 340 \
-        --lines 9)
+        --width 520 \
+        --height 380 \
+        --lines 10)
 
     case "$seleccion" in
-        *"Extender a la Derecha"*)
-            action_extend_right
+        *"Predeterminado"*|*"Restablecer"*)
+            action_default
             ;;
-        *"Extender a la Izquierda"*)
+        *"a la Izquierda"*)
             action_extend_left
             ;;
         *"Duplicar Pantallas"*)
             action_mirror
             ;;
-        *"Solo Pantalla Principal"*)
-            action_only_primary
+        *"Solo Netbook"*)
+            action_only_internal
             ;;
         *"Solo Pantalla Externa"*)
-            action_only_secondary
+            action_only_external
             ;;
-        *"Auto-configurar"*)
-            auto_detect
+        *"Auto-detectar"*)
+            action_default
             ;;
         *"Configurar Resolución"*)
             action_resolution_menu
@@ -373,8 +421,23 @@ case "$1" in
     menu)
         menu
         ;;
-    auto)
-        auto_detect
+    default|reset|primary|auto)
+        action_default
+        ;;
+    extend-right)
+        action_extend_right
+        ;;
+    extend-left)
+        action_extend_left
+        ;;
+    mirror)
+        action_mirror
+        ;;
+    only-internal|laptop)
+        action_only_internal
+        ;;
+    only-external|external)
+        action_only_external
         ;;
     save)
         action_save_config

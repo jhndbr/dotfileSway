@@ -1,47 +1,61 @@
 #!/usr/bin/env bash
 # ╔══════════════════════════════════════════════════════════════╗
-# ║        Menú de Capturas de Pantalla                         ║
+# ║        Menú Completo de Capturas de Pantalla (5 Opciones)    ║
 # ╚══════════════════════════════════════════════════════════════╝
 
 # Directorio de capturas
 DIR="$HOME/Pictures/Screenshots"
 mkdir -p "$DIR"
-FILE="$DIR/$(date +%Y%m%d_%H%M%S).png"
+FILENAME="$(date +%Y%m%d_%H%M%S).png"
+FILE="$DIR/$FILENAME"
 
-# Opciones para Wofi
-OPCIONES="󰹑    Pantalla completa\n󰒉    Seleccionar área\n󰖲    Ventana activa\n󱎫    Área con delay (3s)"
+# 5 Opciones para Wofi
+OPCIONES="󰹑    Pantalla completa (Guardar y Copiar)\n󰒉    Seleccionar área (Solo Copiar al portapapeles)\n󰒉    Seleccionar área (Solo Guardar archivo)\n󰒉    Seleccionar área (Guardar y Copiar)\n󰖲    Ventana activa (Guardar y Copiar)"
 
 # Seleccionar a través de Wofi dmenu
 SELECCION=$(echo -e "$OPCIONES" | wofi --dmenu \
     --prompt "  󰄀  Captura de Pantalla" \
     --cache-file /dev/null \
     --insensitive \
-    --width 360 \
-    --height 230 \
-    --lines 4)
+    --width 460 \
+    --height 275 \
+    --lines 5)
+
+[ -z "$SELECCION" ] && exit 0
 
 case "$SELECCION" in
-    *"Pantalla completa"*)
+    *"Pantalla completa (Guardar y Copiar)"*)
         grim "$FILE"
         wl-copy < "$FILE"
-        dunstify -a "Screenshot" -r 9940 -i "$FILE" "📸 Captura Guardada" "Pantalla completa copiada al portapapeles"
+        dunstify -a "Screenshot" -r 9940 -i "$FILE" "📸 Pantalla Completa" "Guardada en Screenshots/$FILENAME y copiada"
         ;;
-    *"Seleccionar área"*)
-        grim -g "$(slurp -d -b 1c1c1eaa -c ffffffff -s ffffff20 -w 1)" - | tee "$FILE" | wl-copy
-        dunstify -a "Screenshot" -r 9940 -i "$FILE" "📸 Captura Guardada" "Área seleccionada copiada al portapapeles"
+    *"Seleccionar área (Solo Copiar al portapapeles)"*)
+        GEOM=$(slurp -d -b 1c1c1eaa -c ffffffff -s ffffff20 -w 1)
+        if [ -n "$GEOM" ]; then
+            grim -g "$GEOM" - | wl-copy
+            dunstify -a "Screenshot" -r 9940 "📸 Área Copiada" "Captura copiada al portapapeles (sin guardar archivo)"
+        fi
         ;;
-    *"Ventana activa"*)
+    *"Seleccionar área (Solo Guardar archivo)"*)
+        GEOM=$(slurp -d -b 1c1c1eaa -c ffffffff -s ffffff20 -w 1)
+        if [ -n "$GEOM" ]; then
+            grim -g "$GEOM" "$FILE"
+            dunstify -a "Screenshot" -r 9940 -i "$FILE" "📸 Área Guardada" "Guardada en Screenshots/$FILENAME (no copiada)"
+        fi
+        ;;
+    *"Seleccionar área (Guardar y Copiar)"*)
+        GEOM=$(slurp -d -b 1c1c1eaa -c ffffffff -s ffffff20 -w 1)
+        if [ -n "$GEOM" ]; then
+            grim -g "$GEOM" - | tee "$FILE" | wl-copy
+            dunstify -a "Screenshot" -r 9940 -i "$FILE" "📸 Área Guardada y Copiada" "Guardada en Screenshots/$FILENAME y copiada"
+        fi
+        ;;
+    *"Ventana activa (Guardar y Copiar)"*)
         GEOMETRY=$(swaymsg -t get_tree | jq -r '.. | select(.focused?) | .rect | "\(.x),\(.y) \(.width)x\(.height)"')
         if [ -n "$GEOMETRY" ]; then
             grim -g "$GEOMETRY" "$FILE"
             wl-copy < "$FILE"
-            dunstify -a "Screenshot" -r 9940 -i "$FILE" "📸 Captura Guardada" "Ventana activa copiada al portapapeles"
+            dunstify -a "Screenshot" -r 9940 -i "$FILE" "📸 Ventana Activa" "Ventana guardada en Screenshots/$FILENAME y copiada"
         fi
-        ;;
-    *"Área con delay"*)
-        dunstify -a "Screenshot" -r 9940 "⏱️ Captura con Retardo" "Selecciona el área en 3 segundos..."
-        sleep 3
-        grim -g "$(slurp -d -b 1c1c1eaa -c ffffffff -s ffffff20 -w 1)" - | tee "$FILE" | wl-copy
-        dunstify -a "Screenshot" -r 9940 -i "$FILE" "📸 Captura Guardada" "Área capturada y copiada al portapapeles"
         ;;
 esac

@@ -258,23 +258,36 @@
         "orientation": "horizontal",
         "spacing": 0,
         "drawer": {
-            "transition-duration": 150,
-            "transition-left-to-right": true
+            "transition-duration": 200,
+            "transition-left-to-right": true,
+            "click-to-reveal": true
         },
         "modules": [
             "custom/system-icon",
-            "cpu",
-            "memory",
-            "temperature"
+            "cpu#icon",
+            "cpu#text",
+            "memory#icon",
+            "memory#text",
+            "disk#icon",
+            "disk#text"
         ]
     },
     "custom/system-icon": {
-        "format": "󰍛",
-        "tooltip-format": "Monitor de Rendimiento\n(Pasa el cursor para ver CPU, RAM y Temp)",
-        "on-click": "foot -e btop"
+        "format": "",
+        "tooltip-format": "Monitor de Sistema (CPU, RAM, Disco)\nClic para desplegar / ocultar",
+        "tooltip": true
     },
 
-    "cpu": {
+    "cpu#icon": {
+        "format": "󰻠",
+        "states": {
+            "warning": 70,
+            "critical": 90
+        },
+        "tooltip-format": "CPU: {usage}%\nFrecuencia: {avg_frequency} GHz",
+        "on-click": "foot -e btop"
+    },
+    "cpu#text": {
         "format": "{usage}%",
         "interval": 2,
         "states": {
@@ -285,7 +298,16 @@
         "on-click": "foot -e btop"
     },
 
-    "memory": {
+    "memory#icon": {
+        "format": "󰘚",
+        "states": {
+            "warning": 75,
+            "critical": 90
+        },
+        "tooltip-format": "RAM: {used:0.1f} GiB / {total:0.1f} GiB ({percentage}%)\nSwap: {swapUsed:0.1f} GiB / {swapTotal:0.1f} GiB",
+        "on-click": "foot -e btop"
+    },
+    "memory#text": {
         "format": "{percentage}%",
         "interval": 3,
         "states": {
@@ -296,11 +318,26 @@
         "on-click": "foot -e btop"
     },
 
-    "temperature": {
-        "critical-threshold": 80,
-        "format": "{temperatureC}°",
-        "format-critical": "{temperatureC}°",
-        "tooltip-format": "Temperatura: {temperatureC}°C"
+    "disk#icon": {
+        "format": "󰋊",
+        "path": "/",
+        "states": {
+            "warning": 80,
+            "critical": 90
+        },
+        "tooltip-format": "Disco: {used} / {total} ({percentage_used}%)\nDisponible: {free}",
+        "on-click": "foot -e btop"
+    },
+    "disk#text": {
+        "format": "{percentage_used}%",
+        "interval": 30,
+        "path": "/",
+        "states": {
+            "warning": 80,
+            "critical": 90
+        },
+        "tooltip-format": "Disco: {used} / {total} ({percentage_used}%)\nDisponible: {free}",
+        "on-click": "foot -e btop"
     },
 
     "tray": {

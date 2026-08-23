@@ -27,6 +27,13 @@ format_item() {
 }
 
 # ── 1. Detecciones ultrarrápidas (< 2ms) ────────────────────────
+# Modo Cafeína (Inhibir reposo y bloqueo)
+if [ -f "$HOME/.cache/caffeine-active" ] || ! pgrep -x swayidle > /dev/null; then
+    ITEM_CAFFEINE=$(format_item "󰅶" "Modo Cafeína" "Activado")
+else
+    ITEM_CAFFEINE=$(format_item "󰾪" "Modo Cafeína" "Desactivado")
+fi
+
 # Luz Nocturna (Gammastep)
 if pgrep -x gammastep > /dev/null; then
     ITEM_GAMMA=$(format_item "󰌵" "Luz Nocturna" "Activada")
@@ -59,6 +66,7 @@ fi
 
 # ── 2. Lista de Opciones Formateada ────────────────────────────
 OPCIONES="$(format_item "󰍹" "Pantallas y Monitores" "Configurar")
+$ITEM_CAFFEINE
 $ITEM_BT
 $(format_item "󰕾" "Salida de Audio" "Cambiar")
 $ITEM_GAMMA
@@ -72,7 +80,8 @@ fi
 
 OPCIONES="$OPCIONES
 $(format_item "󰈊" "Selector de Color" "HEX")
-$(format_item "󰄀" "Captura de Pantalla" "Menú")
+$(format_item "󰄀" "Captura de Pantalla" "5 Opciones")
+$(format_item "󰌌" "Guía de Atajos y Alias" "Ver")
 $(format_item "󰞅" "Selector de Emojis" "Copiar")
 $(format_item "󰅖" "Limpiar Portapapeles" "Vaciar")"
 
@@ -82,8 +91,8 @@ SELECCION=$(echo -e "$OPCIONES" | wofi --dmenu \
     --cache-file /dev/null \
     --insensitive \
     --width 500 \
-    --height 440 \
-    --lines 11)
+    --height 500 \
+    --lines 13)
 
 # Salir si se canceló
 [ -z "$SELECCION" ] && exit 0
@@ -92,6 +101,9 @@ SELECCION=$(echo -e "$OPCIONES" | wofi --dmenu \
 case "$SELECCION" in
     *"Pantallas y Monitores"*)
         "$SCRIPTS_DIR/monitor-manager.sh" menu
+        ;;
+    *"Modo Cafeína"*)
+        "$SCRIPTS_DIR/caffeine-toggle.sh" toggle
         ;;
     *"Bluetooth"*)
         BT_IS_BLOCKED=$(rfkill list bluetooth 2>/dev/null | grep -q "Soft blocked: yes" && echo "yes" || echo "no")
@@ -173,6 +185,17 @@ $(format_item "󰾆" "power-saver" "Ahorro de Batería")"
         ;;
     *"Captura de Pantalla"*)
         "$SCRIPTS_DIR/screenshot.sh"
+        ;;
+    *"Guía de Atajos y Alias"*|*"Atajos y Alias"*)
+        CHEATSHEET="$HOME/.config/sway/cheatsheet.md"
+        [ ! -f "$CHEATSHEET" ] && CHEATSHEET="$HOME/Documents/dotfileSway/config/cheatsheet.md"
+        if command -v zed &>/dev/null; then
+            zed "$CHEATSHEET" &
+        elif command -v nano &>/dev/null; then
+            foot --title="Guía de Atajos y Alias" -e nano "$CHEATSHEET" &
+        else
+            xdg-open "$CHEATSHEET" &
+        fi
         ;;
     *"Selector de Emojis"*)
         "$SCRIPTS_DIR/emoji-picker.sh"

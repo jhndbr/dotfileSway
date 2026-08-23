@@ -318,7 +318,10 @@ tooltip label {
 #pulseaudio.icon,
 #backlight.icon,
 #network.icon,
-#battery.icon {
+#battery.icon,
+#cpu.icon,
+#memory.icon,
+#disk.icon {
     font-family: "JetBrainsMono Nerd Font", "Symbols Nerd Font", monospace;
     font-size: 13.5px;
     color: @text_secondary;
@@ -330,7 +333,10 @@ tooltip label {
 #backlight.icon:hover,
 #network.icon:hover,
 #battery.icon:hover,
-#custom-system-icon:hover {
+#custom-system-icon:hover,
+#cpu.icon:hover,
+#memory.icon:hover,
+#disk.icon:hover {
     color: @text_primary;
 }
 
@@ -338,16 +344,10 @@ tooltip label {
 #pulseaudio.text,
 #backlight.text,
 #network.text,
-#battery.text {
-    font-size: 11px;
-    font-weight: 500;
-    padding: 0 3px 0 1px;
-    color: @text_secondary;
-}
-
-#cpu,
-#memory,
-#temperature {
+#battery.text,
+#cpu.text,
+#memory.text,
+#disk.text {
     font-size: 11px;
     font-weight: 500;
     padding: 0 3px 0 1px;
@@ -355,13 +355,26 @@ tooltip label {
 }
 
 #cpu.warning,
-#memory.warning {
+#cpu.icon.warning,
+#cpu.text.warning,
+#memory.warning,
+#memory.icon.warning,
+#memory.text.warning,
+#disk.warning,
+#disk.icon.warning,
+#disk.text.warning {
     color: @semantic_warning;
 }
 
 #cpu.critical,
+#cpu.icon.critical,
+#cpu.text.critical,
 #memory.critical,
-#temperature.critical {
+#memory.icon.critical,
+#memory.text.critical,
+#disk.critical,
+#disk.icon.critical,
+#disk.text.critical {
     color: @semantic_danger;
 }
 

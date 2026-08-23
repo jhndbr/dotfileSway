@@ -117,9 +117,11 @@ bindsym $mod+Shift+e exec $scripts/power-menu.sh
 # Centro de Control / Quick Settings (Mod + X)
 bindsym $mod+x exec $scripts/quicksettings-menu.sh
 
-# Gestor de monitores y pantallas
+# Gestor de monitores y pantallas (Menú: Mod+P / XF86Display | Restablecer Predeterminado: Mod+M / Mod+F7)
 bindsym $mod+p exec $scripts/monitor-manager.sh menu
 bindsym XF86Display exec $scripts/monitor-manager.sh menu
+bindsym $mod+m exec $scripts/monitor-manager.sh default
+bindsym $mod+F7 exec $scripts/monitor-manager.sh default
 
 # ── Navegación ──────────────────────────────────────────────────
 # Navegación con flechas
