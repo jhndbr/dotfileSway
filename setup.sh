@@ -155,7 +155,7 @@ mkdir -p ~/.local/bin
 echo -e "${YELLOW}📦 Creando backup en $BACKUP_DIR${NC}"
 mkdir -p "$BACKUP_DIR"
 
-CONFIGS=(mango waybar wofi dunst foot swaylock gammastep gtk-3.0 gtk-4.0 environment.d qt5ct qt6ct matugen zed yazi xdg-desktop-portal)
+CONFIGS=(mango waybar wofi dunst foot gtklock gammastep gtk-3.0 gtk-4.0 environment.d qt5ct qt6ct matugen zed yazi xdg-desktop-portal)
 
 for item in "${CONFIGS[@]}"; do
     if [ -d "$HOME/.config/$item" ]; then

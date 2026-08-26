@@ -36,10 +36,6 @@ output_path = '~/.config/kitty/dank-theme.conf'
 input_path = '~/.config/matugen/templates/foot.ini'
 output_path = '~/.config/foot/dank-colors.ini'
 
-[templates.swaylock]
-input_path = '~/.config/matugen/templates/swaylock.conf'
-output_path = '~/.config/swaylock/config'
-
 [templates.mango]
 input_path = '~/.config/matugen/templates/mango-colors.conf'
 output_path = '~/.config/mango/dank-colors'

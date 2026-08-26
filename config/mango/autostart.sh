@@ -19,7 +19,7 @@ systemctl --user restart xdg-desktop-portal 2>/dev/null &
 gnome-keyring-daemon --start --components="secrets,ssh,pkcs11" &
 
 # ── Wallpaper ────────────────────────────────────────────────────
-swaybg -i "$HOME/Pictures/1.jpg" -m fill >/dev/null 2>&1 &
+wbg "$HOME/Pictures/1.jpg" >/dev/null 2>&1 &
 
 # ── Barra superior (Waybar) ─────────────────────────────────────
 waybar -c ~/.config/mango/waybar/config.jsonc -s ~/.config/mango/waybar/style.css >/dev/null 2>&1 &

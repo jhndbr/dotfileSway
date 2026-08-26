@@ -4,7 +4,7 @@
 # ║        Usa Wofi como selector + MangoWM/Systemd nativo       ║
 # ╚══════════════════════════════════════════════════════════════╝
 
-LOCK_CMD="swaylock -f"
+LOCK_CMD="gtklock"
 
 OPCIONES="  Bloquear\n  Cerrar Sesión\n  Suspender\n  Reiniciar\n  Apagar"
 

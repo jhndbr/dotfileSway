@@ -56,10 +56,7 @@ sudo pacman -S --needed --noconfirm base-devel git
 # Nota: Se eliminaron paquetes duplicados, Nautilus/gvfs redundantes
 PACMAN_PACKAGES=(
     # Entorno Principal Wayland & UI
-    # MangoWM + mmsg (IPC) se instalan desde el AUR (ver AUR_PACKAGES más abajo)
-    swaybg
-    swaylock
-    swayidle
+    # MangoWM + mmsg (IPC) se instalan desde el AUR (ver más abajo)
     waybar
     wofi
     foot
@@ -155,23 +152,91 @@ log_info "Instalando paquetes oficiales con pacman..."
 sudo pacman -S --needed --noconfirm "${PACMAN_PACKAGES[@]}"
 log_success "Paquetes oficiales instalados con éxito"
 
-# ── 4.1 Paquetes AUR (MangoWM + IPC) ─────────────────────────────
-# MangoWM y su herramienta IPC (mmsg) no están en los repos oficiales.
+# ── 4.1 Helper AUR (yay/paru) + MangoWM ─────────────────────────
+# MangoWM y su herramienta IPC (mmsg) no están en los repos oficiales:
+# se instalan desde el AUR con un helper (yay o paru).
+
+# 4.1.a. Detectar helper AUR existente
+AUR_HELPER=""
+if command -v yay &>/dev/null; then
+    AUR_HELPER="yay"
+elif command -v paru &>/dev/null; then
+    AUR_HELPER="paru"
+fi
+
+# 4.1.b. Si no hay helper, ofrecer instalar yay o paru (solo interactivo)
+if [ -z "$AUR_HELPER" ]; then
+    log_warn "No se encontró ningún helper del AUR (yay o paru)."
+    log_warn "MangoWM se instala desde el AUR, así que necesitás uno de los dos."
+    if [ -t 0 ]; then
+        echo ""
+        echo -e "${CYAN}${BOLD}Elegí un helper del AUR para instalar:${NC}"
+        echo -e "  ${BOLD}1)${NC} yay   — El helper más popular y estándar de facto"
+        echo -e "  ${BOLD}2)${NC} paru  — Helper más nuevo, escrito en Rust, con funciones extra"
+        echo -e "  ${BOLD}3)${NC} Omitir — No instalar helper (MangoWM quedará sin instalar)"
+        echo ""
+        read -rp "  Opción [1/2/3] (por defecto 1): " aur_choice
+        case "${aur_choice:-1}" in
+            1)
+                AUR_HELPER="yay"
+                ;;
+            2)
+                AUR_HELPER="paru"
+                ;;
+            3)
+                AUR_HELPER=""
+                ;;
+            *)
+                AUR_HELPER="yay"
+                ;;
+        esac
+
+        # Instalar el helper elegido clonando el repo y compilando con makepkg
+        if [ -n "$AUR_HELPER" ]; then
+            log_info "Instalando ${AUR_HELPER} desde el AUR..."
+            AUR_BUILD_DIR="$(mktemp -d)"
+            if git clone "https://aur.archlinux.org/${AUR_HELPER}.git" "$AUR_BUILD_DIR" 2>/dev/null; then
+                ( cd "$AUR_BUILD_DIR" && makepkg -si --needed --noconfirm )
+            else
+                log_error "No se pudo clonar el repo de ${AUR_HELPER}."
+                AUR_HELPER=""
+            fi
+            rm -rf "$AUR_BUILD_DIR"
+            # Recalcular binario disponible
+            if ! command -v "$AUR_HELPER" &>/dev/null; then
+                log_error "La instalación de ${AUR_HELPER} falló."
+                AUR_HELPER=""
+            fi
+        fi
+    else
+        log_warn "Instalación no interactiva: no se instaló ningún helper AUR."
+    fi
+fi
+
+# 4.1.c. Instalar MangoWM y utilidades desde el AUR
+# mangowm incluye mmsg (IPC). wbg (wallpaper) y gtklock (lockscreen) son
+# alternativas wlroots-native sin "sway" en el nombre. swayidle es el daemon
+# de idle estándar de wlroots (no depende del WM Sway).
 AUR_PACKAGES=(
     mangowm
+    wbg
+    gtklock
+    swayidle
 )
 
-log_info "Instalando paquetes del AUR (MangoWM)..."
-if command -v yay &>/dev/null; then
-    yay -S --needed --noconfirm "${AUR_PACKAGES[@]}"
-    log_success "Paquetes AUR instalados con éxito (mmsg incluido en mangowm)"
-elif command -v paru &>/dev/null; then
-    paru -S --needed --noconfirm "${AUR_PACKAGES[@]}"
-    log_success "Paquetes AUR instalados con éxito (mmsg incluido en mangowm)"
+if [ -n "$AUR_HELPER" ]; then
+    log_info "Instalando MangoWM + utilidades desde el AUR con ${AUR_HELPER}..."
+    "$AUR_HELPER" -S --needed --noconfirm "${AUR_PACKAGES[@]}"
+    if command -v mmsg &>/dev/null && command -v mango &>/dev/null; then
+        log_success "MangoWM instalado con éxito (incluye mmsg, el cliente IPC)"
+    else
+        log_error "MangoWM no se instaló correctamente. Verificá el log de ${AUR_HELPER}."
+    fi
+    log_success "Utilidades AUR instaladas: wbg (wallpaper), gtklock (lockscreen), swayidle (idle)"
 else
-    log_warn "No se encontró yay ni paru. Instalá MangoWM manualmente desde el AUR:"
-    log_warn "  yay -S mangowm"
-    log_warn "  (mmsg, el cliente IPC, viene incluido en el paquete mangowm)"
+    log_warn "Sin helper AUR disponible. Instalá manualmente:"
+    log_warn "  ${AUR_HELPER:-yay} -S mangowm wbg gtklock swayidle"
+    log_warn "  mmsg, el cliente IPC, viene incluido en el paquete mangowm"
 fi
 
 log_info "Actualizando caché de fuentes del sistema..."

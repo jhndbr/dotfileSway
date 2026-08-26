@@ -104,10 +104,6 @@ output_path = '$HOME/.config/kitty/dank-theme.conf'
 input_path = '$TEMPLATES_DIR/foot.ini'
 output_path = '$HOME/.config/foot/dank-colors.ini'
 
-[templates.swaylock]
-input_path = '$TEMPLATES_DIR/swaylock.conf'
-output_path = '$HOME/.config/swaylock/config'
-
 [templates.mango]
 input_path = '$TEMPLATES_DIR/mango-colors.conf'
 output_path = '$HOME/.config/mango/dank-colors'

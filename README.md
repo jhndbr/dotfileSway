@@ -16,7 +16,7 @@ Dotfiles minimalistas, elegantes y funcionales para un entorno de escritorio bas
 - **Wofi** — Launcher estilo Spotlight con fuzzy matching
 - **Dunst** — Notificaciones con esquinas redondeadas y glassmorphism
 - **Foot** — Terminal rápida con colores pastel
-- **Swaylock** — Pantalla de bloqueo monocromática
+- **Gtklock** — Pantalla de bloqueo GTK4 monocromática
 - **Swayidle** — Gestión de inactividad (bloqueo, dpms, suspensión)
 - **Gestor de Monitores** — Control de pantallas, modo dual/espejo y resoluciones integrado en Waybar (vía `wlr-randr`)
 - **Wofi** — Menú de apagado / sesión visual con glassmorphism
@@ -39,7 +39,7 @@ dotfileSway/
 │   ├── wofi/           # Launcher + estilos
 │   ├── dunst/          # Notificaciones
 │   ├── foot/           # Terminal
-│   ├── swaylock/       # Pantalla de bloqueo
+│   ├── gtklock/       # Pantalla de bloqueo (config.ini)
 │   ├── gammastep/      # Filtro luz azul
 │   ├── yazi/           # Gestor de archivos TUI
 │   ├── gtk-3.0/        # Tema GTK 3
@@ -85,7 +85,7 @@ cd ~/Documents/dotfileSway
 bash install_packages.sh
 ```
 
-> MangoWM y su cliente IPC `mmsg` se instalan desde el AUR (paquete `mangowm`). El script usa `yay` o `paru` automáticamente.
+> MangoWM y su cliente IPC `mmsg` se instalan desde el AUR (paquete `mangowm`). El script detecta si ya tenés `yay` o `paru`; si no hay ninguno, te pregunta cuál instalar (compilándolo desde el AUR con `makepkg`) y luego usa ese helper para instalar MangoWM.
 
 ### 3. Aplicar configuraciones
 
@@ -117,7 +117,7 @@ bash ~/.local/bin/set-wallpaper.sh /ruta/a/tu/imagen.jpg
 
 ### Flujo del script de wallpaper
 
-1. **Actualización en vivo:** Recarga la configuración de MangoWM (`mmsg -d reload_config`) y aplica el wallpaper con `swaybg`.
+1. **Actualización en vivo:** Recarga la configuración de MangoWM (`mmsg -d reload_config`) y aplica el wallpaper con `wbg`.
 2. **Persistencia:** Copia la imagen a `~/Pictures/1.jpg` para mantener el fondo predeterminado.
 3. **Extracción de colores:** Analiza la imagen con Matugen y Pywal para generar una paleta de colores coherente.
 4. **Sincronización del entorno:** Genera y recarga automáticamente los temas para:
@@ -138,7 +138,7 @@ bash ~/.local/bin/set-wallpaper.sh /ruta/a/tu/imagen.jpg
 | `Mod+A` | Lanzador de aplicaciones (Wofi) |
 | `Mod+Q` | Cerrar ventana |
 | `Mod+Shift+Return` / `Mod+Y` | Gestor de archivos (Yazi TUI) |
-| `Mod+L` / `Mod+Escape` | Bloquear pantalla (Swaylock) |
+| `Mod+L` / `Mod+Escape` | Bloquear pantalla (Gtklock) |
 | `Mod+Shift+E` | Menú de apagado / sesión (Wofi) |
 | `Mod+V` | Historial de portapapeles (Cliphist) |
 | `Mod+.` | Selector de Emojis |
@@ -173,8 +173,11 @@ El script `install_packages.sh` instala las siguientes dependencias necesarias:
 
 | Categoría | Paquetes |
 |---|---|
-| **WM** | mangowm (AUR, incluye mmsg), swaybg, swaylock, swayidle |
+| **WM** | mangowm (AUR, incluye mmsg) |
 | **Monitores** | wlr-randr, wlr-dpms |
+| **Wallpaper** | wbg (AUR) |
+| **Lockscreen** | gtklock (AUR) |
+| **Idle** | swayidle (AUR) |
 | **UI** | waybar, wofi, dunst |
 | **Terminal** | foot |
 | **Audio** | pipewire, wireplumber, pavucontrol |
