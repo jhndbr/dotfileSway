@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # ╔══════════════════════════════════════════════════════════════╗
-# ║      Script de Instalación y Configuración de Sway           ║
+# ║      Script de Instalación y Configuración de MangoWM       ║
 # ║      Soporte Inteligente para PC de Escritorio & Laptop      ║
 # ╚══════════════════════════════════════════════════════════════╝
 
@@ -59,7 +59,7 @@ done
 
 echo -e "${CYAN}${BOLD}"
 echo "╔══════════════════════════════════════════════════════════════╗"
-echo "║      🚀 Instalación de Dotfiles Sway                       ║"
+echo "║      🚀 Instalación de Dotfiles MangoWM                   ║"
 echo "╚══════════════════════════════════════════════════════════════╝"
 echo -e "${NC}"
 
@@ -114,7 +114,7 @@ echo -e "   ${GREEN}✓ Perfil configurado: ${BOLD}$DEVICE_PROFILE${NC}\n"
 if [ -n "$CLI_KB" ]; then
     KB_LAYOUT="$CLI_KB"
 else
-    echo -e "${YELLOW}⌨️  Distribución del teclado para Sway:${NC}"
+    echo -e "${YELLOW}⌨️  Distribución del teclado para MangoWM:${NC}"
     echo "     1) Español (es) — Latinoamericano / España"
     echo "     2) Inglés EE.UU. (us) — QWERTY estándar"
     echo "     3) Inglés Internacional (us intl) — Con acentos vía dead keys ('+a = á, ~+n = ñ)"
@@ -155,7 +155,7 @@ mkdir -p ~/.local/bin
 echo -e "${YELLOW}📦 Creando backup en $BACKUP_DIR${NC}"
 mkdir -p "$BACKUP_DIR"
 
-CONFIGS=(sway waybar wofi dunst foot swaylock gammastep gtk-3.0 gtk-4.0 environment.d qt5ct qt6ct matugen zed yazi xdg-desktop-portal)
+CONFIGS=(mango waybar wofi dunst foot swaylock gammastep gtk-3.0 gtk-4.0 environment.d qt5ct qt6ct matugen zed yazi xdg-desktop-portal)
 
 for item in "${CONFIGS[@]}"; do
     if [ -d "$HOME/.config/$item" ]; then
@@ -215,7 +215,7 @@ for item in "${CONFIGS[@]}"; do
     fi
 done
 
-# ── 8. Ajustar Waybar & Sway según perfil (PC vs Laptop) ────────
+# ── 8. Ajustar Waybar & MangoWM según perfil (PC vs Laptop) ────
 echo ""
 echo -e "${CYAN}🛠️  Aplicando perfil de dispositivo (${BLUE}$DEVICE_PROFILE${CYAN})...${NC}"
 
@@ -226,17 +226,25 @@ if [ -f "$SCRIPT_DIR/config/waybar/config.$DEVICE_PROFILE" ]; then
     echo -e "  ${GREEN}✓ Waybar configurado para $DEVICE_PROFILE${NC}"
 fi
 
-# Sway device.conf
-if [ -f "$SCRIPT_DIR/config/sway/device.conf.$DEVICE_PROFILE" ]; then
-    cp -f "$SCRIPT_DIR/config/sway/device.conf.$DEVICE_PROFILE" "$HOME/.config/sway/device.conf"
-    cp -f "$SCRIPT_DIR/config/sway/device.conf.$DEVICE_PROFILE" "$SCRIPT_DIR/config/sway/device.conf"
-    echo -e "  ${GREEN}✓ Sway device.conf configurado para $DEVICE_PROFILE${NC}"
+# MangoWM waybar (config.jsonc específica del perfil)
+if [ -f "$SCRIPT_DIR/config/mango/waybar/config.$DEVICE_PROFILE" ]; then
+    mkdir -p "$HOME/.config/mango/waybar"
+    cp -f "$SCRIPT_DIR/config/mango/waybar/config.$DEVICE_PROFILE" "$HOME/.config/mango/waybar/config.jsonc"
+    cp -f "$SCRIPT_DIR/config/mango/waybar/config.$DEVICE_PROFILE" "$SCRIPT_DIR/config/mango/waybar/config.jsonc"
+    echo -e "  ${GREEN}✓ Waybar (MangoWM) configurado para $DEVICE_PROFILE${NC}"
+fi
+
+# MangoWM device.conf
+if [ -f "$SCRIPT_DIR/config/mango/device.conf.$DEVICE_PROFILE" ]; then
+    cp -f "$SCRIPT_DIR/config/mango/device.conf.$DEVICE_PROFILE" "$HOME/.config/mango/device.conf"
+    cp -f "$SCRIPT_DIR/config/mango/device.conf.$DEVICE_PROFILE" "$SCRIPT_DIR/config/mango/device.conf"
+    echo -e "  ${GREEN}✓ MangoWM device.conf configurado para $DEVICE_PROFILE${NC}"
 fi
 
 # ── 9. Aplicar distribución de teclado ──────────────────────────
 if [ -f "$SCRIPT_DIR/scripts/keyboard-layout.sh" ]; then
     bash "$SCRIPT_DIR/scripts/keyboard-layout.sh" set "$KB_LAYOUT"
-    cp -f "$HOME/.config/sway/inputs.conf" "$SCRIPT_DIR/config/sway/inputs.conf" 2>/dev/null || true
+    cp -f "$HOME/.config/mango/inputs.conf" "$SCRIPT_DIR/config/mango/inputs.conf" 2>/dev/null || true
     echo -e "  ${GREEN}✓ Distribución de teclado $KB_LAYOUT aplicada${NC}"
 fi
 
@@ -325,10 +333,10 @@ echo "║  Backup guardado en: $BACKUP_DIR"
 echo "╚══════════════════════════════════════════════════════════════╝"
 echo -e "${NC}"
 
-# ── 14. Recargar Sway si está corriendo ─────────────────────────
-if command -v swaymsg &> /dev/null && pgrep -x sway &> /dev/null; then
-    swaymsg reload || true
-    echo -e "  ${GREEN}✓ Sway recargado en vivo con la nueva configuración${NC}"
+# ── 14. Recargar MangoWM si está corriendo ──────────────────────
+if command -v mmsg &> /dev/null && pgrep -x mango &> /dev/null; then
+    mmsg -d reload_config || true
+    echo -e "  ${GREEN}✓ MangoWM recargado en vivo con la nueva configuración${NC}"
 else
-    echo -e "${BLUE}💡 Podés iniciar tu sesión con Sway o recargar con Mod+Shift+C.${NC}"
+    echo -e "${BLUE}💡 Podés iniciar tu sesión con MangoWM o recargar con Mod+Shift+C.${NC}"
 fi

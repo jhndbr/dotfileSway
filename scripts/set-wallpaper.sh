@@ -21,8 +21,8 @@ if [ "$WALLPAPER_INPUT" != "$TARGET_WALLPAPER" ]; then
     cp -f "$WALLPAPER_INPUT" "$TARGET_WALLPAPER" &
 fi
 
-if command -v swaymsg &>/dev/null && pgrep -x sway &>/dev/null; then
-    swaymsg "output * bg '$WALLPAPER_INPUT' fill" &
+if command -v mmsg &>/dev/null && pgrep -x mango &>/dev/null; then
+    mmsg -d reload_config &
 fi
 
 echo "🎨 Generando paleta de colores dinámicas desde: $WALLPAPER_INPUT..."
@@ -108,9 +108,9 @@ output_path = '$HOME/.config/foot/dank-colors.ini'
 input_path = '$TEMPLATES_DIR/swaylock.conf'
 output_path = '$HOME/.config/swaylock/config'
 
-[templates.sway]
-input_path = '$TEMPLATES_DIR/sway-colors'
-output_path = '$HOME/.config/sway/dank-colors'
+[templates.mango]
+input_path = '$TEMPLATES_DIR/mango-colors.conf'
+output_path = '$HOME/.config/mango/dank-colors'
 
 [templates.dunst]
 input_path = '$TEMPLATES_DIR/dunstrc'
@@ -387,8 +387,8 @@ sed -i 's/^icon_theme=.*/icon_theme=Papirus-Dark/' "$HOME/.config/qt6ct/qt6ct.co
 # ── 8. Recargar componentes del escritorio, Sway y Foot ───────────────
 pkill -SIGUSR2 waybar 2>/dev/null || true
 pkill -SIGUSR1 foot 2>/dev/null || true
-if command -v swaymsg &>/dev/null && pgrep -x sway &>/dev/null; then
-    swaymsg reload 2>/dev/null || true
+if command -v mmsg &>/dev/null && pgrep -x mango &>/dev/null; then
+    mmsg -d reload_config 2>/dev/null || true
 fi
 if pgrep -x dunst &>/dev/null; then
     killall dunst 2>/dev/null || true
@@ -424,7 +424,7 @@ pkill -f xdg-desktop-portal-gtk 2>/dev/null || true
 
 # ── 11. Notificación ──────────────────────────────────────────────
 if command -v dunstify &>/dev/null; then
-    dunstify -a "DMS Matugen" -r 8812 "🎨 Tema Dinámico Aplicado" "Sway, Waybar, Foot, Qt, Iconos, Swaylock, Wofi y GTK sincronizados" || true
+    dunstify -a "DMS Matugen" -r 8812 "🎨 Tema Dinámico Aplicado" "MangoWM, Waybar, Foot, Qt, Iconos, Swaylock, Wofi y GTK sincronizados" || true
 fi
 
 echo "✅ Tema dinámico Dank aplicado exitosamente a todo el escritorio."

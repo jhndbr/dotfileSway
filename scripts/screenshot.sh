@@ -25,9 +25,13 @@ case "$SELECCION" in
         fi
         ;;
     "Ventana activa")
-        GEOMETRY=$(swaymsg -t get_tree | jq -r '.. | select(.focused?) | .rect | "\(.x),\(.y) \(.width)x\(.height)"')
-        if [ -n "$GEOMETRY" ] && [ "$GEOMETRY" != "null" ]; then
-            grim -g "$GEOMETRY" "$FILE" && wl-copy < "$FILE" && notify-send -i "$FILE" "📸 Screenshot" "Ventana activa guardada y copiada al portapapeles."
+        # MangoWM no expone la geometría de ventana vía IPC.
+        # Capturamos la salida (monitor) enfocada con grim -o.
+        FOCUSED_OUT=$(mmsg -g -o 2>/dev/null | awk 'NR==1{print $1}')
+        if [ -n "$FOCUSED_OUT" ]; then
+            grim -o "$FOCUSED_OUT" "$FILE" && wl-copy < "$FILE" && notify-send -i "$FILE" "📸 Screenshot" "Salida activa ($FOCUSED_OUT) guardada y copiada al portapapeles."
+        else
+            notify-send "📸 Screenshot" "No se pudo determinar la salida activa."
         fi
         ;;
     "Área con delay (3s)")

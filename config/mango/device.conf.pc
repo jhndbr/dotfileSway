@@ -1,0 +1,7 @@
+# ╔══════════════════════════════════════════════════════════════╗
+# ║        Configuración para PC de Escritorio (MangoWM)           ║
+# ║        Optimizado sin batería, sin backlight, sin touchpad     ║
+# ╚══════════════════════════════════════════════════════════════╝
+
+# PC de escritorio: touchpad desactivado, sin gestos ni brillo integrado
+disable_trackpad=1

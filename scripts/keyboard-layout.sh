@@ -2,21 +2,21 @@
 
 # ╔══════════════════════════════════════════════════════════════╗
 # ║        Gestor Dinámico de Distribución de Teclado            ║
-# ║        Cambia en caliente con swaymsg y persiste config      ║
+# ║        Cambia en caliente con mmsg y persiste config         ║
 # ╚══════════════════════════════════════════════════════════════╝
 
-CONFIG_FILE="$HOME/.config/sway/inputs.conf"
+CONFIG_FILE="$HOME/.config/mango/inputs.conf"
 mkdir -p "$(dirname "$CONFIG_FILE")"
 
 get_current_layout() {
     if [ -f "$CONFIG_FILE" ]; then
-        if grep -q 'xkb_layout "us,es"' "$CONFIG_FILE"; then
+        if grep -q 'xkb_rules_layout=us,es' "$CONFIG_FILE"; then
             echo "dual"
-        elif grep -q 'xkb_variant "intl"' "$CONFIG_FILE"; then
+        elif grep -q 'xkb_rules_variant=intl' "$CONFIG_FILE"; then
             echo "us-intl"
-        elif grep -q 'xkb_layout "us"' "$CONFIG_FILE"; then
+        elif grep -q 'xkb_rules_layout=us' "$CONFIG_FILE"; then
             echo "us"
-        elif grep -q 'xkb_layout "es"' "$CONFIG_FILE"; then
+        elif grep -q 'xkb_rules_layout=es' "$CONFIG_FILE"; then
             echo "es"
         else
             echo "es"
@@ -32,57 +32,69 @@ apply_layout() {
     case "$layout" in
         "es")
             cat > "$CONFIG_FILE" << 'EOF'
+# ╔══════════════════════════════════════════════════════════════╗
+# ║                    MangoWM Keyboard Layout                     ║
+# ║                    Generado por keyboard-layout.sh              ║
+# ╚══════════════════════════════════════════════════════════════╝
+
 # ── Teclado Español (Latinoamericano / España) ──────────────────
-input type:keyboard {
-    xkb_layout "es"
-    repeat_delay 300
-    repeat_rate 50
-}
+xkb_rules_layout=es
+repeat_delay=300
+repeat_rate=50
 EOF
             desc="Español (es)"
             ;;
 
         "us")
             cat > "$CONFIG_FILE" << 'EOF'
+# ╔══════════════════════════════════════════════════════════════╗
+# ║                    MangoWM Keyboard Layout                     ║
+# ║                    Generado por keyboard-layout.sh              ║
+# ╚══════════════════════════════════════════════════════════════╝
+
 # ── Teclado Inglés EE.UU. (US Standard) ─────────────────────────
-input type:keyboard {
-    xkb_layout "us"
-    repeat_delay 300
-    repeat_rate 50
-}
+xkb_rules_layout=us
+repeat_delay=300
+repeat_rate=50
 EOF
             desc="Inglés EE.UU. (us)"
             ;;
 
         "us-intl")
             cat > "$CONFIG_FILE" << 'EOF'
+# ╔══════════════════════════════════════════════════════════════╗
+# ║                    MangoWM Keyboard Layout                     ║
+# ║                    Generado por keyboard-layout.sh              ║
+# ╚══════════════════════════════════════════════════════════════╝
+
 # ── Teclado Inglés Internacional (Dead Keys: '+a=á, ~+n=ñ) ─────
-input type:keyboard {
-    xkb_layout "us"
-    xkb_variant "intl"
-    repeat_delay 300
-    repeat_rate 50
-}
+xkb_rules_layout=us
+xkb_rules_variant=intl
+repeat_delay=300
+repeat_rate=50
 EOF
             desc="US Internacional (tildes con '+a = á)"
             ;;
 
         "dual")
             cat > "$CONFIG_FILE" << 'EOF'
+# ╔══════════════════════════════════════════════════════════════╗
+# ║                    MangoWM Keyboard Layout                     ║
+# ║                    Generado por keyboard-layout.sh              ║
+# ╚══════════════════════════════════════════════════════════════╝
+
 # ── Teclado Dual (US + ES con toggle Alt+Shift) ────────────────
-input type:keyboard {
-    xkb_layout "us,es"
-    xkb_options "grp:alt_shift_toggle"
-    repeat_delay 300
-    repeat_rate 50
-}
+xkb_rules_layout=us,es
+xkb_rules_options=grp:alt_shift_toggle
+repeat_delay=300
+repeat_rate=50
 EOF
             desc="US + ES (Alternar con Alt+Shift)"
             ;;
     esac
 
-    if command -v swaymsg &>/dev/null && pgrep -x sway &>/dev/null; then
-        swaymsg reload 2>/dev/null || true
+    if command -v mmsg &>/dev/null && pgrep -x mango &>/dev/null; then
+        mmsg -d reload_config 2>/dev/null || true
     fi
 
     if command -v dunstify &>/dev/null; then

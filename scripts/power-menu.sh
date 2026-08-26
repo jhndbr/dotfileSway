@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # ╔══════════════════════════════════════════════════════════════╗
 # ║        Menú de Apagado / Sesión (reemplazo de wlogout)      ║
-# ║        Usa Wofi como selector + Sway/Systemd nativo         ║
+# ║        Usa Wofi como selector + MangoWM/Systemd nativo       ║
 # ╚══════════════════════════════════════════════════════════════╝
 
 LOCK_CMD="swaylock -f"
@@ -21,7 +21,7 @@ case "$SELECCION" in
         $LOCK_CMD
         ;;
     *"Cerrar Sesión"*)
-        swaymsg exit
+        mmsg -d quit
         ;;
     *"Suspender"*)
         $LOCK_CMD && systemctl suspend

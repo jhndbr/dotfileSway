@@ -69,14 +69,14 @@ fi
 
 # Distribución de Teclado
 KB_LAYOUT="es"
-if [ -f "$HOME/.config/sway/inputs.conf" ]; then
-    if grep -q 'xkb_layout "us,es"' "$HOME/.config/sway/inputs.conf"; then
+if [ -f "$HOME/.config/mango/inputs.conf" ]; then
+    if grep -q 'xkb_rules_layout=us,es' "$HOME/.config/mango/inputs.conf"; then
         KB_LAYOUT="us+es"
-    elif grep -q 'xkb_variant "intl"' "$HOME/.config/sway/inputs.conf"; then
+    elif grep -q 'xkb_rules_variant=intl' "$HOME/.config/mango/inputs.conf"; then
         KB_LAYOUT="us-intl"
-    elif grep -q 'xkb_layout "us"' "$HOME/.config/sway/inputs.conf"; then
+    elif grep -q 'xkb_rules_layout=us' "$HOME/.config/mango/inputs.conf"; then
         KB_LAYOUT="us"
-    elif grep -q 'xkb_layout "es"' "$HOME/.config/sway/inputs.conf"; then
+    elif grep -q 'xkb_rules_layout=es' "$HOME/.config/mango/inputs.conf"; then
         KB_LAYOUT="es"
     fi
 fi

@@ -1,28 +1,28 @@
 # dotfileSway
 
-> Configuración completa de **Sway WM** para Arch Linux — Estilo **macOS Monochromatic**
+> Configuración completa de **MangoWM** para Arch Linux — Estilo **macOS Monochromatic**
 >
 > **Estado:** Probado y verificado en una Máquina Virtual (VM) con **Arch Linux Minimal**.
 
-Dotfiles minimalistas, elegantes y funcionales para un entorno de escritorio basado en Sway/Wayland.
+Dotfiles minimalistas, elegantes y funcionales para un entorno de escritorio basado en MangoWM/Wayland.
 
 ---
 
 ## Características
 
 - **Estética macOS Monochromatic** — Paleta monocromática oscura con acentos blancos
-- **Sway WM** — Tiling window manager con gaps, bordes y reglas inteligentes
+- **MangoWM** — Tiling window manager con gaps, bordes, animaciones fluidas y glassmorphism
 - **Waybar** — Barra superior translúcida con módulos completos
 - **Wofi** — Launcher estilo Spotlight con fuzzy matching
 - **Dunst** — Notificaciones con esquinas redondeadas y glassmorphism
 - **Foot** — Terminal rápida con colores pastel
 - **Swaylock** — Pantalla de bloqueo monocromática
 - **Swayidle** — Gestión de inactividad (bloqueo, dpms, suspensión)
-- **Gestor de Monitores** — Control de pantallas, modo dual/espejo y resoluciones integrado en Waybar
-- **Wlogout** — Menú de apagado visual con glassmorphism
+- **Gestor de Monitores** — Control de pantallas, modo dual/espejo y resoluciones integrado en Waybar (vía `wlr-randr`)
+- **Wofi** — Menú de apagado / sesión visual con glassmorphism
 - **Gammastep** — Filtro de luz azul automático
 - **GTK 3/4 y Qt 5/6** — Tema oscuro dinámico basado en Adwaita y Fusion
-- **Zsh** — Shell con Oh My Zsh + Starship / Powerlevel10k + FZF
+- **Zsh** — Shell con Starship + FZF
 - **Scripts** — Wallpaper dinámico, gestión de monitores, capturas de pantalla, volumen, brillo, selector de color y emojis
 
 ---
@@ -32,8 +32,10 @@ Dotfiles minimalistas, elegantes y funcionales para un entorno de escritorio bas
 ```
 dotfileSway/
 ├── config/
-│   ├── sway/           # Configuración del WM
-│   ├── waybar/         # Barra + estilos CSS
+│   ├── mango/          # Configuración del WM (config.conf, bind.conf, rule.conf, etc.)
+│   │   ├── waybar/     # Configuración de Waybar específica para MangoWM
+│   │   └── scripts/    # Scripts auxiliares (config_check, hide_waybar)
+│   ├── waybar/         # Barra + estilos CSS (config por defecto)
 │   ├── wofi/           # Launcher + estilos
 │   ├── dunst/          # Notificaciones
 │   ├── foot/           # Terminal
@@ -46,16 +48,17 @@ dotfileSway/
 │   ├── qt6ct/          # Configuración de estilo Qt6
 │   └── environment.d/  # Variables de entorno Qt
 ├── scripts/
-│   ├── monitor-manager.sh # Gestor interactivo de monitores y resoluciones
-│   ├── set-wallpaper.sh # Gestor de wallpaper y tema dinámico
-│   ├── screenshot.sh   # Menú de capturas
-│   ├── volume.sh       # Control de volumen + OSD
-│   ├── brightness.sh   # Control de brillo + OSD
-│   ├── color-picker.sh # Selector de color
-│   ├── emoji-picker.sh # Selector de emojis
-│   └── yazi-open-with.sh # Selector universal de app para Yazi
+│   ├── monitor-manager.sh # Gestor interactivo de monitores (mmsg + wlr-randr)
+│   ├── set-wallpaper.sh   # Gestor de wallpaper y tema dinámico
+│   ├── screenshot.sh      # Menú de capturas
+│   ├── volume.sh          # Control de volumen + OSD
+│   ├── brightness.sh      # Control de brillo + OSD
+│   ├── color-picker.sh    # Selector de color
+│   ├── emoji-picker.sh    # Selector de emojis
+│   └── yazi-open-with.sh  # Selector universal de app para Yazi
+├── templates/          # Plantillas de Matugen (mango-colors.conf, etc.)
 ├── wallpapers/         # Fondos de pantalla
-├── .zshrc              # Configuración de Zsh
+├── .zshrc             # Configuración de Zsh
 ├── .zprofile           # Variables de entorno Wayland
 ├── .gitconfig          # Configuración de Git
 ├── setup.sh            # Instalar dotfiles
@@ -81,6 +84,8 @@ cd ~/Documents/dotfileSway
 ```bash
 bash install_packages.sh
 ```
+
+> MangoWM y su cliente IPC `mmsg` se instalan desde el AUR (paquete `mangowm`). El script usa `yay` o `paru` automáticamente.
 
 ### 3. Aplicar configuraciones
 
@@ -112,11 +117,11 @@ bash ~/.local/bin/set-wallpaper.sh /ruta/a/tu/imagen.jpg
 
 ### Flujo del script de wallpaper
 
-1. **Actualización en vivo:** Cambia el wallpaper de Sway al instante mediante `swaymsg`.
+1. **Actualización en vivo:** Recarga la configuración de MangoWM (`mmsg -d reload_config`) y aplica el wallpaper con `swaybg`.
 2. **Persistencia:** Copia la imagen a `~/Pictures/1.jpg` para mantener el fondo predeterminado.
 3. **Extracción de colores:** Analiza la imagen con Matugen y Pywal para generar una paleta de colores coherente.
 4. **Sincronización del entorno:** Genera y recarga automáticamente los temas para:
-   - Sway, Waybar y Dunst
+   - MangoWM, Waybar y Dunst
    - Foot (Terminal)
    - Aplicaciones GTK 3 y GTK 4
    - Aplicaciones Qt 5 y Qt 6
@@ -132,22 +137,26 @@ bash ~/.local/bin/set-wallpaper.sh /ruta/a/tu/imagen.jpg
 | `Mod+Return` | Abrir terminal (Foot) |
 | `Mod+A` | Lanzador de aplicaciones (Wofi) |
 | `Mod+Q` | Cerrar ventana |
-| `Mod+E` / `Mod+Y` | Gestor de archivos (Yazi TUI) |
+| `Mod+Shift+Return` / `Mod+Y` | Gestor de archivos (Yazi TUI) |
 | `Mod+L` / `Mod+Escape` | Bloquear pantalla (Swaylock) |
-| `Mod+Shift+E` | Menú de apagado (Wlogout) |
+| `Mod+Shift+E` | Menú de apagado / sesión (Wofi) |
 | `Mod+V` | Historial de portapapeles (Cliphist) |
 | `Mod+.` | Selector de Emojis |
 | `Mod+W` | Alternar ventana flotante |
 | `Mod+F` | Pantalla completa (Fullscreen) |
-| `Mod+R` | Modo redimensionar (Resize mode) |
-| `Mod+Shift+C` | Recargar configuración de Sway |
-| `Mod+h/j/k/l` / `Mod+Flechas` | Cambiar enfoque entre ventanas (Vim / Flechas) |
-| `Mod+Shift+h/j/k/l` / `Mod+Shift+Flechas` | Mover ventana de posición |
-| `Mod+1-0` | Ir al workspace 1 al 10 |
-| `Mod+Shift+1-0` | Mover ventana al workspace 1 al 10 |
-| `Mod+b` / `Mod+Shift+v` | Dividir espacio Horizontal / Vertical |
-| `Mod+s` / `Mod+t` / `Mod+d` | Layout Apilado / Pestañas / Toggle Split |
+| `Mod+Shift+C` | Recargar configuración de MangoWM |
+| `Mod+h/j/k` / `Mod+Flechas` | Cambiar enfoque entre ventanas (Vim / Flechas) |
+| `Mod+Shift+h/j/k` / `Mod+Shift+Flechas` | Mover ventana de posición |
+| `Mod+1-9` | Ir al tag 1 al 9 |
+| `Mod+Shift+1-9` | Mover ventana al tag 1 al 9 |
+| `Mod+B` | Cambiar dirección de división (dwindle) |
+| `Mod+E` / `Mod+T` | Aumentar / reducir master (master-stack) |
+| `Mod+N` | Cambiar layout (tile → scroller) |
 | `Mod+Shift+-` / `Mod+-` | Enviar a Scratchpad / Mostrar Scratchpad |
+| `Mod+G` | Toggle global (mostrar en todos los tags) |
+| `Mod+O` | Toggle overlay |
+| `Mod+I` / `Mod+Shift+I` | Minimizar / Restaurar minimizado |
+| `Mod+Grave` | Overview (vista general de tags) |
 | `Print` | Captura de pantalla completa (Grim) |
 | `Mod+Print` | Capturar área (Guardar y copiar) |
 | `Mod+Shift+S` | Capturar área (Solo copiar al portapapeles) |
@@ -158,15 +167,14 @@ bash ~/.local/bin/set-wallpaper.sh /ruta/a/tu/imagen.jpg
 
 ---
 
-
-
 ## Dependencias
 
 El script `install_packages.sh` instala las siguientes dependencias necesarias:
 
 | Categoría | Paquetes |
 |---|---|
-| **WM** | sway, swaybg, swaylock, swayidle |
+| **WM** | mangowm (AUR, incluye mmsg), swaybg, swaylock, swayidle |
+| **Monitores** | wlr-randr, wlr-dpms |
 | **UI** | waybar, wofi, dunst |
 | **Terminal** | foot |
 | **Audio** | pipewire, wireplumber, pavucontrol |
@@ -175,7 +183,7 @@ El script `install_packages.sh` instala las siguientes dependencias necesarias:
 | **Archivos & Apps** | yazi, ffmpegthumbnailer, poppler, chafa, ouch, firefox, mpv, imv, zathura |
 | **CLI** | bat, eza, fd, ripgrep, zoxide, fzf |
 | **Fuentes** | JetBrains Mono Nerd, Inter, Noto |
-| **Shell** | zsh, oh-my-zsh, powerlevel10k / starship |
+| **Shell** | zsh, starship, zsh-autosuggestions, zsh-syntax-highlighting |
 
 ---
 

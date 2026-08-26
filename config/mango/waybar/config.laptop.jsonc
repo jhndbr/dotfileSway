@@ -1,0 +1,386 @@
+{
+    "layer": "top",
+    "position": "top",
+    "height": 38,
+    "spacing": 0,
+    "margin-top": 0,
+    "margin-left": 0,
+    "margin-right": 0,
+    "margin-bottom": 0,
+    "reload_style_on_change": true,
+
+    "modules-left": [
+        "custom/menu",
+        "mango/workspaces",
+        "mango/layout",
+        "mango/window"
+    ],
+
+    "modules-center": [
+        "clock"
+    ],
+
+    "modules-right": [
+        "custom/media",
+        "tray",
+        "custom/quicksettings",
+        "group/controls",
+        "group/hardware",
+        "custom/power"
+    ],
+
+    /* ── Menú de Inicio Minimalista (Estilo Apple / Linux) ───────── */
+    "custom/menu": {
+        "format": "󰣇",
+        "tooltip-format": "Lanzador de Aplicaciones (Wofi)",
+        "on-click": "wofi --show drun",
+        "tooltip": true
+    },
+
+    /* ── Espacios de Trabajo (Tags) — Cápsula macOS ─────────────── */
+    "mango/workspaces": {
+        "format": "{icon}",
+        "hide-empty": true,
+        "on-click": "activate",
+        "on-click-right": "toggle",
+        "overview-label": "OVERVIEW",
+        "format-icons": {
+            "1": "",
+            "2": "",
+            "3": "",
+            "4": "",
+            "5": "",
+            "6": "",
+            "7": "",
+            "8": "",
+            "9": "",
+            "OVERVIEW": "󰮫"
+        }
+    },
+
+    /* ── Layout indicator ──────────────────────────────────────── */
+    "mango/layout": {
+        "format": "󰩨 {}"
+    },
+
+    /* ── Ventana activa ────────────────────────────────────────── */
+    "mango/window": {
+        "format": "{}",
+        "max-length": 40,
+        "rewrite": {
+            "(.*) — Mozilla Firefox": "󰈹  $1",
+            "(.*) - foot": "󰞷  $1",
+            "(.*) — yazi": "󰝰  $1",
+            "yazi": "󰝰  Yazi",
+            "(.*) - Visual Studio Code": "󰨞  $1",
+            "(.*) - Code": "󰨞  $1",
+            "(.*) - Zed": "󰅩  $1",
+            "(.*) — Spotify": "󰓇  $1",
+            "Volume Control": "󰕾  Pavucontrol",
+            "Bluetooth Devices": "󰂯  Blueman"
+        },
+        "tooltip": false
+    },
+
+    /* ── Reloj y Fecha (Estilo Barra de Menú macOS) ──────────────── */
+    "clock": {
+        "format": "{:%a %d %b  %H:%M}",
+        "format-alt": "{:%A %d de %B, %Y  ·  %H:%M:%S}",
+        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
+        "locale": "es_AR.UTF-8",
+        "interval": 1
+    },
+
+    /* ── Mini Reproductor Multimedia Flotante ────────────────────── */
+    "custom/media": {
+        "format": "{icon} {text}",
+        "return-type": "json",
+        "max-length": 35,
+        "format-icons": {
+            "Playing": "󰎆",
+            "Paused": "󰏤",
+            "Stopped": "󰝚",
+            "default": "󰝚"
+        },
+        "escape": true,
+        "exec": "playerctl -a metadata --format '{\"text\": \"{{markup_escape(artist)}} — {{markup_escape(title)}}\", \"tooltip\": \"{{playerName}} · {{status}}\\n{{markup_escape(artist)}} — {{markup_escape(title)}}\", \"alt\": \"{{status}}\", \"class\": \"{{status}}\"}' -F 2>/dev/null",
+        "on-click": "playerctl play-pause",
+        "on-click-right": "playerctl next",
+        "on-click-middle": "playerctl previous",
+        "on-scroll-up": "playerctl volume 0.05+",
+        "on-scroll-down": "playerctl volume 0.05-"
+    },
+
+    /* ── Centro de Control (QuickSettings Wofi) ──────────────────── */
+    "custom/quicksettings": {
+        "format": "󰒓",
+        "tooltip-format": "Centro de Control &amp; Herramientas\n(Pantallas, Luz Cálida, Notificaciones, etc.)",
+        "on-click": "~/.local/bin/quicksettings-menu.sh",
+        "tooltip": true
+    },
+
+    /* ── Grupo Unificado de Controles de Hardware (Laptop) ──────── */
+    "group/controls": {
+        "orientation": "horizontal",
+        "spacing": 0,
+        "modules": [
+            "group/network",
+            "group/backlight",
+            "group/audio",
+            "group/battery"
+        ]
+    },
+
+    /* ── Audio Drawer ────────────────────────────────────────────── */
+    "group/audio": {
+        "orientation": "horizontal",
+        "drawer": {
+            "transition-duration": 300,
+            "transition-left-to-right": true
+        },
+        "modules": [
+            "pulseaudio#icon",
+            "pulseaudio#text"
+        ]
+    },
+    "pulseaudio#icon": {
+        "format": "{icon}",
+        "format-bluetooth": "󰂰",
+        "format-bluetooth-muted": "󰂲",
+        "format-muted": "󰝟",
+        "format-icons": {
+            "headphone": "󰋋",
+            "hands-free": "󰋎",
+            "headset": "󰋎",
+            "phone": "󰏲",
+            "portable": "󰏲",
+            "car": "󰄋",
+            "default": ["󰕿", "󰖀", "󰕾"]
+        },
+        "on-click": "pavucontrol",
+        "on-click-right": "pactl set-sink-mute @DEFAULT_SINK@ toggle",
+        "scroll-step": 5,
+        "tooltip-format": "Audio: {volume}%\n{desc}"
+    },
+    "pulseaudio#text": {
+        "format": "{volume}",
+        "on-click": "pavucontrol",
+        "on-click-right": "pactl set-sink-mute @DEFAULT_SINK@ toggle",
+        "scroll-step": 5,
+        "tooltip-format": "{desc}"
+    },
+
+    /* ── Red Drawer ──────────────────────────────────────────────── */
+    "group/network": {
+        "orientation": "horizontal",
+        "drawer": {
+            "transition-duration": 300,
+            "transition-left-to-right": true
+        },
+        "modules": [
+            "network#icon",
+            "network#text"
+        ]
+    },
+    "network#icon": {
+        "format-wifi": "{icon}",
+        "format-ethernet": "󰈀",
+        "format-linked": "󰈀",
+        "format-disconnected": "󰤭",
+        "format-icons": ["󰤯", "󰤟", "󰤢", "󰤥", "󰤨"],
+        "tooltip-format-wifi": "{essid} ({signalStrength}%)\n{ipaddr}/{cidr}",
+        "tooltip-format-ethernet": "{ifname}\n{ipaddr}/{cidr}",
+        "tooltip-format-disconnected": "Desconectado",
+        "on-click": "nm-connection-editor",
+        "interval": 5
+    },
+    "network#text": {
+        "format-wifi": "{signalStrength}",
+        "format-ethernet": "LAN",
+        "format-linked": "Sin IP",
+        "format-disconnected": "OFF",
+        "tooltip-format-wifi": "{essid}\n↑ {bandwidthUpBits}  ↓ {bandwidthDownBits}",
+        "on-click": "nm-connection-editor",
+        "interval": 5
+    },
+
+    /* ── Batería Drawer ──────────────────────────────────────────── */
+    "group/battery": {
+        "orientation": "horizontal",
+        "drawer": {
+            "transition-duration": 300,
+            "transition-left-to-right": true
+        },
+        "modules": [
+            "battery#icon",
+            "battery#text"
+        ]
+    },
+    "battery#icon": {
+        "states": {
+            "good": 80,
+            "warning": 30,
+            "critical": 15
+        },
+        "format": "{icon}",
+        "format-charging": "󰂄",
+        "format-plugged": "󰚥",
+        "format-full": "󰁹",
+        "format-icons": ["󰂎", "󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"],
+        "tooltip-format": "Batería: {capacity}%\n{timeTo} — {power:.1f}W",
+        "interval": 10
+    },
+    "battery#text": {
+        "format": "{capacity}",
+        "tooltip-format": "{timeTo}\n{power:.1f}W",
+        "interval": 10
+    },
+
+    /* ── Brillo Drawer ───────────────────────────────────────────── */
+    "group/backlight": {
+        "orientation": "horizontal",
+        "drawer": {
+            "transition-duration": 300,
+            "transition-left-to-right": true
+        },
+        "modules": [
+            "backlight#icon",
+            "backlight#text"
+        ]
+    },
+    "backlight#icon": {
+        "format": "{icon}",
+        "format-icons": ["󰃞", "󰃟", "󰃠"],
+        "scroll-step": 5,
+        "tooltip-format": "Brillo: {percent}%"
+    },
+    "backlight#text": {
+        "format": "{percent}",
+        "scroll-step": 5,
+        "tooltip-format": "Brillo: {percent}%"
+    },
+
+    /* ── Monitor de Sistema / Hardware Unificado (Click-to-Reveal) ── */
+    "group/hardware": {
+        "orientation": "inherit",
+        "drawer": {
+            "transition-duration": 300,
+            "children-class": "hardware-drawer",
+            "transition-left-to-right": false,
+            "click-to-reveal": true
+        },
+        "modules": [
+            "custom/hardware-toggle",
+            "group/cpu",
+            "group/memory",
+            "group/disk",
+            "group/temperature"
+        ]
+    },
+
+    "custom/hardware-toggle": {
+        "format": "",
+        "tooltip-format": "Estadísticas del Sistema\nClick para expandir / ocultar",
+        "tooltip": true
+    },
+
+    /* ── CPU ─────────────────────────────────────────────────────── */
+    "group/cpu": {
+        "orientation": "horizontal",
+        "modules": [
+            "cpu#icon",
+            "cpu#text"
+        ]
+    },
+    "cpu#icon": {
+        "format": "󰻠",
+        "interval": 3,
+        "tooltip-format": "CPU: {usage}%\n{avg_frequency} GHz",
+        "on-click": "foot -e btop"
+    },
+    "cpu#text": {
+        "format": "{usage}",
+        "interval": 3,
+        "tooltip-format": "CPU: {usage}%\n{avg_frequency} GHz",
+        "on-click": "foot -e btop"
+    },
+
+    /* ── Memoria RAM ─────────────────────────────────────────────── */
+    "group/memory": {
+        "orientation": "horizontal",
+        "modules": [
+            "memory#icon",
+            "memory#text"
+        ]
+    },
+    "memory#icon": {
+        "format": "󰍛",
+        "interval": 5,
+        "tooltip-format": "RAM: {used:0.1f} GiB / {total:0.1f} GiB ({percentage}%)\nSwap: {swapUsed:0.1f} GiB / {swapTotal:0.1f} GiB",
+        "on-click": "foot -e btop"
+    },
+    "memory#text": {
+        "format": "{percentage}",
+        "interval": 5,
+        "tooltip-format": "RAM: {used:0.1f} GiB / {total:0.1f} GiB ({percentage}%)\nSwap: {swapUsed:0.1f} GiB / {swapTotal:0.1f} GiB",
+        "on-click": "foot -e btop"
+    },
+
+    /* ── Disco ───────────────────────────────────────────────────── */
+    "group/disk": {
+        "orientation": "horizontal",
+        "modules": [
+            "disk#icon",
+            "disk#text"
+        ]
+    },
+    "disk#icon": {
+        "format": "󰋊",
+        "interval": 30,
+        "path": "/",
+        "tooltip-format": "Disco: {used} de {total} ({percentage_used}% usado)\nLibre: {free}",
+        "on-click": "foot -e btop"
+    },
+    "disk#text": {
+        "format": "{percentage_used}",
+        "interval": 30,
+        "path": "/",
+        "tooltip-format": "Disco: {used} de {total} ({percentage_used}% usado)\nLibre: {free}",
+        "on-click": "foot -e btop"
+    },
+
+    /* ── Temperatura ─────────────────────────────────────────────── */
+    "group/temperature": {
+        "orientation": "horizontal",
+        "modules": [
+            "temperature#icon",
+            "temperature#text"
+        ]
+    },
+    "temperature#icon": {
+        "format": "󰔏",
+        "critical-threshold": 80,
+        "tooltip-format": "Temperatura: {temperatureC}°C",
+        "on-click": "foot -e btop"
+    },
+    "temperature#text": {
+        "format": "{temperatureC}°",
+        "format-critical": "{temperatureC}°",
+        "critical-threshold": 80,
+        "tooltip-format": "Temperatura: {temperatureC}°C",
+        "on-click": "foot -e btop"
+    },
+
+    "tray": {
+        "icon-size": 14,
+        "spacing": 6
+    },
+
+    /* ── Menú de Apagado / Sesión ────────────────────────────────── */
+    "custom/power": {
+        "format": "⏻",
+        "tooltip-format": "Menú de Apagado y Sesión",
+        "on-click": "~/.local/bin/power-menu.sh",
+        "tooltip": true
+    }
+}

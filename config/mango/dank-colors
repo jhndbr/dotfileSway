@@ -1,0 +1,13 @@
+# ── Paleta dinámica generada por Matugen (mangoWM) ──────────────
+# Fallback — sobrescrito por Matugen en runtime
+
+bordercolor   = 0x1e2019ff
+focuscolor    = 0xb5d086ff
+urgentcolor   = 0xffb4abff
+rootcolor     = 0x12140eff
+maximizescreencolor = 0x292b23ff
+overlaycolor  = 0x292b23ff
+globalcolor   = 0xb5d086ff
+scratchpadcolor = 0x8f9284ff
+dropcolor     = 0x8f928455
+splitcolor    = 0xffb4abff

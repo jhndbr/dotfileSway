@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
 # ╔══════════════════════════════════════════════════════════════╗
-# ║        Instalador de Dependencias Entorno Sway WM            ║
-# ║        Optimizado & Robusto para Arch Linux (pacman)         ║
+# ║        Instalador de Dependencias Entorno MangoWM             ║
+# ║        Optimizado & Robusto para Arch Linux (pacman/AUR)      ║
 # ╚══════════════════════════════════════════════════════════════╝
 
 set -eo pipefail
@@ -24,7 +24,7 @@ log_error()   { echo -e "${RED}✖ ${1}${NC}"; }
 banner() {
     echo -e "${CYAN}${BOLD}"
     echo "╔══════════════════════════════════════════════════════════════╗"
-    echo "║       📦 Instalador de Dependencias Sway (Arch Linux)       ║"
+    echo "║       📦 Instalador de Dependencias MangoWM (Arch Linux)     ║"
     echo "╚══════════════════════════════════════════════════════════════╝"
     echo -e "${NC}"
 }
@@ -56,7 +56,7 @@ sudo pacman -S --needed --noconfirm base-devel git
 # Nota: Se eliminaron paquetes duplicados, Nautilus/gvfs redundantes
 PACMAN_PACKAGES=(
     # Entorno Principal Wayland & UI
-    sway
+    # MangoWM + mmsg (IPC) se instalan desde el AUR (ver AUR_PACKAGES más abajo)
     swaybg
     swaylock
     swayidle
@@ -65,6 +65,8 @@ PACMAN_PACKAGES=(
     foot
     dunst
     gammastep
+    wlr-randr
+    wlr-dpms
 
     # Captura de Pantalla & Portapapeles
     grim
@@ -152,6 +154,25 @@ PACMAN_PACKAGES=(
 log_info "Instalando paquetes oficiales con pacman..."
 sudo pacman -S --needed --noconfirm "${PACMAN_PACKAGES[@]}"
 log_success "Paquetes oficiales instalados con éxito"
+
+# ── 4.1 Paquetes AUR (MangoWM + IPC) ─────────────────────────────
+# MangoWM y su herramienta IPC (mmsg) no están en los repos oficiales.
+AUR_PACKAGES=(
+    mangowm
+)
+
+log_info "Instalando paquetes del AUR (MangoWM)..."
+if command -v yay &>/dev/null; then
+    yay -S --needed --noconfirm "${AUR_PACKAGES[@]}"
+    log_success "Paquetes AUR instalados con éxito (mmsg incluido en mangowm)"
+elif command -v paru &>/dev/null; then
+    paru -S --needed --noconfirm "${AUR_PACKAGES[@]}"
+    log_success "Paquetes AUR instalados con éxito (mmsg incluido en mangowm)"
+else
+    log_warn "No se encontró yay ni paru. Instalá MangoWM manualmente desde el AUR:"
+    log_warn "  yay -S mangowm"
+    log_warn "  (mmsg, el cliente IPC, viene incluido en el paquete mangowm)"
+fi
 
 log_info "Actualizando caché de fuentes del sistema..."
 fc-cache -f > /dev/null 2>&1 || true

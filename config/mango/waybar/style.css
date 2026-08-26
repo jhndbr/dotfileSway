@@ -1,0 +1,513 @@
+/* ╔══════════════════════════════════════════════════════════════╗
+   ║     Waybar — macOS-Inspired Frosted Glass Bar for MangoWM      ║
+   ║     Uniform Island Architecture · Dynamic Material Palette     ║
+   ╚══════════════════════════════════════════════════════════════╝ */
+
+@import url("../../gtk-3.0/dank-colors.css");
+
+/* ══════════════════════════════════════════════════════════════
+   ║  DESIGN TOKENS — Derived from Matugen Dynamic Palette       ║
+   ══════════════════════════════════════════════════════════════ */
+
+/* Bar Surface */
+@define-color bg_bar             alpha(@window_bg_color, 0.80);
+@define-color border_bar         alpha(@window_fg_color, 0.06);
+
+/* Island / Pill Surfaces */
+@define-color bg_pill            alpha(@window_fg_color, 0.06);
+@define-color bg_pill_hover      alpha(@window_fg_color, 0.12);
+@define-color bg_pill_active     alpha(@accent_bg_color, 0.18);
+@define-color border_pill        alpha(@window_fg_color, 0.08);
+@define-color border_pill_hover  alpha(@accent_bg_color, 0.35);
+
+/* Text Hierarchy */
+@define-color text_primary       @window_fg_color;
+@define-color text_secondary     alpha(@window_fg_color, 0.60);
+@define-color text_muted         alpha(@window_fg_color, 0.38);
+@define-color text_on_accent     @accent_fg_color;
+
+/* Accent — all from system palette */
+@define-color accent             @accent_bg_color;
+@define-color accent_dim         alpha(@accent_bg_color, 0.65);
+
+/* Semantic — derived from system, not hardcoded */
+@define-color semantic_success   alpha(@accent_bg_color, 0.85);
+@define-color semantic_warning   @button_active_bg_color;
+@define-color semantic_danger    @destructive_bg_color;
+
+/* ══════════════════════════════════════════════════════════════
+   ║  GLOBAL RESET & TYPOGRAPHY                                  ║
+   ══════════════════════════════════════════════════════════════ */
+
+* {
+    border: none;
+    border-radius: 0;
+    font-family: "Inter", "SF Pro Display", "JetBrainsMono Nerd Font", sans-serif;
+    font-size: 11.5px;
+    font-weight: 500;
+    min-height: 0;
+    padding: 0;
+    margin: 0;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   ║  BAR CONTAINER — Frosted Glass Edge-to-Edge                 ║
+   ══════════════════════════════════════════════════════════════ */
+
+window#waybar {
+    background: @bg_bar;
+    border: none;
+    border-bottom: 1px solid @border_bar;
+    border-radius: 0;
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.12),
+                0 2px 16px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+}
+
+window#waybar.hidden {
+    opacity: 0;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   ║  TOOLTIPS                                                   ║
+   ══════════════════════════════════════════════════════════════ */
+
+tooltip {
+    background: alpha(@window_bg_color, 0.94);
+    border: 1px solid alpha(@window_fg_color, 0.10);
+    border-radius: 6px;
+    padding: 5px 9px;
+    box-shadow: none;
+}
+
+tooltip label {
+    color: @text_primary;
+    font-size: 11px;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   ║  UNIFORM ISLAND / PILL ARCHITECTURE                         ║
+   ║  Every module container shares the same base geometry        ║
+   ══════════════════════════════════════════════════════════════ */
+
+#custom-menu,
+#workspaces,
+#layout,
+#window,
+#clock,
+#custom-media,
+#custom-quicksettings,
+#controls,
+#hardware,
+#tray,
+#custom-power {
+    background: @bg_pill;
+    border: 1px solid @border_pill;
+    border-radius: 8px;
+    padding: 0 10px;
+    margin: 5px 2px;
+    min-height: 28px;
+    color: @text_primary;
+    transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* Uniform hover for all interactive pills */
+#custom-menu:hover,
+#workspaces:hover,
+#clock:hover,
+#custom-media:hover,
+#custom-quicksettings:hover,
+#controls:hover,
+#hardware:hover,
+#tray:hover {
+    background: @bg_pill_hover;
+    border-color: @border_pill_hover;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   ║  TRANSPARENT RESET FOR GROUP CHILDREN & DRAWERS             ║
+   ║  Ensures no double-backgrounds inside pill containers        ║
+   ══════════════════════════════════════════════════════════════ */
+
+#controls *,
+#audio *,
+#backlight *,
+#network *,
+#battery *,
+#hardware *,
+#cpu *,
+#memory *,
+#disk *,
+#temperature *,
+#controls *:hover,
+#audio *:hover,
+#backlight *:hover,
+#network *:hover,
+#battery *:hover,
+#hardware *:hover,
+#cpu *:hover,
+#memory *:hover,
+#disk *:hover,
+#temperature *:hover {
+    background: transparent;
+    background-color: transparent;
+    background-image: none;
+    border: none;
+    outline: none;
+    box-shadow: none;
+}
+
+/* Labels inside groups — strip everything, GTK3 centers naturally */
+#controls label,
+#hardware label,
+#audio label,
+#backlight label,
+#network label,
+#battery label,
+#cpu label,
+#memory label,
+#disk label,
+#temperature label {
+    background: transparent;
+    border: none;
+    outline: none;
+    box-shadow: none;
+    padding: 0;
+    margin: 0;
+    color: inherit;
+    font-weight: 500;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   ║  LEFT — Menu · Workspaces · Layout · Window Title           ║
+   ══════════════════════════════════════════════════════════════ */
+
+/* Distro launcher icon (Perfect square & optical center) */
+#custom-menu {
+    font-family: "JetBrainsMono Nerd Font", "Symbols Nerd Font", monospace;
+    font-size: 15px;
+    color: @accent;
+    padding: 0 1px 0 0;
+    margin: 5px 2px 5px 4px;
+    min-width: 28px;
+    min-height: 28px;
+}
+
+#custom-menu label {
+    margin-right: 1px;
+    padding: 0;
+}
+
+/* Workspaces — numbered capsules */
+#workspaces {
+    padding: 0 3px;
+}
+
+#workspaces button {
+    color: @text_muted;
+    padding: 0 7px;
+    margin: 3px 2px;
+    border-radius: 6px;
+    background: transparent;
+    min-width: 20px;
+    min-height: 22px;
+    font-size: 11px;
+    font-weight: 600;
+    transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+#workspaces button:hover {
+    background: @bg_pill_hover;
+    color: @text_primary;
+}
+
+#workspaces button.focused,
+#workspaces button.active {
+    background: @accent;
+    color: @text_on_accent;
+    font-weight: 700;
+    box-shadow: 0 1px 4px alpha(@accent, 0.35);
+}
+
+#workspaces button.urgent {
+    background: alpha(@semantic_danger, 0.35);
+    color: @semantic_danger;
+}
+
+#workspaces button.hidden {
+    color: @text_muted;
+    background-color: transparent;
+}
+
+/* Layout indicator (tile / scroller) */
+#layout {
+    background: @accent;
+    color: @text_on_accent;
+    font-weight: 700;
+    border-radius: 6px;
+    padding: 0 10px;
+}
+
+/* Active window title — stays in pill system but de-emphasized */
+#window {
+    color: @text_secondary;
+    font-size: 11px;
+    font-weight: 500;
+    padding: 0 10px;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   ║  CENTER — Clock (macOS menu bar style)                      ║
+   ══════════════════════════════════════════════════════════════ */
+
+#clock {
+    font-weight: 600;
+    font-size: 11.5px;
+    letter-spacing: 0.3px;
+    padding: 0 14px;
+    color: @text_primary;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   ║  RIGHT — Media · Tray · Controls · Hardware · Power         ║
+   ══════════════════════════════════════════════════════════════ */
+
+/* Media player — macOS Dynamic Island / frosted pill */
+#custom-media {
+    font-size: 11px;
+    font-weight: 500;
+    padding: 0 11px;
+    color: @text_primary;
+    letter-spacing: 0.1px;
+    transition: all 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+#custom-media.Playing {
+    color: @text_primary;
+    background: alpha(@accent_bg_color, 0.14);
+    border-color: alpha(@accent_bg_color, 0.35);
+}
+
+#custom-media.Playing:hover {
+    background: alpha(@accent_bg_color, 0.22);
+    border-color: alpha(@accent_bg_color, 0.55);
+}
+
+#custom-media.Paused {
+    color: @text_muted;
+    background: @bg_pill;
+    border-color: @border_pill;
+}
+
+#custom-media.Paused:hover {
+    color: @text_secondary;
+    background: @bg_pill_hover;
+    border-color: @border_pill_hover;
+}
+
+/* Control Center button (Perfect square & optical center) */
+#custom-quicksettings {
+    font-family: "JetBrainsMono Nerd Font", "Symbols Nerd Font", monospace;
+    font-size: 14px;
+    color: @text_secondary;
+    padding: 0 1px 0 0;
+    margin: 5px 2px;
+    min-width: 28px;
+    min-height: 28px;
+}
+
+#custom-quicksettings label {
+    margin-right: 1px;
+    padding: 0;
+}
+
+#custom-quicksettings:hover {
+    color: @accent;
+}
+
+/* ── Group Containers (Controls & Hardware) ──────────────────── */
+#controls {
+    padding: 0 4px;
+}
+
+#hardware {
+    padding: 0 4px;
+}
+
+/* Sub-drawers inside Controls & Hardware groups — compact & balanced */
+#network,
+#backlight,
+#audio,
+#battery {
+    margin: 0 1px;
+    padding: 0;
+}
+
+#cpu,
+#memory,
+#disk,
+#temperature {
+    margin: 0 3px;
+    padding: 0;
+}
+
+/* ── Drawer trigger icons — compact padding for ideal icon density ── */
+#pulseaudio.icon,
+#backlight.icon,
+#network.icon,
+#battery.icon,
+#cpu.icon,
+#memory.icon,
+#disk.icon,
+#temperature.icon {
+    font-family: "JetBrainsMono Nerd Font", "Symbols Nerd Font", monospace;
+    font-size: 13.5px;
+    color: @text_secondary;
+    padding: 0 3px;
+    min-width: 14px;
+    transition: color 0.2s ease;
+}
+
+#pulseaudio.icon:hover,
+#backlight.icon:hover,
+#network.icon:hover,
+#battery.icon:hover,
+#cpu.icon:hover,
+#memory.icon:hover,
+#disk.icon:hover,
+#temperature.icon:hover {
+    color: @text_primary;
+}
+
+/* Hardware toggle button (Arrow) */
+#custom-hardware-toggle {
+    font-family: "JetBrainsMono Nerd Font", "Symbols Nerd Font", monospace;
+    font-size: 13px;
+    font-weight: bold;
+    color: @text_secondary;
+    padding: 0 4px;
+    min-width: 14px;
+    transition: all 0.2s ease;
+}
+
+#custom-hardware-toggle:hover {
+    color: @accent;
+}
+
+/* Drawer numeric readouts — tight coupling with icon when drawer opens */
+#pulseaudio.text,
+#backlight.text,
+#network.text,
+#battery.text,
+#cpu.text,
+#memory.text,
+#disk.text,
+#temperature.text {
+    font-size: 11px;
+    font-weight: 500;
+    padding: 0 3px 0 1px;
+    color: @text_secondary;
+    transition: color 0.2s ease;
+}
+
+#pulseaudio.text:hover,
+#backlight.text:hover,
+#network.text:hover,
+#battery.text:hover,
+#cpu.text:hover,
+#memory.text:hover,
+#disk.text:hover,
+#temperature.text:hover {
+    color: @text_primary;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   ║  SEMANTIC STATES — Battery, Power Profiles, Notifications   ║
+   ══════════════════════════════════════════════════════════════ */
+
+/* Battery states */
+#battery.warning,
+#battery.icon.warning,
+#battery.text.warning {
+    color: @semantic_warning;
+}
+
+#battery.critical,
+#battery.icon.critical,
+#battery.text.critical {
+    color: @semantic_danger;
+}
+
+#battery.charging,
+#battery.plugged,
+#battery.icon.charging,
+#battery.icon.plugged {
+    color: @accent;
+}
+
+/* Power Profiles */
+#power-profiles-daemon {
+    padding: 0 5px;
+    color: @text_secondary;
+}
+
+#power-profiles-daemon.performance {
+    color: @semantic_danger;
+}
+
+#power-profiles-daemon.balanced {
+    color: @accent;
+}
+
+#power-profiles-daemon.power-saver {
+    color: @semantic_success;
+}
+
+/* Idle inhibitor */
+#idle_inhibitor.activated {
+    color: @accent;
+}
+
+/* Night light */
+#custom-gammastep.on {
+    color: @semantic_warning;
+}
+
+/* Notifications */
+#custom-notification {
+    padding: 0 5px;
+}
+
+#custom-notification.paused {
+    color: @semantic_warning;
+}
+
+/* System tray */
+#tray {
+    padding: 0 8px;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   ║  POWER BUTTON — Danger on hover                             ║
+   ══════════════════════════════════════════════════════════════ */
+
+#custom-power {
+    font-family: "JetBrainsMono Nerd Font", "Symbols Nerd Font", monospace;
+    font-size: 13px;
+    padding: 0 1px 0 0;
+    color: @text_muted;
+    margin: 5px 4px 5px 2px;
+    min-width: 28px;
+    min-height: 28px;
+}
+
+#custom-power label {
+    margin-right: 1px;
+    padding: 0;
+}
+
+#custom-power:hover {
+    background: alpha(@semantic_danger, 0.18);
+    border-color: alpha(@semantic_danger, 0.45);
+    color: @semantic_danger;
+}

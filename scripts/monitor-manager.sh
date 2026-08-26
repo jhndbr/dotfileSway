@@ -1,12 +1,13 @@
 #!/usr/bin/env bash
 # ╔══════════════════════════════════════════════════════════════╗
-# ║        Gestor Simple de Monitores para Sway & Waybar         ║
-# ║        Sin daemons - Rápido, ligero y configurable           ║
+# ║      Gestor Simple de Monitores para MangoWM & Waybar        ║
+# ║      Sin daemons - Rápido, ligero y configurable              ║
+# ║      Usa mmsg + wlr-randr (MangoWM no soporta swaymsg)       ║
 # ╚══════════════════════════════════════════════════════════════╝
 
 set -eo pipefail
 
-OUTPUTS_CONF="$HOME/.config/sway/outputs.conf"
+MONITOR_CONF="$HOME/.config/mango/monitor.conf"
 
 notify() {
     local title="$1"
@@ -18,63 +19,76 @@ notify() {
     fi
 }
 
-get_outputs_json() {
-    swaymsg -t get_outputs -r 2>/dev/null || echo "[]"
+# ── Detección de salidas ───────────────────────────────────────
+# MangoWM no tiene un get_outputs JSON equivalente a swaymsg.
+# Usamos wlr-randr (recomendado por la docs oficial de MangoWM)
+# y mmsg -O como respaldo.
+
+get_outputs_raw() {
+    if command -v wlr-randr &>/dev/null; then
+        wlr-randr 2>/dev/null || true
+    fi
+}
+
+# Lista de nombres de salida, una por línea
+list_output_names() {
+    if command -v mmsg &>/dev/null && pgrep -x mango &>/dev/null; then
+        mmsg -O 2>/dev/null | grep -vE '^\s*$'
+    else
+        wlr-randr 2>/dev/null | grep -oE '^[A-Za-z0-9-]+(,|$)' | sed 's/,$//'
+    fi
 }
 
 # ── 1. Salida JSON para Waybar ──────────────────────────────────
 waybar_status() {
-    local data
-    data=$(get_outputs_json)
+    local total=0 active=0
+    local names
+    names=$(list_output_names)
 
-    if [ "$data" = "[]" ] || [ -z "$data" ]; then
-        echo '{"text":"󰍹","tooltip":"No se detectaron salidas de Sway","class":"offline","alt":"offline"}'
+    if [ -z "$names" ]; then
+        echo '{"text":"󰍹","tooltip":"No se detectaron salidas","class":"offline","alt":"offline"}'
         return
     fi
 
-    local total active
-    total=$(echo "$data" | jq 'length')
-    active=$(echo "$data" | jq '[.[] | select(.active == true)] | length')
+    total=$(echo "$names" | wc -l | tr -d ' ')
 
-    local is_mirror=false
-    if [ "$active" -gt 1 ]; then
-        local x_coords
-        x_coords=$(echo "$data" | jq -r '[.[] | select(.active == true) | .rect.x] | unique | length')
-        if [ "$x_coords" -eq 1 ]; then
-            is_mirror=true
-        fi
+    # MangoWM enciende todas las salidas conectadas por defecto; asumimos activas
+    # salvo las que wlr-randr marca como (off).
+    local off_count=0
+    if command -v wlr-randr &>/dev/null; then
+        off_count=$(wlr-randr 2>/dev/null | grep -cE '\(off\)' || true)
     fi
+    active=$((total - off_count))
+    [ "$active" -lt 0 ] && active=0
 
     local icon="󰍹"
     local class="single"
 
-    if [ "$is_mirror" = true ]; then
-        icon="󰑈"
-        class="mirror"
-    elif [ "$active" -gt 1 ]; then
+    if [ "$active" -gt 1 ]; then
         icon="󰍺"
         class="dual"
     elif [ "$total" -gt 1 ] && [ "$active" -eq 1 ]; then
-        icon="󰍹"
         class="connected"
-    else
-        local first_name
-        first_name=$(echo "$data" | jq -r '.[0].name // ""')
-        if [[ "$first_name" =~ ^eDP|^LVDS ]]; then
-            icon="󰌢"
-            class="laptop"
-        else
-            icon="󰍹"
-            class="single"
-        fi
+    fi
+
+    local first_name
+    first_name=$(echo "$names" | head -n1)
+    if [[ "$first_name" =~ ^eDP|^LVDS ]] && [ "$active" -le 1 ]; then
+        icon="󰌢"
+        class="laptop"
     fi
 
     local tooltip="🖥️ Monitores Conectados ($active/$total activos)
 ───────────────────────────────"
 
-    while IFS= read -r line; do
-        tooltip+=$'\n'"$line"
-    done < <(echo "$data" | jq -r '.[] | "• \(.name) [\(if .active then "ACTIVO" else "INACTIVO" end)]\n  Res: \(.current_mode.width // 0)x\(.current_mode.height // 0) @ \((.current_mode.refresh // 0) / 1000 | floor)Hz\n  Escala: \(.scale // 1.0) | Pos: (\(.rect.x),\(.rect.y))"')
+    while IFS= read -r name; do
+        [ -z "$name" ] && continue
+        local state="ACTIVO"
+        if wlr-randr 2>/dev/null | awk -v n="$name" '$1==n' | grep -q '(off)'; then
+            state="INACTIVO"
+        fi
+        tooltip+=$'\n'"• $name [$state]"
+    done <<< "$names"
 
     tooltip+=$'\n'"───────────────────────────────"
     tooltip+=$'\n'"󰌌 Clic izquierdo: Menú de opciones"
@@ -90,29 +104,27 @@ waybar_status() {
 
 # ── 2. Acciones de Configuración ────────────────────────────────
 auto_detect() {
-    local data
-    data=$(get_outputs_json)
+    local names
+    names=$(list_output_names)
     local count
-    count=$(echo "$data" | jq 'length')
+    count=$(echo "$names" | wc -l | tr -d ' ')
 
     if [ "$count" -le 1 ]; then
         local name
-        name=$(echo "$data" | jq -r '.[0].name // empty')
-        if [ -n "$name" ]; then
-            swaymsg output "$name" enable pos 0 0
+        name=$(echo "$names" | head -n1)
+        if [ -n "$name" ] && command -v wlr-randr &>/dev/null; then
+            wlr-randr --output "$name" --pos 0,0 --on 2>/dev/null || true
             notify "Monitor Único" "Configurado $name como pantalla principal"
         fi
     else
-        # Primer monitor (generalmente integrado eDP-1)
         local out1 out2
-        out1=$(echo "$data" | jq -r '.[0].name')
-        out2=$(echo "$data" | jq -r '.[1].name')
-        local w1
-        w1=$(echo "$data" | jq -r '.[0].current_mode.width // 1920')
-
-        swaymsg output "$out1" enable pos 0 0
-        swaymsg output "$out2" enable pos "$w1" 0
-        notify "Dual Monitor Activado" "$out1 (0,0) + $out2 ($w1,0)"
+        out1=$(echo "$names" | sed -n '1p')
+        out2=$(echo "$names" | sed -n '2p')
+        if command -v wlr-randr &>/dev/null; then
+            wlr-randr --output "$out1" --pos 0,0 --on 2>/dev/null || true
+            wlr-randr --output "$out2" --pos 1920,0 --on 2>/dev/null || true
+        fi
+        notify "Dual Monitor Activado" "$out1 (0,0) + $out2 (1920,0)"
     fi
 
     # Refrescar fondo de pantalla si existe script
@@ -122,111 +134,117 @@ auto_detect() {
 }
 
 action_extend_right() {
-    local data
-    data=$(get_outputs_json)
-    local out1 out2 w1
-    out1=$(echo "$data" | jq -r '.[0].name')
-    out2=$(echo "$data" | jq -r '.[1].name // empty')
+    local names out1 out2
+    names=$(list_output_names)
+    out1=$(echo "$names" | sed -n '1p')
+    out2=$(echo "$names" | sed -n '2p')
 
     if [ -z "$out2" ]; then
         notify "Aviso" "Solo hay una pantalla conectada"
         return
     fi
 
-    w1=$(echo "$data" | jq -r '.[0].current_mode.width // 1920')
-    swaymsg output "$out1" enable pos 0 0
-    swaymsg output "$out2" enable pos "$w1" 0
+    if command -v wlr-randr &>/dev/null; then
+        wlr-randr --output "$out1" --pos 0,0 --on 2>/dev/null || true
+        wlr-randr --output "$out2" --pos 1920,0 --on 2>/dev/null || true
+    fi
     notify "Pantallas Extendidas" "Secundaria ($out2) a la derecha de $out1"
 }
 
 action_extend_left() {
-    local data
-    data=$(get_outputs_json)
-    local out1 out2 w2
-    out1=$(echo "$data" | jq -r '.[0].name')
-    out2=$(echo "$data" | jq -r '.[1].name // empty')
+    local names out1 out2
+    names=$(list_output_names)
+    out1=$(echo "$names" | sed -n '1p')
+    out2=$(echo "$names" | sed -n '2p')
 
     if [ -z "$out2" ]; then
         notify "Aviso" "Solo hay una pantalla conectada"
         return
     fi
 
-    w2=$(echo "$data" | jq -r '.[1].current_mode.width // 1920')
-    swaymsg output "$out2" enable pos 0 0
-    swaymsg output "$out1" enable pos "$w2" 0
+    if command -v wlr-randr &>/dev/null; then
+        wlr-randr --output "$out2" --pos 0,0 --on 2>/dev/null || true
+        wlr-randr --output "$out1" --pos 1920,0 --on 2>/dev/null || true
+    fi
     notify "Pantallas Extendidas" "Secundaria ($out2) a la izquierda de $out1"
 }
 
 action_mirror() {
-    local data
-    data=$(get_outputs_json)
-    local out1 out2
-    out1=$(echo "$data" | jq -r '.[0].name')
-    out2=$(echo "$data" | jq -r '.[1].name // empty')
+    local names out1 out2
+    names=$(list_output_names)
+    out1=$(echo "$names" | sed -n '1p')
+    out2=$(echo "$names" | sed -n '2p')
 
     if [ -z "$out2" ]; then
         notify "Aviso" "Solo hay una pantalla conectada"
         return
     fi
 
-    swaymsg output "$out1" enable pos 0 0
-    swaymsg output "$out2" enable pos 0 0
+    # Espejo: misma posición para ambas salidas
+    if command -v wlr-randr &>/dev/null; then
+        wlr-randr --output "$out1" --pos 0,0 --on 2>/dev/null || true
+        wlr-randr --output "$out2" --pos 0,0 --on 2>/dev/null || true
+    fi
     notify "Modo Espejo" "Pantallas duplicadas en posición 0,0"
 }
 
 action_only_primary() {
-    local data
-    data=$(get_outputs_json)
-    local out1 out2
-    out1=$(echo "$data" | jq -r '.[0].name')
-    out2=$(echo "$data" | jq -r '.[1].name // empty')
+    local names out1 out2
+    names=$(list_output_names)
+    out1=$(echo "$names" | sed -n '1p')
+    out2=$(echo "$names" | sed -n '2p')
 
-    swaymsg output "$out1" enable pos 0 0
+    if [ -n "$out1" ] && command -v wlr-randr &>/dev/null; then
+        wlr-randr --output "$out1" --pos 0,0 --on 2>/dev/null || true
+    fi
     if [ -n "$out2" ]; then
-        swaymsg output "$out2" disable
+        wlr-randr --output "$out2" --off 2>/dev/null || true
     fi
     notify "Solo Pantalla Principal" "Activada: $out1"
 }
 
 action_only_secondary() {
-    local data
-    data=$(get_outputs_json)
-    local out1 out2
-    out1=$(echo "$data" | jq -r '.[0].name')
-    out2=$(echo "$data" | jq -r '.[1].name // empty')
+    local names out1 out2
+    names=$(list_output_names)
+    out1=$(echo "$names" | sed -n '1p')
+    out2=$(echo "$names" | sed -n '2p')
 
     if [ -z "$out2" ]; then
         notify "Aviso" "No hay pantalla secundaria conectada"
         return
     fi
 
-    swaymsg output "$out2" enable pos 0 0
-    swaymsg output "$out1" disable
+    if command -v wlr-randr &>/dev/null; then
+        wlr-randr --output "$out2" --pos 0,0 --on 2>/dev/null || true
+        wlr-randr --output "$out1" --off 2>/dev/null || true
+    fi
     notify "Solo Pantalla Secundaria" "Activada: $out2 (Principal desactivada)"
 }
 
 action_resolution_menu() {
-    local data
-    data=$(get_outputs_json)
-    local outputs
-    outputs=$(echo "$data" | jq -r '.[].name')
+    if ! command -v wlr-randr &>/dev/null; then
+        notify "Error" "wlr-randr no está instalado (requerido por MangoWM)"
+        return
+    fi
 
-    if [ -z "$outputs" ]; then
+    local names chosen_out
+    names=$(list_output_names)
+    if [ -z "$names" ]; then
         notify "Error" "No se detectaron salidas"
         return
     fi
 
-    # Seleccionar pantalla
-    local chosen_out
-    chosen_out=$(echo "$outputs" | wofi --dmenu --prompt "Seleccionar Monitor" --width 300 --height 200 --lines 4)
+    chosen_out=$(echo "$names" | wofi --dmenu --prompt "Seleccionar Monitor" --width 300 --height 200 --lines 4)
     [ -z "$chosen_out" ] && return
 
-    # Listar resoluciones disponibles
+    # Listar modos disponibles desde wlr-randr
     local modes
-    modes=$(echo "$data" | jq -r --arg name "$chosen_out" '.[] | select(.name == $name) | .modes[] | "\(.width)x\(.height) @ \((.refresh / 1000 | floor))Hz"' | sort -u -r -V)
+    modes=$(wlr-randr --output "$chosen_out" 2>/dev/null \
+        | grep -oE '[0-9]+x[0-9]+@[0-9.]+Hz' \
+        | sort -u -r -V)
 
     if [ -z "$modes" ]; then
-        notify "Aviso" "No se pudieron obtener resoluciones automáticas para $chosen_out"
+        notify "Aviso" "No se pudieron obtener resoluciones para $chosen_out"
         return
     fi
 
@@ -234,32 +252,23 @@ action_resolution_menu() {
     chosen_mode=$(echo "$modes" | wofi --dmenu --prompt "Resolución para $chosen_out" --width 320 --height 300 --lines 8)
     [ -z "$chosen_mode" ] && return
 
-    # Extraer ancho y alto
-    local res
-    res=$(echo "$chosen_mode" | awk '{print $1}')
-    local hz
-    hz=$(echo "$chosen_mode" | awk '{print $3}' | sed 's/Hz//')
-
-    if [ -n "$res" ]; then
-        if [ -n "$hz" ] && [ "$hz" -gt 0 ] 2>/dev/null; then
-            swaymsg output "$chosen_out" mode "${res}@${hz}Hz" || swaymsg output "$chosen_out" mode "$res"
-        else
-            swaymsg output "$chosen_out" mode "$res"
-        fi
-        notify "Resolución Cambiada" "$chosen_out configurado a $chosen_mode"
-    fi
+    # Formato: WxH@RHz
+    wlr-randr --output "$chosen_out" --custom-mode "$chosen_mode" 2>/dev/null \
+        || wlr-randr --output "$chosen_out" --mode "$chosen_mode" 2>/dev/null || true
+    notify "Resolución Cambiada" "$chosen_out configurado a $chosen_mode"
 }
 
 action_scale_menu() {
-    local data
-    data=$(get_outputs_json)
-    local outputs
-    outputs=$(echo "$data" | jq -r '.[].name')
+    if ! command -v wlr-randr &>/dev/null; then
+        notify "Error" "wlr-randr no está instalado (requerido por MangoWM)"
+        return
+    fi
 
-    [ -z "$outputs" ] && return
+    local names chosen_out
+    names=$(list_output_names)
+    [ -z "$names" ] && return
 
-    local chosen_out
-    chosen_out=$(echo "$outputs" | wofi --dmenu --prompt "Seleccionar Monitor para Escala" --width 300 --height 200 --lines 4)
+    chosen_out=$(echo "$names" | wofi --dmenu --prompt "Seleccionar Monitor para Escala" --width 300 --height 200 --lines 4)
     [ -z "$chosen_out" ] && return
 
     local scales="1.0  (100% - Normal)\n1.25 (125% - Escalado sutil)\n1.5  (150% - Escalado medio)\n1.75 (175% - Escalado alto)\n2.0  (200% - HiDPI / 4K)"
@@ -270,41 +279,63 @@ action_scale_menu() {
     local val
     val=$(echo "$chosen_scale" | awk '{print $1}')
     if [ -n "$val" ]; then
-        swaymsg output "$chosen_out" scale "$val"
+        wlr-randr --output "$chosen_out" --scale "$val" 2>/dev/null || true
         notify "Escala Aplicada" "$chosen_out: Escala fijada en $val"
     fi
 }
 
 action_save_config() {
-    local data
-    data=$(get_outputs_json)
-    mkdir -p "$(dirname "$OUTPUTS_CONF")"
+    if ! command -v wlr-randr &>/dev/null; then
+        notify "Error" "wlr-randr no está instalado"
+        return
+    fi
+
+    mkdir -p "$(dirname "$MONITOR_CONF")"
 
     {
         echo "# ╔══════════════════════════════════════════════════════════════╗"
-        echo "# ║        Configuración Guardada de Monitores                   ║"
+        echo "# ║        MangoWM Monitor Rules                                   ║"
+        echo "# ║        Generado automáticamente por monitor-manager.sh         ║"
         echo "# ╚══════════════════════════════════════════════════════════════╝"
+        echo "#"
+        echo "# Formato: monitorrule=name:<NAME>,width:W,height:H,refresh:R,x:X,y:Y,scale:S"
+        echo "# Descomentar y ajustar según tu hardware (wlr-randr para obtener los datos)."
         echo ""
-    } > "$OUTPUTS_CONF"
+    } > "$MONITOR_CONF"
 
-    while IFS= read -r line; do
-        echo "$line" >> "$OUTPUTS_CONF"
-    done < <(echo "$data" | jq -r '.[] | if .active then "output \(.name) enable mode \(.current_mode.width // 1920)x\(.current_mode.height // 1080)@\((.current_mode.refresh // 60000) / 1000 | floor)Hz pos \(.rect.x) \(.rect.y) scale \(.scale)" else "output \(.name) disable" end')
+    local names
+    names=$(list_output_names)
+    while IFS= read -r name; do
+        [ -z "$name" ] && continue
+        local line
+        line=$(wlr-randr 2>/dev/null | awk -v n="$name '
+            $1==n {
+                gsub(/[()]/, "", $0)
+                print $0
+            }')
+        echo "# Salida detectada: $name"
+        echo "# $line"
+        echo "# monitorrule=name:$name,width:1920,height:1080,refresh:60,x:0,y:0,scale:1"
+        echo ""
+    done <<< "$names"
 
-    notify "Configuración Guardada" "Guardado en ~/.config/sway/outputs.conf"
+    notify "Configuración Guardada" "Guardado en $MONITOR_CONF"
 }
 
-action_reload_sway() {
-    swaymsg reload
-    notify "Sway Recargado" "Se recargó la configuración de Sway y monitores"
+action_reload_mango() {
+    if command -v mmsg &>/dev/null && pgrep -x mango &>/dev/null; then
+        mmsg -d reload_config
+        notify "MangoWM Recargado" "Se recargó la configuración de MangoWM y monitores"
+    else
+        notify "Aviso" "MangoWM no está corriendo"
+    fi
 }
 
 # ── 3. Menú Principal Wofi ──────────────────────────────────────
 menu() {
-    local data
-    data=$(get_outputs_json)
-    local total
-    total=$(echo "$data" | jq 'length')
+    local names total
+    names=$(list_output_names)
+    total=$(echo "$names" | wc -l | tr -d ' ')
 
     local opciones=""
 
@@ -320,7 +351,7 @@ menu() {
     opciones+="󰑮  Configurar Resolución y Refresco\n"
     opciones+="󰹑  Configurar Escala (Scaling)\n"
     opciones+="💾  Guardar Configuración Actual\n"
-    opciones+="🔄  Recargar Sway"
+    opciones+="🔄  Recargar MangoWM"
 
     local seleccion
     seleccion=$(echo -e "$opciones" | wofi --dmenu \
@@ -359,8 +390,8 @@ menu() {
         *"Guardar Configuración"*)
             action_save_config
             ;;
-        *"Recargar Sway"*)
-            action_reload_sway
+        *"Recargar MangoWM"*)
+            action_reload_mango
             ;;
     esac
 }
@@ -380,7 +411,7 @@ case "$1" in
         action_save_config
         ;;
     reload)
-        action_reload_sway
+        action_reload_mango
         ;;
     *)
         menu
