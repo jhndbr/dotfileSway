@@ -29,10 +29,6 @@ while [[ $# -gt 0 ]]; do
             CLEAN_INSTALL=true
             shift
             ;;
-        --device)
-            CLI_DEVICE="$2"
-            shift 2
-            ;;
         --keyboard|--kb)
             CLI_KB="$2"
             shift 2
@@ -43,7 +39,6 @@ while [[ $# -gt 0 ]]; do
             echo "Opciones:"
             echo "  -c, --clean, -f, --force    Borra las configuraciones previas en ~/.config y scripts"
             echo "                              antes de copiar las nuevas (crea un backup previo)."
-            echo "  --device [pc|laptop]        Fuerza el perfil de dispositivo sin preguntar."
             echo "  --keyboard [es|us|us-intl|dual]  Fuerza la distribución de teclado."
             echo "  -h, --help                  Muestra este mensaje de ayuda."
             echo ""
@@ -59,7 +54,7 @@ done
 
 echo -e "${CYAN}${BOLD}"
 echo "╔══════════════════════════════════════════════════════════════╗"
-echo "║      🚀 Instalación de Dotfiles Sway                       ║"
+echo "║      🚀 Instalación de Dotfiles Sway (PC de Escritorio)     ║"
 echo "╚══════════════════════════════════════════════════════════════╝"
 echo -e "${NC}"
 
@@ -69,46 +64,9 @@ if [ "$CLEAN_INSTALL" = true ]; then
     echo ""
 fi
 
-# ── 1. Detección y Selección de Perfil (PC vs Laptop) ───────────
-detect_hardware() {
-    local chassis
-    chassis=$(cat /sys/class/dmi/id/chassis_type 2>/dev/null || echo "0")
-    local has_bat
-    has_bat=$(ls -d /sys/class/power_supply/BAT* 2>/dev/null | head -n 1 || true)
-    
-    if [ -n "$has_bat" ] || [[ "$chassis" =~ ^(8|9|10|11|14|30|31|32)$ ]]; then
-        echo "laptop"
-    else
-        echo "pc"
-    fi
-}
-
-DETECTED_TYPE=$(detect_hardware)
-if [ "$DETECTED_TYPE" = "laptop" ]; then
-    DETECTED_LABEL="Laptop / Notebook"
-    DEFAULT_OPT="2"
-else
-    DETECTED_LABEL="PC de Escritorio"
-    DEFAULT_OPT="1"
-fi
-
-if [ -n "$CLI_DEVICE" ]; then
-    DEVICE_PROFILE="$CLI_DEVICE"
-else
-    echo -e "${YELLOW}🖥️  Hardware detectado: ${BLUE}${BOLD}$DETECTED_LABEL${NC}"
-    echo "   Selecciona el perfil a aplicar:"
-    echo "     1) PC de Escritorio (Optimizado: sin batería, sin backlight interno, sin touchpad)"
-    echo "     2) Laptop / Notebook (Completo: batería, backlight, gestos touchpad, alertas)"
-    read -rp "   Opción [1/2, Por defecto: $DEFAULT_OPT]: " dev_choice
-    dev_choice="${dev_choice:-$DEFAULT_OPT}"
-
-    if [ "$dev_choice" = "2" ] || [ "$dev_choice" = "laptop" ]; then
-        DEVICE_PROFILE="laptop"
-    else
-        DEVICE_PROFILE="pc"
-    fi
-fi
-echo -e "   ${GREEN}✓ Perfil configurado: ${BOLD}$DEVICE_PROFILE${NC}\n"
+# ── 1. Perfil de Dispositivo (PC de Escritorio) ─────────────────
+DEVICE_PROFILE="pc"
+echo -e "${YELLOW}🖥️  Perfil: ${BLUE}${BOLD}PC de Escritorio (Optimizado)${NC}\n"
 
 # ── 2. Selección de Distribución de Teclado ────────────────────
 if [ -n "$CLI_KB" ]; then
@@ -215,25 +173,7 @@ for item in "${CONFIGS[@]}"; do
     fi
 done
 
-# ── 8. Ajustar Waybar & Sway según perfil (PC vs Laptop) ────────
-echo ""
-echo -e "${CYAN}🛠️  Aplicando perfil de dispositivo (${BLUE}$DEVICE_PROFILE${CYAN})...${NC}"
-
-# Waybar
-if [ -f "$SCRIPT_DIR/config/waybar/config.$DEVICE_PROFILE" ]; then
-    cp -f "$SCRIPT_DIR/config/waybar/config.$DEVICE_PROFILE" "$HOME/.config/waybar/config"
-    cp -f "$SCRIPT_DIR/config/waybar/config.$DEVICE_PROFILE" "$SCRIPT_DIR/config/waybar/config"
-    echo -e "  ${GREEN}✓ Waybar configurado para $DEVICE_PROFILE${NC}"
-fi
-
-# Sway device.conf
-if [ -f "$SCRIPT_DIR/config/sway/device.conf.$DEVICE_PROFILE" ]; then
-    cp -f "$SCRIPT_DIR/config/sway/device.conf.$DEVICE_PROFILE" "$HOME/.config/sway/device.conf"
-    cp -f "$SCRIPT_DIR/config/sway/device.conf.$DEVICE_PROFILE" "$SCRIPT_DIR/config/sway/device.conf"
-    echo -e "  ${GREEN}✓ Sway device.conf configurado para $DEVICE_PROFILE${NC}"
-fi
-
-# ── 9. Aplicar distribución de teclado ──────────────────────────
+# ── 8. Distribución de Teclado ──────────────────────────────────
 if [ -f "$SCRIPT_DIR/scripts/keyboard-layout.sh" ]; then
     bash "$SCRIPT_DIR/scripts/keyboard-layout.sh" set "$KB_LAYOUT"
     cp -f "$HOME/.config/sway/inputs.conf" "$SCRIPT_DIR/config/sway/inputs.conf" 2>/dev/null || true
@@ -273,7 +213,7 @@ if [ -f "$HOME/.config/gtk-3.0/bookmarks" ]; then
     sed -i "s|file:///home/[^/]*|file://$HOME|g" "$HOME/.config/gtk-3.0/bookmarks" 2>/dev/null || true
 fi
 
-# ── 10. Copiar archivos de home (.zshrc, .zprofile, .gitconfig) ─
+# ── 9. Copiar archivos de home (.zshrc, .zprofile, .gitconfig) ──
 echo ""
 echo -e "${CYAN}🏠 Aplicando configuraciones de home (~)...${NC}"
 rm -f "$HOME/.zshenv" 2>/dev/null || true
@@ -292,7 +232,7 @@ mkdir -p "$HOME/.config/zsh"
 cp -f "$SCRIPT_DIR/.zshrc" "$HOME/.config/zsh/.zshrc"
 cp -f "$SCRIPT_DIR/.zprofile" "$HOME/.config/zsh/.zprofile"
 
-# ── 11. Copiar scripts a ~/.local/bin ───────────────────────────
+# ── 10. Copiar scripts a ~/.local/bin ───────────────────────────
 if [ -d "$SCRIPT_DIR/scripts" ]; then
     echo ""
     echo -e "${CYAN}⚡ Instalando scripts utilitarios en ~/.local/bin...${NC}"
@@ -306,14 +246,14 @@ if [ -d "$SCRIPT_DIR/scripts" ]; then
     done
 fi
 
-# ── 12. Aplicar fondo de pantalla y generar temas dinámicos ────
+# ── 11. Aplicar fondo de pantalla y generar temas dinámicos ────
 if [ -f "$SCRIPT_DIR/wallpapers/1.jpg" ]; then
     echo ""
     echo -e "  ${GREEN}→${NC} Aplicando wallpaper y generando temas dinámicos..."
     bash "$HOME/.local/bin/set-wallpaper.sh" "$SCRIPT_DIR/wallpapers/1.jpg" 2>/dev/null || true
 fi
 
-# ── 13. Resultado ───────────────────────────────────────────────
+# ── 12. Resultado ───────────────────────────────────────────────
 echo ""
 echo -e "${GREEN}${BOLD}"
 echo "╔══════════════════════════════════════════════════════════════╗"

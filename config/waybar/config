@@ -164,30 +164,6 @@
         "tooltip-format": "{desc}"
     },
 
-    /* ── Brillo Drawer ───────────────────────────────────────────── */
-    "group/backlight": {
-        "orientation": "horizontal",
-        "drawer": {
-            "transition-duration": 300,
-            "transition-left-to-right": true
-        },
-        "modules": [
-            "backlight#icon",
-            "backlight#text"
-        ]
-    },
-    "backlight#icon": {
-        "format": "{icon}",
-        "format-icons": ["󰃞", "󰃟", "󰃠"],
-        "scroll-step": 5,
-        "tooltip-format": "Brillo: {percent}%"
-    },
-    "backlight#text": {
-        "format": "{percent}",
-        "scroll-step": 5,
-        "tooltip-format": "Brillo: {percent}%"
-    },
-
     /* ── Red Drawer ──────────────────────────────────────────────── */
     "group/network": {
         "orientation": "horizontal",
@@ -220,38 +196,6 @@
         "tooltip-format-wifi": "{essid}\n↑ {bandwidthUpBits}  ↓ {bandwidthDownBits}",
         "on-click": "nm-connection-editor",
         "interval": 5
-    },
-
-    /* ── Batería Drawer ──────────────────────────────────────────── */
-    "group/battery": {
-        "orientation": "horizontal",
-        "drawer": {
-            "transition-duration": 300,
-            "transition-left-to-right": true
-        },
-        "modules": [
-            "battery#icon",
-            "battery#text"
-        ]
-    },
-    "battery#icon": {
-        "states": {
-            "good": 80,
-            "warning": 30,
-            "critical": 15
-        },
-        "format": "{icon}",
-        "format-charging": "󰂄",
-        "format-plugged": "󰚥",
-        "format-full": "󰁹",
-        "format-icons": ["󰂎", "󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"],
-        "tooltip-format": "Batería: {capacity}%\n{timeTo} — {power:.1f}W",
-        "interval": 10
-    },
-    "battery#text": {
-        "format": "{capacity}",
-        "tooltip-format": "{timeTo}\n{power:.1f}W",
-        "interval": 10
     },
 
     /* ── Monitor de Sistema / Hardware Unificado (Click-to-Reveal) ── */
