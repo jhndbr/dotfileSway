@@ -97,8 +97,8 @@ EOF
         mmsg -d reload_config 2>/dev/null || true
     fi
 
-    if command -v dunstify &>/dev/null; then
-        dunstify -a "Teclado" -r 9950 -u low "⌨️ Teclado" "Distribución: $desc"
+    if command -v dunstify &>/dev/null && pgrep -x dunst &>/dev/null; then
+        dunstify -a "Teclado" -r 9950 -u low "⌨️ Teclado" "Distribución: $desc" 2>/dev/null || true
     fi
 }
 
