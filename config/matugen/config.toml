@@ -36,6 +36,10 @@ output_path = '~/.config/kitty/dank-theme.conf'
 input_path = '~/.config/matugen/templates/foot.ini'
 output_path = '~/.config/foot/dank-colors.ini'
 
+[templates.cava]
+input_path = '~/.config/matugen/templates/cava-config'
+output_path = '~/.config/cava/config'
+
 [templates.swaylock]
 input_path = '~/.config/matugen/templates/swaylock.conf'
 output_path = '~/.config/swaylock/config'
@@ -51,4 +55,3 @@ output_path = '~/.config/dunst/dunstrc'
 [templates.wofi]
 input_path = '~/.config/matugen/templates/wofi-style.css'
 output_path = '~/.config/wofi/style.css'
-

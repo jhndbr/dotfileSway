@@ -55,6 +55,7 @@ workspace_auto_back_and_forth yes
 
 # ── Output ──────────────────────────────────────────────────────
 output * bg ~/Pictures/1.jpg fill
+output * adaptive_sync on allow_tearing yes max_render_time 1
 include ~/.config/sway/outputs.conf
 
 # ── Input & Teclado (Modular) ───────────────────────────────────
@@ -185,23 +186,30 @@ mode "resize" {
 }
 bindsym $mod+r mode "resize"
 
-# ── Screenshots (grim + slurp) ──────────────────────────────────
+# ── Screenshots & Grabación (grim + slurp + wf-recorder) ────────
 # Pantalla completa
 bindsym Print exec grim ~/Pictures/Screenshots/$(date +%Y%m%d_%H%M%S).png && notify-send "📸 Screenshot" "Pantalla completa guardada"
 # Seleccionar área → guardar + copiar
 bindsym $mod+Print exec grim -g "$(slurp -d -b 1c1c1eaa -c ffffffff -s ffffff20 -w 1)" - | tee ~/Pictures/Screenshots/$(date +%Y%m%d_%H%M%S).png | wl-copy && notify-send "📸 Screenshot" "Selección guardada y copiada"
 # Seleccionar área → solo copiar
 bindsym $mod+Shift+s exec grim -g "$(slurp -d -b 1c1c1eaa -c ffffffff -s ffffff20 -w 1)" - | wl-copy && notify-send "📸 Screenshot" "Selección copiada al portapapeles"
+# Seleccionar área → solo guardar (sin copiar al portapapeles)
+bindsym $mod+Control+s exec grim -g "$(slurp -d -b 1c1c1eaa -c ffffffff -s ffffff20 -w 1)" ~/Pictures/Screenshots/$(date +%Y%m%d_%H%M%S).png && notify-send "📸 Screenshot" "Área guardada en Screenshots"
 # Menú de screenshot completo
 bindsym $mod+Shift+Print exec $scripts/screenshot.sh
+# Grabación de pantalla (Video MP4 / GIF)
+bindsym $mod+Mod1+r exec $scripts/screen-recorder.sh area
+bindsym $mod+Mod1+Shift+r exec $scripts/screen-recorder.sh area --audio
 # Color picker
 bindsym $mod+Shift+p exec $scripts/color-picker.sh
 
-# ── Media / Audio / Brillo ──────────────────────────────────────
-bindsym --locked XF86AudioMute exec $scripts/volume.sh mute
-bindsym --locked XF86AudioLowerVolume exec $scripts/volume.sh down
-bindsym --locked XF86AudioRaiseVolume exec $scripts/volume.sh up
-bindsym --locked XF86AudioMicMute exec pactl set-source-mute @DEFAULT_SOURCE@ toggle
+# ── Media / Audio / Brillo / OSD ────────────────────────────────
+bindsym --locked XF86AudioMute exec swayosd-client --output-volume mute-toggle || $scripts/volume.sh mute
+bindsym --locked XF86AudioLowerVolume exec swayosd-client --output-volume lower || $scripts/volume.sh down
+bindsym --locked XF86AudioRaiseVolume exec swayosd-client --output-volume raise || $scripts/volume.sh up
+bindsym --locked XF86AudioMicMute exec swayosd-client --input-volume mute-toggle || pactl set-source-mute @DEFAULT_SOURCE@ toggle
+bindsym --locked XF86MonBrightnessUp exec swayosd-client --brightness raise || $scripts/brightness.sh up
+bindsym --locked XF86MonBrightnessDown exec swayosd-client --brightness lower || $scripts/brightness.sh down
 
 bindsym --locked XF86AudioPlay exec playerctl play-pause
 bindsym --locked XF86AudioPause exec playerctl play-pause
@@ -236,10 +244,14 @@ for_window [title="(?:Open|Save) (?:File|Folder|As)"] floating enable, resize se
 for_window [title="Picture-in-Picture"] floating enable, sticky enable, resize set 480 270
 for_window [title="Firefox — Sharing Indicator"] floating enable, move position center
 
-# ── Inhibir idle cuando hay video/audio ─────────────────────────
+# ── Inhibir idle cuando hay video/audio o juegos ────────────────
 for_window [app_id="firefox"] inhibit_idle fullscreen
 for_window [class="Chromium"] inhibit_idle fullscreen
 for_window [app_id="mpv"] inhibit_idle visible
+for_window [app_id="cs2"] inhibit_idle fullscreen
+for_window [class="cs2"] inhibit_idle fullscreen
+for_window [class="gamescope"] inhibit_idle fullscreen
+for_window [class="steam_app_.*"] inhibit_idle fullscreen
 
 # ── Autostart ───────────────────────────────────────────────────
 bar {
@@ -254,18 +266,20 @@ exec systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP XDG
 exec /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
 exec gnome-keyring-daemon --start --components="secrets,ssh,pkcs11"
 
-# Notificaciones
+# Notificaciones & Feedback OSD
 exec dunst
+exec swayosd-server --style ~/.config/swayosd/style.css
 
-# Portapapeles & Automontaje USB liviano (headless, sin overhead gráfico de bandeja)
-exec wl-paste --watch cliphist store
+# Portapapeles (Texto e Imágenes) & Automontaje USB liviano
+exec wl-paste --type text --watch cliphist store
+exec wl-paste --type image --watch cliphist store
 exec udiskie -N &
 
 # Idle management (pantalla y reposo)
 exec $scripts/swayidle.sh
 
-# Filtro de luz azul (night light)
-exec gammastep
+# Filtro de luz azul (night light persistente)
+exec $scripts/gammastep-toggle.sh autostart
 
 # Gestor de pantalla de fondo (redundante con output * bg, pero útil para cambios dinámicos)
 # exec swaybg -i ~/Pictures/1.jpg -m fill

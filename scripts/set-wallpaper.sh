@@ -21,6 +21,12 @@ if [ "$WALLPAPER_INPUT" != "$TARGET_WALLPAPER" ]; then
     cp -f "$WALLPAPER_INPUT" "$TARGET_WALLPAPER" &
 fi
 
+# Generar fondo desenfocado para la pantalla de bloqueo (Swaylock Blur)
+BLUR_WALLPAPER="$HOME/Pictures/1_blur.png"
+if command -v magick &>/dev/null; then
+    (magick "$WALLPAPER_INPUT" -filter Gaussian -resize 25% -define filter:sigma=2.5 -resize 400% "$BLUR_WALLPAPER" 2>/dev/null || true) &
+fi
+
 if command -v swaymsg &>/dev/null && pgrep -x sway &>/dev/null; then
     swaymsg "output * bg '$WALLPAPER_INPUT' fill" &
 fi
@@ -50,18 +56,18 @@ mkdir -p "$HOME/.config/matugen"
 mkdir -p "$HOME/.config/gtk-3.0" "$HOME/.config/gtk-4.0"
 mkdir -p "$HOME/.config/zed/themes"
 mkdir -p "$HOME/.config/qt5ct/colors" "$HOME/.config/qt6ct/colors"
-mkdir -p "$HOME/.config/kitty" "$HOME/.config/foot" "$HOME/.config/wofi"
+mkdir -p "$HOME/.config/kitty" "$HOME/.config/foot" "$HOME/.config/wofi" "$HOME/.config/swayosd"
 
-# Sincronizar plantillas a ~/.config/matugen/templates desde las ubicaciones posibles
+# Sincronizar plantillas a ~/.config/matugen/templates dinámicamente
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-if [ -d "$SCRIPT_DIR/../templates" ]; then
-    cp -rf "$SCRIPT_DIR/../templates/"* "$TEMPLATES_DIR/" 2>/dev/null || true
-elif [ -d "$HOME/Documents/dotfileSway/templates" ]; then
-    cp -rf "$HOME/Documents/dotfileSway/templates/"* "$TEMPLATES_DIR/" 2>/dev/null || true
+REPO_DIR="$(cd "$SCRIPT_DIR/.." 2>/dev/null && pwd || true)"
+
+if [ -d "$REPO_DIR/templates" ]; then
+    cp -rf "$REPO_DIR/templates/"* "$TEMPLATES_DIR/" 2>/dev/null || true
 elif [ -d "$HOME/Documentos/Github/dotfileSway/templates" ]; then
     cp -rf "$HOME/Documentos/Github/dotfileSway/templates/"* "$TEMPLATES_DIR/" 2>/dev/null || true
-elif [ -d "$HOME/dotfileSway/templates" ]; then
-    cp -rf "$HOME/dotfileSway/templates/"* "$TEMPLATES_DIR/" 2>/dev/null || true
+elif [ -d "$HOME/Documents/dotfileSway/templates" ]; then
+    cp -rf "$HOME/Documents/dotfileSway/templates/"* "$TEMPLATES_DIR/" 2>/dev/null || true
 fi
 
 # Configuración de Matugen vinculando las plantillas de Dank Linux
@@ -119,6 +125,14 @@ output_path = '$HOME/.config/dunst/dunstrc'
 [templates.wofi]
 input_path = '$TEMPLATES_DIR/wofi-style.css'
 output_path = '$HOME/.config/wofi/style.css'
+
+[templates.cava]
+input_path = '$TEMPLATES_DIR/cava-config'
+output_path = '$HOME/.config/cava/config'
+
+[templates.swayosd]
+input_path = '$TEMPLATES_DIR/swayosd-style.css'
+output_path = '$HOME/.config/swayosd/style.css'
 EOF
 
 # ── 4. Ejecutar Matugen standalone importando dank16.json si existe ───────
@@ -387,12 +401,18 @@ sed -i 's/^icon_theme=.*/icon_theme=Papirus-Dark/' "$HOME/.config/qt6ct/qt6ct.co
 # ── 8. Recargar componentes del escritorio, Sway y Foot ───────────────
 pkill -SIGUSR2 waybar 2>/dev/null || true
 pkill -SIGUSR1 foot 2>/dev/null || true
+pkill -SIGUSR1 cava 2>/dev/null || true
+pkill -f waybar-cava.py 2>/dev/null || true
 if command -v swaymsg &>/dev/null && pgrep -x sway &>/dev/null; then
     swaymsg reload 2>/dev/null || true
 fi
 if pgrep -x dunst &>/dev/null; then
     killall dunst 2>/dev/null || true
     dunst &>/dev/null &
+fi
+if pgrep -x swayosd-server &>/dev/null; then
+    pkill -x swayosd-server 2>/dev/null || true
+    swayosd-server --style "$HOME/.config/swayosd/style.css" &>/dev/null &
 fi
 
 # ── 9. Sincronizar copias en el repositorio de dotfiles ──────────

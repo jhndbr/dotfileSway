@@ -2,7 +2,10 @@
 # ╔══════════════════════════════════════════════════════════════╗
 # ║        Swayidle Script                                       ║
 # ╚══════════════════════════════════════════════════════════════╝
-# Script para iniciar swayidle con los timeouts deseados.
+# Si el modo cafeína está activo, no iniciar el temporizador de inactividad
+if [ -f "$HOME/.config/caffeine_active" ] || [ -f "${XDG_RUNTIME_DIR:-/tmp}/caffeine_active" ]; then
+    exit 0
+fi
 
 exec swayidle -w \
     timeout 300 'swaylock -f' \

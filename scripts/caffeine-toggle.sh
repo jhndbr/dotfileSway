@@ -5,7 +5,7 @@
 # ║        Inhibe la suspensión y bloqueo por inactividad        ║
 # ╚══════════════════════════════════════════════════════════════╝
 
-STATE_FILE="${XDG_RUNTIME_DIR:-/tmp}/caffeine_active"
+STATE_FILE="$HOME/.config/caffeine_active"
 SCRIPTS_DIR="$HOME/.local/bin"
 
 notify() {
@@ -20,19 +20,21 @@ notify() {
 }
 
 is_active() {
-    [ -f "$STATE_FILE" ]
+    [ -f "$STATE_FILE" ] || [ -f "${XDG_RUNTIME_DIR:-/tmp}/caffeine_active" ]
 }
 
 enable_caffeine() {
     touch "$STATE_FILE"
+    touch "${XDG_RUNTIME_DIR:-/tmp}/caffeine_active" 2>/dev/null || true
     if pgrep -x swayidle >/dev/null; then
         pkill -STOP -x swayidle 2>/dev/null || true
     fi
-    notify "󰅶" "Modo Cafeína" "Activado — Pantalla y sesión siempre activas"
+    notify "󰅶" "Modo Cafeína" "Activado — Pantalla y sesión siempre activas (Permanente)"
 }
 
 disable_caffeine() {
     rm -f "$STATE_FILE"
+    rm -f "${XDG_RUNTIME_DIR:-/tmp}/caffeine_active" 2>/dev/null || true
     if pgrep -x swayidle >/dev/null; then
         pkill -CONT -x swayidle 2>/dev/null || true
     else
@@ -42,7 +44,7 @@ disable_caffeine() {
             "$(dirname "$0")/swayidle.sh" &
         fi
     fi
-    notify "󰾪" "Modo Cafeína" "Desactivado — Temporizador de inactividad reanudado"
+    notify "󰾪" "Modo Cafeína" "Desactivado — Temporizador de inactividad reanudado (Permanente)"
 }
 
 case "$1" in

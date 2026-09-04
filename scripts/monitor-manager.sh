@@ -115,6 +115,9 @@ auto_detect() {
         notify "Dual Monitor Activado" "$out1 (0,0) + $out2 ($w1,0)"
     fi
 
+    # Guardar cambios automáticamente
+    action_save_config
+
     # Refrescar fondo de pantalla si existe script
     if [ -f "$HOME/.local/bin/set-wallpaper.sh" ]; then
         bash "$HOME/.local/bin/set-wallpaper.sh" &>/dev/null || true
@@ -136,6 +139,7 @@ action_extend_right() {
     w1=$(echo "$data" | jq -r '.[0].current_mode.width // 1920')
     swaymsg output "$out1" enable pos 0 0
     swaymsg output "$out2" enable pos "$w1" 0
+    action_save_config
     notify "Pantallas Extendidas" "Secundaria ($out2) a la derecha de $out1"
 }
 
@@ -154,6 +158,7 @@ action_extend_left() {
     w2=$(echo "$data" | jq -r '.[1].current_mode.width // 1920')
     swaymsg output "$out2" enable pos 0 0
     swaymsg output "$out1" enable pos "$w2" 0
+    action_save_config
     notify "Pantallas Extendidas" "Secundaria ($out2) a la izquierda de $out1"
 }
 
@@ -171,6 +176,7 @@ action_mirror() {
 
     swaymsg output "$out1" enable pos 0 0
     swaymsg output "$out2" enable pos 0 0
+    action_save_config
     notify "Modo Espejo" "Pantallas duplicadas en posición 0,0"
 }
 
@@ -185,6 +191,7 @@ action_only_primary() {
     if [ -n "$out2" ]; then
         swaymsg output "$out2" disable
     fi
+    action_save_config
     notify "Solo Pantalla Principal" "Activada: $out1"
 }
 
@@ -202,6 +209,7 @@ action_only_secondary() {
 
     swaymsg output "$out2" enable pos 0 0
     swaymsg output "$out1" disable
+    action_save_config
     notify "Solo Pantalla Secundaria" "Activada: $out2 (Principal desactivada)"
 }
 
@@ -246,7 +254,8 @@ action_resolution_menu() {
         else
             swaymsg output "$chosen_out" mode "$res"
         fi
-        notify "Resolución Cambiada" "$chosen_out configurado a $chosen_mode"
+        action_save_config
+        notify "Resolución Guardada" "$chosen_out: $chosen_mode (Permanente)"
     fi
 }
 
@@ -271,7 +280,8 @@ action_scale_menu() {
     val=$(echo "$chosen_scale" | awk '{print $1}')
     if [ -n "$val" ]; then
         swaymsg output "$chosen_out" scale "$val"
-        notify "Escala Aplicada" "$chosen_out: Escala fijada en $val"
+        action_save_config
+        notify "Escala Guardada" "$chosen_out: Escala fijada en $val (Permanente)"
     fi
 }
 
@@ -283,15 +293,20 @@ action_save_config() {
     {
         echo "# ╔══════════════════════════════════════════════════════════════╗"
         echo "# ║        Configuración Guardada de Monitores                   ║"
+        echo "# ║        Generado automáticamente por monitor-manager.sh       ║"
         echo "# ╚══════════════════════════════════════════════════════════════╝"
         echo ""
     } > "$OUTPUTS_CONF"
 
     while IFS= read -r line; do
-        echo "$line" >> "$OUTPUTS_CONF"
-    done < <(echo "$data" | jq -r '.[] | if .active then "output \(.name) enable mode \(.current_mode.width // 1920)x\(.current_mode.height // 1080)@\((.current_mode.refresh // 60000) / 1000 | floor)Hz pos \(.rect.x) \(.rect.y) scale \(.scale)" else "output \(.name) disable" end')
+        [ -n "$line" ] && echo "$line" >> "$OUTPUTS_CONF"
+    done < <(echo "$data" | jq -r '.[] | if .active then "output \(.name) enable mode \(.current_mode.width // 1920)x\(.current_mode.height // 1080)@\((.current_mode.refresh // 60000) / 1000 | floor)Hz pos \(.rect.x) \(.rect.y) scale \(.scale) adaptive_sync on allow_tearing yes max_render_time 1" else "output \(.name) disable" end')
 
-    notify "Configuración Guardada" "Guardado en ~/.config/sway/outputs.conf"
+    # Sincronizar con repo si existe
+    local repo_outputs="$HOME/Documentos/Github/dotfileSway/config/sway/outputs.conf"
+    if [ -f "$repo_outputs" ] && [ "$OUTPUTS_CONF" != "$repo_outputs" ]; then
+        cp -f "$OUTPUTS_CONF" "$repo_outputs" 2>/dev/null || true
+    fi
 }
 
 action_reload_sway() {

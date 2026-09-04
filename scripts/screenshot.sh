@@ -9,20 +9,32 @@ mkdir -p "$DIR"
 FILE="$DIR/$(date +%Y%m%d_%H%M%S).png"
 
 # Opciones para Wofi
-OPCIONES="Pantalla completa\nSeleccionar área\nVentana activa\nÁrea con delay (3s)"
+OPCIONES="Seleccionar área (Guardar y Copiar)\nSeleccionar área (Solo Guardar)\nSeleccionar área (Solo Copiar)\nPantalla completa\nVentana activa\nÁrea con delay (3s)"
 
 # Seleccionar a través de Wofi dmenu
-SELECCION=$(echo -e "$OPCIONES" | wofi --dmenu --prompt "Captura:" -i)
+SELECCION=$(echo -e "$OPCIONES" | wofi --dmenu --prompt "Captura de Pantalla:" -i --width 340 --height 270 --lines 6)
 
 case "$SELECCION" in
-    "Pantalla completa")
-        grim "$FILE" && wl-copy < "$FILE" && notify-send -i "$FILE" "📸 Screenshot" "Pantalla completa guardada y copiada al portapapeles."
-        ;;
-    "Seleccionar área")
+    "Seleccionar área (Guardar y Copiar)")
         GEOMETRY=$(slurp -d -b 1c1c1eaa -c ffffffff -s ffffff20 -w 1)
         if [ -n "$GEOMETRY" ]; then
-            grim -g "$GEOMETRY" "$FILE" && wl-copy < "$FILE" && notify-send -i "$FILE" "📸 Screenshot" "Área seleccionada guardada y copiada al portapapeles."
+            grim -g "$GEOMETRY" "$FILE" && wl-copy < "$FILE" && notify-send -i "$FILE" "📸 Screenshot" "Área guardada en Screenshots y copiada al portapapeles."
         fi
+        ;;
+    "Seleccionar área (Solo Guardar)")
+        GEOMETRY=$(slurp -d -b 1c1c1eaa -c ffffffff -s ffffff20 -w 1)
+        if [ -n "$GEOMETRY" ]; then
+            grim -g "$GEOMETRY" "$FILE" && notify-send -i "$FILE" "📸 Screenshot" "Área guardada en Screenshots (sin copiar al portapapeles)."
+        fi
+        ;;
+    "Seleccionar área (Solo Copiar)")
+        GEOMETRY=$(slurp -d -b 1c1c1eaa -c ffffffff -s ffffff20 -w 1)
+        if [ -n "$GEOMETRY" ]; then
+            grim -g "$GEOMETRY" - | wl-copy && notify-send "📸 Screenshot" "Área copiada al portapapeles (sin guardar archivo)."
+        fi
+        ;;
+    "Pantalla completa")
+        grim "$FILE" && wl-copy < "$FILE" && notify-send -i "$FILE" "📸 Screenshot" "Pantalla completa guardada y copiada al portapapeles."
         ;;
     "Ventana activa")
         GEOMETRY=$(swaymsg -t get_tree | jq -r '.. | select(.focused?) | .rect | "\(.x),\(.y) \(.width)x\(.height)"')

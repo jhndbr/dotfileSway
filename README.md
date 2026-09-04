@@ -131,12 +131,14 @@ bash ~/.local/bin/set-wallpaper.sh /ruta/a/tu/imagen.jpg
 |---|---|
 | `Mod+Return` | Abrir terminal (Foot) |
 | `Mod+A` | Lanzador de aplicaciones (Wofi) |
+| `Mod+X` | **Centro de Control / Quick Settings** (Monitores, Bluetooth, Audio, Cafeína, Luz Cálida, etc.) |
 | `Mod+Q` | Cerrar ventana |
 | `Mod+E` / `Mod+Y` | Gestor de archivos (Yazi TUI) |
 | `Mod+L` / `Mod+Escape` | Bloquear pantalla (Swaylock) |
-| `Mod+Shift+E` | Menú de apagado (Wlogout) |
+| `Mod+Shift+E` | Menú de apagado y sesión |
 | `Mod+V` | Historial de portapapeles (Cliphist) |
 | `Mod+.` | Selector de Emojis |
+| `Mod+Shift+Space` | Selector de distribución de teclado (Español / US / US-Intl / Dual) |
 | `Mod+W` | Alternar ventana flotante |
 | `Mod+F` | Pantalla completa (Fullscreen) |
 | `Mod+R` | Modo redimensionar (Resize mode) |
@@ -149,12 +151,15 @@ bash ~/.local/bin/set-wallpaper.sh /ruta/a/tu/imagen.jpg
 | `Mod+s` / `Mod+t` / `Mod+d` | Layout Apilado / Pestañas / Toggle Split |
 | `Mod+Shift+-` / `Mod+-` | Enviar a Scratchpad / Mostrar Scratchpad |
 | `Print` | Captura de pantalla completa (Grim) |
-| `Mod+Print` | Capturar área (Guardar y copiar) |
+| `Mod+Print` | Capturar área (Guardar en carpeta y copiar al portapapeles) |
+| `Mod+Ctrl+S` | **Capturar área (Solo guardar archivo, sin copiar)** |
 | `Mod+Shift+S` | Capturar área (Solo copiar al portapapeles) |
-| `Mod+Shift+Print` | Menú interactivo de screenshots |
+| `Mod+Shift+Print` | Menú interactivo de screenshots (Wofi) |
+| `Mod+Alt+R` | Iniciar / Detener grabación de área seleccionada (MP4) |
+| `Mod+Shift+Alt+R` | Iniciar / Detener grabación de pantalla con audio |
 | `Mod+P` / `XF86Display` | Menú de gestión de monitores (Extender, resoluciones, escala) |
 | `Mod+Shift+P` | Selector de color (Color Picker) |
-| `Teclas Multimedia` | Control de volumen, brillo y reproducción multimedia |
+| `Teclas Multimedia` | Control de volumen, brillo (DDC/CI) y OSD flotante (SwayOSD) |
 
 ---
 

@@ -28,8 +28,8 @@ format_item() {
 
 # ── 1. Detecciones ultrarrápidas (< 2ms) ────────────────────────
 # Modo Cafeína (Inhibición de reposo)
-CAFFEINE_STATE="${XDG_RUNTIME_DIR:-/tmp}/caffeine_active"
-if [ -f "$CAFFEINE_STATE" ]; then
+CAFFEINE_STATE="$HOME/.config/caffeine_active"
+if [ -f "$CAFFEINE_STATE" ] || [ -f "${XDG_RUNTIME_DIR:-/tmp}/caffeine_active" ]; then
     ITEM_CAFFEINE=$(format_item "󰅶" "Modo Cafeína" "Activado")
 else
     ITEM_CAFFEINE=$(format_item "󰾪" "Modo Cafeína" "Desactivado")

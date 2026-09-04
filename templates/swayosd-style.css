@@ -1,0 +1,45 @@
+/* ╔══════════════════════════════════════════════════════════════╗
+ * ║        SwayOSD — Plantilla de Tema Dinámico Matugen         ║
+ * ╚══════════════════════════════════════════════════════════════╝ */
+
+window#osd {
+    padding: 12px 20px;
+    border-radius: 999px;
+    border: 1px solid alpha(#{{colors.outline.default.hex_stripped}}, 0.35);
+    background: alpha(#{{colors.surface.default.hex_stripped}}, 0.88);
+    box-shadow: 0 8px 24px alpha(#000000, 0.45);
+}
+
+#container {
+    margin: 14px;
+}
+
+image, label {
+    color: #{{colors.on_surface.default.hex_stripped}};
+}
+
+progressbar:disabled,
+image:disabled {
+    opacity: 0.45;
+}
+
+progressbar {
+    min-height: 6px;
+    border-radius: 999px;
+    background: transparent;
+    border: none;
+}
+
+trough {
+    min-height: 6px;
+    border-radius: 999px;
+    border: none;
+    background: alpha(#{{colors.surface_container_highest.default.hex_stripped}}, 0.5);
+}
+
+progress {
+    min-height: 6px;
+    border-radius: 999px;
+    border: none;
+    background: #{{colors.primary.default.hex_stripped}};
+}
