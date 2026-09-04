@@ -185,7 +185,7 @@
   -GtkDialog-button-spacing: 4;
   -GtkDialog-action-area-border: 0;
   outline-color: alpha(currentColor,0.3);
-  outline-style: dashed;
+  outline-style: none;
   outline-offset: -3px;
   outline-width: 1px;
   -gtk-outline-radius: 7px;
@@ -3327,17 +3327,17 @@ menuitem radio:dir(rtl) {
 }
 
 popover.background {
-  padding: 0;
-  background-color: transparent;
-  box-shadow: none;
+  padding: 2px;
+  background-color: @popover_bg_color;
+  box-shadow: 0 1px 5px 1px rgba(0, 0, 0, 0.09), 0 2px 8px 3px rgba(0, 0, 0, 0.05);
 }
 .csd popover.background, popover.background {
-  border: none;
-  background-color: transparent;
+  border: 1px solid mix(currentColor,@window_bg_color,0.85);
+  border-radius: 10px;
 }
 .csd popover.background {
   background-clip: padding-box;
-  border-color: transparent;
+  border-color: rgba(255, 255, 255, 0.15);
 }
 popover.background > list,
 popover.background > .view,

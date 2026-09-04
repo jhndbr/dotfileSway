@@ -2,12 +2,17 @@
  * ║        SwayOSD — Plantilla de Tema Dinámico Matugen         ║
  * ╚══════════════════════════════════════════════════════════════╝ */
 
+window {
+    background: transparent;
+    box-shadow: none;
+}
+
 window#osd {
     padding: 12px 20px;
     border-radius: 999px;
     border: 1px solid alpha(#{{colors.outline.default.hex_stripped}}, 0.35);
     background: alpha(#{{colors.surface.default.hex_stripped}}, 0.88);
-    box-shadow: 0 8px 24px alpha(#000000, 0.45);
+    box-shadow: none;
 }
 
 #container {

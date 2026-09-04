@@ -113,7 +113,7 @@ mkdir -p ~/.local/bin
 echo -e "${YELLOW}📦 Creando backup en $BACKUP_DIR${NC}"
 mkdir -p "$BACKUP_DIR"
 
-CONFIGS=(sway waybar wofi dunst foot swaylock gammastep gtk-3.0 gtk-4.0 environment.d qt5ct qt6ct matugen zed yazi xdg-desktop-portal fontconfig mpv fastfetch cava)
+CONFIGS=(sway waybar wofi dunst foot swaylock gammastep gtk-3.0 gtk-4.0 environment.d qt5ct qt6ct matugen zed Thunar xfce4 xdg-desktop-portal fontconfig mpv fastfetch cava)
 
 for item in "${CONFIGS[@]}"; do
     if [ -d "$HOME/.config/$item" ]; then
@@ -195,12 +195,18 @@ if [ -f "$SCRIPT_DIR/config/starship.toml" ]; then
     cp -f "$SCRIPT_DIR/config/starship.toml" "$HOME/.config/starship.toml"
 fi
 
-# Registrar yazi.desktop en ~/.local/share/applications
-if [ -f "$SCRIPT_DIR/config/yazi/yazi.desktop" ]; then
-    echo -e "  ${GREEN}→${NC} Registrando launcher de Yazi (${BLUE}yazi.desktop${NC})..."
-    mkdir -p "$HOME/.local/share/applications"
-    cp -f "$SCRIPT_DIR/config/yazi/yazi.desktop" "$HOME/.local/share/applications/yazi.desktop"
+# Limpiar accesos residuales de Yazi si existieran
+rm -f "$HOME/.local/share/applications/yazi.desktop" 2>/dev/null || true
+rm -f "$HOME/.local/bin/yazi-open-with.sh" 2>/dev/null || true
+rm -rf "$HOME/.config/yazi" 2>/dev/null || true
+
+# Actualizar base de datos de aplicaciones y predeterminar Thunar
+if command -v update-desktop-database &>/dev/null; then
     update-desktop-database "$HOME/.local/share/applications" 2>/dev/null || true
+fi
+if command -v xdg-mime &>/dev/null; then
+    xdg-mime default thunar.desktop inode/directory 2>/dev/null || true
+    xdg-mime default thunar.desktop application/x-gnome-saved-search 2>/dev/null || true
 fi
 
 if [ -d "$SCRIPT_DIR/templates" ]; then

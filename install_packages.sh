@@ -102,13 +102,18 @@ PACMAN_PACKAGES=(
     xdg-desktop-portal-gtk
     xdg-utils
 
-    # Gestor de Archivos Yazi & Previews en Terminal
-    yazi
+    # Gestor de Archivos Thunar, Miniaturas & Utilidades de Compresión
+    thunar
+    thunar-volman
+    thunar-archive-plugin
+    tumbler
+    gvfs
+    gvfs-mtp
     ffmpegthumbnailer
-    poppler
-    chafa
+    poppler-glib
     p7zip
     ouch
+    zenity
 
     # Aplicaciones Predeterminadas (Suite Minimal Completa)
     firefox

@@ -47,6 +47,6 @@ audio/ogg=mpv.desktop
 audio/aac=mpv.desktop
 audio/m4a=mpv.desktop
 
-# Gestor de Archivos (Yazi en foot)
-inode/directory=yazi.desktop
-application/x-gnome-saved-search=yazi.desktop
+# Gestor de Archivos (Thunar)
+inode/directory=thunar.desktop
+application/x-gnome-saved-search=thunar.desktop

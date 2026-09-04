@@ -8,7 +8,7 @@ export EDITOR="nano"
 export VISUAL="nano"
 export BROWSER="firefox"
 export TERMINAL="foot"
-export FILEMANAGER="yazi"
+export FILEMANAGER="thunar"
 export LANG="es_AR.UTF-8"
 export LC_ALL="es_AR.UTF-8"
 
@@ -151,9 +151,10 @@ alias orphans='sudo pacman -Rns $(pacman -Qtdq) 2>/dev/null || echo "No hay paqu
 alias dotfiles='cd ~/Documentos/Github/dotfileSway'
 alias dots-apply='bash ~/Documentos/Github/dotfileSway/setup.sh'
 alias wallpaper='~/.local/bin/set-wallpaper.sh'
-alias fm='yazi'
-alias files='yazi'
-alias y='yazi'
+alias fm='thunar'
+alias files='thunar'
+alias t='thunar'
+alias zed='zeditor'
 
 # Ouch — Compresión y Descompresión Inteligente
 alias extract='ouch decompress'

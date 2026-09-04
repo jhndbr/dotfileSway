@@ -1,1 +1,81 @@
-dank-colors.css
+@import url("dank-colors.css");
+
+/* ── Focus Outline ── */
+* {
+  outline-width: 0;
+  outline-style: none;
+}
+*:focus,
+*:focus-visible {
+  outline: none;
+  outline-width: 0;
+  outline-style: none;
+}
+
+/* ── Fondo sólido de ventana para evitar transparencia indeseada ── */
+window,
+window.background,
+window.csd,
+.background {
+  background-color: @window_bg_color;
+  color: @window_fg_color;
+}
+
+window.csd decoration,
+window decoration,
+decoration {
+  background-color: @window_bg_color;
+  border-style: none;
+  border-width: 0;
+  box-shadow: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* ── Menús y Popovers GTK3 ── */
+menu,
+.menu,
+.context-menu,
+popover,
+popover.background,
+menu > contents,
+.csd menu,
+.csd .menu,
+.csd .context-menu,
+window.csd,
+.window-frame {
+  box-shadow: none;
+  text-shadow: none;
+  -gtk-icon-shadow: none;
+}
+
+menu,
+.menu,
+.context-menu,
+.csd menu,
+.csd .menu,
+.csd .context-menu,
+popover,
+popover.background,
+.csd popover,
+.csd popover.background {
+  background-color: @popover_bg_color;
+  color: @popover_fg_color;
+  border-style: solid;
+  border-width: 1px;
+  border-color: rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  padding: 4px;
+}
+
+/* ── Eliminar recuadros en filas y botones de la barra lateral GTK3 ── */
+sidebar row,
+.sidebar row,
+placessidebar row,
+.placessidebar row {
+  border-style: none;
+  border-width: 0;
+  outline-style: none;
+  outline-width: 0;
+  box-shadow: none;
+}

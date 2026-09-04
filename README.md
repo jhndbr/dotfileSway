@@ -39,7 +39,8 @@ dotfileSway/
 │   ├── foot/           # Terminal
 │   ├── swaylock/       # Pantalla de bloqueo
 │   ├── gammastep/      # Filtro luz azul
-│   ├── yazi/           # Gestor de archivos TUI
+│   ├── Thunar/         # Acciones personalizadas de Thunar (uca.xml)
+│   ├── xfce4/          # Configuración y helpers de Thunar/Xfce
 │   ├── gtk-3.0/        # Tema GTK 3
 │   ├── gtk-4.0/        # Tema GTK 4
 │   ├── qt5ct/          # Configuración de estilo Qt5
@@ -53,7 +54,7 @@ dotfileSway/
 │   ├── brightness.sh   # Control de brillo + OSD
 │   ├── color-picker.sh # Selector de color
 │   ├── emoji-picker.sh # Selector de emojis
-│   └── yazi-open-with.sh # Selector universal de app para Yazi
+│   └── thunar-ouch.sh  # Integración de Ouch (compresión/descompresión) con Thunar
 ├── wallpapers/         # Fondos de pantalla
 ├── .zshrc              # Configuración de Zsh
 ├── .zprofile           # Variables de entorno Wayland
@@ -133,7 +134,7 @@ bash ~/.local/bin/set-wallpaper.sh /ruta/a/tu/imagen.jpg
 | `Mod+A` | Lanzador de aplicaciones (Wofi) |
 | `Mod+X` | **Centro de Control / Quick Settings** (Monitores, Bluetooth, Audio, Cafeína, Luz Cálida, etc.) |
 | `Mod+Q` | Cerrar ventana |
-| `Mod+E` / `Mod+Y` | Gestor de archivos (Yazi TUI) |
+| `Mod+E` | Gestor de archivos (Thunar) |
 | `Mod+L` / `Mod+Escape` | Bloquear pantalla (Swaylock) |
 | `Mod+Shift+E` | Menú de apagado y sesión |
 | `Mod+V` | Historial de portapapeles (Cliphist) |
@@ -177,7 +178,7 @@ El script `install_packages.sh` instala las siguientes dependencias necesarias:
 | **Audio** | pipewire, wireplumber, pavucontrol |
 | **Red** | networkmanager, blueman |
 | **Screen** | grim, slurp, wl-clipboard, cliphist |
-| **Archivos & Apps** | yazi, ffmpegthumbnailer, poppler, chafa, ouch, firefox, mpv, imv, zathura |
+| **Archivos & Apps** | thunar, thunar-volman, thunar-archive-plugin, tumbler, gvfs, ouch, zenity, firefox, mpv, imv, zathura |
 | **CLI** | bat, eza, fd, ripgrep, zoxide, fzf |
 | **Fuentes** | JetBrains Mono Nerd, Inter, Noto |
 | **Shell** | zsh, oh-my-zsh, powerlevel10k / starship |

@@ -8,6 +8,7 @@
 set -e
 
 WALLPAPER_INPUT="${1:-$HOME/Pictures/1.jpg}"
+WALLPAPER_INPUT="${WALLPAPER_INPUT/#\~/$HOME}"
 
 if [ ! -f "$WALLPAPER_INPUT" ]; then
     echo "❌ Imagen no encontrada: $WALLPAPER_INPUT"
@@ -18,7 +19,7 @@ TARGET_WALLPAPER="$HOME/Pictures/1.jpg"
 CONVERTED_PNG="$WALLPAPER_INPUT"
 
 if [ "$WALLPAPER_INPUT" != "$TARGET_WALLPAPER" ]; then
-    cp -f "$WALLPAPER_INPUT" "$TARGET_WALLPAPER" &
+    cp -f "$WALLPAPER_INPUT" "$TARGET_WALLPAPER"
 fi
 
 # Generar fondo desenfocado para la pantalla de bloqueo (Swaylock Blur)
@@ -154,11 +155,11 @@ GTK4_FIXES='
   outline-width: 0;
   outline-style: none;
 }
+*:focus,
 *:focus-visible {
-  outline-width: 1px;
-  outline-style: dashed;
-  outline-offset: -3px;
-  outline-color: alpha(currentColor, 0.3);
+  outline: none;
+  outline-width: 0;
+  outline-style: none;
 }
 
 /* ── Fondo sólido de ventana para evitar huecos transparentes ── */
@@ -300,11 +301,11 @@ GTK3_FIXES='
   outline-width: 0;
   outline-style: none;
 }
+*:focus,
 *:focus-visible {
-  outline-width: 1px;
-  outline-style: dashed;
-  outline-offset: -3px;
-  outline-color: alpha(currentColor, 0.3);
+  outline: none;
+  outline-width: 0;
+  outline-style: none;
 }
 
 /* ── Fondo sólido de ventana para evitar transparencia indeseada ── */
@@ -327,7 +328,7 @@ decoration {
   padding: 0;
 }
 
-/* ── Menús GTK3 ── */
+/* ── Menús y Popovers GTK3 ── */
 menu,
 .menu,
 .context-menu,
@@ -349,7 +350,11 @@ menu,
 .context-menu,
 .csd menu,
 .csd .menu,
-.csd .context-menu {
+.csd .context-menu,
+popover,
+popover.background,
+.csd popover,
+.csd popover.background {
   background-color: @popover_bg_color;
   color: @popover_fg_color;
   border-style: solid;
@@ -387,9 +392,9 @@ printf '@import url("dank-colors.css");\n%s\n' "$GTK4_FIXES" \
 # ── 6. Sincronizar color de iconos en segundo plano ─────
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 if [ -f "$HOME/.local/bin/sync-icon-color.py" ]; then
-    python3 "$HOME/.local/bin/sync-icon-color.py" &>/dev/null &
+    python3 "$HOME/.local/bin/sync-icon-color.py" "$CONVERTED_PNG" &>/dev/null &
 elif [ -f "$SCRIPT_DIR/sync-icon-color.py" ]; then
-    python3 "$SCRIPT_DIR/sync-icon-color.py" &>/dev/null &
+    python3 "$SCRIPT_DIR/sync-icon-color.py" "$CONVERTED_PNG" &>/dev/null &
 fi
 
 # ── 7. Asegurar estilo Qt en Fusion, Papirus-Dark y kdeglobals ──
@@ -410,9 +415,16 @@ if pgrep -x dunst &>/dev/null; then
     killall dunst 2>/dev/null || true
     dunst &>/dev/null &
 fi
-if pgrep -x swayosd-server &>/dev/null; then
-    pkill -x swayosd-server 2>/dev/null || true
-    swayosd-server --style "$HOME/.config/swayosd/style.css" &>/dev/null &
+# Reiniciar swayosd-server asegurando que el proceso anterior libere el socket antes de levantar el nuevo
+if command -v swaymsg &>/dev/null && pgrep -x sway &>/dev/null; then
+    if pgrep -x swayosd-server &>/dev/null; then
+        pkill -x swayosd-server 2>/dev/null || true
+        for _ in {1..20}; do
+            pgrep -x swayosd-server &>/dev/null || break
+            sleep 0.05
+        done
+    fi
+    swaymsg "exec swayosd-server --style '$HOME/.config/swayosd/style.css'" 2>/dev/null || true
 fi
 
 # ── 9. Sincronizar copias en el repositorio de dotfiles ──────────
@@ -439,8 +451,19 @@ gsettings set org.gnome.desktop.interface monospace-font-name 'JetBrainsMono Ner
 gsettings set org.gnome.desktop.interface document-font-name 'Inter 10' 2>/dev/null || true
 gsettings set org.gnome.desktop.interface icon-theme 'Papirus-Dark' 2>/dev/null || true
 gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark' 2>/dev/null || true
-gsettings set org.gnome.desktop.interface gtk-theme 'adw-gtk3-dark' 2>/dev/null || gsettings set org.gnome.desktop.interface gtk-theme 'adw-gtk3' 2>/dev/null || true
-pkill -f xdg-desktop-portal-gtk 2>/dev/null || true
+
+# Alternar gtk-theme para forzar a GTK3 y aplicaciones abiertas a recargar el CSS inmediatamente
+gsettings set org.gnome.desktop.interface gtk-theme 'Adwaita' 2>/dev/null || true
+sleep 0.05
+gsettings set org.gnome.desktop.interface gtk-theme 'adw-gtk3-dark' 2>/dev/null || true
+
+# Reiniciar demonio de Thunar para que cargue los estilos y colores nuevos
+thunar -q 2>/dev/null || true
+
+# Reiniciar limpiamente xdg-desktop-portal-gtk para recargar los colores del selector de archivos (FileChooser)
+if command -v systemctl &>/dev/null && systemctl --user is-active --quiet xdg-desktop-portal-gtk; then
+    systemctl --user restart xdg-desktop-portal-gtk 2>/dev/null || true
+fi
 
 # ── 11. Notificación ──────────────────────────────────────────────
 if command -v dunstify &>/dev/null; then

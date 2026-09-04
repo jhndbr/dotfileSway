@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<actions>
+<action>
+	<icon>utilities-terminal</icon>
+	<name>Abrir terminal aquí</name>
+	<submenu></submenu>
+	<unique-id>1787974507441071-1</unique-id>
+	<command>sh -c 'if [ -d "$1" ]; then exec foot -D "$1"; else exec foot -D "$(dirname "$1")"; fi' _ %f</command>
+	<description>Abrir terminal Foot en la carpeta seleccionada o actual</description>
+	<range></range>
+	<patterns>*</patterns>
+	<startup-notify/>
+	<directories/>
+	<other-files/>
+	<text-files/>
+	<image-files/>
+	<audio-files/>
+	<video-files/>
+</action>
+<action>
+	<icon>package-x-generic</icon>
+	<name>Extraer aquí (Ouch)</name>
+	<submenu></submenu>
+	<unique-id>ouch-extract-here</unique-id>
+	<command>thunar-ouch.sh extract-here %F</command>
+	<description>Extraer directamente en este directorio usando ouch</description>
+	<range></range>
+	<patterns>*.tar;*.tar.gz;*.tgz;*.tar.bz2;*.tbz2;*.tar.xz;*.txz;*.tar.zst;*.tzst;*.zip;*.rar;*.7z;*.gz;*.bz2;*.xz;*.zst;*.lz4;*.br;*.sz;*.TAR;*.TAR.GZ;*.TGZ;*.TAR.BZ2;*.TBZ2;*.TAR.XZ;*.TXZ;*.TAR.ZST;*.TZST;*.ZIP;*.RAR;*.7Z;*.GZ;*.BZ2;*.XZ;*.ZST</patterns>
+	<other-files/>
+</action>
+<action>
+	<icon>folder-download</icon>
+	<name>Extraer en subcarpeta (Ouch)</name>
+	<submenu></submenu>
+	<unique-id>ouch-extract-subdir</unique-id>
+	<command>thunar-ouch.sh extract-subdir %F</command>
+	<description>Extraer en una subcarpeta dedicada usando ouch</description>
+	<range></range>
+	<patterns>*.tar;*.tar.gz;*.tgz;*.tar.bz2;*.tbz2;*.tar.xz;*.txz;*.tar.zst;*.tzst;*.zip;*.rar;*.7z;*.gz;*.bz2;*.xz;*.zst;*.lz4;*.br;*.sz;*.TAR;*.TAR.GZ;*.TGZ;*.TAR.BZ2;*.TBZ2;*.TAR.XZ;*.TXZ;*.TAR.ZST;*.TZST;*.ZIP;*.RAR;*.7Z;*.GZ;*.BZ2;*.XZ;*.ZST</patterns>
+	<other-files/>
+</action>
+<action>
+	<icon>archive-insert</icon>
+	<name>Comprimir con Ouch...</name>
+	<submenu></submenu>
+	<unique-id>ouch-compress-dialog</unique-id>
+	<command>thunar-ouch.sh compress-dialog %F</command>
+	<description>Comprimir los elementos seleccionados eligiendo nombre y formato</description>
+	<range></range>
+	<patterns>*</patterns>
+	<all-files/>
+	<directories/>
+</action>
+<action>
+	<icon>package-x-generic</icon>
+	<name>Comprimir rápido a .tar.gz (Ouch)</name>
+	<submenu></submenu>
+	<unique-id>ouch-compress-quick-tar</unique-id>
+	<command>thunar-ouch.sh compress-quick-tar %F</command>
+	<description>Comprimir inmediatamente los elementos a .tar.gz</description>
+	<range></range>
+	<patterns>*</patterns>
+	<all-files/>
+	<directories/>
+</action>
+<action>
+	<icon>package-x-generic</icon>
+	<name>Comprimir rápido a .zip (Ouch)</name>
+	<submenu></submenu>
+	<unique-id>ouch-compress-quick-zip</unique-id>
+	<command>thunar-ouch.sh compress-quick-zip %F</command>
+	<description>Comprimir inmediatamente los elementos a .zip</description>
+	<range></range>
+	<patterns>*</patterns>
+	<all-files/>
+	<directories/>
+</action>
+<action>
+	<icon>preferences-desktop-wallpaper</icon>
+	<name>Establecer como fondo de pantalla</name>
+	<submenu></submenu>
+	<unique-id>set-wallpaper-action</unique-id>
+	<command>set-wallpaper.sh %f</command>
+	<description>Establecer como fondo y regenerar tema Matugen</description>
+	<range></range>
+	<patterns>*.png;*.jpg;*.jpeg;*.webp;*.bmp;*.PNG;*.JPG;*.JPEG;*.WEBP;*.BMP</patterns>
+	<image-files/>
+</action>
+<action>
+	<icon>dev.zed.Zed</icon>
+	<name>Abrir con Zed</name>
+	<submenu></submenu>
+	<unique-id>open-zed-action</unique-id>
+	<command>zeditor %F</command>
+	<description>Abrir los archivos o directorio seleccionado en Zed Editor</description>
+	<range></range>
+	<patterns>*</patterns>
+	<all-files/>
+	<directories/>
+</action>
+</actions>
