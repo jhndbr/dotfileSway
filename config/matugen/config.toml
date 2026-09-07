@@ -55,3 +55,11 @@ output_path = '~/.config/dunst/dunstrc'
 [templates.wofi]
 input_path = '~/.config/matugen/templates/wofi-style.css'
 output_path = '~/.config/wofi/style.css'
+
+[templates.joplin_chrome]
+input_path = '~/.config/matugen/templates/joplin-userchrome.css'
+output_path = '~/.config/joplin-desktop/userchrome.css'
+
+[templates.joplin_style]
+input_path = '~/.config/matugen/templates/joplin-userstyle.css'
+output_path = '~/.config/joplin-desktop/userstyle.css'

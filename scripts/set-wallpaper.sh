@@ -54,7 +54,7 @@ fi
 TEMPLATES_DIR="$HOME/.config/matugen/templates"
 mkdir -p "$TEMPLATES_DIR"
 mkdir -p "$HOME/.config/matugen"
-mkdir -p "$HOME/.config/gtk-3.0" "$HOME/.config/gtk-4.0"
+mkdir -p "$HOME/.config/gtk-3.0" "$HOME/.config/gtk-4.0" "$HOME/.config/joplin-desktop"
 mkdir -p "$HOME/.config/zed/themes"
 mkdir -p "$HOME/.config/qt5ct/colors" "$HOME/.config/qt6ct/colors"
 mkdir -p "$HOME/.config/kitty" "$HOME/.config/foot" "$HOME/.config/wofi" "$HOME/.config/swayosd"
@@ -134,6 +134,14 @@ output_path = '$HOME/.config/cava/config'
 [templates.swayosd]
 input_path = '$TEMPLATES_DIR/swayosd-style.css'
 output_path = '$HOME/.config/swayosd/style.css'
+
+[templates.joplin_chrome]
+input_path = '$TEMPLATES_DIR/joplin-userchrome.css'
+output_path = '$HOME/.config/joplin-desktop/userchrome.css'
+
+[templates.joplin_style]
+input_path = '$TEMPLATES_DIR/joplin-userstyle.css'
+output_path = '$HOME/.config/joplin-desktop/userstyle.css'
 EOF
 
 # ── 4. Ejecutar Matugen standalone importando dank16.json si existe ───────

@@ -209,6 +209,14 @@ if command -v xdg-mime &>/dev/null; then
     xdg-mime default thunar.desktop application/x-gnome-saved-search 2>/dev/null || true
 fi
 
+# Configurar miniaturas automáticas en Thunar (siempre activas y sin límite de tamaño)
+if command -v xfconf-query &>/dev/null; then
+    echo -e "  ${GREEN}→${NC} Configurando miniaturas en ${BLUE}Thunar${NC}..."
+    xfconf-query -c thunar -p /misc-thumbnail-mode -n -t string -s "THUNAR_THUMBNAIL_MODE_ALWAYS" 2>/dev/null || xfconf-query -c thunar -p /misc-thumbnail-mode -s "THUNAR_THUMBNAIL_MODE_ALWAYS" 2>/dev/null || true
+    xfconf-query -c thunar -p /misc-thumbnail-max-file-size -n -t uint64 -s 0 2>/dev/null || xfconf-query -c thunar -p /misc-thumbnail-max-file-size -s 0 2>/dev/null || true
+fi
+mkdir -p "$HOME/.cache/thumbnails"
+
 if [ -d "$SCRIPT_DIR/templates" ]; then
     echo -e "  ${GREEN}→${NC} Copiando plantillas de Matugen..."
     mkdir -p "$HOME/.config/matugen/templates"

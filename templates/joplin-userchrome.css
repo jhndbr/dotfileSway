@@ -1,0 +1,1381 @@
+/* ╔══════════════════════════════════════════════════════════════╗
+ * ║      Joplin Desktop Theme (userchrome.css) - Matugen       ║
+ * ║   Personalización Integral de la Interfaz Gráfica Joplin   ║
+ * ╚══════════════════════════════════════════════════════════════╝ */
+
+:root {
+  /* ── Paleta Dinámica Extraída por Matugen (Material You) ── */
+  --bg-main: {{colors.background.default.hex}};
+  --bg-surface: {{colors.surface_container.default.hex}};
+  --bg-surface-container: {{colors.surface_container.default.hex}};
+  --bg-surface-high: {{colors.surface_container_high.default.hex}};
+  --bg-surface-highest: {{colors.surface_container_highest.default.hex}};
+  
+  --primary: {{colors.primary.default.hex}};
+  --primary-container: {{colors.primary_container.default.hex}};
+  --on-primary: {{colors.on_primary.default.hex}};
+  --on-primary-container: {{colors.on_primary_container.default.hex}};
+  
+  --text-main: {{colors.on_surface.default.hex}};
+  --text-muted: {{colors.on_surface_variant.default.hex}};
+  --border-color: {{colors.outline_variant.default.hex}};
+  --border-active: {{colors.outline.default.hex}};
+  
+  --font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrainsMono Nerd Font', 'Fira Code', monospace;
+  --radius: 8px;
+  --radius-sm: 6px;
+
+  /* ── Sobrescritura de Variables Nativas de Joplin ── */
+  --joplin-background-color: var(--bg-main) !important;
+  --joplin-background-color2: var(--bg-surface) !important;
+  --joplin-background-color3: var(--bg-surface-container) !important;
+  --joplin-background-color-hover3: var(--bg-surface-high) !important;
+  --joplin-color: var(--text-main) !important;
+  --joplin-color2: var(--text-muted) !important;
+  --joplin-color3: var(--text-muted) !important;
+  --joplin-color4: var(--primary) !important;
+  --joplin-divider-color: var(--border-color) !important;
+  --joplin-border-color4: var(--border-color) !important;
+  --joplin-selected-color: var(--bg-surface-highest) !important;
+  --joplin-url-color: var(--primary) !important;
+  --joplin-font-family: var(--font-family) !important;
+}
+
+/* ── Fuente y Fondo Global ── */
+body, .rli-root {
+  font-family: var(--font-family) !important;
+  background-color: var(--bg-main) !important;
+  color: var(--text-main) !important;
+}
+
+/* ══════════════════════════════════════════════════════════════
+ * 1. BARRA SUPERIOR GLOBAL DE LA APLICACIÓN (HEADER)
+ * ══════════════════════════════════════════════════════════════ */
+.header,
+div[class*="header"] {
+  background-color: var(--bg-surface) !important;
+  border-bottom: 1px solid var(--border-color) !important;
+}
+
+.header button,
+.header a {
+  color: var(--text-main) !important;
+  border-radius: var(--radius-sm) !important;
+  transition: background-color 0.15s ease !important;
+}
+
+.header button:hover {
+  background-color: var(--bg-surface-high) !important;
+}
+
+.header input[type="search"],
+.header input[type="text"] {
+  background-color: var(--bg-surface-container) !important;
+  color: var(--text-main) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: 20px !important;
+  padding: 4px 14px !important;
+  outline: none !important;
+}
+
+.header input[type="search"]:focus,
+.header input[type="text"]:focus {
+  border-color: var(--primary) !important;
+  box-shadow: 0 0 0 2px {{colors.primary.default.hex}}33 !important;
+}
+
+/* ══════════════════════════════════════════════════════════════
+ * 2. BARRA LATERAL (SIDEBAR: Libretas, Etiquetas, Sincronización)
+ * ══════════════════════════════════════════════════════════════ */
+.rli-sideBar,
+div[class*="rli-sideBar"],
+.sidebar._scrollbar2,
+div.sidebar {
+  background-color: var(--bg-surface) !important;
+  border-right: 1px solid var(--border-color) !important;
+}
+
+/* Contenedor del encabezado de la barra lateral (Libretas, Etiquetas) */
+.rli-sideBar .header,
+.sidebar-header-container,
+.list-item-wrapper.sidebar-header-container {
+  position: relative !important;
+  display: flex !important;
+  align-items: center !important;
+  height: 34px !important;
+  min-height: 34px !important;
+  padding: 0 10px 0 12px !important;
+  margin: 4px 6px 2px 6px !important;
+  background: transparent !important;
+  border-bottom: 1px solid {{colors.outline.default.hex}}26 !important;
+  box-sizing: border-box !important;
+}
+
+/* Div interno de StyledHeader */
+.sidebar-header-container > div,
+.sidebar-header-container div[class*="StyledHeader"] {
+  display: flex !important;
+  align-items: center !important;
+  flex: 1 !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border: none !important;
+  cursor: default !important;
+  user-select: none !important;
+}
+
+/* ÍCONO DE LIBRETA Y ETIQUETAS (DESTACADO, NÍTIDO Y COLORIDO) */
+.sidebar-header-container i,
+.sidebar-header-container .icon-notebooks,
+.sidebar-header-container .icon-tags,
+.sidebar-header-container i[class*="StyledHeaderIcon"],
+.sidebar-header-container i[class*="icon-"] {
+  color: var(--primary) !important;
+  font-size: 16px !important;
+  width: 20px !important;
+  height: 20px !important;
+  margin-right: 8px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  opacity: 1 !important;
+  filter: drop-shadow(0 0 5px {{colors.primary.default.hex}}55) !important;
+}
+
+/* TEXTO "LIBRETAS" / "ETIQUETAS" */
+.sidebar-header-container span,
+.sidebar-header-container span[class*="StyledHeaderLabel"] {
+  color: var(--text-main) !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.8px !important;
+  text-transform: uppercase !important;
+  opacity: 0.95 !important;
+}
+
+/* Elementos de la lista (carpetas, tags) */
+.rli-sideBar .list-item-container,
+.rli-sideBar div[class*="listItem"],
+.sidebar-list-items-wrapper .list-item-wrapper:not(.sidebar-header-container) {
+  border-radius: var(--radius-sm) !important;
+  margin: 1px 6px !important;
+  padding: 4px 8px !important;
+  color: var(--text-muted) !important;
+  transition: all 0.15s ease !important;
+}
+
+.rli-sideBar .list-item-container:hover,
+.rli-sideBar div[class*="listItem"]:hover,
+.sidebar-list-items-wrapper .list-item-wrapper:not(.sidebar-header-container):hover {
+  background-color: var(--bg-surface-high) !important;
+  color: var(--text-main) !important;
+}
+
+.rli-sideBar .list-item-container[aria-selected="true"],
+.rli-sideBar .list-item-container.selected,
+.sidebar-list-items-wrapper .list-item-wrapper.-selected {
+  background-color: var(--primary-container) !important;
+  color: var(--on-primary-container) !important;
+  font-weight: 600 !important;
+}
+
+.rli-sideBar .list-item-container[aria-selected="true"] i,
+.sidebar-list-items-wrapper .list-item-wrapper.-selected i,
+.sidebar-list-items-wrapper .list-item-wrapper.-selected span {
+  color: var(--on-primary-container) !important;
+}
+
+.rli-sideBar i,
+.rli-sideBar span[class*="icon"] {
+  color: var(--primary) !important;
+}
+
+/* ── BOTONES DE LA CABECERA DE LIBRETAS (Nueva libreta y Contraer todas) ── */
+.sidebar-header-button,
+button.sidebar-header-button,
+.items > button.sidebar-header-button {
+  position: absolute !important;
+  top: 5px !important;
+  transform: none !important;
+  height: 24px !important;
+  width: 24px !important;
+  min-width: 24px !important;
+  max-width: 24px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: var(--radius-sm) !important;
+  background-color: var(--bg-surface-high) !important;
+  color: var(--primary) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  z-index: 25 !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25) !important;
+  transition: all 0.15s ease !important;
+}
+
+/* Botón "+" Nueva Libreta (alineado a la derecha de la cabecera) */
+button.sidebar-header-button.-newfolder,
+.items > button.sidebar-header-button.-newfolder {
+  right: 10px !important;
+  inset-inline-end: 10px !important;
+}
+
+/* Botón Contraer / Expandir todas las libretas (a la izquierda del "+") */
+button.sidebar-header-button.-collapseall,
+.items > button.sidebar-header-button.-collapseall {
+  right: 38px !important;
+  inset-inline-end: 38px !important;
+}
+
+button.sidebar-header-button:hover:not(:disabled),
+.items > button.sidebar-header-button:hover:not(:disabled) {
+  background-color: var(--primary-container) !important;
+  border-color: var(--primary) !important;
+  color: var(--on-primary-container) !important;
+  box-shadow: 0 0 8px {{colors.primary.default.hex}}44 !important;
+  transform: translateY(-1px) !important;
+}
+
+button.sidebar-header-button:hover:not(:disabled) i,
+.items > button.sidebar-header-button:hover:not(:disabled) i {
+  color: var(--on-primary-container) !important;
+}
+
+button.sidebar-header-button i,
+.items > button.sidebar-header-button i {
+  color: var(--primary) !important;
+  font-size: 11px !important;
+  line-height: 1 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: color 0.15s ease !important;
+}
+
+button.sidebar-header-button:disabled,
+.items > button.sidebar-header-button:disabled {
+  opacity: 0.3 !important;
+  background-color: transparent !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+  cursor: default !important;
+}
+
+/* Scrollbar de la barra lateral (_scrollbar2) */
+.sidebar._scrollbar2,
+._scrollbar2 {
+  scrollbar-width: thin !important;
+  scrollbar-color: {{colors.outline.default.hex}}44 transparent !important;
+}
+
+/* ── ZONA DE SINCRONIZACIÓN Y REPORTE DE PROCESO ── */
+
+/* Botón de despliegue del proceso de sincronización (Chevron) */
+button.sync-report-toggle,
+.rli-sideBar button.sync-report-toggle {
+  width: 100% !important;
+  background: transparent !important;
+  border: none !important;
+  padding: 4px 0 !important;
+  margin: 0 0 4px 0 !important;
+  text-align: center !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: var(--text-muted) !important;
+  cursor: pointer !important;
+  opacity: 0.7 !important;
+  transition: all 0.15s ease !important;
+}
+
+button.sync-report-toggle:hover {
+  opacity: 1 !important;
+  color: var(--primary) !important;
+}
+
+button.sync-report-toggle i {
+  color: inherit !important;
+  font-size: 13px !important;
+}
+
+/* Caja de texto del reporte de sincronización (progreso / estado) */
+#sync-report,
+#sync_report,
+div[id="sync-report"],
+div[id="sync_report"],
+div[class*="StyledSyncReport"] {
+  background-color: var(--bg-surface-high) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: var(--radius-sm) !important;
+  padding: 8px 10px !important;
+  margin: 0 0 8px 0 !important;
+  width: 100% !important;
+  color: var(--text-muted) !important;
+  font-family: var(--font-mono) !important;
+  font-size: 11px !important;
+  line-height: 1.45 !important;
+  max-height: 120px !important;
+  overflow-y: auto !important;
+  text-align: left !important;
+  box-sizing: border-box !important;
+  opacity: 1 !important;
+}
+
+div[class*="StyledSyncReportText"],
+#sync-report div,
+#sync_report div {
+  color: var(--text-muted) !important;
+  font-family: var(--font-mono) !important;
+  font-size: 11px !important;
+  line-height: 1.4 !important;
+  word-break: break-word !important;
+}
+
+/* Botón principal "Sincronizar" (perfectamente centrado, ocupa el ancho disponible dentro del contenedor con padding) */
+.sidebar-sync-button,
+button.sidebar-sync-button,
+div[class*="StyledSynchronizeButton"] {
+  background-color: var(--bg-surface-high) !important;
+  color: var(--text-main) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: var(--radius) !important;
+  padding: 8px 14px !important;
+  margin: 0 !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  font-weight: 600 !important;
+  font-size: 13px !important;
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+}
+
+button.sidebar-sync-button:hover {
+  background-color: var(--primary) !important;
+  color: var(--on-primary) !important;
+  border-color: var(--primary) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
+}
+
+button.sidebar-sync-button:hover *,
+button.sidebar-sync-button:hover i,
+button.sidebar-sync-button:hover span {
+  color: var(--on-primary) !important;
+}
+
+button.sidebar-sync-button .icon,
+button.sidebar-sync-button i {
+  color: var(--primary) !important;
+  margin: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 14px !important;
+}
+
+/* ══════════════════════════════════════════════════════════════
+ * 3. CONTROLES SUPERIORES DE NOTAS (NOTA, TAREA, BUSCAR, ORDENAR)
+ * ══════════════════════════════════════════════════════════════ */
+
+/* Fondo del área de controles */
+div[role="navigation"] > div:first-child,
+.rli-noteList > div:first-child,
+.rli-noteList > div > div:first-child,
+div.new-note-todo-buttons,
+div.search-and-sort {
+  background-color: var(--bg-surface) !important;
+}
+
+div[role="navigation"] > div:first-child {
+  border-bottom: 1px solid var(--border-color) !important;
+  padding: 6px 8px 4px 8px !important;
+  box-sizing: border-box !important;
+}
+
+div.new-note-todo-buttons {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 8px !important;
+  padding: 4px 6px !important;
+  margin: 0 !important;
+  background: transparent !important;
+}
+
+/* Botón "Nueva Nota" (Primario - Color de Acento) */
+button.new-note-button,
+button[title="New note"],
+button[title="Nueva nota"],
+button[title*="note" i],
+button[title*="nota" i] {
+  background-color: var(--primary) !important;
+  color: var(--on-primary) !important;
+  border: none !important;
+  border-radius: var(--radius-sm) !important;
+  padding: 6px 12px !important;
+  font-weight: 600 !important;
+  font-size: 13px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25) !important;
+}
+
+button.new-note-button:hover,
+button[title*="note" i]:hover,
+button[title*="nota" i]:hover {
+  filter: brightness(1.1) !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35) !important;
+}
+
+button.new-note-button *,
+button[title*="note" i] *,
+button[title*="nota" i] * {
+  color: var(--on-primary) !important;
+}
+
+/* Botón "Nueva Tarea" (Secundario) */
+button.new-todo-button,
+button[title="New to-do"],
+button[title="Nueva tarea"],
+button[title*="to-do" i],
+button[title*="tarea" i] {
+  background-color: var(--bg-surface-high) !important;
+  color: var(--text-main) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: var(--radius-sm) !important;
+  padding: 6px 12px !important;
+  font-weight: 500 !important;
+  font-size: 13px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+}
+
+button.new-todo-button:hover,
+button[title*="to-do" i]:hover,
+button[title*="tarea" i]:hover {
+  background-color: var(--bg-surface-highest) !important;
+  border-color: var(--primary) !important;
+  color: var(--primary) !important;
+}
+
+button.new-todo-button *,
+button[title*="to-do" i] *,
+button[title*="tarea" i] * {
+  color: var(--text-main) !important;
+}
+
+button.new-todo-button:hover *,
+button[title*="to-do" i]:hover *,
+button[title*="tarea" i]:hover * {
+  color: var(--primary) !important;
+}
+
+/* Fila de Buscar y Ordenar */
+div.search-and-sort {
+  display: flex !important;
+  flex-direction: row !important;
+  gap: 6px !important;
+  padding: 4px 6px 6px 6px !important;
+  align-items: center !important;
+  background: transparent !important;
+}
+
+div.search-bar,
+div.search-and-sort .search-bar {
+  flex: 1 !important;
+}
+
+div.search-input,
+div.search-and-sort .search-input {
+  background-color: var(--bg-surface-high) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: var(--radius-sm) !important;
+  display: flex !important;
+  align-items: center !important;
+  padding: 2px 8px !important;
+  height: 30px !important;
+  box-sizing: border-box !important;
+  transition: all 0.2s ease !important;
+}
+
+div.search-input:focus-within {
+  border-color: var(--primary) !important;
+  box-shadow: 0 0 0 2px {{colors.primary.default.hex}}33 !important;
+}
+
+div.search-input input,
+div.search-input input[type="search"],
+div.search-input .field {
+  background: transparent !important;
+  color: var(--text-main) !important;
+  border: none !important;
+  outline: none !important;
+  font-size: 12.5px !important;
+  padding: 2px 6px !important;
+  width: 100% !important;
+}
+
+div.search-input input::placeholder {
+  color: var(--text-muted) !important;
+  opacity: 0.7 !important;
+}
+
+div.search-input button,
+div.search-input .button,
+div.search-input .icon,
+div.search-input i {
+  background: transparent !important;
+  border: none !important;
+  color: var(--text-muted) !important;
+  cursor: pointer !important;
+}
+
+div.search-input button:hover,
+div.search-input button:hover .icon,
+div.search-input button:hover i {
+  color: var(--primary) !important;
+}
+
+/* Botones de Ordenar */
+button.sort-order-field-button,
+button.sort-order-reverse-button,
+button[title*="sort" i],
+button[title*="orden" i] {
+  background-color: var(--bg-surface-high) !important;
+  color: var(--text-muted) !important;
+  border: 1px solid var(--border-color) !important;
+  height: 30px !important;
+  min-width: 32px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  transition: all 0.15s ease !important;
+}
+
+button.sort-order-field-button {
+  border-right: none !important;
+  border-radius: var(--radius-sm) 0 0 var(--radius-sm) !important;
+}
+
+button.sort-order-reverse-button {
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0 !important;
+}
+
+button.sort-order-field-button:hover,
+button.sort-order-reverse-button:hover,
+button[title*="sort" i]:hover,
+button[title*="orden" i]:hover {
+  background-color: var(--bg-surface-highest) !important;
+  color: var(--primary) !important;
+}
+
+button.sort-order-field-button *,
+button.sort-order-reverse-button *,
+button[title*="sort" i] *,
+button[title*="orden" i] * {
+  color: inherit !important;
+  font-size: 12px !important;
+}
+
+/* ══════════════════════════════════════════════════════════════
+ * 4. LISTA DE NOTAS DE LA LIBRETA (NOTELIST & ITEMS)
+ * ══════════════════════════════════════════════════════════════ */
+.rli-noteList,
+div[class*="rli-noteList"],
+div[role="navigation"][aria-label="Note list"],
+.note-list {
+  background-color: var(--bg-surface-container) !important;
+  border-right: 1px solid var(--border-color) !important;
+}
+
+.note-list > .notes {
+  background-color: transparent !important;
+  padding: 4px 6px !important;
+}
+
+.note-list-item:before {
+  display: none !important;
+  border-bottom: none !important;
+}
+
+.note-list-item-wrapper {
+  margin: 2px 0 !important;
+  border-radius: var(--radius-sm) !important;
+}
+
+.note-list-item {
+  border-radius: var(--radius-sm) !important;
+  transition: background-color 0.15s ease !important;
+}
+
+.note-list-item > .content,
+.note-list-item > .row {
+  border-radius: var(--radius-sm) !important;
+  padding: 6px 12px !important;
+  display: flex !important;
+  align-items: center !important;
+  border-left: 3px solid transparent !important;
+  transition: all 0.15s ease !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+.note-list-item:hover > .content,
+.note-list-item:hover > .row,
+.note-list-item.-focus-visible > .content,
+.note-list-item.-focus-visible > .row {
+  background-color: var(--bg-surface-high) !important;
+}
+
+.note-list-item > .content.-selected,
+.note-list-item > .row.-selected,
+.note-list-item-wrapper[aria-selected="true"] > .note-list-item > .content,
+.note-list-item-wrapper[aria-selected="true"] > .note-list-item > .row {
+  background-color: var(--bg-surface-highest) !important;
+  border-left: 3px solid var(--primary) !important;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2) !important;
+}
+
+.note-list-item .title,
+.note-list-item .title span,
+.note-list-item .item[data-name="note.title"] .content,
+a[draggable="true"] span {
+  font-family: var(--font-family) !important;
+  font-weight: 600 !important;
+  font-size: 13px !important;
+  color: var(--text-main) !important;
+}
+
+.note-list-item > .content.-completed .title,
+.note-list-item > .row.-completed {
+  opacity: 0.5 !important;
+}
+
+.note-list-item .item,
+.note-list-item .item[data-name*="time"] {
+  color: var(--text-muted) !important;
+  font-size: 11.5px !important;
+}
+
+.note-list-item .checkbox input[type="checkbox"],
+.note-list-item input[data-id="todo-checkbox"] {
+  accent-color: var(--primary) !important;
+  transform: scale(1.1) !important;
+  margin-right: 8px !important;
+  cursor: pointer !important;
+}
+
+.note-list-header {
+  background-color: var(--bg-surface) !important;
+  border-bottom: 1px solid var(--border-color) !important;
+}
+
+.note-list-header > .item {
+  color: var(--text-muted) !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  text-transform: uppercase !important;
+}
+
+/* ══════════════════════════════════════════════════════════════
+ * 5. BARRA DEL EDITOR DE TEXTO / MARKDOWN (FONDO Y BOTONES)
+ * ══════════════════════════════════════════════════════════════ */
+
+.rli-editor,
+div[class*="rli-editor"] {
+  background-color: var(--bg-main) !important;
+}
+
+/* Cabecera superior del editor (Título, fecha y toolbar superior) */
+div.note-title-wrapper,
+.rli-editor .note-title-wrapper,
+div[class*="note-title-wrapper"] {
+  background-color: var(--bg-surface) !important;
+  border-bottom: 1px solid var(--border-color) !important;
+  padding: 6px 14px !important;
+  display: flex !important;
+  align-items: center !important;
+  box-sizing: border-box !important;
+}
+
+input.title-input,
+.note-title-wrapper input.title-input,
+.rli-editor input.title-input {
+  background-color: transparent !important;
+  color: var(--text-main) !important;
+  font-family: var(--font-family) !important;
+  font-size: 18px !important;
+  font-weight: 700 !important;
+  border: none !important;
+  border-bottom: 2px solid transparent !important;
+  padding: 4px 0 !important;
+  outline: none !important;
+  transition: border-color 0.2s ease !important;
+}
+
+input.title-input:focus {
+  border-bottom: 2px solid var(--primary) !important;
+}
+
+input.title-input::placeholder {
+  color: var(--text-muted) !important;
+  opacity: 0.6 !important;
+}
+
+div.note-title-info-group {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  background-color: var(--bg-surface) !important;
+}
+
+/* Fondo de los divs hijos directos de note-title-info-group
+   (wrappers absolutos del NoteToolbar y ToggleEditorsButton) */
+div.note-title-info-group > div {
+  background-color: var(--bg-surface) !important;
+}
+
+.updated-time-label {
+  color: var(--text-muted) !important;
+  font-size: 11.5px !important;
+  opacity: 0.8 !important;
+}
+
+/* Botones en la cabecera del título de la nota (NoteToolbar) */
+.note-title-info-group .toolbar-button,
+.note-title-info-group button.toolbar-button,
+.note-title-info-group button.button,
+.note-title-info-group div.editor-toolbar button {
+  background-color: var(--bg-surface-high) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: var(--radius-sm) !important;
+  color: var(--text-main) !important;
+  height: 28px !important;
+  min-height: 28px !important;
+  min-width: 28px !important;
+  padding: 2px 6px !important;
+  margin: 0 1px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-sizing: border-box !important;
+  transition: all 0.15s ease !important;
+}
+
+.note-title-info-group .toolbar-button:hover:not(:disabled),
+.note-title-info-group button.toolbar-button:hover:not(:disabled),
+.note-title-info-group div.editor-toolbar button:hover:not(:disabled) {
+  background-color: var(--bg-surface-highest) !important;
+  border-color: var(--primary) !important;
+}
+
+.note-title-info-group .toolbar-button:hover:not(:disabled) i,
+.note-title-info-group .toolbar-button:hover:not(:disabled) span,
+.note-title-info-group div.editor-toolbar button:hover:not(:disabled) i {
+  color: var(--primary) !important;
+}
+
+/* ── CONTENEDORES SIN CLASE DE TINYMCE (leftExtraToolbarContainer / rightExtraToolbarContainer) ── */
+/* Estos divs no tienen clase CSS — son hijos directos de div.joplin-tinymce
+   con posición absoluta e inline style backgroundColor: theme.backgroundColor3 */
+div.joplin-tinymce > div {
+  background-color: var(--bg-surface) !important;
+}
+
+/* Botones dentro de los contenedores extra de TinyMCE (Retroceder, Avanzar, Editor externo) */
+div.joplin-tinymce > div > button.toolbar-button,
+div.joplin-tinymce > div > button.button {
+  background-color: var(--bg-surface-high) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: var(--radius-sm) !important;
+  color: var(--text-main) !important;
+  height: 26px !important;
+  min-width: 26px !important;
+  padding: 2px 6px !important;
+  margin: 0 1px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  transition: all 0.15s ease !important;
+}
+
+div.joplin-tinymce > div > button.toolbar-button:not(:disabled):hover,
+div.joplin-tinymce > div > button.button:not(:disabled):hover {
+  background-color: var(--bg-surface-highest) !important;
+  border-color: var(--primary) !important;
+}
+
+div.joplin-tinymce > div > button.toolbar-button:not(:disabled):hover span,
+div.joplin-tinymce > div > button.toolbar-button:not(:disabled):hover i {
+  color: var(--primary) !important;
+}
+
+div.joplin-tinymce > div > button.toolbar-button:disabled {
+  opacity: 0.3 !important;
+}
+
+/* ToggleEditorsButton — segmentos internos dentro del wrapper TinyMCE sin clase */
+div.joplin-tinymce > div button.tox-tbtn > div {
+  background-color: var(--bg-surface-high) !important;
+  border-color: var(--border-color) !important;
+}
+
+div.joplin-tinymce > div button.tox-tbtn > div i {
+  color: var(--text-muted) !important;
+}
+
+/* Segmento activo (RichText activo — div:last-child tiene backgroundColor: theme.color3) */
+div.joplin-tinymce > div button.tox-tbtn.richText-active > div:last-child {
+  background-color: var(--primary-container) !important;
+  border-color: var(--primary) !important;
+  opacity: 1 !important;
+}
+
+div.joplin-tinymce > div button.tox-tbtn.richText-active > div:last-child i {
+  color: var(--on-primary-container) !important;
+}
+
+div.joplin-tinymce > div button.tox-tbtn.richText-active > div:first-child {
+  opacity: 0.6 !important;
+}
+
+/* Segmento activo (Markdown activo — div:first-child tiene backgroundColor: theme.color3) */
+div.joplin-tinymce > div button.tox-tbtn.markdown-active > div:first-child {
+  background-color: var(--primary-container) !important;
+  border-color: var(--primary) !important;
+  opacity: 1 !important;
+}
+
+div.joplin-tinymce > div button.tox-tbtn.markdown-active > div:first-child i {
+  color: var(--on-primary-container) !important;
+}
+
+div.joplin-tinymce > div button.tox-tbtn.markdown-active > div:last-child {
+  opacity: 0.6 !important;
+}
+
+/* ── BARRA DE HERRAMIENTAS DE EDICIÓN (MARKDOWN TOOLBAR / CODEMIRROR TOOLBAR) ── */
+#CodeMirrorToolbar,
+div#CodeMirrorToolbar,
+div.editor-toolbar,
+.rli-editor .editor-toolbar,
+div.note-title-wrapper .editor-toolbar,
+div[role="toolbar"],
+div[class*="editor-toolbar"] {
+  background-color: var(--bg-surface) !important;
+  border-bottom: 1px solid var(--border-color) !important;
+  padding: 4px 10px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 2px !important;
+  box-sizing: border-box !important;
+}
+
+div.editor-toolbar > .group {
+  display: flex !important;
+  align-items: center !important;
+  gap: 2px !important;
+}
+
+/* Botones genéricos de la barra de herramientas */
+div.editor-toolbar .toolbar-button,
+div.editor-toolbar button.toolbar-button,
+div.editor-toolbar button.button,
+div.editor-toolbar div button,
+a.button {
+  background-color: transparent !important;
+  border: 1px solid transparent !important;
+  border-radius: var(--radius-sm) !important;
+  color: var(--text-main) !important;
+  height: 28px !important;
+  min-height: 28px !important;
+  min-width: 28px !important;
+  padding: 2px 6px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  transition: all 0.15s ease !important;
+}
+
+div.editor-toolbar .toolbar-icon,
+div.editor-toolbar i,
+div.editor-toolbar span.icon,
+div.editor-toolbar span,
+a.button span,
+.fa-ellipsis-h {
+  color: var(--text-muted) !important;
+  font-size: 14px !important;
+  transition: color 0.15s ease !important;
+}
+
+div.editor-toolbar .toolbar-button:not(:disabled):hover,
+div.editor-toolbar button:not(:disabled):hover,
+div.editor-toolbar a.button:hover {
+  background-color: var(--bg-surface-high) !important;
+  border-color: var(--border-color) !important;
+}
+
+div.editor-toolbar .toolbar-button:not(:disabled):hover .toolbar-icon,
+div.editor-toolbar .toolbar-button:not(:disabled):hover i,
+div.editor-toolbar .toolbar-button:not(:disabled):hover span,
+div.editor-toolbar a.button:hover span {
+  color: var(--primary) !important;
+}
+
+div.editor-toolbar .toolbar-button:disabled,
+div.editor-toolbar .toolbar-button.disabled {
+  opacity: 0.3 !important;
+  cursor: default !important;
+}
+
+div.editor-toolbar .spacer {
+  flex-grow: 1 !important;
+}
+
+/* ── BOTONES DE ACCIÓN: ATRÁS, ADELANTE Y EDITOR EXTERNO (CON FONDO DISTINTIVO) ── */
+div.editor-toolbar > .group:first-child {
+  display: flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+  padding-right: 6px !important;
+  margin-right: 4px !important;
+  border-right: 1px solid var(--border-color) !important;
+}
+
+div.editor-toolbar > .group:first-child .toolbar-button,
+div.editor-toolbar > .group:first-child button,
+div.editor-toolbar button:has(.icon-back),
+div.editor-toolbar button:has(.icon-forward),
+div.editor-toolbar button:has(.icon-share),
+button[title*="Back" i],
+button[title*="Atrás" i],
+button[title*="Forward" i],
+button[title*="Adelante" i],
+button[title*="External" i],
+button[title*="extern" i] {
+  background-color: var(--bg-surface-high) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: var(--radius-sm) !important;
+  color: var(--text-main) !important;
+  height: 28px !important;
+  min-height: 28px !important;
+  min-width: 30px !important;
+  padding: 2px 8px !important;
+  margin: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-sizing: border-box !important;
+  transition: all 0.15s ease !important;
+}
+
+div.editor-toolbar > .group:first-child .toolbar-button .toolbar-icon,
+div.editor-toolbar > .group:first-child button i,
+div.editor-toolbar button:has(.icon-back) i,
+div.editor-toolbar button:has(.icon-forward) i,
+div.editor-toolbar button:has(.icon-share) i {
+  color: var(--text-main) !important;
+  font-size: 13px !important;
+}
+
+div.editor-toolbar > .group:first-child .toolbar-button:not(:disabled):hover,
+div.editor-toolbar > .group:first-child button:not(:disabled):hover,
+div.editor-toolbar button:has(.icon-back):not(:disabled):hover,
+div.editor-toolbar button:has(.icon-forward):not(:disabled):hover,
+div.editor-toolbar button:has(.icon-share):not(:disabled):hover,
+button[title*="Back" i]:not(:disabled):hover,
+button[title*="Atrás" i]:not(:disabled):hover,
+button[title*="Forward" i]:not(:disabled):hover,
+button[title*="Adelante" i]:not(:disabled):hover,
+button[title*="External" i]:not(:disabled):hover,
+button[title*="extern" i]:not(:disabled):hover {
+  background-color: var(--bg-surface-highest) !important;
+  border-color: var(--primary) !important;
+}
+
+div.editor-toolbar > .group:first-child .toolbar-button:not(:disabled):hover .toolbar-icon,
+div.editor-toolbar > .group:first-child button:not(:disabled):hover i,
+div.editor-toolbar button:has(.icon-back):not(:disabled):hover i,
+div.editor-toolbar button:has(.icon-forward):not(:disabled):hover i,
+div.editor-toolbar button:has(.icon-share):not(:disabled):hover i {
+  color: var(--primary) !important;
+}
+
+div.editor-toolbar > .group:first-child .toolbar-button:disabled,
+div.editor-toolbar > .group:first-child button:disabled {
+  opacity: 0.35 !important;
+  background-color: var(--bg-surface-high) !important;
+  border-color: transparent !important;
+  cursor: default !important;
+}
+
+/* ── BOTÓN: ALTERNAR EDITORES (MARKDOWN VS TEXTO ENRIQUECIDO) (CON FONDO DISTINTIVO) ── */
+div.editor-toolbar > .group:last-child {
+  display: flex !important;
+  align-items: center !important;
+  padding-left: 6px !important;
+  margin-left: 4px !important;
+  border-left: 1px solid var(--border-color) !important;
+}
+
+div.editor-toolbar .tox-tbtn,
+div.editor-toolbar > .group:last-child button,
+button.tox-tbtn {
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  height: 28px !important;
+  cursor: pointer !important;
+}
+
+/* Segmentos internos del toggle (Markdown y Rich Text) */
+div.editor-toolbar .tox-tbtn > div,
+button.tox-tbtn > div {
+  background-color: var(--bg-surface-high) !important;
+  border: 1px solid var(--border-color) !important;
+  height: 28px !important;
+  min-height: 28px !important;
+  padding: 0 8px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-sizing: border-box !important;
+  transition: all 0.15s ease !important;
+}
+
+div.editor-toolbar .tox-tbtn > div:first-child,
+button.tox-tbtn > div:first-child {
+  border-top-left-radius: var(--radius-sm) !important;
+  border-bottom-left-radius: var(--radius-sm) !important;
+  border-right: none !important;
+}
+
+div.editor-toolbar .tox-tbtn > div:last-child,
+button.tox-tbtn > div:last-child {
+  border-top-right-radius: var(--radius-sm) !important;
+  border-bottom-right-radius: var(--radius-sm) !important;
+}
+
+/* Segmento Activo (Markdown activo) */
+div.editor-toolbar .tox-tbtn.markdown-active > div:first-child,
+button.tox-tbtn.markdown-active > div:first-child {
+  background-color: var(--primary-container) !important;
+  border-color: var(--primary) !important;
+  opacity: 1 !important;
+}
+
+div.editor-toolbar .tox-tbtn.markdown-active > div:first-child i,
+button.tox-tbtn.markdown-active > div:first-child i {
+  color: var(--on-primary-container) !important;
+}
+
+/* Segmento Inactivo cuando Markdown está activo */
+div.editor-toolbar .tox-tbtn.markdown-active > div:last-child,
+button.tox-tbtn.markdown-active > div:last-child {
+  background-color: var(--bg-surface-high) !important;
+  border-color: var(--border-color) !important;
+  opacity: 0.65 !important;
+}
+
+div.editor-toolbar .tox-tbtn.markdown-active > div:last-child i,
+button.tox-tbtn.markdown-active > div:last-child i {
+  color: var(--text-muted) !important;
+}
+
+/* Segmento Activo (RichText / WYSIWYG activo) */
+div.editor-toolbar .tox-tbtn.richText-active > div:last-child,
+button.tox-tbtn.richText-active > div:last-child {
+  background-color: var(--primary-container) !important;
+  border-color: var(--primary) !important;
+  opacity: 1 !important;
+}
+
+div.editor-toolbar .tox-tbtn.richText-active > div:last-child i,
+button.tox-tbtn.richText-active > div:last-child i {
+  color: var(--on-primary-container) !important;
+}
+
+/* Segmento Inactivo cuando RichText está activo */
+div.editor-toolbar .tox-tbtn.richText-active > div:first-child,
+button.tox-tbtn.richText-active > div:first-child {
+  background-color: var(--bg-surface-high) !important;
+  border-color: var(--border-color) !important;
+  opacity: 0.65 !important;
+}
+
+div.editor-toolbar .tox-tbtn.richText-active > div:first-child i,
+button.tox-tbtn.richText-active > div:first-child i {
+  color: var(--text-muted) !important;
+}
+
+/* Efecto hover sobre los segmentos del toggle */
+div.editor-toolbar .tox-tbtn > div:hover,
+button.tox-tbtn > div:hover {
+  background-color: var(--bg-surface-highest) !important;
+  border-color: var(--primary) !important;
+}
+
+div.editor-toolbar .tox-tbtn > div:hover i,
+button.tox-tbtn > div:hover i {
+  color: var(--primary) !important;
+}
+
+/* ── BARRA DE HERRAMIENTAS TINYMCE (EDITOR WYSIWYG / TEXTO ENRIQUECIDO) ── */
+/* Joplin inyecta dinámicamente un <style id="tinyMceStyle"> al montar TinyMCE con:
+   .joplin-tinymce .tox .tox-toolbar__primary { background: none; background-color: #2e3830 !important; }
+   .joplin-tinymce .tox-toolbar__group { background-color: #2e3830; }
+   Como <style> se inserta después del <link> de userchrome.css, en caso de empate de especificidad gana Joplin.
+   Para sobreescribirlo de forma definitiva, usamos selectores con especificidad MUCHO más alta (0-6-0 y jerarquías completas): */
+
+/* Fondo principal del editor TinyMCE */
+html body div.tox.tox-tinymce,
+html body div.tox-tinymce,
+body div.tox.tox-tinymce,
+div.tox.tox-tinymce,
+div.tox-tinymce {
+  background-color: var(--bg-surface) !important;
+  border-color: var(--border-color) !important;
+}
+
+/* Header / editor-header */
+html body div.joplin-tinymce div.tox-editor-header,
+html body .joplin-tinymce .tox-editor-header,
+body div.joplin-tinymce div.tox-editor-header,
+body .joplin-tinymce .tox-editor-header,
+.joplin-tinymce.joplin-tinymce .tox-editor-header.tox-editor-header,
+div.tox .tox-editor-header,
+div.tox-editor-header {
+  background: none !important;
+  background-color: var(--bg-surface) !important;
+  border-color: var(--border-color) !important;
+}
+
+/* Toolbar principal TinyMCE (MÁXIMA ESPECIFICIDAD para derrotar a .joplin-tinymce .tox .tox-toolbar__primary) */
+html body div.joplin-tinymce div.tox div.tox-toolbar__primary,
+html body .joplin-tinymce .tox .tox-toolbar__primary,
+body div.joplin-tinymce div.tox div.tox-toolbar__primary,
+body .joplin-tinymce .tox .tox-toolbar__primary,
+.joplin-tinymce.joplin-tinymce .tox.tox .tox-toolbar__primary.tox-toolbar__primary,
+div.joplin-tinymce div.tox div.tox-toolbar__primary,
+div.joplin-tinymce .tox .tox-toolbar__primary,
+div.tox-editor-header div.tox-toolbar__primary,
+div[role="group"].tox-toolbar__primary,
+div.tox .tox-toolbar__primary,
+html body div.joplin-tinymce div.tox div.tox-toolbar__overflow,
+html body .joplin-tinymce .tox .tox-toolbar__overflow,
+body .joplin-tinymce .tox .tox-toolbar__overflow,
+.joplin-tinymce.joplin-tinymce .tox.tox .tox-toolbar__overflow.tox-toolbar__overflow,
+html body div.joplin-tinymce div.tox div.tox-toolbar,
+html body .joplin-tinymce .tox .tox-toolbar,
+body .joplin-tinymce .tox .tox-toolbar,
+.joplin-tinymce.joplin-tinymce .tox.tox .tox-toolbar.tox-toolbar,
+html body div.joplin-tinymce div.tox .tox-toolbar-overlord,
+body .joplin-tinymce .tox .tox-toolbar-overlord {
+  background: none !important;
+  background-color: var(--bg-surface) !important;
+  border-color: var(--border-color) !important;
+}
+
+/* Grupos dentro del toolbar — misma y mayor especificidad que Joplin: .joplin-tinymce .tox-toolbar__group */
+html body div.joplin-tinymce div.tox-toolbar__group,
+html body .joplin-tinymce .tox-toolbar__group,
+body div.joplin-tinymce div.tox-toolbar__group,
+body .joplin-tinymce .tox-toolbar__group,
+.joplin-tinymce.joplin-tinymce .tox-toolbar__group.tox-toolbar__group,
+html body div.joplin-tinymce div.tox div.tox-toolbar__group,
+body .joplin-tinymce .tox .tox-toolbar__group,
+.joplin-tinymce.joplin-tinymce .tox.tox .tox-toolbar__group.tox-toolbar__group,
+div.joplin-tinymce .tox-toolbar__group,
+div.tox .tox-toolbar__group,
+div.tox-toolbar__group {
+  background: none !important;
+  background-color: var(--bg-surface) !important;
+}
+
+/* Botones del toolbar TinyMCE */
+div.tox .tox-tbtn {
+  background-color: transparent !important;
+  border-radius: var(--radius-sm) !important;
+  cursor: pointer !important;
+}
+
+div.tox .tox-tbtn:hover {
+  background-color: var(--bg-surface-high) !important;
+}
+
+div.tox .tox-tbtn svg {
+  fill: var(--text-muted) !important;
+}
+
+div.tox .tox-tbtn:hover svg,
+div.tox .tox-tbtn:hover svg path {
+  fill: var(--primary) !important;
+}
+
+div.tox .tox-tbtn--enabled,
+div.tox .tox-tbtn--enabled:hover {
+  background-color: var(--primary-container) !important;
+}
+
+div.tox .tox-tbtn--enabled svg,
+div.tox .tox-tbtn--enabled svg path {
+  fill: var(--primary) !important;
+}
+
+/* Split buttons (color picker etc.) */
+div.tox .tox-split-button {
+  background-color: transparent !important;
+}
+
+div.tox .tox-split-button:hover {
+  background-color: var(--bg-surface-high) !important;
+  box-shadow: none !important;
+}
+
+/* Select labels (H1, H2, H3) */
+div.tox .tox-tbtn__select-label {
+  color: var(--text-muted) !important;
+}
+
+div.tox .tox-statusbar {
+  background-color: var(--bg-surface) !important;
+  border-top: 1px solid var(--border-color) !important;
+  color: var(--text-muted) !important;
+}
+
+/* ══════════════════════════════════════════════════════════════
+ * 6. BARRA DE ETIQUETAS (TAGS)
+ * ══════════════════════════════════════════════════════════════ */
+div[class*="tagBar"],
+div.tag-bar,
+div.tag-list {
+  background-color: var(--bg-surface) !important;
+  border-top: 1px solid var(--border-color) !important;
+  padding: 4px 14px !important;
+}
+
+div.tag-bar button,
+div.tag-list span,
+span.tag-label {
+  background-color: var(--bg-surface-high) !important;
+  color: var(--text-main) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: 12px !important;
+  padding: 2px 10px !important;
+  font-size: 11.5px !important;
+  transition: all 0.15s ease !important;
+}
+
+div.tag-bar button:hover,
+div.tag-list span:hover {
+  background-color: var(--primary) !important;
+  color: var(--on-primary) !important;
+  border-color: var(--primary) !important;
+}
+
+/* ══════════════════════════════════════════════════════════════
+ * 7. EDITOR CODEMIRROR (TEXTO RAW / MARKDOWN)
+ * ══════════════════════════════════════════════════════════════ */
+.CodeMirror {
+  background-color: var(--bg-main) !important;
+  color: var(--text-main) !important;
+  font-family: var(--font-mono) !important;
+  font-size: 14px !important;
+  line-height: 1.65 !important;
+  padding: 8px 12px !important;
+}
+
+.CodeMirror-gutters {
+  background-color: var(--bg-surface) !important;
+  border-right: 1px solid var(--border-color) !important;
+}
+
+.CodeMirror-linenumber {
+  color: var(--text-muted) !important;
+  opacity: 0.55 !important;
+}
+
+.CodeMirror-cursor {
+  border-left: 2px solid var(--primary) !important;
+}
+
+.CodeMirror-selected {
+  background: {{colors.primary.default.hex}}33 !important;
+}
+
+.cm-search-marker {
+  background: {{colors.primary_container.default.hex}} !important;
+  color: {{colors.on_primary_container.default.hex}} !important;
+}
+
+.cm-search-marker.cm-search-marker-selected {
+  background: var(--primary) !important;
+  color: var(--on-primary) !important;
+}
+
+span.cm-header {
+  color: var(--primary) !important;
+  font-weight: 700 !important;
+}
+
+span.cm-link, span.cm-url {
+  color: var(--primary) !important;
+}
+
+span.cm-strong {
+  color: var(--text-main) !important;
+  font-weight: 700 !important;
+}
+
+span.cm-em {
+  color: var(--text-main) !important;
+  font-style: italic !important;
+}
+
+span.cm-comment {
+  color: var(--text-muted) !important;
+  font-style: italic !important;
+}
+
+/* ══════════════════════════════════════════════════════════════
+ * 8. BARRAS DE DESPLAZAMIENTO (SCROLLBARS MODERNAS)
+ * ══════════════════════════════════════════════════════════════ */
+::-webkit-scrollbar {
+  width: 6px !important;
+  height: 6px !important;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent !important;
+}
+
+::-webkit-scrollbar-thumb {
+  background: {{colors.outline.default.hex}}44 !important;
+  border-radius: 4px !important;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: {{colors.primary.default.hex}}99 !important;
+}

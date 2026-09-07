@@ -111,6 +111,8 @@ PACMAN_PACKAGES=(
     gvfs-mtp
     ffmpegthumbnailer
     poppler-glib
+    webp-pixbuf-loader
+    libgsf
     p7zip
     ouch
     zenity
