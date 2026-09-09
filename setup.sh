@@ -54,7 +54,7 @@ done
 
 echo -e "${CYAN}${BOLD}"
 echo "╔══════════════════════════════════════════════════════════════╗"
-echo "║      🚀 Instalación de Dotfiles Sway (PC de Escritorio)     ║"
+echo "║      🚀 Instalación de Dotfiles Sway (PC / Laptop)           ║"
 echo "╚══════════════════════════════════════════════════════════════╝"
 echo -e "${NC}"
 
