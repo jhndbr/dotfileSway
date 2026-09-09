@@ -30,6 +30,36 @@
 @define-color button_active_bg_color #004f52;
 @define-color button_active_fg_color #9cf1f4;
 
+/* ── Material Design 3 Palette Tokens ── */
+@define-color mat_primary #80d4d7;
+@define-color mat_on_primary #003738;
+@define-color mat_primary_container #004f52;
+@define-color mat_on_primary_container #9cf1f4;
+@define-color mat_secondary #b0cccc;
+@define-color mat_on_secondary #1b3435;
+@define-color mat_secondary_container #324b4c;
+@define-color mat_on_secondary_container #cce8e8;
+@define-color mat_tertiary #b5c7e9;
+@define-color mat_on_tertiary #1e314c;
+@define-color mat_tertiary_container #354763;
+@define-color mat_on_tertiary_container #d5e3ff;
+@define-color mat_surface #0e1415;
+@define-color mat_on_surface #dde4e3;
+@define-color mat_surface_variant #3f4949;
+@define-color mat_on_surface_variant #bec8c8;
+@define-color mat_surface_container #1a2121;
+@define-color mat_surface_container_high #252b2b;
+@define-color mat_surface_container_highest #303636;
+@define-color mat_surface_container_low #161d1d;
+@define-color mat_surface_container_lowest #090f0f;
+@define-color mat_outline #899393;
+@define-color mat_outline_variant #3f4949;
+@define-color mat_error #ffb4ab;
+@define-color mat_on_error #690005;
+@define-color mat_error_container #93000a;
+@define-color mat_on_error_container #ffdad6;
+
+
 /*
 * GTK Colors
 * Generated with Matugen
@@ -154,11 +184,10 @@
   -GtkWidget-text-handle-height: 24;
   -GtkDialog-button-spacing: 4;
   -GtkDialog-action-area-border: 0;
-  outline-color: alpha(currentColor,0.3);
-  outline-style: dashed;
-  outline-offset: -3px;
-  outline-width: 1px;
-  -gtk-outline-radius: 7px;
+  outline-color: transparent;
+  outline-style: none;
+  outline-offset: 0;
+  outline-width: 0;
   -gtk-secondary-caret-color: @accent_bg_color;
 }
 
@@ -3297,17 +3326,17 @@ menuitem radio:dir(rtl) {
 }
 
 popover.background {
-  padding: 0;
-  background-color: transparent;
-  box-shadow: none;
+  padding: 2px;
+  background-color: @popover_bg_color;
+  box-shadow: 0 1px 5px 1px rgba(0, 0, 0, 0.09), 0 2px 8px 3px rgba(0, 0, 0, 0.05);
 }
 .csd popover.background, popover.background {
-  border: none;
-  background-color: transparent;
+  border: 1px solid mix(currentColor,@window_bg_color,0.85);
+  border-radius: 10px;
 }
 .csd popover.background {
   background-clip: padding-box;
-  border-color: transparent;
+  border-color: rgba(255, 255, 255, 0.15);
 }
 popover.background > list,
 popover.background > .view,
