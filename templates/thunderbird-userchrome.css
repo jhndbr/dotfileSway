@@ -1,0 +1,316 @@
+/* ╔══════════════════════════════════════════════════════════════╗
+ * ║  Thunderbird Supernova Material 3 userChrome Theme          ║
+ * ║  Generado dinámicamente con Matugen                        ║
+ * ╚══════════════════════════════════════════════════════════════╝ */
+
+:host,
+:root,
+:root[lwtheme],
+body {
+  /* Tokens Material 3 */
+  --md-primary: {{colors.primary.dark.hex}};
+  --md-on-primary: {{colors.on_primary.dark.hex}};
+  --md-primary-container: {{colors.primary_container.dark.hex}};
+  --md-on-primary-container: {{colors.on_primary_container.dark.hex}};
+  --md-secondary: {{colors.secondary.dark.hex}};
+  --md-on-secondary: {{colors.on_secondary.dark.hex}};
+  --md-surface: {{colors.surface.dark.hex}};
+  --md-on-surface: {{colors.on_surface.dark.hex}};
+  --md-on-surface-variant: {{colors.on_surface_variant.dark.hex}};
+  --md-surface-container-lowest: {{colors.surface_container_lowest.dark.hex}};
+  --md-surface-container-low: {{colors.surface_container_low.dark.hex}};
+  --md-surface-container: {{colors.surface_container.dark.hex}};
+  --md-surface-container-high: {{colors.surface_container_high.dark.hex}};
+  --md-surface-container-highest: {{colors.surface_container_highest.dark.hex}};
+  --md-outline: {{colors.outline.dark.hex}};
+  --md-outline-variant: {{colors.outline_variant.dark.hex}};
+  --md-error: {{colors.error.dark.hex}};
+
+  /* Thunderbird Layout Base Variables (Supernova / Nebula) */
+  --layout-background-0: var(--md-surface) !important;
+  --layout-background-1: var(--md-surface-container-low) !important;
+  --layout-background-2: var(--md-surface-container) !important;
+  --layout-background-3: var(--md-surface-container-high) !important;
+  --layout-background-4: var(--md-surface-container-highest) !important;
+
+  /* Typography / Text colors */
+  --layout-color-0: var(--md-on-surface) !important;
+  --layout-color-1: var(--md-on-surface) !important;
+  --layout-color-2: var(--md-on-surface-variant) !important;
+  --layout-color-3: var(--md-outline) !important;
+
+  /* Borders & Dividers */
+  --layout-border-0: var(--md-outline-variant) !important;
+  --layout-border-1: var(--md-outline-variant) !important;
+  --layout-border-2: var(--md-outline-variant) !important;
+
+  /* Selection & Accent */
+  --selected-item-color: var(--md-primary) !important;
+  --selected-item-text-color: var(--md-on-primary) !important;
+  --color-accent-primary: var(--md-primary) !important;
+  --color-accent-primary-hover: var(--md-primary-container) !important;
+  --color-accent-primary-active: var(--md-primary) !important;
+
+  /* Buttons */
+  --button-primary-background-color: var(--md-primary) !important;
+  --button-primary-hover-background-color: var(--md-primary-container) !important;
+  --button-primary-active-background-color: var(--md-primary) !important;
+  --button-primary-text-color: var(--md-on-primary) !important;
+  --button-background-color: var(--md-surface-container-high) !important;
+  --button-hover-background-color: var(--md-surface-container-highest) !important;
+  --button-text-color: var(--md-on-surface) !important;
+  --button-border-color: var(--md-outline-variant) !important;
+  --button-border-radius: 12px !important;
+
+  /* Spaces Toolbar (Barra vertical de navegación izquierda) */
+  --spaces-bg-color: var(--md-surface-container-lowest) !important;
+  --spaces-button-active-bg-color: var(--md-primary) !important;
+  --spaces-button-active-text-color: var(--md-on-primary) !important;
+  --spaces-button-badge-bg-color: var(--md-error) !important;
+
+  /* Toolbars and Header Area */
+  --toolbar-background-color: var(--md-surface-container-low) !important;
+  --toolbar-text-color: var(--md-on-surface) !important;
+  --toolbox-background-color: var(--md-surface-container-low) !important;
+  --lwt-accent-color: var(--md-surface-container-low) !important;
+  --lwt-text-color: var(--md-on-surface) !important;
+  --lwt-toolbar-field-background-color: var(--md-surface-container-high) !important;
+  --lwt-toolbar-field-color: var(--md-on-surface) !important;
+  --lwt-toolbar-field-focus-background-color: var(--md-surface-container-highest) !important;
+
+  /* Sidebar (Carpetas) */
+  --sidebar-background-color: var(--md-surface-container) !important;
+  --sidebar-text-color: var(--md-on-surface) !important;
+  --sidebar-border-color: var(--md-outline-variant) !important;
+  --sidebar-highlight-background-color: var(--md-primary-container) !important;
+  --sidebar-highlight-text-color: var(--md-on-primary-container) !important;
+
+  /* Folder pane & Thread pane */
+  --folder-pane-background: var(--md-surface-container) !important;
+  --thread-pane-background: var(--md-surface-container-low) !important;
+  --message-header-background: var(--md-surface-container-low) !important;
+
+  /* Inputs & Search Variables */
+  --input-background: var(--md-surface-container-high) !important;
+  --input-color: var(--md-on-surface) !important;
+  --input-border-color: var(--md-outline-variant) !important;
+  --search-bar-background: var(--md-surface-container-high) !important;
+  --search-bar-focus-background: var(--md-surface-container-high) !important;
+  --search-bar-color: var(--md-on-surface) !important;
+  --search-bar-border-color: var(--md-outline-variant) !important;
+  --search-outline-offset: 0px !important;
+  --focus-outline-color: transparent !important;
+
+  /* Popups and menus */
+  --panel-background: var(--md-surface-container-high) !important;
+  --panel-color: var(--md-on-surface) !important;
+  --panel-border-color: var(--md-outline-variant) !important;
+  --panel-border-radius: 12px !important;
+
+  /* Thunderbird Design System Color Tokens (Icons & Accents) */
+  --color-primary-default: var(--md-primary) !important;
+  --color-primary-default-dark: var(--md-primary) !important;
+  --color-primary-default-light: var(--md-primary) !important;
+  --color-primary-hover: var(--md-primary-container) !important;
+  --color-primary-hover-dark: var(--md-primary-container) !important;
+  --color-text-highlight-dark: var(--md-primary) !important;
+  --color-accent-blue-dark: var(--md-primary) !important;
+  --color-accent-blue-light: var(--md-primary) !important;
+  --color-accent-ink-dark: var(--md-primary) !important;
+  --color-accent-ink-light: var(--md-primary) !important;
+
+  /* Colores de iconos de carpetas (Folder Pane & Account Central) */
+  --folder-color-inbox: var(--md-primary) !important;
+  --folder-color-folder: var(--md-primary) !important;
+  --folder-color-sent: var(--md-primary) !important;
+  --folder-color-outbox: var(--md-primary) !important;
+  --folder-color-draft: var(--md-secondary) !important;
+  --folder-color-archive: var(--md-secondary) !important;
+  --folder-color-template: var(--md-secondary) !important;
+  --account-color: var(--md-primary) !important;
+  --icon-color: var(--md-primary) !important;
+  --primary-stroke: var(--md-primary) !important;
+  --primary-fill: color-mix(in srgb, var(--md-primary) 22%, transparent) !important;
+}
+
+/* ── Estilos generales y detalles estéticos M3 ──────────────── */
+
+/* Bordes redondeados en elementos seleccionados de árbol y listas */
+#folderTree li.selected > .container,
+#threadTree tr.selected,
+.table-layout tr.selected,
+li.selected {
+  border-radius: 8px !important;
+}
+
+/* Barra de espacios lateral con iconos redondeados */
+.spaces-toolbar button,
+#spacesToolbar button {
+  border-radius: 12px !important;
+  margin-inline: 4px !important;
+  transition: all 0.2s ease !important;
+}
+
+.spaces-toolbar button:hover,
+#spacesToolbar button:hover {
+  background-color: color-mix(in srgb, var(--md-on-surface) 10%, transparent) !important;
+}
+
+/* ── Barra de búsqueda unificada (Un solo borde, brillo suave, sin widget GTK nativo) ── */
+#unifiedToolbar,
+#unified-toolbar {
+  border-bottom: 1px solid var(--md-outline-variant) !important;
+}
+
+/* Eliminar borde y fondo del contenedor li, div.live-content y web component */
+li.search-bar,
+li[item-id="search-bar"],
+.live-content,
+global-search-bar,
+search-bar,
+.search-bar,
+#unifiedToolbar .search-bar,
+.search-bar-container {
+  -moz-appearance: none !important;
+  appearance: none !important;
+  border: none !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+  outline: none !important;
+  padding: 0 !important;
+}
+
+global-search-bar form,
+search-bar form {
+  -moz-appearance: none !important;
+  appearance: none !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  border: none !important;
+  border-radius: 12px !important;
+}
+
+/* Input interno: desactivar apariencia nativa de GTK (-moz-appearance: none) para evitar el cuadro gris nativo */
+input[type="search"] {
+  -moz-appearance: none !important;
+  appearance: none !important;
+  border: 1px solid var(--md-outline-variant) !important;
+  border-radius: 12px !important;
+  background: var(--md-surface-container-high) !important;
+  background-color: var(--md-surface-container-high) !important;
+  color: var(--md-on-surface) !important;
+  box-shadow: none !important;
+  outline: none !important;
+  padding: 4px 12px !important;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
+}
+
+/* Iluminación suave al enfocar (sin brillo encandilante ni borde cuadrado) */
+input[type="search"]:focus,
+input[type="search"]:focus-visible {
+  -moz-appearance: none !important;
+  appearance: none !important;
+  border-color: color-mix(in srgb, var(--md-primary) 70%, var(--md-outline-variant)) !important;
+  outline: none !important;
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--md-primary) 30%, transparent) !important;
+}
+
+/* Teclas kbd dentro del buscador (CTRL + K) con estilo integrado */
+kbd {
+  background-color: var(--md-surface-container) !important;
+  border: 1px solid var(--md-outline-variant) !important;
+  color: var(--md-on-surface-variant) !important;
+  border-radius: 4px !important;
+}
+
+/* Tabs */
+.tabmail-tab {
+  border-radius: 10px 10px 0 0 !important;
+  margin-inline: 2px !important;
+}
+
+.tabmail-tab[selected="true"] {
+  background-color: var(--md-surface-container-high) !important;
+  color: var(--md-primary) !important;
+  font-weight: 600 !important;
+}
+
+/* Cabecera del mensaje */
+#messageHeader,
+.message-header-container {
+  background-color: var(--md-surface-container-low) !important;
+  border-bottom: 1px solid var(--md-outline-variant) !important;
+  border-radius: 0 0 12px 12px !important;
+}
+
+/* Scrollbars discretos estilo Material */
+* {
+  scrollbar-width: thin !important;
+  scrollbar-color: var(--md-outline-variant) transparent !important;
+}
+
+/* ── Sobrescritura directa de contenedores principales ────────── */
+#spacesToolbar,
+.spaces-toolbar {
+  background-color: var(--md-surface-container-lowest) !important;
+}
+
+#folderPane,
+#folderTree,
+.folder-pane {
+  background-color: var(--md-surface-container) !important;
+  color: var(--md-on-surface) !important;
+}
+
+#threadPane,
+#threadTree,
+.thread-pane,
+#threadTree treechildren {
+  background-color: var(--md-surface-container-low) !important;
+  color: var(--md-on-surface) !important;
+}
+
+#messagePane,
+.message-pane {
+  background-color: var(--md-surface) !important;
+}
+
+#unifiedToolbar,
+#navigation-toolbox,
+#tabs-toolbar,
+#titlebar {
+  background-color: var(--md-surface-container-low) !important;
+  color: var(--md-on-surface) !important;
+}
+
+/* ── Iconos temáticos (Reemplazo del azul por el color del tema) ─ */
+/* Iconos en el árbol de carpetas (Folder Pane) */
+#folderTree .icon,
+.folder-tree .icon,
+li[is="folder-tree-row"] .icon {
+  stroke: var(--md-primary) !important;
+  fill: color-mix(in srgb, var(--md-primary) 22%, transparent) !important;
+}
+
+/* Iconos de acciones en la vista central y paneles de cuenta */
+#accountCentral .icon,
+.account-central-header .icon,
+.card-icon,
+.account-central-button .icon,
+#accountCentral a .icon,
+#accountCentral button .icon {
+  stroke: var(--md-primary) !important;
+  fill: color-mix(in srgb, var(--md-primary) 22%, transparent) !important;
+  color: var(--md-primary) !important;
+}
+
+/* Enlaces y botones de Account Central */
+#accountCentral a,
+#accountCentral .hub-item {
+  color: var(--md-on-surface) !important;
+}
+
+#accountCentral a:hover {
+  color: var(--md-primary) !important;
+}

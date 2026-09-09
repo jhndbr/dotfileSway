@@ -1,0 +1,33 @@
+# CAVA Configuration - Matugen Dynamic Theme
+
+[general]
+bars = 0
+bar_width = 2
+bar_spacing = 1
+framerate = 60
+autosens = 1
+noise_reduction = 0.77
+
+[input]
+method = pulse
+source = auto
+
+[output]
+method = noncurses
+orientation = bottom
+channels = stereo
+
+[color]
+gradient = 1
+gradient_count = 8
+gradient_color_1 = '{{colors.primary.default.hex}}'
+gradient_color_2 = '{{colors.primary_container.default.hex}}'
+gradient_color_3 = '{{colors.secondary.default.hex}}'
+gradient_color_4 = '{{colors.secondary_container.default.hex}}'
+gradient_color_5 = '{{colors.tertiary.default.hex}}'
+gradient_color_6 = '{{colors.tertiary_container.default.hex}}'
+gradient_color_7 = '{{colors.primary.default.hex}}'
+gradient_color_8 = '{{colors.surface_tint.default.hex}}'
+
+[smoothing]
+noise_reduction = 77

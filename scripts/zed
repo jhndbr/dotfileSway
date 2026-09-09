@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+# Wrapper para Zed Editor en Arch Linux (binario zeditor)
+exec zeditor "$@"

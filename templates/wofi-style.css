@@ -1,5 +1,5 @@
 /* ╔══════════════════════════════════════════════════════════════╗
-   ║    Wofi Style — Flat Rectilinear Launcher for Sway           ║
+   ║    Wofi Style — Seamless Glassmorphism (No Black Corners)    ║
    ╚══════════════════════════════════════════════════════════════╝ */
 
 @define-color window_bg_color {{colors.surface.default.hex}};
@@ -39,8 +39,8 @@ window,
     margin: 0px;
     padding: 12px;
     background-color: @bg_card;
-    border-radius: 0px;
-    border: 1px solid alpha(@accent_color, 0.40);
+    border-radius: 0;
+    border: 1px solid alpha(@accent_color, 0.35);
     box-shadow: none;
 }
 
@@ -48,18 +48,17 @@ window,
 #input {
     margin-bottom: 10px;
     padding: 9px 12px;
-    border-radius: 0px;
+    border-radius: 0;
     border: 1px solid @border_subtle;
     background-color: @bg_pill;
     color: @text_primary;
     font-size: 13px;
     outline: none;
-    transition: none;
+    transition: all 0.2s ease;
 }
 
 #input:focus {
-    border-color: @border_subtle;
-    border-bottom: 2px solid @accent_color;
+    border-color: @accent_color;
     background-color: @bg_pill_hover;
     box-shadow: none;
 }
@@ -75,11 +74,11 @@ window,
 
 /* ── List Entries ─────────────────────────────────────────── */
 #entry {
-    padding: 8px 12px;
-    border-radius: 0px;
+    padding: 7px 10px;
+    border-radius: 0;
     color: @text_primary;
     margin: 2px 0;
-    transition: none;
+    transition: all 0.15s ease;
 }
 
 #entry:hover {
@@ -87,12 +86,11 @@ window,
     color: @text_primary;
 }
 
-/* Selected item with dynamic accent indicator */
+/* Selected item with dynamic accent color */
 #entry:selected {
     background-color: @accent_color;
     color: @accent_fg_color;
     font-weight: 600;
-    border-left: 3px solid @accent_fg_color;
     box-shadow: none;
 }
 

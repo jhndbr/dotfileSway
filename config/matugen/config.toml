@@ -36,6 +36,14 @@ output_path = '~/.config/kitty/dank-theme.conf'
 input_path = '~/.config/matugen/templates/foot.ini'
 output_path = '~/.config/foot/dank-colors.ini'
 
+[templates.cava]
+input_path = '~/.config/matugen/templates/cava-config'
+output_path = '~/.config/cava/config'
+
+[templates.swayosd]
+input_path = '~/.config/matugen/templates/swayosd-style.css'
+output_path = '~/.config/swayosd/style.css'
+
 [templates.swaylock]
 input_path = '~/.config/matugen/templates/swaylock.conf'
 output_path = '~/.config/swaylock/config'
@@ -52,3 +60,10 @@ output_path = '~/.config/dunst/dunstrc'
 input_path = '~/.config/matugen/templates/wofi-style.css'
 output_path = '~/.config/wofi/style.css'
 
+[templates.joplin_chrome]
+input_path = '~/.config/matugen/templates/joplin-userchrome.css'
+output_path = '~/.config/joplin-desktop/userchrome.css'
+
+[templates.joplin_style]
+input_path = '~/.config/matugen/templates/joplin-userstyle.css'
+output_path = '~/.config/joplin-desktop/userstyle.css'

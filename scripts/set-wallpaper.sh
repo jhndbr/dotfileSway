@@ -8,29 +8,24 @@
 set -e
 
 WALLPAPER_INPUT="${1:-$HOME/Pictures/1.jpg}"
+WALLPAPER_INPUT="${WALLPAPER_INPUT/#\~/$HOME}"
 
 if [ ! -f "$WALLPAPER_INPUT" ]; then
     echo "❌ Imagen no encontrada: $WALLPAPER_INPUT"
     exit 1
 fi
 
-mkdir -p "$HOME/Pictures"
 TARGET_WALLPAPER="$HOME/Pictures/1.jpg"
-
-TMP_IMG="/tmp/matugen_current_wallpaper"
-MIME_TYPE=$(file -b --mime-type "$WALLPAPER_INPUT" 2>/dev/null || echo "")
-if [[ "$MIME_TYPE" == *"png"* ]]; then
-    TMP_IMG="${TMP_IMG}.png"
-elif [[ "$MIME_TYPE" == *"jpeg"* || "$MIME_TYPE" == *"jpg"* ]]; then
-    TMP_IMG="${TMP_IMG}.jpg"
-else
-    TMP_IMG="${TMP_IMG}.png"
-fi
-cp -f "$WALLPAPER_INPUT" "$TMP_IMG" 2>/dev/null || true
-CONVERTED_PNG="$TMP_IMG"
+CONVERTED_PNG="$WALLPAPER_INPUT"
 
 if [ "$WALLPAPER_INPUT" != "$TARGET_WALLPAPER" ]; then
-    cp -f "$WALLPAPER_INPUT" "$TARGET_WALLPAPER" 2>/dev/null || true
+    cp -f "$WALLPAPER_INPUT" "$TARGET_WALLPAPER"
+fi
+
+# Generar fondo desenfocado para la pantalla de bloqueo (Swaylock Blur)
+BLUR_WALLPAPER="$HOME/Pictures/1_blur.png"
+if command -v magick &>/dev/null; then
+    (magick "$WALLPAPER_INPUT" -filter Gaussian -resize 25% -define filter:sigma=2.5 -resize 400% "$BLUR_WALLPAPER" 2>/dev/null || true) &
 fi
 
 if command -v swaymsg &>/dev/null && pgrep -x sway &>/dev/null; then
@@ -59,21 +54,49 @@ fi
 TEMPLATES_DIR="$HOME/.config/matugen/templates"
 mkdir -p "$TEMPLATES_DIR"
 mkdir -p "$HOME/.config/matugen"
-mkdir -p "$HOME/.config/gtk-3.0" "$HOME/.config/gtk-4.0"
+mkdir -p "$HOME/.config/gtk-3.0" "$HOME/.config/gtk-4.0" "$HOME/.config/joplin-desktop"
 mkdir -p "$HOME/.config/zed/themes"
 mkdir -p "$HOME/.config/qt5ct/colors" "$HOME/.config/qt6ct/colors"
-mkdir -p "$HOME/.config/kitty" "$HOME/.config/foot" "$HOME/.config/wofi"
+mkdir -p "$HOME/.config/kitty" "$HOME/.config/foot" "$HOME/.config/wofi" "$HOME/.config/swayosd"
 
-# Sincronizar plantillas a ~/.config/matugen/templates desde las ubicaciones posibles
+# Detectar perfil activo de Thunderbird y asegurar carpeta chrome
+TB_PROFILE=$(find "$HOME/.thunderbird" -maxdepth 2 -type d -name "*.default-release" 2>/dev/null | head -n 1)
+if [ -z "$TB_PROFILE" ]; then
+    TB_PROFILE=$(find "$HOME/.thunderbird" -maxdepth 2 -type d -name "*.default*" 2>/dev/null | head -n 1)
+fi
+if [ -n "$TB_PROFILE" ]; then
+    mkdir -p "$TB_PROFILE/chrome"
+    if [ ! -f "$TB_PROFILE/chrome/userContent.css" ]; then
+        echo '@import "userChrome.css";' > "$TB_PROFILE/chrome/userContent.css"
+    fi
+fi
+
+# Detectar perfil activo de Firefox y asegurar carpeta chrome y legacy stylesheets
+FF_PROFILE=$(find "$HOME/.mozilla/firefox" -maxdepth 2 -type d -name "*.default-release*" 2>/dev/null | head -n 1)
+if [ -z "$FF_PROFILE" ]; then
+    FF_PROFILE=$(find "$HOME/.mozilla/firefox" -maxdepth 2 -type d -name "*.default*" 2>/dev/null | head -n 1)
+fi
+if [ -n "$FF_PROFILE" ]; then
+    mkdir -p "$FF_PROFILE/chrome"
+    if [ ! -f "$FF_PROFILE/chrome/userContent.css" ]; then
+        echo '@import "userChrome.css";' > "$FF_PROFILE/chrome/userContent.css"
+    fi
+    # Asegurar que las hojas de estilo de usuario estén habilitadas en Firefox
+    if ! grep -q "toolkit.legacyUserProfileCustomizations.stylesheets" "$FF_PROFILE/user.js" 2>/dev/null; then
+        echo 'user_pref("toolkit.legacyUserProfileCustomizations.stylesheets", true);' >> "$FF_PROFILE/user.js"
+    fi
+fi
+
+# Sincronizar plantillas a ~/.config/matugen/templates dinámicamente
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-if [ -d "$SCRIPT_DIR/../templates" ]; then
-    cp -rf "$SCRIPT_DIR/../templates/"* "$TEMPLATES_DIR/" 2>/dev/null || true
-elif [ -d "$HOME/Documents/dotfileSway/templates" ]; then
-    cp -rf "$HOME/Documents/dotfileSway/templates/"* "$TEMPLATES_DIR/" 2>/dev/null || true
+REPO_DIR="$(cd "$SCRIPT_DIR/.." 2>/dev/null && pwd || true)"
+
+if [ -d "$REPO_DIR/templates" ]; then
+    cp -rf "$REPO_DIR/templates/"* "$TEMPLATES_DIR/" 2>/dev/null || true
 elif [ -d "$HOME/Documentos/Github/dotfileSway/templates" ]; then
     cp -rf "$HOME/Documentos/Github/dotfileSway/templates/"* "$TEMPLATES_DIR/" 2>/dev/null || true
-elif [ -d "$HOME/dotfileSway/templates" ]; then
-    cp -rf "$HOME/dotfileSway/templates/"* "$TEMPLATES_DIR/" 2>/dev/null || true
+elif [ -d "$HOME/Documents/dotfileSway/templates" ]; then
+    cp -rf "$HOME/Documents/dotfileSway/templates/"* "$TEMPLATES_DIR/" 2>/dev/null || true
 fi
 
 # Configuración de Matugen vinculando las plantillas de Dank Linux
@@ -131,7 +154,41 @@ output_path = '$HOME/.config/dunst/dunstrc'
 [templates.wofi]
 input_path = '$TEMPLATES_DIR/wofi-style.css'
 output_path = '$HOME/.config/wofi/style.css'
+
+[templates.cava]
+input_path = '$TEMPLATES_DIR/cava-config'
+output_path = '$HOME/.config/cava/config'
+
+[templates.swayosd]
+input_path = '$TEMPLATES_DIR/swayosd-style.css'
+output_path = '$HOME/.config/swayosd/style.css'
+
+[templates.joplin_chrome]
+input_path = '$TEMPLATES_DIR/joplin-userchrome.css'
+output_path = '$HOME/.config/joplin-desktop/userchrome.css'
+
+[templates.joplin_style]
+input_path = '$TEMPLATES_DIR/joplin-userstyle.css'
+output_path = '$HOME/.config/joplin-desktop/userstyle.css'
 EOF
+
+if [ -n "$TB_PROFILE" ]; then
+cat << EOF >> "$HOME/.config/matugen/config.toml"
+
+[templates.thunderbird]
+input_path = '$TEMPLATES_DIR/thunderbird-userchrome.css'
+output_path = '$TB_PROFILE/chrome/userChrome.css'
+EOF
+fi
+
+if [ -n "$FF_PROFILE" ]; then
+cat << EOF >> "$HOME/.config/matugen/config.toml"
+
+[templates.firefox]
+input_path = '$TEMPLATES_DIR/firefox-userchrome.css'
+output_path = '$FF_PROFILE/chrome/userChrome.css'
+EOF
+fi
 
 # ── 4. Ejecutar Matugen standalone importando dank16.json si existe ───────
 if [ -f "/tmp/dank16.json" ]; then
@@ -152,11 +209,11 @@ GTK4_FIXES='
   outline-width: 0;
   outline-style: none;
 }
+*:focus,
 *:focus-visible {
-  outline-width: 1px;
-  outline-style: dashed;
-  outline-offset: -3px;
-  outline-color: alpha(currentColor, 0.3);
+  outline: none;
+  outline-width: 0;
+  outline-style: none;
 }
 
 /* ── Fondo sólido de ventana para evitar huecos transparentes ── */
@@ -210,8 +267,8 @@ popover contents {
   color: @popover_fg_color;
   border-style: solid;
   border-width: 1px;
-  border-color: alpha(@accent_bg_color, 0.40);
-  border-radius: 0px;
+  border-color: rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
   box-shadow: none;
   padding: 4px;
 }
@@ -248,8 +305,8 @@ navigation-sidebar row,
 placessidebar row,
 .placessidebar row {
   background-color: transparent;
-  margin: 1px 2px;
-  border-radius: 0px;
+  margin: 2px 4px;
+  border-radius: 6px;
 }
 
 sidebar row:hover,
@@ -288,7 +345,7 @@ flowboxchild,
 flowboxchild:selected,
 .content-view .tile:selected {
   background-color: alpha(currentColor, 0.12);
-  border-radius: 0px;
+  border-radius: 12px;
 }
 '
 
@@ -298,11 +355,11 @@ GTK3_FIXES='
   outline-width: 0;
   outline-style: none;
 }
+*:focus,
 *:focus-visible {
-  outline-width: 1px;
-  outline-style: dashed;
-  outline-offset: -3px;
-  outline-color: alpha(currentColor, 0.3);
+  outline: none;
+  outline-width: 0;
+  outline-style: none;
 }
 
 /* ── Fondo sólido de ventana para evitar transparencia indeseada ── */
@@ -325,7 +382,7 @@ decoration {
   padding: 0;
 }
 
-/* ── Menús GTK3 ── */
+/* ── Menús y Popovers GTK3 ── */
 menu,
 .menu,
 .context-menu,
@@ -347,14 +404,17 @@ menu,
 .context-menu,
 .csd menu,
 .csd .menu,
-.csd .context-menu {
+.csd .context-menu,
+popover,
+popover.background,
+.csd popover,
+.csd popover.background {
   background-color: @popover_bg_color;
   color: @popover_fg_color;
   border-style: solid;
   border-width: 1px;
-  border-color: alpha(@accent_bg_color, 0.40);
-  border-radius: 0px;
-  box-shadow: none;
+  border-color: rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
   padding: 4px;
 }
 
@@ -368,7 +428,6 @@ placessidebar row,
   outline-style: none;
   outline-width: 0;
   box-shadow: none;
-  border-radius: 0px;
 }
 '
 
@@ -387,9 +446,9 @@ printf '@import url("dank-colors.css");\n%s\n' "$GTK4_FIXES" \
 # ── 6. Sincronizar color de iconos en segundo plano ─────
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 if [ -f "$HOME/.local/bin/sync-icon-color.py" ]; then
-    python3 "$HOME/.local/bin/sync-icon-color.py" &>/dev/null &
+    python3 "$HOME/.local/bin/sync-icon-color.py" "$CONVERTED_PNG" &>/dev/null &
 elif [ -f "$SCRIPT_DIR/sync-icon-color.py" ]; then
-    python3 "$SCRIPT_DIR/sync-icon-color.py" &>/dev/null &
+    python3 "$SCRIPT_DIR/sync-icon-color.py" "$CONVERTED_PNG" &>/dev/null &
 fi
 
 # ── 7. Asegurar estilo Qt en Fusion, Papirus-Dark y kdeglobals ──
@@ -401,12 +460,25 @@ sed -i 's/^icon_theme=.*/icon_theme=Papirus-Dark/' "$HOME/.config/qt6ct/qt6ct.co
 # ── 8. Recargar componentes del escritorio, Sway y Foot ───────────────
 pkill -SIGUSR2 waybar 2>/dev/null || true
 pkill -SIGUSR1 foot 2>/dev/null || true
+pkill -SIGUSR1 cava 2>/dev/null || true
+pkill -f waybar-cava.py 2>/dev/null || true
 if command -v swaymsg &>/dev/null && pgrep -x sway &>/dev/null; then
     swaymsg reload 2>/dev/null || true
 fi
 if pgrep -x dunst &>/dev/null; then
     killall dunst 2>/dev/null || true
     dunst &>/dev/null &
+fi
+# Reiniciar swayosd-server asegurando que el proceso anterior libere el socket antes de levantar el nuevo
+if command -v swaymsg &>/dev/null && pgrep -x sway &>/dev/null; then
+    if pgrep -x swayosd-server &>/dev/null; then
+        pkill -x swayosd-server 2>/dev/null || true
+        for _ in {1..20}; do
+            pgrep -x swayosd-server &>/dev/null || break
+            sleep 0.05
+        done
+    fi
+    swaymsg "exec swayosd-server --style '$HOME/.config/swayosd/style.css'" 2>/dev/null || true
 fi
 
 # ── 9. Sincronizar copias en el repositorio de dotfiles ──────────
@@ -420,22 +492,18 @@ elif [ -d "$HOME/Documents/dotfileSway" ]; then
 elif [ -d "$HOME/dotfileSway" ]; then
     DOTFILES_DIR="$HOME/dotfileSway"
 fi
-
 if [ -n "$DOTFILES_DIR" ] && [ -d "$DOTFILES_DIR" ]; then
-    mkdir -p "$DOTFILES_DIR/config/gtk-3.0" "$DOTFILES_DIR/config/gtk-4.0" "$DOTFILES_DIR/config/zed/themes" "$DOTFILES_DIR/config/foot" "$DOTFILES_DIR/config/wofi" "$DOTFILES_DIR/config/sway" "$DOTFILES_DIR/config/dunst" "$DOTFILES_DIR/scripts" "$DOTFILES_DIR/config/qt5ct" "$DOTFILES_DIR/config/qt6ct"
-    cp -f "$HOME/.config/gtk-3.0/dank-colors.css" "$DOTFILES_DIR/config/gtk-3.0/dank-colors.css" 2>/dev/null || true
-    cp -f "$HOME/.config/gtk-4.0/dank-colors.css" "$DOTFILES_DIR/config/gtk-4.0/dank-colors.css" 2>/dev/null || true
-    cp -f "$HOME/.config/gtk-3.0/settings.ini" "$DOTFILES_DIR/config/gtk-3.0/settings.ini" 2>/dev/null || true
-    cp -f "$HOME/.config/gtk-4.0/settings.ini" "$DOTFILES_DIR/config/gtk-4.0/settings.ini" 2>/dev/null || true
-    cp -f "$HOME/.config/qt5ct/qt5ct.conf" "$DOTFILES_DIR/config/qt5ct/qt5ct.conf" 2>/dev/null || true
-    cp -f "$HOME/.config/qt6ct/qt6ct.conf" "$DOTFILES_DIR/config/qt6ct/qt6ct.conf" 2>/dev/null || true
-    cp -f "$HOME/.config/zed/themes/dank-zed-theme.json" "$DOTFILES_DIR/config/zed/themes/dank-zed-theme.json" 2>/dev/null || true
-    cp -f "$HOME/.config/foot/foot.ini" "$DOTFILES_DIR/config/foot/foot.ini" 2>/dev/null || true
-    cp -f "$HOME/.config/foot/dank-colors.ini" "$DOTFILES_DIR/config/foot/dank-colors.ini" 2>/dev/null || true
+    mkdir -p "$DOTFILES_DIR/config/gtk-3.0" "$DOTFILES_DIR/config/gtk-4.0" "$DOTFILES_DIR/config/zed/themes" "$DOTFILES_DIR/config/foot" "$DOTFILES_DIR/config/wofi" "$DOTFILES_DIR/scripts" "$DOTFILES_DIR/config/qt5ct" "$DOTFILES_DIR/config/qt6ct"
+    cp -f "$HOME/.config/gtk-3.0/dank-colors.css" "$DOTFILES_DIR/config/gtk-3.0/dank-colors.css"
+    cp -f "$HOME/.config/gtk-4.0/dank-colors.css" "$DOTFILES_DIR/config/gtk-4.0/dank-colors.css"
+    cp -f "$HOME/.config/gtk-3.0/settings.ini" "$DOTFILES_DIR/config/gtk-3.0/settings.ini"
+    cp -f "$HOME/.config/gtk-4.0/settings.ini" "$DOTFILES_DIR/config/gtk-4.0/settings.ini"
+    cp -f "$HOME/.config/qt5ct/qt5ct.conf" "$DOTFILES_DIR/config/qt5ct/qt5ct.conf"
+    cp -f "$HOME/.config/qt6ct/qt6ct.conf" "$DOTFILES_DIR/config/qt6ct/qt6ct.conf"
+    cp -f "$HOME/.config/zed/themes/dank-zed-theme.json" "$DOTFILES_DIR/config/zed/themes/dank-zed-theme.json"
+    cp -f "$HOME/.config/foot/foot.ini" "$DOTFILES_DIR/config/foot/foot.ini"
     cp -f "$HOME/.config/wofi/style.css" "$DOTFILES_DIR/config/wofi/style.css" 2>/dev/null || true
-    cp -f "$HOME/.config/sway/dank-colors" "$DOTFILES_DIR/config/sway/dank-colors" 2>/dev/null || true
-    cp -f "$HOME/.config/dunst/dunstrc" "$DOTFILES_DIR/config/dunst/dunstrc" 2>/dev/null || true
-    cp -f "$HOME/.local/bin/sync-icon-color.py" "$DOTFILES_DIR/scripts/sync-icon-color.py" 2>/dev/null || true
+    cp -f "$HOME/.local/bin/sync-icon-color.py" "$DOTFILES_DIR/scripts/sync-icon-color.py"
     cp -f "$HOME/.local/bin/set-wallpaper.sh" "$DOTFILES_DIR/scripts/set-wallpaper.sh" 2>/dev/null || true
 fi
 
@@ -446,8 +514,24 @@ gsettings set org.gnome.desktop.interface monospace-font-name 'JetBrainsMono Ner
 gsettings set org.gnome.desktop.interface document-font-name 'Inter 10' 2>/dev/null || true
 gsettings set org.gnome.desktop.interface icon-theme 'Papirus-Dark' 2>/dev/null || true
 gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark' 2>/dev/null || true
-gsettings set org.gnome.desktop.interface gtk-theme 'adw-gtk3-dark' 2>/dev/null || gsettings set org.gnome.desktop.interface gtk-theme 'adw-gtk3' 2>/dev/null || true
-pkill -f xdg-desktop-portal-gtk 2>/dev/null || true
+
+# Alternar gtk-theme para forzar a GTK3 y aplicaciones abiertas a recargar el CSS inmediatamente
+gsettings set org.gnome.desktop.interface gtk-theme 'Adwaita' 2>/dev/null || true
+sleep 0.05
+gsettings set org.gnome.desktop.interface gtk-theme 'adw-gtk3-dark' 2>/dev/null || true
+
+# Reiniciar demonio de Thunar para que cargue los estilos y colores nuevos
+thunar -q 2>/dev/null || true
+
+# Reiniciar limpiamente xdg-desktop-portal-gtk para recargar los colores del selector de archivos (FileChooser)
+if command -v systemctl &>/dev/null && systemctl --user is-active --quiet xdg-desktop-portal-gtk; then
+    systemctl --user restart xdg-desktop-portal-gtk 2>/dev/null || true
+fi
+
+# Actualizar colores en navegadores / clientes compatibles con Pywalfox (Thunderbird / Firefox)
+if command -v pywalfox &>/dev/null; then
+    pywalfox update 2>/dev/null || true
+fi
 
 # ── 11. Notificación ──────────────────────────────────────────────
 if command -v dunstify &>/dev/null; then

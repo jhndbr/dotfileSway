@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+export PATH="$HOME/.local/bin:$HOME/.cargo/bin:$PATH"
+TARGET_DIR="$HOME/Documentos/Github/tuidal"
+
+if [ -d "$TARGET_DIR" ]; then
+    cd "$TARGET_DIR" || exit 1
+    exec uv run tidal_tui "$@"
+else
+    echo "❌ Directorio no encontrado: $TARGET_DIR"
+    exit 1
+fi

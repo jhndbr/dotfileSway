@@ -66,14 +66,17 @@ PACMAN_PACKAGES=(
     dunst
     gammastep
 
-    # Captura de Pantalla & Portapapeles
+    # Captura de Pantalla, Grabación & Portapapeles
     grim
     slurp
+    wf-recorder
     wl-clipboard
     cliphist
     wtype
 
-    # Audio, Red, Montaje USB y Control de Sistema
+    # Audio, Red, Montaje USB, OSD y Control de Sistema
+    swayosd
+    ddcutil
     networkmanager
     network-manager-applet
     pipewire
@@ -90,6 +93,8 @@ PACMAN_PACKAGES=(
     blueman
     udiskie
     power-profiles-daemon
+    gamemode
+    lib32-gamemode
 
     # Portales e Integración Wayland / XDG
     xdg-desktop-portal
@@ -97,19 +102,25 @@ PACMAN_PACKAGES=(
     xdg-desktop-portal-gtk
     xdg-utils
 
-    # Gestor de Archivos Yazi & Previews en Terminal
-    yazi
+    # Gestor de Archivos Thunar, Miniaturas & Utilidades de Compresión
+    thunar
+    thunar-volman
+    thunar-archive-plugin
+    tumbler
+    gvfs
+    gvfs-mtp
     ffmpegthumbnailer
-    poppler
-    chafa
+    poppler-glib
+    webp-pixbuf-loader
+    libgsf
     p7zip
     ouch
+    zenity
 
     # Aplicaciones Predeterminadas (Suite Minimal Completa)
     firefox
     mpv
     imv
-    swayimg
     zathura
     zathura-pdf-mupdf
     nano
@@ -198,6 +209,10 @@ log_success "Servicio bluetooth habilitado"
 log_info "Habilitando servicios de audio Pipewire & Wireplumber..."
 systemctl --user enable --now pipewire.service pipewire-pulse.service wireplumber.service 2>/dev/null || true
 log_success "Servicios de audio habilitados"
+
+log_info "Habilitando servicio de optimización gaming (GameMode)..."
+systemctl --user enable --now gamemoded.service 2>/dev/null || true
+log_success "Servicio gamemode habilitado"
 
 # ── 8.2. Optimización de Memoria & Logs (ZRAM & Journald) ──────
 log_info "Configurando compresión de memoria en tiempo real (ZRAM)..."

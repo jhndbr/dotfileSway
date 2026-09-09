@@ -35,3 +35,9 @@ node_modules/
 # Thumbnails
 ._*
 Thumbs.db
+
+# Backups y caches de dotfiles
+dotfiles-backup/
+.system_generated/
+*.backup
+

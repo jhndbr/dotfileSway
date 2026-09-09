@@ -30,6 +30,36 @@
 @define-color button_active_bg_color {{colors.primary_container.default.hex}};
 @define-color button_active_fg_color {{colors.on_primary_container.default.hex}};
 
+/* ── Material Design 3 Palette Tokens ── */
+@define-color mat_primary {{colors.primary.default.hex}};
+@define-color mat_on_primary {{colors.on_primary.default.hex}};
+@define-color mat_primary_container {{colors.primary_container.default.hex}};
+@define-color mat_on_primary_container {{colors.on_primary_container.default.hex}};
+@define-color mat_secondary {{colors.secondary.default.hex}};
+@define-color mat_on_secondary {{colors.on_secondary.default.hex}};
+@define-color mat_secondary_container {{colors.secondary_container.default.hex}};
+@define-color mat_on_secondary_container {{colors.on_secondary_container.default.hex}};
+@define-color mat_tertiary {{colors.tertiary.default.hex}};
+@define-color mat_on_tertiary {{colors.on_tertiary.default.hex}};
+@define-color mat_tertiary_container {{colors.tertiary_container.default.hex}};
+@define-color mat_on_tertiary_container {{colors.on_tertiary_container.default.hex}};
+@define-color mat_surface {{colors.surface.default.hex}};
+@define-color mat_on_surface {{colors.on_surface.default.hex}};
+@define-color mat_surface_variant {{colors.surface_variant.default.hex}};
+@define-color mat_on_surface_variant {{colors.on_surface_variant.default.hex}};
+@define-color mat_surface_container {{colors.surface_container.default.hex}};
+@define-color mat_surface_container_high {{colors.surface_container_high.default.hex}};
+@define-color mat_surface_container_highest {{colors.surface_container_highest.default.hex}};
+@define-color mat_surface_container_low {{colors.surface_container_low.default.hex}};
+@define-color mat_surface_container_lowest {{colors.surface_container_lowest.default.hex}};
+@define-color mat_outline {{colors.outline.default.hex}};
+@define-color mat_outline_variant {{colors.outline_variant.default.hex}};
+@define-color mat_error {{colors.error.default.hex}};
+@define-color mat_on_error {{colors.on_error.default.hex}};
+@define-color mat_error_container {{colors.error_container.default.hex}};
+@define-color mat_on_error_container {{colors.on_error_container.default.hex}};
+
+
 /*
 * GTK Colors
 * Generated with Matugen
@@ -154,11 +184,10 @@
   -GtkWidget-text-handle-height: 24;
   -GtkDialog-button-spacing: 4;
   -GtkDialog-action-area-border: 0;
-  outline-color: alpha(currentColor,0.3);
-  outline-style: dashed;
-  outline-offset: -3px;
-  outline-width: 1px;
-  -gtk-outline-radius: 7px;
+  outline-color: transparent;
+  outline-style: none;
+  outline-offset: 0;
+  outline-width: 0;
   -gtk-secondary-caret-color: @accent_bg_color;
 }
 
@@ -3297,17 +3326,17 @@ menuitem radio:dir(rtl) {
 }
 
 popover.background {
-  padding: 0;
-  background-color: transparent;
-  box-shadow: none;
+  padding: 2px;
+  background-color: @popover_bg_color;
+  box-shadow: 0 1px 5px 1px rgba(0, 0, 0, 0.09), 0 2px 8px 3px rgba(0, 0, 0, 0.05);
 }
 .csd popover.background, popover.background {
-  border: none;
-  background-color: transparent;
+  border: 1px solid mix(currentColor,@window_bg_color,0.85);
+  border-radius: 10px;
 }
 .csd popover.background {
   background-clip: padding-box;
-  border-color: transparent;
+  border-color: rgba(255, 255, 255, 0.15);
 }
 popover.background > list,
 popover.background > .view,

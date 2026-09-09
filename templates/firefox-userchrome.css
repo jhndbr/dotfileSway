@@ -1,138 +1,475 @@
-@media -moz-pref("userChrome.theme-material") {
-  :root {
-    --md-sys-color-primary: {{colors.primary.light.hex}};
-    --md-sys-color-surface-tint: {{colors.primary.light.hex}};
-    --md-sys-color-on-primary: {{colors.on_primary.light.hex}};
-    --md-sys-color-primary-container: {{colors.primary_container.light.hex}};
-    --md-sys-color-on-primary-container: {{colors.on_primary_container.light.hex}};
-    --md-sys-color-secondary: {{colors.secondary.light.hex}};
-    --md-sys-color-on-secondary: {{colors.on_secondary.light.hex}};
-    --md-sys-color-secondary-container: {{colors.secondary_container.light.hex}};
-    --md-sys-color-on-secondary-container: {{colors.on_secondary_container.light.hex}};
-    --md-sys-color-tertiary: {{colors.tertiary.light.hex}};
-    --md-sys-color-on-tertiary: {{colors.on_tertiary.light.hex}};
-    --md-sys-color-tertiary-container: {{colors.tertiary_container.light.hex}};
-    --md-sys-color-on-tertiary-container: {{colors.on_tertiary_container.light.hex}};
-    --md-sys-color-error: {{colors.error.light.hex}};
-    --md-sys-color-on-error: {{colors.on_error.light.hex}};
-    --md-sys-color-error-container: {{colors.error_container.light.hex}};
-    --md-sys-color-on-error-container: {{colors.on_error_container.light.hex}};
-    --md-sys-color-background: {{colors.background.light.hex}};
-    --md-sys-color-on-background: {{colors.on_background.light.hex}};
-    --md-sys-color-surface: {{colors.background.light.hex}};
-    --md-sys-color-on-surface: {{colors.on_surface.light.hex}};
-    --md-sys-color-surface-variant: {{colors.surface_variant.light.hex}};
-    --md-sys-color-on-surface-variant: {{colors.on_surface_variant.light.hex}};
-    --md-sys-color-outline: {{colors.outline.light.hex}};
-    --md-sys-color-outline-variant: {{colors.outline_variant.light.hex}};
-    --md-sys-color-shadow: {{colors.shadow.light.hex}};
-    --md-sys-color-scrim: {{colors.scrim.light.hex}};
-    --md-sys-color-inverse-surface: {{colors.inverse_surface.light.hex}};
-    --md-sys-color-inverse-on-surface: {{colors.inverse_on_surface.light.hex}};
-    --md-sys-color-inverse-primary: {{colors.inverse_primary.light.hex}};
-    --md-sys-color-primary-fixed: {{colors.primary_fixed.light.hex}};
-    --md-sys-color-on-primary-fixed: {{colors.on_primary_fixed.light.hex}};
-    --md-sys-color-primary-fixed-dim: {{colors.primary_fixed_dim.light.hex}};
-    --md-sys-color-on-primary-fixed-variant: {{colors.on_primary_fixed_variant.light.hex}};
-    --md-sys-color-secondary-fixed: {{colors.secondary_fixed.light.hex}};
-    --md-sys-color-on-secondary-fixed: {{colors.on_secondary_fixed.light.hex}};
-    --md-sys-color-secondary-fixed-dim: {{colors.secondary_fixed_dim.light.hex}};
-    --md-sys-color-on-secondary-fixed-variant: {{colors.on_secondary_fixed_variant.light.hex}};
-    --md-sys-color-tertiary-fixed: {{colors.tertiary_fixed.light.hex}};
-    --md-sys-color-on-tertiary-fixed: {{colors.on_tertiary_fixed.light.hex}};
-    --md-sys-color-tertiary-fixed-dim: {{colors.tertiary_fixed_dim.light.hex}};
-    --md-sys-color-on-tertiary-fixed-variant: {{colors.on_tertiary_fixed_variant.light.hex}};
-    --md-sys-color-surface-dim: {{colors.surface_dim.light.hex}};
-    --md-sys-color-surface-bright: {{colors.surface_bright.light.hex}};
-    --md-sys-color-surface-container-lowest: {{colors.surface_container_lowest.light.hex}};
-    --md-sys-color-surface-container-low: {{colors.surface_container_low.light.hex}};
-    --md-sys-color-surface-container: {{colors.background.light.hex}};
-    --md-sys-color-surface-container-high: {{colors.background.light.hex}};
-    --md-sys-color-surface-container-highest: {{colors.background.light.hex}};
+/* ╔══════════════════════════════════════════════════════════════╗
+ * ║  Firefox Material 3 userChrome Theme                       ║
+ * ║  Generado dinámicamente con Matugen                        ║
+ * ╚══════════════════════════════════════════════════════════════╝ */
 
-    --m3-radius: 12px;
-    --m3-radius-sm: 10px;
-    --m3-elev-0: none;
-    --m3-elev-1: 0 1px 2px color-mix(in srgb, var(--md-sys-color-shadow) 8%, transparent), 0 1px 3px color-mix(in srgb, var(--md-sys-color-shadow) 6%, transparent);
-    --m3-elev-2: 0 2px 6px color-mix(in srgb, var(--md-sys-color-shadow) 10%, transparent), 0 1px 3px color-mix(in srgb, var(--md-sys-color-shadow) 6%, transparent);
-    --m3-elev-3: 0 11px 7px color-mix(in srgb, var(--md-sys-color-shadow) 19%, transparent), 0 13px 25px color-mix(in srgb, var(--md-sys-color-shadow) 30%, transparent);
-    --m3-elev-4: 0 14px 12px color-mix(in srgb, var(--md-sys-color-shadow) 17%, transparent), 0 20px 40px color-mix(in srgb, var(--md-sys-color-shadow) 30%, transparent);
-    --m3-elev-5: 0 17px 17px color-mix(in srgb, var(--md-sys-color-shadow) 15%, transparent), 0 27px 55px color-mix(in srgb, var(--md-sys-color-shadow) 30%, transparent);
-
-    --tab-height: 34px;
-    --urlbar-height: 38px;
-
-    --state-hover: color-mix(in srgb, var(--md-sys-color-on-surface) 8%, transparent);
-    --state-press: color-mix(in srgb, var(--md-sys-color-on-surface) 12%, transparent);
-
-    --focus-ring: 0 0 0 2px color-mix(in srgb, var(--md-sys-color-primary) 70%, transparent);
-  }
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --md-sys-color-primary: {{colors.primary.dark.hex}};
-    --md-sys-color-surface-tint: {{colors.primary.dark.hex}};
-    --md-sys-color-on-primary: {{colors.on_primary.dark.hex}};
-    --md-sys-color-primary-container: {{colors.primary_container.dark.hex}};
-    --md-sys-color-on-primary-container: {{colors.on_primary_container.dark.hex}};
-    --md-sys-color-secondary: {{colors.secondary.dark.hex}};
-    --md-sys-color-on-secondary: {{colors.on_secondary.dark.hex}};
-    --md-sys-color-secondary-container: {{colors.secondary_container.dark.hex}};
-    --md-sys-color-on-secondary-container: {{colors.on_secondary_container.dark.hex}};
-    --md-sys-color-tertiary: {{colors.tertiary.dark.hex}};
-    --md-sys-color-on-tertiary: {{colors.on_tertiary.dark.hex}};
-    --md-sys-color-tertiary-container: {{colors.tertiary_container.dark.hex}};
-    --md-sys-color-on-tertiary-container: {{colors.on_tertiary_container.dark.hex}};
-    --md-sys-color-error: {{colors.error.dark.hex}};
-    --md-sys-color-on-error: {{colors.on_error.dark.hex}};
-    --md-sys-color-error-container: {{colors.error_container.dark.hex}};
-    --md-sys-color-on-error-container: {{colors.on_error_container.dark.hex}};
-    --md-sys-color-background: {{colors.background.dark.hex}};
-    --md-sys-color-on-background: {{colors.on_background.dark.hex}};
-    --md-sys-color-surface: {{colors.surface.dark.hex}};
-    --md-sys-color-on-surface: {{colors.on_surface.dark.hex}};
-    --md-sys-color-surface-variant: {{colors.surface_variant.dark.hex}};
-    --md-sys-color-on-surface-variant: {{colors.on_surface_variant.dark.hex}};
-    --md-sys-color-outline: {{colors.outline.dark.hex}};
-    --md-sys-color-outline-variant: {{colors.outline_variant.dark.hex}};
-    --md-sys-color-shadow: {{colors.shadow.dark.hex}};
-    --md-sys-color-scrim: {{colors.scrim.dark.hex}};
-    --md-sys-color-inverse-surface: {{colors.inverse_surface.dark.hex}};
-    --md-sys-color-inverse-on-surface: {{colors.inverse_on_surface.dark.hex}};
-    --md-sys-color-inverse-primary: {{colors.inverse_primary.dark.hex}};
-    --md-sys-color-primary-fixed: {{colors.primary_fixed.dark.hex}};
-    --md-sys-color-on-primary-fixed: {{colors.on_primary_fixed.dark.hex}};
-    --md-sys-color-primary-fixed-dim: {{colors.primary_fixed_dim.dark.hex}};
-    --md-sys-color-on-primary-fixed-variant: {{colors.on_primary_fixed_variant.dark.hex}};
-    --md-sys-color-secondary-fixed: {{colors.secondary_fixed.dark.hex}};
-    --md-sys-color-on-secondary-fixed: {{colors.on_secondary_fixed.dark.hex}};
-    --md-sys-color-secondary-fixed-dim: {{colors.secondary_fixed_dim.dark.hex}};
-    --md-sys-color-on-secondary-fixed-variant: {{colors.on_secondary_fixed_variant.dark.hex}};
-    --md-sys-color-tertiary-fixed: {{colors.tertiary_fixed.dark.hex}};
-    --md-sys-color-on-tertiary-fixed: {{colors.on_tertiary_fixed.dark.hex}};
-    --md-sys-color-tertiary-fixed-dim: {{colors.tertiary_fixed_dim.dark.hex}};
-    --md-sys-color-on-tertiary-fixed-variant: {{colors.on_tertiary_fixed_variant.dark.hex}};
-    --md-sys-color-surface-dim: {{colors.surface_dim.dark.hex}};
-    --md-sys-color-surface-bright: {{colors.surface_bright.dark.hex}};
-    --md-sys-color-surface-container-lowest: {{colors.surface_container_lowest.dark.hex}};
-    --md-sys-color-surface-container-low: {{colors.surface_container_low.dark.hex}};
-    --md-sys-color-surface-container: {{colors.surface_container.dark.hex}};
-    --md-sys-color-surface-container-high: {{colors.surface_container_high.dark.hex}};
-    --md-sys-color-surface-container-highest: {{colors.surface_container_highest.dark.hex}};
-
-    --m3-elev-1: 0 1px 2px color-mix(in srgb, var(--md-sys-color-shadow) 50%, transparent), 0 1px 3px color-mix(in srgb, var(--md-sys-color-shadow) 35%, transparent);
-    --m3-elev-2: 0 4px 10px color-mix(in srgb, var(--md-sys-color-shadow) 55%, transparent), 0 1px 3px color-mix(in srgb, var(--md-sys-color-shadow) 35%, transparent);
-    --m3-elev-3: 0 11px 7px color-mix(in srgb, var(--md-sys-color-shadow) 45%, transparent), 0 13px 25px color-mix(in srgb, var(--md-sys-color-shadow) 55%, transparent);
-    --m3-elev-4: 0 14px 12px color-mix(in srgb, var(--md-sys-color-shadow) 42%, transparent), 0 20px 40px color-mix(in srgb, var(--md-sys-color-shadow) 55%, transparent);
-    --m3-elev-5: 0 17px 17px color-mix(in srgb, var(--md-sys-color-shadow) 40%, transparent), 0 27px 55px color-mix(in srgb, var(--md-sys-color-shadow) 55%, transparent);
-
-    --state-hover: color-mix(in srgb, var(--md-sys-color-on-surface) 6%, transparent);
-    --state-press: color-mix(in srgb, var(--md-sys-color-on-surface) 10%, transparent);
-  }
-}
-
-/* idk if this even works, but the suggestion in the material updated readme bricks symbols no matter how many fallbacks I add */
 :root {
-  font-family: system-ui, "Inter Variable", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji" !important;
+  /* Tokens Material 3 */
+  --md-primary: {{colors.primary.dark.hex}};
+  --md-on-primary: {{colors.on_primary.dark.hex}};
+  --md-primary-container: {{colors.primary_container.dark.hex}};
+  --md-on-primary-container: {{colors.on_primary_container.dark.hex}};
+  --md-secondary: {{colors.secondary.dark.hex}};
+  --md-on-secondary: {{colors.on_secondary.dark.hex}};
+  --md-surface: {{colors.surface.dark.hex}};
+  --md-on-surface: {{colors.on_surface.dark.hex}};
+  --md-on-surface-variant: {{colors.on_surface_variant.dark.hex}};
+  --md-surface-container-lowest: {{colors.surface_container_lowest.dark.hex}};
+  --md-surface-container-low: {{colors.surface_container_low.dark.hex}};
+  --md-surface-container: {{colors.surface_container.dark.hex}};
+  --md-surface-container-high: {{colors.surface_container_high.dark.hex}};
+  --md-surface-container-highest: {{colors.surface_container_highest.dark.hex}};
+  --md-outline: {{colors.outline.dark.hex}};
+  --md-outline-variant: {{colors.outline_variant.dark.hex}};
+  --md-error: {{colors.error.dark.hex}};
+
+  /* Variables nativas de barras de herramientas */
+  --toolbar-bgcolor: var(--md-surface-container-low) !important;
+  --toolbar-color: var(--md-on-surface) !important;
+  --toolbox-non-lwt-bgcolor: var(--md-surface-container-low) !important;
+  --lwt-accent-color: var(--md-surface-container-low) !important;
+  --lwt-text-color: var(--md-on-surface) !important;
+  --toolbarbutton-icon-fill: var(--md-on-surface) !important;
+  --toolbarbutton-hover-background: color-mix(in srgb, var(--md-on-surface) 10%, transparent) !important;
+  --toolbarbutton-active-background: color-mix(in srgb, var(--md-on-surface) 15%, transparent) !important;
+
+  /* Variables nativas de pestañas */
+  --tab-selected-bgcolor: color-mix(in srgb, var(--md-primary) 15%, var(--md-surface-container-high)) !important;
+  --tab-background-color-selected: color-mix(in srgb, var(--md-primary) 15%, var(--md-surface-container-high)) !important;
+  --tab-selected-textcolor: #ffffff !important;
+  --tab-hover-bgcolor: color-mix(in srgb, var(--md-on-surface) 8%, transparent) !important;
+  --tab-background-color-hover: color-mix(in srgb, var(--md-on-surface) 8%, transparent) !important;
+
+  /* Variables nativas de URLBar y Search View */
+  --toolbar-field-background-color: var(--md-surface-container-high) !important;
+  --toolbar-field-color: var(--md-on-surface) !important;
+  --toolbar-field-focus-background-color: var(--md-surface-container-high) !important;
+  --toolbar-field-focus-color: #ffffff !important;
+  --toolbar-field-focus-border-color: var(--md-primary) !important;
+  --urlbar-background-color: var(--md-surface-container-high) !important;
+  --urlbar-background-color-focus: var(--md-surface-container-high) !important;
+  --urlbar-background-border: 1px solid var(--md-outline-variant) !important;
+  --urlbar-background-border-focused: 1px solid var(--md-primary) !important;
+  --urlbar-background-border-breakout: 1px solid var(--md-primary) !important;
+  --urlbar-background-outline-focused: none !important;
+  --urlbar-input-container-outline-breakout: none !important;
+  --urlbar-input-container-outline-breakout-focused: none !important;
+  --urlbar-box-background: var(--md-surface-container-high) !important;
+  --urlbar-box-background-color: var(--md-surface-container-high) !important;
+  --urlbar-box-background-color-focus: var(--md-surface-container-high) !important;
+  --urlbar-box-background-color-hover: var(--md-surface-container-highest) !important;
+  --urlbar-box-text-color: var(--md-on-surface) !important;
+  --urlbar-box-text-color-hover: #ffffff !important;
+  --urlbarview-background-color-hover: var(--md-surface-container-highest) !important;
+  --urlbarview-background-color-selected: var(--md-surface-container-highest) !important;
+  --urlbarview-separator-color: transparent !important;
+  --urlbarview-text-color-selected: #ffffff !important;
+  --urlbarview-text-color-action: var(--md-primary) !important;
+  --urlbarview-text-color-secondary: var(--md-on-surface-variant) !important;
+  --focus-outline-color: transparent !important;
+
+  /* Variables de Popups, Menús y Paneles */
+  --panel-background-color: var(--md-surface-container-high) !important;
+  --panel-background: var(--md-surface-container-high) !important;
+  --panel-text-color: #ffffff !important;
+  --panel-color: #ffffff !important;
+  --panel-border-color: var(--md-outline-variant) !important;
+  --panel-border-radius: 10px !important;
+  --arrowpanel-background: var(--md-surface-container-high) !important;
+  --arrowpanel-color: #ffffff !important;
+  --arrowpanel-border-color: var(--md-outline-variant) !important;
+  --autocomplete-popup-background: var(--md-surface-container-high) !important;
+  --autocomplete-popup-color: var(--md-on-surface) !important;
+
+  /* Barra lateral (Sidebar y Pestañas Verticales) */
+  --sidebar-background-color: var(--md-surface-container-low) !important;
+  --sidebar-text-color: var(--md-on-surface) !important;
+  --sidebar-border-color: var(--md-outline-variant) !important;
+}
+
+/* ── Cajas y Contenedores Principales ────────────────────────── */
+#navigator-toolbox,
+#nav-bar,
+#PersonalToolbar,
+#TabsToolbar {
+  background-color: var(--md-surface-container-low) !important;
+  color: var(--md-on-surface) !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+#browser {
+  background-color: var(--md-surface) !important;
+}
+
+/* ── Barra Lateral y Pestañas Verticales ─────────────────────── */
+#sidebar-main,
+sidebar-main,
+#sidebar-container,
+#sidebar-box,
+#sidebar-header,
+.sidebar-panel,
+#sidebar,
+#tabbrowser-tabs[orient="vertical"],
+#vertical-tabs,
+.vertical-tabs-container {
+  background-color: var(--md-surface-container-low) !important;
+  color: var(--md-on-surface) !important;
+  border-color: var(--md-outline-variant) !important;
+}
+
+#sidebar-container {
+  border-inline-end: 1px solid var(--md-outline-variant) !important;
+}
+
+/* Pestañas verticales */
+#tabbrowser-tabs[orient="vertical"] .tabbrowser-tab,
+.tabbrowser-tab[orient="vertical"],
+#vertical-tabs .tabbrowser-tab {
+  border-radius: 8px !important;
+  margin: 2px 4px !important;
+  border: none !important;
+  background: transparent !important;
+}
+
+/* Pestaña no seleccionada hover */
+#tabbrowser-tabs[orient="vertical"] .tabbrowser-tab:hover:not([selected]) .tab-background,
+.tabbrowser-tab[orient="vertical"]:hover:not([selected]) .tab-background {
+  background-color: color-mix(in srgb, var(--md-on-surface) 10%, transparent) !important;
+  border-radius: 8px !important;
+  border: none !important;
+}
+
+/* Pestaña seleccionada: fondo oscuro elegante acorde al tema */
+#tabbrowser-tabs[orient="vertical"] .tabbrowser-tab:is([selected], [selected="true"]) .tab-background,
+.tabbrowser-tab[orient="vertical"]:is([selected], [selected="true"]) .tab-background {
+  background-color: color-mix(in srgb, var(--md-primary) 15%, var(--md-surface-container-high)) !important;
+  border: 1px solid var(--md-outline-variant) !important;
+  border-radius: 8px !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Letras de pestañas verticales */
+#tabbrowser-tabs[orient="vertical"] .tabbrowser-tab .tab-label,
+.tabbrowser-tab[orient="vertical"] .tab-label {
+  color: var(--md-on-surface) !important;
+}
+
+#tabbrowser-tabs[orient="vertical"] .tabbrowser-tab:is([selected], [selected="true"]) .tab-label,
+.tabbrowser-tab[orient="vertical"]:is([selected], [selected="true"]) .tab-label {
+  color: #ffffff !important;
+  font-weight: 600 !important;
+}
+
+/* Iconos de páginas (Favicons) limpios y destacados */
+#tabbrowser-tabs[orient="vertical"] .tab-icon-image,
+.tabbrowser-tab[orient="vertical"] .tab-icon-image {
+  width: 18px !important;
+  height: 18px !important;
+  opacity: 1 !important;
+  filter: none !important;
+  display: inline-block !important;
+}
+
+#tabbrowser-tabs[orient="vertical"] .tab-icon-stack,
+.tabbrowser-tab[orient="vertical"] .tab-icon-stack {
+  width: 20px !important;
+  height: 20px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+/* Centrado perfecto del favicon en modo colapsado */
+#tabbrowser-tabs[orient="vertical"]:not([expanded]) .tabbrowser-tab {
+  display: flex !important;
+  justify-content: center !important;
+}
+
+#tabbrowser-tabs[orient="vertical"]:not([expanded]) .tab-content {
+  padding: 0 !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  margin: 0 !important;
+}
+
+#tabbrowser-tabs[orient="vertical"]:not([expanded]) .tab-icon-stack {
+  margin: 0 auto !important;
+}
+
+#tabbrowser-tabs[orient="vertical"]:not([expanded]) .tab-background {
+  margin: 0 !important;
+}
+
+/* Separación limpia en modo vertical expandido */
+#tabbrowser-tabs[orient="vertical"][expanded] .tab-icon-stack {
+  margin-inline-end: 8px !important;
+}
+
+/* Pestañas de la barra lateral (fxview-tab-row y sidebar-tab-row) */
+fxview-tab-row,
+sidebar-tab-row {
+  color: var(--md-on-surface) !important;
+}
+
+fxview-tab-row:is([selected], [current]),
+sidebar-tab-row:is([selected], [current]) {
+  background-color: color-mix(in srgb, var(--md-primary) 15%, var(--md-surface-container-high)) !important;
+  color: #ffffff !important;
+  border-radius: 8px !important;
+}
+
+/* Botones e iconos en la barra lateral */
+#sidebar-main toolbarbutton,
+sidebar-main toolbarbutton,
+#sidebar-box toolbarbutton,
+#vertical-tabs-newtab-button {
+  color: var(--md-on-surface) !important;
+  fill: var(--md-on-surface) !important;
+  border-radius: 8px !important;
+}
+
+#sidebar-main toolbarbutton:hover,
+sidebar-main toolbarbutton:hover,
+#vertical-tabs-newtab-button:hover {
+  background-color: color-mix(in srgb, var(--md-on-surface) 10%, transparent) !important;
+}
+
+/* ── Pestañas Horizontales Estándar ───────────────────────────── */
+.tabbrowser-tab {
+  padding-inline: 2px !important;
+}
+
+.tab-background {
+  border-radius: 10px 10px 0 0 !important;
+  margin-block: 3px 0 !important;
+  border: none !important;
+  box-shadow: none !important;
+  transition: background-color 0.2s ease !important;
+}
+
+.tabbrowser-tab:is([selected], [selected="true"]) .tab-background {
+  background-color: var(--md-surface-container-high) !important;
+}
+
+.tabbrowser-tab .tab-label {
+  color: var(--md-on-surface) !important;
+}
+
+.tabbrowser-tab:is([selected], [selected="true"]) .tab-label {
+  color: #ffffff !important;
+  font-weight: 600 !important;
+}
+
+.tab-line {
+  display: none !important;
+}
+
+/* ── Barra de Direcciones (URLBar) & Vista de Búsqueda ────────── */
+/* Fondo de la barra de direcciones (selector por clase y por id) */
+.urlbar-background,
+#urlbar-background {
+  background-color: var(--md-surface-container-high) !important;
+  border: 1px solid var(--md-outline-variant) !important;
+  border-radius: 12px !important;
+  box-shadow: none !important;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
+}
+
+/* URLBar enfocada o desplegada */
+.urlbar:is([focused], [open]) > .urlbar-background,
+#urlbar:is([focused], [open]) > .urlbar-background,
+.urlbar:is([focused], [open]) > #urlbar-background,
+#urlbar:is([focused], [open]) > #urlbar-background,
+.urlbar[breakout-extend] > .urlbar-background,
+#urlbar[breakout-extend] > .urlbar-background {
+  background-color: var(--md-surface-container-high) !important;
+  border: 1px solid var(--md-primary) !important;
+  box-shadow: 0 0 0 1px var(--md-primary) !important;
+  outline: none !important;
+}
+
+.urlbar-input-container,
+#urlbar-input-container {
+  border: none !important;
+  outline: none !important;
+}
+
+/* Título de búsqueda y modo de búsqueda */
+#urlbar-search-mode-indicator {
+  background-color: var(--md-surface-container-highest) !important;
+  color: #ffffff !important;
+  border: none !important;
+  border-radius: 8px !important;
+}
+
+#urlbar-search-mode-indicator-title {
+  color: #ffffff !important;
+  font-weight: 500 !important;
+}
+
+#urlbar-search-mode-indicator-close {
+  fill: #ffffff !important;
+}
+
+/* Contenedor del desplegable de sugerencias */
+.urlbarView,
+#urlbar-results,
+.urlbarView-results,
+.urlbarView-body-outer,
+.urlbarView-body-inner {
+  background-color: var(--md-surface-container-high) !important;
+  color: var(--md-on-surface) !important;
+  border: none !important;
+  border-radius: 0 0 12px 12px !important;
+}
+
+.urlbarView-body-inner,
+#urlbar[open] > .urlbarView > .urlbarView-body-outer > .urlbarView-body-inner {
+  border-top: none !important;
+}
+
+/* Títulos y cabeceras dentro del dropdown de búsqueda */
+.search-panel-header,
+.urlbarView-row[label]::before {
+  color: var(--md-on-surface-variant) !important;
+  border: none !important;
+  background: transparent !important;
+  opacity: 0.9 !important;
+}
+
+/* Cuadro de recomendaciones (Firefox Suggest / Tips / Onboarding) */
+.urlbarView-row[dynamicType],
+.urlbarView-row[dynamicType] .urlbarView-row-inner,
+.urlbarView-row[type="tip"],
+.urlbarView-row[type="tip"] .urlbarView-row-inner,
+.urlbarView-dynamic-quickSuggestContextualOptIn-text-container,
+.urlbarView-quickSuggestContextualOptIn-one-off-container {
+  background-color: var(--md-surface-container) !important;
+  background: var(--md-surface-container) !important;
+  border: none !important;
+  color: var(--md-on-surface) !important;
+  border-radius: 8px !important;
+}
+
+.urlbarView-row[dynamicType] .urlbarView-dynamic-quickSuggestContextualOptIn-title,
+.urlbarView-row[type="tip"] .urlbarView-title {
+  color: #ffffff !important;
+}
+
+.urlbarView-row[dynamicType] .urlbarView-dynamic-quickSuggestContextualOptIn-description,
+.urlbarView-row[type="tip"] .urlbarView-row-body-description {
+  color: var(--md-on-surface-variant) !important;
+}
+
+/* Filas de resultados */
+.urlbarView-row {
+  border: none !important;
+  border-radius: 8px !important;
+  margin-inline: 4px !important;
+  background-color: transparent !important;
+}
+
+.urlbarView-row:hover {
+  background-color: var(--md-surface-container-highest) !important;
+}
+
+.urlbarView-row[selected] {
+  background-color: var(--md-surface-container-highest) !important;
+  color: #ffffff !important;
+}
+
+.urlbarView-row[selected] .urlbarView-title,
+.urlbarView-row:hover .urlbarView-title {
+  color: #ffffff !important;
+}
+
+.urlbarView-url {
+  color: var(--md-primary) !important;
+}
+
+.urlbarView-action {
+  color: var(--md-on-surface-variant) !important;
+}
+
+/* Barra inferior de motores de búsqueda alternativos */
+.search-one-offs,
+#urlbar-one-offs,
+.urlbarView-one-offs {
+  background-color: var(--md-surface-container-high) !important;
+  border-top: 1px solid var(--md-outline-variant) !important;
+  color: var(--md-on-surface) !important;
+}
+
+.search-one-offs .searchbar-engine-one-off-item:hover {
+  background-color: var(--md-surface-container-highest) !important;
+}
+
+/* ── Menús Contextuales (Clic Derecho) y Menú de Aplicación ─── */
+menupopup,
+panel,
+#contentAreaContextMenu,
+#tabContextMenu,
+#toolbar-context-menu,
+#appMenu-popup {
+  -moz-appearance: none !important;
+  appearance: none !important;
+  background-color: var(--md-surface-container-high) !important;
+  color: #ffffff !important;
+  border-color: var(--md-outline-variant) !important;
+}
+
+/* Contenido de Menús y Paneles (Shadow DOM ::part(content)) */
+menupopup::part(content),
+panel::part(content),
+.panel-arrowcontent {
+  -moz-appearance: none !important;
+  appearance: none !important;
+  background-color: var(--md-surface-container-high) !important;
+  background: var(--md-surface-container-high) !important;
+  color: #ffffff !important;
+  border: 1px solid var(--md-outline-variant) !important;
+  border-radius: 10px !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4) !important;
+}
+
+panelview,
+.panel-subview-body {
+  background-color: var(--md-surface-container-high) !important;
+  background: var(--md-surface-container-high) !important;
+  color: #ffffff !important;
+}
+
+menuitem,
+menu,
+.subviewbutton {
+  -moz-appearance: none !important;
+  appearance: none !important;
+  color: var(--md-on-surface) !important;
+  border-radius: 6px !important;
+}
+
+menuitem:is(:hover, [_moz-menuactive="true"]),
+menu:is(:hover, [_moz-menuactive="true"]),
+.subviewbutton:hover {
+  background-color: var(--md-surface-container-highest) !important;
+  color: #ffffff !important;
+}
+
+menuseparator,
+toolbarseparator {
+  border-top: 1px solid var(--md-outline-variant) !important;
+  border-bottom: none !important;
+  margin: 4px 6px !important;
+}
+
+.toolbarbutton-1 {
+  border-radius: 8px !important;
+}
+
+/* Scrollbars discretos estilo Material */
+* {
+  scrollbar-width: thin !important;
+  scrollbar-color: var(--md-outline-variant) transparent !important;
 }

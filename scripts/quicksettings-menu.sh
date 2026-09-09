@@ -27,8 +27,9 @@ format_item() {
 }
 
 # ── 1. Detecciones ultrarrápidas (< 2ms) ────────────────────────
-# Modo Cafeína (Inhibir reposo y bloqueo)
-if [ -f "$HOME/.cache/caffeine-active" ] || ! pgrep -x swayidle > /dev/null; then
+# Modo Cafeína (Inhibición de reposo)
+CAFFEINE_STATE="$HOME/.config/caffeine_active"
+if [ -f "$CAFFEINE_STATE" ] || [ -f "${XDG_RUNTIME_DIR:-/tmp}/caffeine_active" ]; then
     ITEM_CAFFEINE=$(format_item "󰅶" "Modo Cafeína" "Activado")
 else
     ITEM_CAFFEINE=$(format_item "󰾪" "Modo Cafeína" "Desactivado")
@@ -57,18 +58,36 @@ else
     ITEM_BT=$(format_item "󰂯" "Bluetooth" "Ajustes")
 fi
 
-# Perfil de Energía
+# Perfil de Energía (Solo si powerprofilesctl está activo)
 ITEM_POWER=""
 if command -v powerprofilesctl &>/dev/null; then
-    CURRENT_PROFILE=$(powerprofilesctl get 2>/dev/null || echo "balanced")
-    ITEM_POWER=$(format_item "󰓅" "Perfil de Rendimiento" "$CURRENT_PROFILE")
+    CURRENT_PROFILE=$(powerprofilesctl get 2>/dev/null || true)
+    if [ -n "$CURRENT_PROFILE" ]; then
+        ITEM_POWER=$(format_item "󰓅" "Perfil de Rendimiento" "$CURRENT_PROFILE")
+    fi
 fi
+
+# Distribución de Teclado
+KB_LAYOUT="es"
+if [ -f "$HOME/.config/sway/inputs.conf" ]; then
+    if grep -q 'xkb_layout "us,es"' "$HOME/.config/sway/inputs.conf"; then
+        KB_LAYOUT="us+es"
+    elif grep -q 'xkb_variant "intl"' "$HOME/.config/sway/inputs.conf"; then
+        KB_LAYOUT="us-intl"
+    elif grep -q 'xkb_layout "us"' "$HOME/.config/sway/inputs.conf"; then
+        KB_LAYOUT="us"
+    elif grep -q 'xkb_layout "es"' "$HOME/.config/sway/inputs.conf"; then
+        KB_LAYOUT="es"
+    fi
+fi
+ITEM_KB=$(format_item "⌨️" "Distribución Teclado" "$KB_LAYOUT")
 
 # ── 2. Lista de Opciones Formateada ────────────────────────────
 OPCIONES="$(format_item "󰍹" "Pantallas y Monitores" "Configurar")
-$ITEM_CAFFEINE
 $ITEM_BT
+$ITEM_KB
 $(format_item "󰕾" "Salida de Audio" "Cambiar")
+$ITEM_CAFFEINE
 $ITEM_GAMMA
 $ITEM_NOTIF
 $(format_item "󰂞" "Historial de Notificaciones" "Ver")"
@@ -80,7 +99,7 @@ fi
 
 OPCIONES="$OPCIONES
 $(format_item "󰈊" "Selector de Color" "HEX")
-$(format_item "󰄀" "Captura de Pantalla" "5 Opciones")
+$(format_item "󰄀" "Captura de Pantalla" "Menú")
 $(format_item "󰌌" "Guía de Atajos y Alias" "Ver")
 $(format_item "󰞅" "Selector de Emojis" "Copiar")
 $(format_item "󰅖" "Limpiar Portapapeles" "Vaciar")"
@@ -91,19 +110,19 @@ SELECCION=$(echo -e "$OPCIONES" | wofi --dmenu \
     --cache-file /dev/null \
     --insensitive \
     --width 500 \
-    --height 500 \
-    --lines 13)
+    --height 520 \
+    --lines 14)
 
 # Salir si se canceló
 [ -z "$SELECCION" ] && exit 0
 
 # ── 4. Ejecución de Acciones ────────────────────────────────────
 case "$SELECCION" in
+    *"Modo Cafeína"*|*"Cafeína"*)
+        "$SCRIPTS_DIR/caffeine-toggle.sh"
+        ;;
     *"Pantallas y Monitores"*)
         "$SCRIPTS_DIR/monitor-manager.sh" menu
-        ;;
-    *"Modo Cafeína"*)
-        "$SCRIPTS_DIR/caffeine-toggle.sh" toggle
         ;;
     *"Bluetooth"*)
         BT_IS_BLOCKED=$(rfkill list bluetooth 2>/dev/null | grep -q "Soft blocked: yes" && echo "yes" || echo "no")
@@ -144,6 +163,9 @@ $PAIRED_DEVICES"
                 bluetoothctl connect "$DEV_MAC" &
                 ;;
         esac
+        ;;
+    *"Distribución Teclado"*|*"Teclado"*)
+        "$SCRIPTS_DIR/keyboard-layout.sh" menu
         ;;
     *"Salida de Audio"*)
         SINKS=$(pactl list short sinks 2>/dev/null | awk '{print "󰕾    " $1 ": " $2}')
@@ -189,6 +211,7 @@ $(format_item "󰾆" "power-saver" "Ahorro de Batería")"
     *"Guía de Atajos y Alias"*|*"Atajos y Alias"*)
         CHEATSHEET="$HOME/.config/sway/cheatsheet.md"
         [ ! -f "$CHEATSHEET" ] && CHEATSHEET="$HOME/Documents/dotfileSway/config/cheatsheet.md"
+        [ ! -f "$CHEATSHEET" ] && CHEATSHEET="$HOME/Documentos/Github/dotfileSway/config/cheatsheet.md"
         if command -v zed &>/dev/null; then
             zed "$CHEATSHEET" &
         elif command -v nano &>/dev/null; then
