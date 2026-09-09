@@ -1,8 +1,8 @@
-set $bg_dark      #12140e
-set $bg_surface   #12140e
-set $bg_overlay   #292b23
-set $border_focus #b5d086
-set $border_unfocus #1e2019
-set $text_main    #e3e3d8
-set $text_muted   #8f9284
+set $bg_dark      #0e1415
+set $bg_surface   #0e1415
+set $bg_overlay   #252b2b
+set $border_focus #80d4d7
+set $border_unfocus #1a2121
+set $text_main    #dde4e3
+set $text_muted   #899393
 set $accent_red   #ffb4ab
