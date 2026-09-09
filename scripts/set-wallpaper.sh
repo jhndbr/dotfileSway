@@ -59,6 +59,34 @@ mkdir -p "$HOME/.config/zed/themes"
 mkdir -p "$HOME/.config/qt5ct/colors" "$HOME/.config/qt6ct/colors"
 mkdir -p "$HOME/.config/kitty" "$HOME/.config/foot" "$HOME/.config/wofi" "$HOME/.config/swayosd"
 
+# Detectar perfil activo de Thunderbird y asegurar carpeta chrome
+TB_PROFILE=$(find "$HOME/.thunderbird" -maxdepth 2 -type d -name "*.default-release" 2>/dev/null | head -n 1)
+if [ -z "$TB_PROFILE" ]; then
+    TB_PROFILE=$(find "$HOME/.thunderbird" -maxdepth 2 -type d -name "*.default*" 2>/dev/null | head -n 1)
+fi
+if [ -n "$TB_PROFILE" ]; then
+    mkdir -p "$TB_PROFILE/chrome"
+    if [ ! -f "$TB_PROFILE/chrome/userContent.css" ]; then
+        echo '@import "userChrome.css";' > "$TB_PROFILE/chrome/userContent.css"
+    fi
+fi
+
+# Detectar perfil activo de Firefox y asegurar carpeta chrome y legacy stylesheets
+FF_PROFILE=$(find "$HOME/.mozilla/firefox" -maxdepth 2 -type d -name "*.default-release*" 2>/dev/null | head -n 1)
+if [ -z "$FF_PROFILE" ]; then
+    FF_PROFILE=$(find "$HOME/.mozilla/firefox" -maxdepth 2 -type d -name "*.default*" 2>/dev/null | head -n 1)
+fi
+if [ -n "$FF_PROFILE" ]; then
+    mkdir -p "$FF_PROFILE/chrome"
+    if [ ! -f "$FF_PROFILE/chrome/userContent.css" ]; then
+        echo '@import "userChrome.css";' > "$FF_PROFILE/chrome/userContent.css"
+    fi
+    # Asegurar que las hojas de estilo de usuario estén habilitadas en Firefox
+    if ! grep -q "toolkit.legacyUserProfileCustomizations.stylesheets" "$FF_PROFILE/user.js" 2>/dev/null; then
+        echo 'user_pref("toolkit.legacyUserProfileCustomizations.stylesheets", true);' >> "$FF_PROFILE/user.js"
+    fi
+fi
+
 # Sincronizar plantillas a ~/.config/matugen/templates dinámicamente
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_DIR="$(cd "$SCRIPT_DIR/.." 2>/dev/null && pwd || true)"
@@ -143,6 +171,24 @@ output_path = '$HOME/.config/joplin-desktop/userchrome.css'
 input_path = '$TEMPLATES_DIR/joplin-userstyle.css'
 output_path = '$HOME/.config/joplin-desktop/userstyle.css'
 EOF
+
+if [ -n "$TB_PROFILE" ]; then
+cat << EOF >> "$HOME/.config/matugen/config.toml"
+
+[templates.thunderbird]
+input_path = '$TEMPLATES_DIR/thunderbird-userchrome.css'
+output_path = '$TB_PROFILE/chrome/userChrome.css'
+EOF
+fi
+
+if [ -n "$FF_PROFILE" ]; then
+cat << EOF >> "$HOME/.config/matugen/config.toml"
+
+[templates.firefox]
+input_path = '$TEMPLATES_DIR/firefox-userchrome.css'
+output_path = '$FF_PROFILE/chrome/userChrome.css'
+EOF
+fi
 
 # ── 4. Ejecutar Matugen standalone importando dank16.json si existe ───────
 if [ -f "/tmp/dank16.json" ]; then
@@ -471,6 +517,11 @@ thunar -q 2>/dev/null || true
 # Reiniciar limpiamente xdg-desktop-portal-gtk para recargar los colores del selector de archivos (FileChooser)
 if command -v systemctl &>/dev/null && systemctl --user is-active --quiet xdg-desktop-portal-gtk; then
     systemctl --user restart xdg-desktop-portal-gtk 2>/dev/null || true
+fi
+
+# Actualizar colores en navegadores / clientes compatibles con Pywalfox (Thunderbird / Firefox)
+if command -v pywalfox &>/dev/null; then
+    pywalfox update 2>/dev/null || true
 fi
 
 # ── 11. Notificación ──────────────────────────────────────────────

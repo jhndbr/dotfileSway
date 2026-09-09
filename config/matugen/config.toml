@@ -63,3 +63,13 @@ output_path = '~/.config/joplin-desktop/userchrome.css'
 [templates.joplin_style]
 input_path = '~/.config/matugen/templates/joplin-userstyle.css'
 output_path = '~/.config/joplin-desktop/userstyle.css'
+
+[templates.thunderbird]
+input_path = '~/.config/matugen/templates/thunderbird-userchrome.css'
+output_path = '~/.thunderbird/k7rw1pp6.default-release/chrome/userChrome.css'
+
+[templates.firefox]
+input_path = '~/.config/matugen/templates/firefox-userchrome.css'
+output_path = '~/.mozilla/firefox/jea5q63m.default-release-1785507135153/chrome/userChrome.css'
+
+
