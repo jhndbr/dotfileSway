@@ -182,13 +182,19 @@ sync_browser_profiles() {
             if [ ! -f "$prof/chrome/userContent.css" ]; then
                 echo '@import "userChrome.css";' > "$prof/chrome/userContent.css"
             fi
-            # Habilitar userChrome.css en Firefox
+            # Habilitar userChrome.css y propiedades SVG en Firefox
             if [ -f "$prof/user.js" ]; then
                 if ! grep -q "toolkit.legacyUserProfileCustomizations.stylesheets" "$prof/user.js"; then
                     echo 'user_pref("toolkit.legacyUserProfileCustomizations.stylesheets", true);' >> "$prof/user.js"
                 fi
+                if ! grep -q "svg.context-properties.content.enabled" "$prof/user.js"; then
+                    echo 'user_pref("svg.context-properties.content.enabled", true);' >> "$prof/user.js"
+                fi
             else
-                echo 'user_pref("toolkit.legacyUserProfileCustomizations.stylesheets", true);' > "$prof/user.js"
+                {
+                    echo 'user_pref("toolkit.legacyUserProfileCustomizations.stylesheets", true);'
+                    echo 'user_pref("svg.context-properties.content.enabled", true);'
+                } > "$prof/user.js"
             fi
         done < <(find "$base" -maxdepth 1 -type d \( -name "*default*" -o -name "*release*" \) 2>/dev/null)
     done
