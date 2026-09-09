@@ -53,39 +53,11 @@ fi
 # ── 3. Asegurar estructura de plantillas y configuración Matugen ─
 TEMPLATES_DIR="$HOME/.config/matugen/templates"
 mkdir -p "$TEMPLATES_DIR"
-mkdir -p "$HOME/.config/matugen"
+mkdir -p "$HOME/.config/matugen/generated"
 mkdir -p "$HOME/.config/gtk-3.0" "$HOME/.config/gtk-4.0" "$HOME/.config/joplin-desktop"
 mkdir -p "$HOME/.config/zed/themes"
 mkdir -p "$HOME/.config/qt5ct/colors" "$HOME/.config/qt6ct/colors"
 mkdir -p "$HOME/.config/kitty" "$HOME/.config/foot" "$HOME/.config/wofi" "$HOME/.config/swayosd"
-
-# Detectar perfil activo de Thunderbird y asegurar carpeta chrome
-TB_PROFILE=$(find "$HOME/.thunderbird" -maxdepth 2 -type d -name "*.default-release" 2>/dev/null | head -n 1)
-if [ -z "$TB_PROFILE" ]; then
-    TB_PROFILE=$(find "$HOME/.thunderbird" -maxdepth 2 -type d -name "*.default*" 2>/dev/null | head -n 1)
-fi
-if [ -n "$TB_PROFILE" ]; then
-    mkdir -p "$TB_PROFILE/chrome"
-    if [ ! -f "$TB_PROFILE/chrome/userContent.css" ]; then
-        echo '@import "userChrome.css";' > "$TB_PROFILE/chrome/userContent.css"
-    fi
-fi
-
-# Detectar perfil activo de Firefox y asegurar carpeta chrome y legacy stylesheets
-FF_PROFILE=$(find "$HOME/.mozilla/firefox" -maxdepth 2 -type d -name "*.default-release*" 2>/dev/null | head -n 1)
-if [ -z "$FF_PROFILE" ]; then
-    FF_PROFILE=$(find "$HOME/.mozilla/firefox" -maxdepth 2 -type d -name "*.default*" 2>/dev/null | head -n 1)
-fi
-if [ -n "$FF_PROFILE" ]; then
-    mkdir -p "$FF_PROFILE/chrome"
-    if [ ! -f "$FF_PROFILE/chrome/userContent.css" ]; then
-        echo '@import "userChrome.css";' > "$FF_PROFILE/chrome/userContent.css"
-    fi
-    # Asegurar que las hojas de estilo de usuario estén habilitadas en Firefox
-    if ! grep -q "toolkit.legacyUserProfileCustomizations.stylesheets" "$FF_PROFILE/user.js" 2>/dev/null; then
-        echo 'user_pref("toolkit.legacyUserProfileCustomizations.stylesheets", true);' >> "$FF_PROFILE/user.js"
-    fi
-fi
 
 # Sincronizar plantillas a ~/.config/matugen/templates dinámicamente
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -170,25 +142,15 @@ output_path = '$HOME/.config/joplin-desktop/userchrome.css'
 [templates.joplin_style]
 input_path = '$TEMPLATES_DIR/joplin-userstyle.css'
 output_path = '$HOME/.config/joplin-desktop/userstyle.css'
-EOF
-
-if [ -n "$TB_PROFILE" ]; then
-cat << EOF >> "$HOME/.config/matugen/config.toml"
-
-[templates.thunderbird]
-input_path = '$TEMPLATES_DIR/thunderbird-userchrome.css'
-output_path = '$TB_PROFILE/chrome/userChrome.css'
-EOF
-fi
-
-if [ -n "$FF_PROFILE" ]; then
-cat << EOF >> "$HOME/.config/matugen/config.toml"
 
 [templates.firefox]
 input_path = '$TEMPLATES_DIR/firefox-userchrome.css'
-output_path = '$FF_PROFILE/chrome/userChrome.css'
+output_path = '$HOME/.config/matugen/generated/firefox-userchrome.css'
+
+[templates.thunderbird]
+input_path = '$TEMPLATES_DIR/thunderbird-userchrome.css'
+output_path = '$HOME/.config/matugen/generated/thunderbird-userchrome.css'
 EOF
-fi
 
 # ── 4. Ejecutar Matugen standalone importando dank16.json si existe ───────
 if [ -f "/tmp/dank16.json" ]; then
@@ -196,6 +158,71 @@ if [ -f "/tmp/dank16.json" ]; then
 else
     matugen image "$CONVERTED_PNG" -m dark --source-color-index 0
 fi
+
+# ── 4.1. Sincronizar dinámicamente temas en TODOS los perfiles de Firefox y Thunderbird ──
+sync_browser_profiles() {
+    local ff_css="$HOME/.config/matugen/generated/firefox-userchrome.css"
+    local tb_css="$HOME/.config/matugen/generated/thunderbird-userchrome.css"
+
+    # Firefox: Soporte para ~/.config/mozilla/firefox, ~/.mozilla/firefox y Flatpak
+    local ff_bases=(
+        "$HOME/.config/mozilla/firefox"
+        "$HOME/.mozilla/firefox"
+        "$HOME/.var/app/org.mozilla.firefox/.mozilla/firefox"
+    )
+
+    for base in "${ff_bases[@]}"; do
+        [ -d "$base" ] || continue
+        while IFS= read -r prof; do
+            [ -d "$prof" ] || continue
+            mkdir -p "$prof/chrome"
+            if [ -f "$ff_css" ]; then
+                cp -f "$ff_css" "$prof/chrome/userChrome.css"
+            fi
+            if [ ! -f "$prof/chrome/userContent.css" ]; then
+                echo '@import "userChrome.css";' > "$prof/chrome/userContent.css"
+            fi
+            # Habilitar userChrome.css en Firefox
+            if [ -f "$prof/user.js" ]; then
+                if ! grep -q "toolkit.legacyUserProfileCustomizations.stylesheets" "$prof/user.js"; then
+                    echo 'user_pref("toolkit.legacyUserProfileCustomizations.stylesheets", true);' >> "$prof/user.js"
+                fi
+            else
+                echo 'user_pref("toolkit.legacyUserProfileCustomizations.stylesheets", true);' > "$prof/user.js"
+            fi
+        done < <(find "$base" -maxdepth 1 -type d \( -name "*default*" -o -name "*release*" \) 2>/dev/null)
+    done
+
+    # Thunderbird: Soporte para ~/.thunderbird, ~/.config/thunderbird y Flatpak
+    local tb_bases=(
+        "$HOME/.thunderbird"
+        "$HOME/.config/thunderbird"
+        "$HOME/.var/app/org.mozilla.Thunderbird/.thunderbird"
+    )
+
+    for base in "${tb_bases[@]}"; do
+        [ -d "$base" ] || continue
+        while IFS= read -r prof; do
+            [ -d "$prof" ] || continue
+            mkdir -p "$prof/chrome"
+            if [ -f "$tb_css" ]; then
+                cp -f "$tb_css" "$prof/chrome/userChrome.css"
+            fi
+            if [ ! -f "$prof/chrome/userContent.css" ]; then
+                echo '@import "userChrome.css";' > "$prof/chrome/userContent.css"
+            fi
+            # Habilitar userChrome.css en Thunderbird
+            if [ -f "$prof/user.js" ]; then
+                if ! grep -q "toolkit.legacyUserProfileCustomizations.stylesheets" "$prof/user.js"; then
+                    echo 'user_pref("toolkit.legacyUserProfileCustomizations.stylesheets", true);' >> "$prof/user.js"
+                fi
+            else
+                echo 'user_pref("toolkit.legacyUserProfileCustomizations.stylesheets", true);' > "$prof/user.js"
+            fi
+        done < <(find "$base" -maxdepth 1 -type d \( -name "*default*" -o -name "*release*" \) 2>/dev/null)
+    done
+}
+sync_browser_profiles
 
 # ── 5. Escribir gtk.css / gtk-dark.css en GTK 3 y GTK 4 ──────────
 # El dank-colors.css generado por Matugen aplica outline-style:dashed
