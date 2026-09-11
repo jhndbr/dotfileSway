@@ -380,11 +380,15 @@ sed -i 's/^style=.*/style=Fusion/' "$HOME/.config/qt6ct/qt6ct.conf" 2>/dev/null 
 sed -i 's/^icon_theme=.*/icon_theme=Papirus-Dark/' "$HOME/.config/qt5ct/qt5ct.conf" 2>/dev/null || true
 sed -i 's/^icon_theme=.*/icon_theme=Papirus-Dark/' "$HOME/.config/qt6ct/qt6ct.conf" 2>/dev/null || true
 
-# ── 8. Recargar componentes del escritorio, Sway y Foot ───────────────
+# ── 8. Recargar componentes del escritorio, MangoWM, Wbg y Foot ────────
 pkill -SIGUSR2 waybar 2>/dev/null || true
 pkill -SIGUSR1 foot 2>/dev/null || true
 if command -v mmsg &>/dev/null && pgrep -x mango &>/dev/null; then
     mmsg -d reload_config 2>/dev/null || true
+fi
+if pgrep -x wbg &>/dev/null; then
+    pkill -x wbg 2>/dev/null || true
+    wbg "$TARGET_WALLPAPER" >/dev/null 2>&1 &
 fi
 if pgrep -x dunst &>/dev/null; then
     killall dunst 2>/dev/null || true
@@ -420,7 +424,7 @@ pkill -f xdg-desktop-portal-gtk 2>/dev/null || true
 
 # ── 11. Notificación ──────────────────────────────────────────────
 if command -v dunstify &>/dev/null; then
-    dunstify -a "DMS Matugen" -r 8812 "🎨 Tema Dinámico Aplicado" "MangoWM, Waybar, Foot, Qt, Iconos, Swaylock, Wofi y GTK sincronizados" || true
+    dunstify -a "DMS Matugen" -r 8812 "🎨 Tema Dinámico Aplicado" "MangoWM, Waybar, Foot, Qt, Iconos, Wofi y GTK sincronizados" || true
 fi
 
 echo "✅ Tema dinámico Dank aplicado exitosamente a todo el escritorio."

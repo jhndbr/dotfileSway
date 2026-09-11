@@ -308,7 +308,7 @@ action_save_config() {
     while IFS= read -r name; do
         [ -z "$name" ] && continue
         local line
-        line=$(wlr-randr 2>/dev/null | awk -v n="$name '
+        line=$(wlr-randr 2>/dev/null | awk -v n="$name" '
             $1==n {
                 gsub(/[()]/, "", $0)
                 print $0
@@ -320,6 +320,26 @@ action_save_config() {
     done <<< "$names"
 
     notify "Configuración Guardada" "Guardado en $MONITOR_CONF"
+}
+
+action_dpms_off() {
+    if command -v wlr-randr &>/dev/null; then
+        local names
+        names=$(list_output_names)
+        while IFS= read -r out; do
+            [ -n "$out" ] && wlr-randr --output "$out" --off 2>/dev/null || true
+        done <<< "$names"
+    fi
+}
+
+action_dpms_on() {
+    if command -v wlr-randr &>/dev/null; then
+        local names
+        names=$(list_output_names)
+        while IFS= read -r out; do
+            [ -n "$out" ] && wlr-randr --output "$out" --on 2>/dev/null || true
+        done <<< "$names"
+    fi
 }
 
 action_reload_mango() {
@@ -412,6 +432,12 @@ case "$1" in
         ;;
     reload)
         action_reload_mango
+        ;;
+    dpms-off|off)
+        action_dpms_off
+        ;;
+    dpms-on|on)
+        action_dpms_on
         ;;
     *)
         menu

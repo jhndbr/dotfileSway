@@ -63,7 +63,8 @@ PACMAN_PACKAGES=(
     dunst
     gammastep
     wlr-randr
-    wlr-dpms
+    gtklock
+    swayidle
 
     # Captura de Pantalla & Portapapeles
     grim
@@ -101,7 +102,7 @@ PACMAN_PACKAGES=(
     ffmpegthumbnailer
     poppler
     chafa
-    p7zip
+    7zip
     ouch
 
     # Aplicaciones Predeterminadas (Suite Minimal Completa)
@@ -214,14 +215,10 @@ if [ -z "$AUR_HELPER" ]; then
 fi
 
 # 4.1.c. Instalar MangoWM y utilidades desde el AUR
-# mangowm incluye mmsg (IPC). wbg (wallpaper) y gtklock (lockscreen) son
-# alternativas wlroots-native sin "sway" en el nombre. swayidle es el daemon
-# de idle estándar de wlroots (no depende del WM Sway).
+# mangowm incluye mmsg (IPC). wbg es el wallpaper daemon nativo wlroots.
 AUR_PACKAGES=(
     mangowm
     wbg
-    gtklock
-    swayidle
 )
 
 if [ -n "$AUR_HELPER" ]; then
@@ -232,10 +229,10 @@ if [ -n "$AUR_HELPER" ]; then
     else
         log_error "MangoWM no se instaló correctamente. Verificá el log de ${AUR_HELPER}."
     fi
-    log_success "Utilidades AUR instaladas: wbg (wallpaper), gtklock (lockscreen), swayidle (idle)"
+    log_success "Utilidades AUR instaladas: wbg (wallpaper)"
 else
     log_warn "Sin helper AUR disponible. Instalá manualmente:"
-    log_warn "  ${AUR_HELPER:-yay} -S mangowm wbg gtklock swayidle"
+    log_warn "  ${AUR_HELPER:-yay} -S mangowm wbg"
     log_warn "  mmsg, el cliente IPC, viene incluido en el paquete mangowm"
 fi
 

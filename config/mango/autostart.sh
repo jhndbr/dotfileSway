@@ -7,7 +7,7 @@
 set +e
 
 # ── D-Bus / Entorno & Portales XDG ──────────────────────────────
-dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=mango XDG_SESSION_TYPE=wayland QT_QPA_PLATFORMTHEME=qt6ct &
+dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=mango:wlroots XDG_SESSION_TYPE=wayland QT_QPA_PLATFORMTHEME=qt6ct &
 systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP XDG_SESSION_TYPE QT_QPA_PLATFORMTHEME &
 
 # ── Portales XDG (sin estado sucio previo) ──────────────────────

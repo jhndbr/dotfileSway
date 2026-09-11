@@ -92,7 +92,9 @@ tooltip label {
 
 #custom-menu,
 #workspaces,
+#tags,
 #layout,
+#custom-layout,
 #window,
 #clock,
 #custom-media,
@@ -114,6 +116,8 @@ tooltip label {
 /* Uniform hover for all interactive pills */
 #custom-menu:hover,
 #workspaces:hover,
+#tags:hover,
+#custom-layout:hover,
 #clock:hover,
 #custom-media:hover,
 #custom-quicksettings:hover,
@@ -198,12 +202,14 @@ tooltip label {
     padding: 0;
 }
 
-/* Workspaces — numbered capsules */
-#workspaces {
+/* Workspaces & DWL Tags — numbered capsules */
+#workspaces,
+#tags {
     padding: 0 3px;
 }
 
-#workspaces button {
+#workspaces button,
+#tags button {
     color: @text_muted;
     padding: 0 7px;
     margin: 3px 2px;
@@ -216,20 +222,27 @@ tooltip label {
     transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
-#workspaces button:hover {
+#workspaces button:hover,
+#tags button:hover {
     background: @bg_pill_hover;
     color: @text_primary;
 }
 
 #workspaces button.focused,
-#workspaces button.active {
+#workspaces button.active,
+#tags button.focused {
     background: @accent;
     color: @text_on_accent;
     font-weight: 700;
     box-shadow: 0 1px 4px alpha(@accent, 0.35);
 }
 
-#workspaces button.urgent {
+#tags button.occupied {
+    color: @text_primary;
+}
+
+#workspaces button.urgent,
+#tags button.urgent {
     background: alpha(@semantic_danger, 0.35);
     color: @semantic_danger;
 }
@@ -240,12 +253,18 @@ tooltip label {
 }
 
 /* Layout indicator (tile / scroller) */
-#layout {
+#layout,
+#custom-layout {
     background: @accent;
     color: @text_on_accent;
     font-weight: 700;
     border-radius: 6px;
     padding: 0 10px;
+}
+
+#layout:hover,
+#custom-layout:hover {
+    background: alpha(@accent, 0.85);
 }
 
 /* Active window title — stays in pill system but de-emphasized */

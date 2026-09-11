@@ -227,7 +227,12 @@ if [ -f "$SCRIPT_DIR/config/waybar/config.$DEVICE_PROFILE" ]; then
 fi
 
 # MangoWM waybar (config.jsonc específica del perfil)
-if [ -f "$SCRIPT_DIR/config/mango/waybar/config.$DEVICE_PROFILE" ]; then
+if [ -f "$SCRIPT_DIR/config/mango/waybar/config.$DEVICE_PROFILE.jsonc" ]; then
+    mkdir -p "$HOME/.config/mango/waybar"
+    cp -f "$SCRIPT_DIR/config/mango/waybar/config.$DEVICE_PROFILE.jsonc" "$HOME/.config/mango/waybar/config.jsonc"
+    cp -f "$SCRIPT_DIR/config/mango/waybar/config.$DEVICE_PROFILE.jsonc" "$SCRIPT_DIR/config/mango/waybar/config.jsonc"
+    echo -e "  ${GREEN}✓ Waybar (MangoWM) configurado para $DEVICE_PROFILE${NC}"
+elif [ -f "$SCRIPT_DIR/config/mango/waybar/config.$DEVICE_PROFILE" ]; then
     mkdir -p "$HOME/.config/mango/waybar"
     cp -f "$SCRIPT_DIR/config/mango/waybar/config.$DEVICE_PROFILE" "$HOME/.config/mango/waybar/config.jsonc"
     cp -f "$SCRIPT_DIR/config/mango/waybar/config.$DEVICE_PROFILE" "$SCRIPT_DIR/config/mango/waybar/config.jsonc"
@@ -279,6 +284,10 @@ fi
 
 if [ -f "$HOME/.config/gtk-3.0/bookmarks" ]; then
     sed -i "s|file:///home/[^/]*|file://$HOME|g" "$HOME/.config/gtk-3.0/bookmarks" 2>/dev/null || true
+fi
+
+if [ -f "$HOME/.config/gtklock/config.ini" ]; then
+    sed -i "s|/home/[^/]*/Pictures|/home/$USER/Pictures|g" "$HOME/.config/gtklock/config.ini" 2>/dev/null || true
 fi
 
 # ── 10. Copiar archivos de home (.zshrc, .zprofile, .gitconfig) ─

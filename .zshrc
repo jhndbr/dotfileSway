@@ -179,10 +179,12 @@ alias chatia='cd ~/Documentos/Github/chatia && uv run chatia'
 alias anti='~/Aplicaciones/Antigravity-x64/antigravity'
 
 # MangoWM
+alias mango-reload='mmsg -d reload_config'
+alias mango-log='journalctl --user -b -u mango'
+alias mango-error='cat ~/.mango_error.log 2>/dev/null | grep -E "(ERROR|WARN)" | tail -n 40'
+alias mango-status='mango -p'
 alias sway-reload='mmsg -d reload_config'
 alias sway-log='journalctl --user -b -u mango'
-alias sway-error='cat ~/.mango_error.log | grep -E "(ERROR|WARN)" | tail -n 40'
-alias sway-log-full='cat ~/.mango_error.log'
 
 # Limpieza
 alias cleanup='sudo pacman -Rns $(pacman -Qdtq) 2>/dev/null; yay -Sc --noconfirm 2>/dev/null'

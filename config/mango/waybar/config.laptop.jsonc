@@ -11,9 +11,9 @@
 
     "modules-left": [
         "custom/menu",
-        "mango/workspaces",
-        "mango/layout",
-        "mango/window"
+        "dwl/tags",
+        "custom/layout",
+        "dwl/window"
     ],
 
     "modules-center": [
@@ -37,35 +37,25 @@
         "tooltip": true
     },
 
-    /* ── Espacios de Trabajo (Tags) — Cápsula macOS ─────────────── */
-    "mango/workspaces": {
-        "format": "{icon}",
-        "hide-empty": true,
-        "on-click": "activate",
-        "on-click-right": "toggle",
-        "overview-label": "OVERVIEW",
-        "format-icons": {
-            "1": "",
-            "2": "",
-            "3": "",
-            "4": "",
-            "5": "",
-            "6": "",
-            "7": "",
-            "8": "",
-            "9": "",
-            "OVERVIEW": "󰮫"
-        }
+    /* ── Espacios de Trabajo (Tags) — DWL Protocol para MangoWM ──── */
+    "dwl/tags": {
+        "num-tags": 9,
+        "tag-labels": ["1", "2", "3", "4", "5", "6", "7", "8", "9"]
     },
 
-    /* ── Layout indicator ──────────────────────────────────────── */
-    "mango/layout": {
-        "format": "󰩨 {}"
+    /* ── Layout indicator (MangoWM IPC) ────────────────────────── */
+    "custom/layout": {
+        "exec": "mmsg -g -l 2>/dev/null || echo 'tile'",
+        "interval": 2,
+        "format": "󰩨 {}",
+        "on-click": "mmsg -d switch_layout",
+        "tooltip": true,
+        "tooltip-format": "Layout de MangoWM (Clic para alternar)"
     },
 
-    /* ── Ventana activa ────────────────────────────────────────── */
-    "mango/window": {
-        "format": "{}",
+    /* ── Ventana activa (DWL Protocol) ──────────────────────────── */
+    "dwl/window": {
+        "format": "{title}",
         "max-length": 40,
         "rewrite": {
             "(.*) — Mozilla Firefox": "󰈹  $1",

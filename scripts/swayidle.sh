@@ -7,9 +7,12 @@
 # swayidle es el daemon de idle estándar de wlroots (no depende del WM Sway).
 # MangoWM no expone "output * dpms" vía IPC, así que se usa wlr-randr.
 
+MM="$HOME/.local/bin/monitor-manager.sh"
+[ -x "$MM" ] || MM="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/monitor-manager.sh"
+
 exec swayidle -w \
     timeout 300 'gtklock' \
-    timeout 600 'wlr-randr --output "*" --off' resume 'wlr-randr --output "*" --on' \
+    timeout 600 "$MM dpms-off" resume "$MM dpms-on" \
     timeout 1800 'systemctl suspend' \
     before-sleep 'gtklock' \
     lock 'gtklock'
