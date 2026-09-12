@@ -92,6 +92,9 @@ tooltip label {
 
 #custom-menu,
 #workspaces,
+#tags,
+#layout,
+#custom-layout,
 #mode,
 #scratchpad,
 #window,
@@ -115,6 +118,8 @@ tooltip label {
 /* Uniform hover for all interactive pills */
 #custom-menu:hover,
 #workspaces:hover,
+#tags:hover,
+#custom-layout:hover,
 #scratchpad:hover,
 #clock:hover,
 #custom-media:hover,

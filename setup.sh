@@ -254,6 +254,13 @@ fi
 if [ -f "$SCRIPT_DIR/config/mango/waybar/style.css" ]; then
     cp -f "$SCRIPT_DIR/config/mango/waybar/style.css" "$HOME/.config/mango/waybar/style.css"
     cp -f "$SCRIPT_DIR/config/mango/waybar/style.css" "$HOME/.config/waybar/style.css"
+
+    # En ~/.config/waybar la profundidad hacia ~/.config/gtk-3.0 es de 1 nivel (../gtk-3.0), no 2 (../../gtk-3.0)
+    sed -i 's|\.\./\.\./gtk-3\.0|../gtk-3.0|g' "$HOME/.config/waybar/style.css" 2>/dev/null || true
+
+    # Asegurar ruta absoluta directa para evitar cualquier error de resolución relativa según el CWD
+    sed -i "s|@import url(.*dank-colors.css.*);|@import url(\"$HOME/.config/gtk-3.0/dank-colors.css\");|g" "$HOME/.config/waybar/style.css" 2>/dev/null || true
+    sed -i "s|@import url(.*dank-colors.css.*);|@import url(\"$HOME/.config/gtk-3.0/dank-colors.css\");|g" "$HOME/.config/mango/waybar/style.css" 2>/dev/null || true
 fi
 
 # MangoWM device.conf
