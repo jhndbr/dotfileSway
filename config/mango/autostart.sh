@@ -22,7 +22,16 @@ gnome-keyring-daemon --start --components="secrets,ssh,pkcs11" &
 wbg "$HOME/Pictures/1.jpg" >/dev/null 2>&1 &
 
 # ── Barra superior (Waybar) ─────────────────────────────────────
-waybar -c ~/.config/mango/waybar/config.jsonc -s ~/.config/mango/waybar/style.css >/dev/null 2>&1 &
+killall -9 waybar 2>/dev/null || true
+pkill -9 -x waybar 2>/dev/null || true
+sleep 0.5
+if [ -f "$HOME/.config/mango/waybar/config.jsonc" ]; then
+    waybar -c "$HOME/.config/mango/waybar/config.jsonc" -s "$HOME/.config/mango/waybar/style.css" >/tmp/waybar.log 2>&1 &
+elif [ -f "$HOME/.config/waybar/config.jsonc" ]; then
+    waybar -c "$HOME/.config/waybar/config.jsonc" -s "$HOME/.config/waybar/style.css" >/tmp/waybar.log 2>&1 &
+else
+    waybar >/tmp/waybar.log 2>&1 &
+fi
 
 # ── Notificaciones (Dunst) ──────────────────────────────────────
 dunst &

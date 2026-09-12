@@ -155,7 +155,7 @@ mkdir -p ~/.local/bin
 echo -e "${YELLOW}📦 Creando backup en $BACKUP_DIR${NC}"
 mkdir -p "$BACKUP_DIR"
 
-CONFIGS=(mango waybar wofi dunst foot gtklock gammastep gtk-3.0 gtk-4.0 environment.d qt5ct qt6ct matugen zed yazi xdg-desktop-portal)
+CONFIGS=(mango sway waybar wofi dunst foot gtklock gammastep gtk-3.0 gtk-4.0 environment.d qt5ct qt6ct matugen zed yazi xdg-desktop-portal)
 
 for item in "${CONFIGS[@]}"; do
     if [ -d "$HOME/.config/$item" ]; then
@@ -171,7 +171,7 @@ for cfg_file in mimeapps.list starship.toml; do
 done
 
 # Backup archivos de home
-for file in .zshrc .zprofile .gitconfig .p10k.zsh .zshenv; do
+for file in .bash_profile .profile .zshrc .zprofile .gitconfig .p10k.zsh .zshenv; do
     if [ -f "$HOME/$file" ]; then
         cp -f "$HOME/$file" "$BACKUP_DIR/$file" 2>/dev/null || true
     fi
@@ -192,7 +192,7 @@ if [ "$CLEAN_INSTALL" = true ]; then
     rm -f "$HOME/.config/starship.toml" 2>/dev/null || true
     rm -rf "$HOME/.config/matugen/templates" 2>/dev/null || true
     
-    for file in .zshrc .zprofile .gitconfig .zshenv; do
+    for file in .bash_profile .profile .zshrc .zprofile .gitconfig .zshenv; do
         rm -f "$HOME/$file" 2>/dev/null || true
     done
 
@@ -207,6 +207,13 @@ fi
 # ── 7. Copiar carpetas de configuración a ~/.config ─────────────
 echo ""
 echo -e "${CYAN}⚙️  Instalando configuraciones en ~/.config...${NC}"
+# Reparar dank-colors.css en gtk-3.0 si está dañado antes de copiar
+if [ -f "$SCRIPT_DIR/config/gtk-4.0/dank-colors.css" ]; then
+    if [ ! -f "$SCRIPT_DIR/config/gtk-3.0/dank-colors.css" ] || grep -q 'import.*dank-colors' "$SCRIPT_DIR/config/gtk-3.0/dank-colors.css" 2>/dev/null; then
+        cp -f "$SCRIPT_DIR/config/gtk-4.0/dank-colors.css" "$SCRIPT_DIR/config/gtk-3.0/dank-colors.css" 2>/dev/null || true
+    fi
+fi
+
 for item in "${CONFIGS[@]}"; do
     if [ -d "$SCRIPT_DIR/config/$item" ]; then
         echo -e "  ${GREEN}→${NC} Copiando configuración de ${BLUE}$item${NC}..."
@@ -215,35 +222,55 @@ for item in "${CONFIGS[@]}"; do
     fi
 done
 
+# Asegurar que GTK 3.0 dank-colors.css tenga la paleta correcta en ~/.config
+if [ -f "$HOME/.config/gtk-4.0/dank-colors.css" ]; then
+    if [ ! -f "$HOME/.config/gtk-3.0/dank-colors.css" ] || grep -q 'import.*dank-colors' "$HOME/.config/gtk-3.0/dank-colors.css" 2>/dev/null; then
+        cp -f "$HOME/.config/gtk-4.0/dank-colors.css" "$HOME/.config/gtk-3.0/dank-colors.css" 2>/dev/null || true
+    fi
+fi
+
 # ── 8. Ajustar Waybar & MangoWM según perfil (PC vs Laptop) ────
 echo ""
 echo -e "${CYAN}🛠️  Aplicando perfil de dispositivo (${BLUE}$DEVICE_PROFILE${CYAN})...${NC}"
 
-# Waybar
-if [ -f "$SCRIPT_DIR/config/waybar/config.$DEVICE_PROFILE" ]; then
-    cp -f "$SCRIPT_DIR/config/waybar/config.$DEVICE_PROFILE" "$HOME/.config/waybar/config"
-    cp -f "$SCRIPT_DIR/config/waybar/config.$DEVICE_PROFILE" "$SCRIPT_DIR/config/waybar/config"
-    echo -e "  ${GREEN}✓ Waybar configurado para $DEVICE_PROFILE${NC}"
+mkdir -p "$HOME/.config/mango/waybar"
+mkdir -p "$HOME/.config/waybar"
+
+# Waybar para MangoWM (específica del perfil: PC o Laptop)
+if [ -f "$SCRIPT_DIR/config/mango/waybar/config.$DEVICE_PROFILE.jsonc" ]; then
+    cp -f "$SCRIPT_DIR/config/mango/waybar/config.$DEVICE_PROFILE.jsonc" "$HOME/.config/mango/waybar/config.jsonc"
+    # Compatibilidad dual: también como default de waybar para inicio sin flags
+    cp -f "$SCRIPT_DIR/config/mango/waybar/config.$DEVICE_PROFILE.jsonc" "$HOME/.config/waybar/config.jsonc"
+    cp -f "$SCRIPT_DIR/config/mango/waybar/config.$DEVICE_PROFILE.jsonc" "$HOME/.config/waybar/config"
+    echo -e "  ${GREEN}✓ Waybar (MangoWM) configurado para $DEVICE_PROFILE${NC}"
+elif [ -f "$SCRIPT_DIR/config/mango/waybar/config.jsonc" ]; then
+    cp -f "$SCRIPT_DIR/config/mango/waybar/config.jsonc" "$HOME/.config/mango/waybar/config.jsonc"
+    cp -f "$SCRIPT_DIR/config/mango/waybar/config.jsonc" "$HOME/.config/waybar/config.jsonc"
+    cp -f "$SCRIPT_DIR/config/mango/waybar/config.jsonc" "$HOME/.config/waybar/config"
+    echo -e "  ${GREEN}✓ Waybar (MangoWM) configurado con plantilla base${NC}"
 fi
 
-# MangoWM waybar (config.jsonc específica del perfil)
-if [ -f "$SCRIPT_DIR/config/mango/waybar/config.$DEVICE_PROFILE.jsonc" ]; then
-    mkdir -p "$HOME/.config/mango/waybar"
-    cp -f "$SCRIPT_DIR/config/mango/waybar/config.$DEVICE_PROFILE.jsonc" "$HOME/.config/mango/waybar/config.jsonc"
-    cp -f "$SCRIPT_DIR/config/mango/waybar/config.$DEVICE_PROFILE.jsonc" "$SCRIPT_DIR/config/mango/waybar/config.jsonc"
-    echo -e "  ${GREEN}✓ Waybar (MangoWM) configurado para $DEVICE_PROFILE${NC}"
-elif [ -f "$SCRIPT_DIR/config/mango/waybar/config.$DEVICE_PROFILE" ]; then
-    mkdir -p "$HOME/.config/mango/waybar"
-    cp -f "$SCRIPT_DIR/config/mango/waybar/config.$DEVICE_PROFILE" "$HOME/.config/mango/waybar/config.jsonc"
-    cp -f "$SCRIPT_DIR/config/mango/waybar/config.$DEVICE_PROFILE" "$SCRIPT_DIR/config/mango/waybar/config.jsonc"
-    echo -e "  ${GREEN}✓ Waybar (MangoWM) configurado para $DEVICE_PROFILE${NC}"
+# Sincronizar style.css de Waybar para MangoWM y estándar
+if [ -f "$SCRIPT_DIR/config/mango/waybar/style.css" ]; then
+    cp -f "$SCRIPT_DIR/config/mango/waybar/style.css" "$HOME/.config/mango/waybar/style.css"
+    cp -f "$SCRIPT_DIR/config/mango/waybar/style.css" "$HOME/.config/waybar/style.css"
 fi
 
 # MangoWM device.conf
 if [ -f "$SCRIPT_DIR/config/mango/device.conf.$DEVICE_PROFILE" ]; then
     cp -f "$SCRIPT_DIR/config/mango/device.conf.$DEVICE_PROFILE" "$HOME/.config/mango/device.conf"
-    cp -f "$SCRIPT_DIR/config/mango/device.conf.$DEVICE_PROFILE" "$SCRIPT_DIR/config/mango/device.conf"
     echo -e "  ${GREEN}✓ MangoWM device.conf configurado para $DEVICE_PROFILE${NC}"
+fi
+
+# Permisos ejecutables imprescindibles para scripts de MangoWM
+chmod +x "$HOME/.config/mango/autostart.sh" 2>/dev/null || true
+chmod +x "$HOME/.config/mango/scripts/"*.sh 2>/dev/null || true
+chmod +x "$SCRIPT_DIR/config/mango/autostart.sh" 2>/dev/null || true
+chmod +x "$SCRIPT_DIR/config/mango/scripts/"*.sh 2>/dev/null || true
+
+# Configurar ruta absoluta y ejecución vía bash en config.conf
+if [ -f "$HOME/.config/mango/config.conf" ]; then
+    sed -i "s|exec-once=.*autostart.sh|exec-once=bash $HOME/.config/mango/autostart.sh|g" "$HOME/.config/mango/config.conf" 2>/dev/null || true
 fi
 
 # ── 9. Aplicar distribución de teclado ──────────────────────────
@@ -290,13 +317,13 @@ if [ -f "$HOME/.config/gtklock/config.ini" ]; then
     sed -i "s|/home/[^/]*/Pictures|/home/$USER/Pictures|g" "$HOME/.config/gtklock/config.ini" 2>/dev/null || true
 fi
 
-# ── 10. Copiar archivos de home (.zshrc, .zprofile, .gitconfig) ─
+# ── 10. Copiar archivos de home (.zshrc, .zprofile, .bash_profile, .profile, .gitconfig) ─
 echo ""
 echo -e "${CYAN}🏠 Aplicando configuraciones de home (~)...${NC}"
 rm -f "$HOME/.zshenv" 2>/dev/null || true
 systemctl --user unset-environment ZDOTDIR 2>/dev/null || true
 
-for file in .zshrc .zprofile .gitconfig; do
+for file in .zshrc .zprofile .bash_profile .profile .gitconfig; do
     if [ -f "$SCRIPT_DIR/$file" ]; then
         echo -e "  ${GREEN}→${NC} Instalando ${BLUE}$file${NC}..."
         rm -f "$HOME/$file" 2>/dev/null || true
@@ -306,8 +333,8 @@ done
 
 # Soporte dual: asegurar que ~/.config/zsh tenga copia por si ZDOTDIR está en memoria
 mkdir -p "$HOME/.config/zsh"
-cp -f "$SCRIPT_DIR/.zshrc" "$HOME/.config/zsh/.zshrc"
-cp -f "$SCRIPT_DIR/.zprofile" "$HOME/.config/zsh/.zprofile"
+cp -f "$SCRIPT_DIR/.zshrc" "$HOME/.config/zsh/.zshrc" 2>/dev/null || true
+cp -f "$SCRIPT_DIR/.zprofile" "$HOME/.config/zsh/.zprofile" 2>/dev/null || true
 
 # ── 11. Copiar scripts a ~/.local/bin ───────────────────────────
 if [ -d "$SCRIPT_DIR/scripts" ]; then
@@ -346,6 +373,14 @@ echo -e "${NC}"
 if command -v mmsg &> /dev/null && pgrep -x mango &> /dev/null; then
     mmsg -d reload_config || true
     echo -e "  ${GREEN}✓ MangoWM recargado en vivo con la nueva configuración${NC}"
+    if ! pgrep -x waybar &>/dev/null; then
+        echo -e "  ${GREEN}→${NC} Iniciando Waybar en segundo plano..."
+        killall -9 waybar 2>/dev/null || true
+        waybar -c "$HOME/.config/mango/waybar/config.jsonc" -s "$HOME/.config/mango/waybar/style.css" >/tmp/waybar.log 2>&1 &
+    else
+        pkill -SIGUSR2 waybar 2>/dev/null || true
+    fi
 else
-    echo -e "${BLUE}💡 Podés iniciar tu sesión con MangoWM o recargar con Mod+Shift+C.${NC}"
+    echo -e "${BLUE}💡 Al logearte en TTY1 tu escritorio MangoWM iniciará automáticamente.${NC}"
+    echo -e "${BLUE}   También podés iniciarlo manualmente ejecutando: mango${NC}"
 fi

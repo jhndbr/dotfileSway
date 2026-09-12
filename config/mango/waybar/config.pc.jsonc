@@ -267,7 +267,7 @@
     },
 
     "custom/hardware-toggle": {
-        "format": "",
+        "format": "",
         "tooltip-format": "Estadísticas del Sistema\nClick para expandir / ocultar",
         "tooltip": true
     },

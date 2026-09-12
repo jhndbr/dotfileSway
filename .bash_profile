@@ -2,6 +2,9 @@
 # ║              Variables de Entorno — Wayland/MangoWM          ║
 # ╚══════════════════════════════════════════════════════════════╝
 
+# Cargar .bashrc si existe
+[[ -f ~/.bashrc ]] && . ~/.bashrc
+
 # ── Limpieza de variables residuales ─────────────────────────────
 unset ZDOTDIR 2>/dev/null || true
 
@@ -11,25 +14,21 @@ export XDG_SESSION_DESKTOP=mango
 export XDG_CURRENT_DESKTOP=mango:wlroots
 
 # ── Qt ──────────────────────────────────────────────────────────
-export QT_QPA_PLATFORM=wayland
+export QT_QPA_PLATFORM="wayland;xcb"
 export QT_QPA_PLATFORMTHEME=qt6ct
 export QT_WAYLAND_DISABLE_WINDOWDECORATION=1
 export QT_AUTO_SCREEN_SCALE_FACTOR=1
 
 # ── GTK ─────────────────────────────────────────────────────────
-export GDK_BACKEND=wayland,x11
+export GDK_BACKEND="wayland,x11"
 
 # ── Electron / Chromium ─────────────────────────────────────────
 export ELECTRON_OZONE_PLATFORM_HINT=auto
 export MOZ_ENABLE_WAYLAND=1
 
-# ── Clutter ─────────────────────────────────────────────────────
+# ── Clutter / SDL / Java ────────────────────────────────────────
 export CLUTTER_BACKEND=wayland
-
-# ── SDL ─────────────────────────────────────────────────────────
 export SDL_VIDEODRIVER=wayland
-
-# ── Java ────────────────────────────────────────────────────────
 export _JAVA_AWT_WM_NONREPARENTING=1
 
 # ── PATH ────────────────────────────────────────────────────────
@@ -47,4 +46,3 @@ if [ -z "$WAYLAND_DISPLAY" ] && [ -z "$DISPLAY" ]; then
         fi
     fi
 fi
-
