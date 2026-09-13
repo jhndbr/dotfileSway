@@ -50,6 +50,11 @@ log_success "Locales configurados correctamente"
 
 # ── 3. Base Devel & Git ─────────────────────────────────────────
 log_info "Verificando herramientas base de compilación (base-devel, git)..."
+if grep -q "^#\[multilib\]" /etc/pacman.conf 2>/dev/null; then
+    log_info "Habilitando repositorio [multilib] en /etc/pacman.conf..."
+    sudo sed -i '/^#\[multilib\]/{s/^#//;n;s/^#//}' /etc/pacman.conf 2>/dev/null || true
+    sudo pacman -Sy --noconfirm >/dev/null 2>&1 || true
+fi
 sudo pacman -S --needed --noconfirm base-devel git
 
 # ── 4. Paquetes Oficiales (Pacman) ──────────────────────────────
@@ -90,8 +95,6 @@ PACMAN_PACKAGES=(
     blueman
     udiskie
     power-profiles-daemon
-    gamemode
-    lib32-gamemode
 
     # Portales e Integración Wayland / XDG
     xdg-desktop-portal
@@ -208,9 +211,6 @@ log_info "Habilitando servicios de audio Pipewire & Wireplumber..."
 systemctl --user enable --now pipewire.service pipewire-pulse.service wireplumber.service 2>/dev/null || true
 log_success "Servicios de audio habilitados"
 
-log_info "Habilitando servicio de optimización gaming (GameMode)..."
-systemctl --user enable --now gamemoded.service 2>/dev/null || true
-log_success "Servicio gamemode habilitado"
 
 # ── 8.2. Optimización de Memoria & Logs (ZRAM & Journald) ──────
 log_info "Configurando compresión de memoria en tiempo real (ZRAM)..."
