@@ -2,24 +2,59 @@ pragma Singleton
 import QtQuick
 
 QtObject {
-    // Paleta Monocromática estilo macOS / Minimal Dark
-    readonly property color bgDark: "#141414"
-    readonly property color bgSurface: "#1c1c1e"
-    readonly property color bgCard: "#252528"
-    readonly property color bgHover: "#323235"
-    readonly property color bgSelected: "#3a3a3c"
-    readonly property color borderFocus: "#ffffff"
-    readonly property color borderMuted: "#2c2c2e"
-    readonly property color textMain: "#ffffff"
-    readonly property color textMuted: "#8e8e93"
-    readonly property color accentRed: "#ff453a"
-    readonly property color accentBlue: "#0a84ff"
-    readonly property color accentGreen: "#30d158"
+    // ╔══════════════════════════════════════════════════════════════╗
+    // ║     Quickshell Material 3 Dynamic Tokens (Fallback Base)     ║
+    // ║     Sobre-escrito dinámicamente por Matugen con wallpaper    ║
+    // ╚══════════════════════════════════════════════════════════════╝
 
-    readonly property int radiusSm: 6
-    readonly property int radiusMd: 10
+    // Superficies y elevación (Material 3)
+    readonly property color bgBar: "#141414"
+    readonly property color bgPill: "#1f1f22"
+    readonly property color bgPillHover: "#2a2a2d"
+    readonly property color bgPillActive: "#3a3a40"
+    readonly property color bgCard: "#222225"
+    readonly property color bgDark: "#101012"
+    readonly property color bgSurface: "#18181b"
+    readonly property color bgHover: "#2a2a2e"
+    readonly property color bgSelected: "#333338"
+
+    // Colores primarios y acentos
+    readonly property color primary: "#d0bcff"
+    readonly property color onPrimary: "#381e72"
+    readonly property color primaryContainer: "#4f378b"
+    readonly property color onPrimaryContainer: "#eaddff"
+    
+    readonly property color secondary: "#ccc2dc"
+    readonly property color onSecondary: "#332d41"
+    readonly property color secondaryContainer: "#4a4458"
+    readonly property color onSecondaryContainer: "#e8def8"
+
+    readonly property color tertiary: "#efb8c8"
+    readonly property color onTertiary: "#492532"
+
+    // Textos
+    readonly property color textMain: "#e6e1e5"
+    readonly property color textSecondary: "#cac4d0"
+    readonly property color textMuted: "#938f99"
+
+    // Bordes
+    readonly property color borderFocus: "#d0bcff"
+    readonly property color borderMuted: "#49454f"
+
+    // Alertas y errores
+    readonly property color accentRed: "#ffb4ab"
+    readonly property color error: "#ffb4ab"
+    readonly property color onError: "#690005"
+    readonly property color accentBlue: "#a8c7fa"
+    readonly property color accentGreen: "#a8dab5"
+
+    // Radios y formas (Material Elevated Pill Architecture)
+    readonly property int radiusPill: 999
     readonly property int radiusLg: 14
+    readonly property int radiusMd: 10
+    readonly property int radiusSm: 6
 
+    // Tipografía idéntica a Waybar
     readonly property string fontSans: "Inter, SF Pro Display, JetBrainsMono Nerd Font, sans-serif"
-    readonly property string fontMono: "JetBrainsMono Nerd Font, monospace"
+    readonly property string fontMono: "JetBrainsMono Nerd Font, Symbols Nerd Font, monospace"
 }

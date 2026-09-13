@@ -170,6 +170,10 @@ output_path = '$HOME/.config/joplin-desktop/userchrome.css'
 [templates.joplin_style]
 input_path = '$TEMPLATES_DIR/joplin-userstyle.css'
 output_path = '$HOME/.config/joplin-desktop/userstyle.css'
+
+[templates.quickshell]
+input_path = '$TEMPLATES_DIR/quickshell-theme.qml'
+output_path = '$HOME/.config/quickshell/Theme.qml'
 EOF
 
 if [ -n "$TB_PROFILE" ]; then
@@ -462,6 +466,11 @@ pkill -SIGUSR2 waybar 2>/dev/null || true
 pkill -SIGUSR1 foot 2>/dev/null || true
 pkill -SIGUSR1 cava 2>/dev/null || true
 pkill -f waybar-cava.py 2>/dev/null || true
+
+# Notificar y recargar Quickshell tocando shell.qml para forzar hot-reload
+if pgrep -x quickshell >/dev/null; then
+    touch "$HOME/.config/quickshell/shell.qml" 2>/dev/null || true
+fi
 if command -v swaymsg &>/dev/null && pgrep -x sway &>/dev/null; then
     swaymsg reload 2>/dev/null || true
 fi
@@ -525,8 +534,10 @@ if command -v pywalfox &>/dev/null; then
 fi
 
 # ── 11. Notificación ──────────────────────────────────────────────
-if command -v dunstify &>/dev/null; then
-    dunstify -a "DMS Matugen" -r 8812 "🎨 Tema Dinámico Aplicado" "Sway, Waybar, Foot, Qt, Iconos, Swaylock, Wofi y GTK sincronizados" || true
+if command -v notify-send &>/dev/null; then
+    notify-send -a "DMS Matugen" "🎨 Tema Dinámico Aplicado" "Sway, Quickshell, Foot, Qt, Iconos y GTK sincronizados" 2>/dev/null || true
+elif command -v dunstify &>/dev/null; then
+    dunstify -a "DMS Matugen" -r 8812 "🎨 Tema Dinámico Aplicado" "Sway, Quickshell, Foot, Qt, Iconos y GTK sincronizados" || true
 fi
 
 echo "✅ Tema dinámico Dank aplicado exitosamente a todo el escritorio."

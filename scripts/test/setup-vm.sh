@@ -73,6 +73,7 @@ VM_PACKAGES=(
     polkit-gnome
     wl-clipboard
     brightnessctl
+    matugen
 )
 
 echo -e "${YELLOW}▶ ¿Deseas instalar los paquetes esenciales en la VM con pacman?${NC}"
@@ -114,6 +115,18 @@ if [ ! -f "$HOME/Pictures/1.jpg" ]; then
     elif [ -f "$REPO_DIR/wallpapers/3.jpg" ]; then
         cp -f "$REPO_DIR/wallpapers/3.jpg" "$HOME/Pictures/1.jpg"
     fi
+fi
+
+# Copiar plantillas de Matugen y generar tema inicial
+if [ -d "$REPO_DIR/templates" ]; then
+    echo -e "  ${GREEN}→${NC} Configurando plantillas dinámicas de ${BLUE}Matugen${NC}..."
+    mkdir -p "$HOME/.config/matugen/templates"
+    cp -rf "$REPO_DIR/templates/"* "$HOME/.config/matugen/templates/"
+fi
+
+if command -v matugen &>/dev/null && [ -f "$HOME/.local/bin/set-wallpaper.sh" ] && [ -f "$HOME/Pictures/1.jpg" ]; then
+    echo -e "  ${GREEN}→${NC} Generando paleta de colores dinámica para Quickshell..."
+    bash "$HOME/.local/bin/set-wallpaper.sh" "$HOME/Pictures/1.jpg" || true
 fi
 
 # 4. Iniciar servicios de audio Pipewire
