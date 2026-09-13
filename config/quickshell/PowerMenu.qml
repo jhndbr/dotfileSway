@@ -4,6 +4,7 @@ import QtQuick.Controls
 import Quickshell
 import Quickshell.Wayland
 import Quickshell.Io
+import "."
 
 PanelWindow {
     id: powerWindow
@@ -22,15 +23,15 @@ PanelWindow {
     WlrLayershell.namespace: "sway-powermenu"
     WlrLayershell.keyboardFocus: visible ? WlrKeyboardFocus.Exclusive : WlrKeyboardFocus.None
 
-    function open(): void {
+    function open() {
         visible = true
     }
 
-    function close(): void {
+    function close() {
         visible = false
     }
 
-    function toggle(): void {
+    function toggle() {
         if (visible) close()
         else open()
     }

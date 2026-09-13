@@ -7,6 +7,7 @@ import Quickshell.I3
 import Quickshell.Services.Pipewire
 import Quickshell.Services.SystemTray
 import Quickshell.Widgets
+import "."
 
 PanelWindow {
     id: barWindow

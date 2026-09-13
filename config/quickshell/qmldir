@@ -1,1 +1,5 @@
 singleton Theme 1.0 Theme.qml
+Bar 1.0 Bar.qml
+Launcher 1.0 Launcher.qml
+NotificationPopup 1.0 NotificationPopup.qml
+PowerMenu 1.0 PowerMenu.qml

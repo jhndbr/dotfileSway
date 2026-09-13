@@ -4,6 +4,7 @@ import QtQuick.Controls
 import Quickshell
 import Quickshell.Wayland
 import Quickshell.Widgets
+import "."
 
 PanelWindow {
     id: launcherWindow
@@ -24,18 +25,18 @@ PanelWindow {
 
     property string searchText: ""
 
-    function open(): void {
+    function open() {
         searchText = ""
         searchInput.text = ""
         visible = true
         searchInput.forceActiveFocus()
     }
 
-    function close(): void {
+    function close() {
         visible = false
     }
 
-    function toggle(): void {
+    function toggle() {
         if (visible) close()
         else open()
     }

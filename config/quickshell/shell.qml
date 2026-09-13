@@ -1,16 +1,17 @@
 import QtQuick
 import Quickshell
 import Quickshell.Io
+import "."
 
 ShellRoot {
     id: root
 
     // Métodos globales accesibles desde componentes hijos
-    function toggleLauncher(): void {
+    function toggleLauncher() {
         launcher.toggle()
     }
 
-    function togglePower(): void {
+    function togglePower() {
         powerMenu.toggle()
     }
 
@@ -20,11 +21,11 @@ ShellRoot {
     IpcHandler {
         target: "shell"
 
-        function toggleLauncher(): void {
+        function toggleLauncher() {
             launcher.toggle()
         }
 
-        function togglePower(): void {
+        function togglePower() {
             powerMenu.toggle()
         }
     }

@@ -5,6 +5,7 @@ import Quickshell
 import Quickshell.Wayland
 import Quickshell.Widgets
 import Quickshell.Services.Notifications
+import "."
 
 PanelWindow {
     id: notifWindow
