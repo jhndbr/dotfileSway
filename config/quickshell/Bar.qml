@@ -218,7 +218,7 @@ PanelWindow {
                 Text {
                     text: barWindow.getActiveWindowTitle()
                     font.family: Theme.fontSans
-                    font.pixelSize: 10.5
+                    font.pixelSize: 11
                     font.weight: Font.Medium
                     color: Theme.textMain
                     elide: Text.ElideRight
@@ -253,7 +253,7 @@ PanelWindow {
                 Text {
                     text: barWindow.weatherText
                     font.family: Theme.fontSans
-                    font.pixelSize: 10.5
+                    font.pixelSize: 11
                     font.weight: Font.Medium
                     color: Theme.textMain
                 }
@@ -287,7 +287,7 @@ PanelWindow {
                       ? Qt.formatDateTime(clock.date, "dddd d 'de' MMMM, yyyy  ·  HH:mm")
                       : Qt.formatDateTime(clock.date, "ddd d MMM   HH:mm")
                 font.family: Theme.fontSans
-                font.pixelSize: 10.5
+                font.pixelSize: 11
                 font.weight: Font.Medium
                 color: Theme.textMain
             }
@@ -340,7 +340,7 @@ PanelWindow {
                         return full.length > 24 ? full.substring(0, 24) + "…" : full
                     }
                     font.family: Theme.fontSans
-                    font.pixelSize: 10.5
+                    font.pixelSize: 11
                     color: Theme.textMain
                     elide: Text.ElideRight
                 }
