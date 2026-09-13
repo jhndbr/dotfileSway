@@ -186,7 +186,7 @@ PanelWindow {
                             font.bold: modelData.focused
                             font.pixelSize: 10
                             color: modelData.focused
-                                   ? Theme.onPrimary
+                                   ? Theme.colorOnPrimary
                                    : (modelData.urgent ? "#ffffff" : Theme.textMain)
                         }
 
@@ -618,7 +618,7 @@ PanelWindow {
                 font.family: Theme.fontMono
                 font.pixelSize: 12
                 font.bold: true
-                color: powerMouse.containsMouse ? Theme.onError : Theme.textMuted
+                color: powerMouse.containsMouse ? Theme.colorOnError : Theme.textMuted
             }
 
             MouseArea {
