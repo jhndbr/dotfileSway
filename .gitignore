@@ -41,3 +41,9 @@ dotfiles-backup/
 .system_generated/
 *.backup
 
+# Máquinas Virtuales (QEMU / KVM)
+.vm/
+*.qcow2
+*.iso
+*.img
+

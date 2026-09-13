@@ -10,9 +10,9 @@ set $down j
 set $up k
 set $right l
 set $term foot
-set $menu wofi --show drun
-set $lock swaylock -f
 set $scripts ~/.local/bin
+set $menu $scripts/quickshell-toggle.sh launcher
+set $lock swaylock -f
 
 # Xwayland support
 xwayland enable
@@ -99,8 +99,8 @@ floating_modifier $mod normal
 # Reload config
 bindsym $mod+Shift+c reload
 
-# Menú de apagado / sesión (Wofi nativo)
-bindsym $mod+Shift+e exec $scripts/power-menu.sh
+# Menú de apagado / sesión (Quickshell)
+bindsym $mod+Shift+e exec $scripts/quickshell-toggle.sh power
 
 # Centro de Control / Quick Settings (Mod + X)
 bindsym $mod+x exec $scripts/quicksettings-menu.sh
@@ -253,10 +253,8 @@ for_window [class="cs2"] inhibit_idle fullscreen
 for_window [class="gamescope"] inhibit_idle fullscreen
 for_window [class="steam_app_.*"] inhibit_idle fullscreen
 
-# ── Autostart ───────────────────────────────────────────────────
-bar {
-    swaybar_command waybar
-}
+# Entorno de Shell UI Unificado (Quickshell)
+exec quickshell
 
 # D-Bus / Entorno & Portales XDG
 exec dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway XDG_SESSION_TYPE=wayland QT_QPA_PLATFORMTHEME=qt6ct
@@ -265,10 +263,6 @@ exec systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP XDG
 # Servicios de autenticación, llaves y secretos (Polkit & Keyring)
 exec /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
 exec gnome-keyring-daemon --start --components="secrets,ssh,pkcs11"
-
-# Notificaciones & Feedback OSD
-exec dunst
-exec_always pgrep -x swayosd-server >/dev/null || swayosd-server --style ~/.config/swayosd/style.css
 
 # Portapapeles (Texto e Imágenes) & Automontaje USB liviano
 exec wl-paste --type text --watch cliphist store

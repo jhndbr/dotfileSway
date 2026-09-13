@@ -55,15 +55,13 @@ sudo pacman -S --needed --noconfirm base-devel git
 # ── 4. Paquetes Oficiales (Pacman) ──────────────────────────────
 # Nota: Se eliminaron paquetes duplicados, Nautilus/gvfs redundantes
 PACMAN_PACKAGES=(
-    # Entorno Principal Wayland & UI
+    # Entorno Principal Wayland & UI (Quickshell Unified Shell)
     sway
     swaybg
     swaylock
     swayidle
-    waybar
-    wofi
+    quickshell
     foot
-    dunst
     gammastep
 
     # Captura de Pantalla, Grabación & Portapapeles
@@ -74,8 +72,7 @@ PACMAN_PACKAGES=(
     cliphist
     wtype
 
-    # Audio, Red, Montaje USB, OSD y Control de Sistema
-    swayosd
+    # Audio, Red, Montaje USB y Control de Sistema
     ddcutil
     networkmanager
     network-manager-applet
