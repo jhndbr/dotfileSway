@@ -78,13 +78,15 @@
   --arrowpanel-background: var(--md-surface-container-high) !important;
   --arrowpanel-color: #ffffff !important;
   --arrowpanel-border-color: var(--md-outline-variant) !important;
+  --arrowpanel-border-radius: 10px !important;
   --autocomplete-popup-background: var(--md-surface-container-high) !important;
   --autocomplete-popup-color: var(--md-on-surface) !important;
 
   /* Barra lateral (Sidebar y Pestañas Verticales) */
   --sidebar-background-color: var(--md-surface-container-low) !important;
   --sidebar-text-color: var(--md-on-surface) !important;
-  --sidebar-border-color: var(--md-outline-variant) !important;
+  --sidebar-border-color: transparent !important;
+  --chrome-content-separator-color: transparent !important;
 }
 
 /* ── Cajas y Contenedores Principales ────────────────────────── */
@@ -115,37 +117,70 @@ sidebar-main,
 .vertical-tabs-container {
   background-color: var(--md-surface-container-low) !important;
   color: var(--md-on-surface) !important;
-  border-color: var(--md-outline-variant) !important;
+  border: none !important;
+  border-color: transparent !important;
+  border-inline-end: none !important;
+  border-right: none !important;
+  box-shadow: none !important;
 }
 
 #sidebar-container {
-  border-inline-end: 1px solid var(--md-outline-variant) !important;
+  border: none !important;
+  border-inline-end: none !important;
+  border-right: none !important;
+  box-shadow: none !important;
 }
 
-/* Pestañas verticales */
+/* Ocultar completamente separadores o splitters de la barra lateral */
+#sidebar-splitter,
+#sidebar-launcher-splitter,
+.sidebar-splitter {
+  display: none !important;
+  border: none !important;
+  background: transparent !important;
+  width: 0 !important;
+  min-width: 0 !important;
+  max-width: 0 !important;
+}
+
+/* Eliminar borde divisorio del contenedor de páginas adyacente al sidebar */
+#tabbrowser-tabpanels .browserContainer,
+.browserContainer {
+  border: none !important;
+  border-inline-start: none !important;
+  border-left: none !important;
+  box-shadow: none !important;
+}
+
+/* Pestañas verticales en general */
 #tabbrowser-tabs[orient="vertical"] .tabbrowser-tab,
 .tabbrowser-tab[orient="vertical"],
 #vertical-tabs .tabbrowser-tab {
-  border-radius: 8px !important;
-  margin: 2px 4px !important;
   border: none !important;
   background: transparent !important;
+}
+
+/* Fondo de la pestaña (tab-background) */
+#tabbrowser-tabs[orient="vertical"] .tab-background,
+.tabbrowser-tab[orient="vertical"] .tab-background {
+  border-radius: 10px !important;
+  border: none !important;
+  transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease !important;
 }
 
 /* Pestaña no seleccionada hover */
 #tabbrowser-tabs[orient="vertical"] .tabbrowser-tab:hover:not([selected]) .tab-background,
 .tabbrowser-tab[orient="vertical"]:hover:not([selected]) .tab-background {
   background-color: color-mix(in srgb, var(--md-on-surface) 10%, transparent) !important;
-  border-radius: 8px !important;
-  border: none !important;
+  border-radius: 10px !important;
 }
 
-/* Pestaña seleccionada: fondo oscuro elegante acorde al tema */
+/* Pestaña seleccionada: fondo elegante acorde al tema */
 #tabbrowser-tabs[orient="vertical"] .tabbrowser-tab:is([selected], [selected="true"]) .tab-background,
 .tabbrowser-tab[orient="vertical"]:is([selected], [selected="true"]) .tab-background {
-  background-color: color-mix(in srgb, var(--md-primary) 15%, var(--md-surface-container-high)) !important;
+  background-color: color-mix(in srgb, var(--md-primary) 18%, var(--md-surface-container-high)) !important;
   border: 1px solid var(--md-outline-variant) !important;
-  border-radius: 8px !important;
+  border-radius: 10px !important;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3) !important;
 }
 
@@ -164,47 +199,250 @@ sidebar-main,
 /* Iconos de páginas (Favicons) limpios y destacados */
 #tabbrowser-tabs[orient="vertical"] .tab-icon-image,
 .tabbrowser-tab[orient="vertical"] .tab-icon-image {
-  width: 18px !important;
-  height: 18px !important;
+  width: 16px !important;
+  height: 16px !important;
   opacity: 1 !important;
   filter: none !important;
-  display: inline-block !important;
 }
 
 #tabbrowser-tabs[orient="vertical"] .tab-icon-stack,
 .tabbrowser-tab[orient="vertical"] .tab-icon-stack {
-  width: 20px !important;
-  height: 20px !important;
+  width: 16px !important;
+  height: 16px !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
+  position: relative !important;
 }
 
-/* Centrado perfecto del favicon en modo colapsado */
+/* ═════════════════════════════════════════════════════════════════
+   MODO VERTICAL COLAPSADO (:not([expanded]))
+   ═════════════════════════════════════════════════════════════════ */
+#tabbrowser-tabs[orient="vertical"]:not([expanded]) {
+  --tab-collapsed-background-width: 40px !important;
+  --tab-inner-inline-margin: calc((100% - var(--tab-collapsed-background-width)) / 2) !important;
+  --tab-collapsed-width: 100% !important;
+}
+
 #tabbrowser-tabs[orient="vertical"]:not([expanded]) .tabbrowser-tab {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 3px 0 !important;
+  padding: 0 !important;
+  overflow: visible !important;
   display: flex !important;
   justify-content: center !important;
+  align-items: center !important;
 }
 
+#tabbrowser-tabs[orient="vertical"]:not([expanded]) .tab-stack {
+  width: var(--tab-collapsed-background-width) !important;
+  height: var(--tab-collapsed-background-width) !important;
+  margin: 0 auto !important;
+  display: grid !important;
+  place-items: center !important;
+  position: relative !important;
+}
+
+/* Centrado perfecto del fondo de la pestaña en la barra lateral */
+#tabbrowser-tabs[orient="vertical"]:not([expanded]) .tab-background {
+  grid-area: 1/1 !important;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: var(--tab-collapsed-background-width) !important;
+  margin: 0 auto !important;
+  box-sizing: border-box !important;
+  border-radius: 10px !important;
+}
+
+/* Contenedor de contenido perfectamente centrado sobre el fondo */
 #tabbrowser-tabs[orient="vertical"]:not([expanded]) .tab-content {
+  grid-area: 1/1 !important;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: var(--tab-collapsed-background-width) !important;
+  margin: 0 auto !important;
   padding: 0 !important;
   display: flex !important;
-  justify-content: center !important;
   align-items: center !important;
-  margin: 0 !important;
+  justify-content: center !important;
+  position: relative !important;
+  overflow: visible !important;
 }
 
+/* Ocultar etiquetas de texto en modo colapsado para evitar desbordes */
+#tabbrowser-tabs[orient="vertical"]:not([expanded]) .tab-label-container,
+#tabbrowser-tabs[orient="vertical"]:not([expanded]) .tab-secondary-label {
+  display: none !important;
+}
+
+/* Icono (Favicon) centrado en el fondo de la pestaña */
 #tabbrowser-tabs[orient="vertical"]:not([expanded]) .tab-icon-stack {
   margin: 0 auto !important;
+  position: relative !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
 }
 
-#tabbrowser-tabs[orient="vertical"]:not([expanded]) .tab-background {
+/* Iconos de volumen y audio (soundplaying / muted):
+   Ubicados al lado derecho del icono centrado, sin taparlo y dentro del fondo */
+#tabbrowser-tabs[orient="vertical"]:not([expanded]) .tab-icon-overlay {
+  display: none;
+  position: absolute !important;
+  inset: auto !important;
+  right: 2px !important;
+  left: auto !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  width: 10px !important;
+  height: 10px !important;
+  padding: 1px !important;
+  box-sizing: border-box !important;
+  border-radius: 50% !important;
+  background-color: var(--md-surface-container-highest) !important;
+  fill: var(--md-primary) !important;
+  color: var(--md-primary) !important;
+  z-index: 5 !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4) !important;
+}
+
+#tabbrowser-tabs[orient="vertical"]:not([expanded]) .tab-icon-overlay:is([soundplaying], [muted], [activemedia-blocked]) {
+  display: block !important;
+}
+
+/* Icono de micrófono / cámara / compartir:
+   Ubicado también al lado derecho del icono centrado, sin taparlo */
+#tabbrowser-tabs[orient="vertical"]:not([expanded]) .tab-sharing-icon-overlay {
+  display: none;
+  position: absolute !important;
+  inset: auto !important;
+  right: 2px !important;
+  left: auto !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  width: 10px !important;
+  height: 10px !important;
+  padding: 1px !important;
+  box-sizing: border-box !important;
+  border-radius: 50% !important;
+  background-color: var(--md-surface-container-highest) !important;
+  fill: var(--md-error) !important;
+  color: var(--md-error) !important;
+  z-index: 6 !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4) !important;
+}
+
+#tabbrowser-tabs[orient="vertical"]:not([expanded]) .tab-sharing-icon-overlay[sharing] {
+  display: block !important;
+}
+
+/* Si coinciden micrófono y audio en la misma pestaña:
+   Micrófono arriba a la derecha, audio abajo a la derecha */
+#tabbrowser-tabs[orient="vertical"]:not([expanded]) .tab-icon-stack:has(.tab-sharing-icon-overlay[sharing]) .tab-sharing-icon-overlay {
+  top: 2px !important;
+  transform: none !important;
+}
+#tabbrowser-tabs[orient="vertical"]:not([expanded]) .tab-icon-stack:has(.tab-sharing-icon-overlay[sharing]) .tab-icon-overlay {
+  top: auto !important;
+  bottom: 2px !important;
+  transform: none !important;
+}
+
+/* Botón de cerrar pestaña en modo vertical colapsado:
+   Ubicado en la esquina superior derecha del fondo, aparece al hacer hover */
+#tabbrowser-tabs[orient="vertical"]:not([expanded]) .tab-close-button {
+  display: block !important;
+  position: absolute !important;
+  top: 2px !important;
+  right: 2px !important;
+  width: 14px !important;
+  height: 14px !important;
+  padding: 2px !important;
   margin: 0 !important;
+  border-radius: 50% !important;
+  box-sizing: border-box !important;
+  background-color: var(--md-surface-container-highest) !important;
+  fill: var(--md-on-surface) !important;
+  color: var(--md-on-surface) !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  transition: opacity 0.15s ease, background-color 0.15s ease, fill 0.15s ease !important;
+  z-index: 10 !important;
+  cursor: pointer !important;
 }
 
-/* Separación limpia en modo vertical expandido */
+#tabbrowser-tabs[orient="vertical"]:not([expanded]) .tabbrowser-tab:hover .tab-close-button {
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+
+#tabbrowser-tabs[orient="vertical"]:not([expanded]) .tab-close-button:hover {
+  background-color: var(--md-error) !important;
+  fill: #ffffff !important;
+  color: #ffffff !important;
+}
+
+#tabbrowser-tabs[orient="vertical"]:not([expanded]) .tabbrowser-tab[pinned] .tab-close-button {
+  display: none !important;
+}
+
+#tabbrowser-tabs[orient="vertical"]:not([expanded]) .tab-audio-button {
+  display: none !important;
+}
+
+/* Botón de nueva pestaña centrado con las mismas proporciones */
+#vertical-tabs-newtab-button,
+#tabbrowser-tabs[orient="vertical"]:not([expanded]) #vertical-tabs-newtab-button,
+#tabbrowser-tabs[orient="vertical"]:not([expanded]) #tabs-newtab-button {
+  width: var(--tab-collapsed-background-width) !important;
+  max-width: var(--tab-collapsed-background-width) !important;
+  height: var(--tab-collapsed-background-width) !important;
+  margin-inline: auto !important;
+  margin-block: 4px !important;
+  border-radius: 10px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
+}
+
+/* ═════════════════════════════════════════════════════════════════
+   MODO VERTICAL EXPANDIDO ([expanded])
+   ═════════════════════════════════════════════════════════════════ */
+#tabbrowser-tabs[orient="vertical"][expanded] .tabbrowser-tab {
+  margin: 2px 6px !important;
+}
+
+#tabbrowser-tabs[orient="vertical"][expanded] .tab-background {
+  margin: 0 !important;
+  border-radius: 8px !important;
+}
+
 #tabbrowser-tabs[orient="vertical"][expanded] .tab-icon-stack {
+  margin-inline-start: 6px !important;
   margin-inline-end: 8px !important;
+}
+
+#tabbrowser-tabs[orient="vertical"][expanded] .tab-close-button {
+  display: flex !important;
+  opacity: 0.6 !important;
+  width: 20px !important;
+  height: 20px !important;
+  padding: 3px !important;
+  margin-inline-end: 4px !important;
+  border-radius: 6px !important;
+  transition: opacity 0.15s ease, background-color 0.15s ease !important;
+}
+
+#tabbrowser-tabs[orient="vertical"][expanded] .tabbrowser-tab:hover .tab-close-button {
+  opacity: 1 !important;
+}
+
+#tabbrowser-tabs[orient="vertical"][expanded] .tab-close-button:hover {
+  background-color: var(--md-error) !important;
+  fill: #ffffff !important;
+  color: #ffffff !important;
 }
 
 /* Pestañas de la barra lateral (fxview-tab-row y sidebar-tab-row) */
@@ -407,6 +645,7 @@ sidebar-main toolbarbutton:hover,
 }
 
 /* ── Menús Contextuales (Clic Derecho) y Menú de Aplicación ─── */
+/* El contenedor exterior debe ser completamente transparente para evitar esquinas cuadradas */
 menupopup,
 panel,
 #contentAreaContextMenu,
@@ -415,12 +654,15 @@ panel,
 #appMenu-popup {
   -moz-appearance: none !important;
   appearance: none !important;
-  background-color: var(--md-surface-container-high) !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
   color: #ffffff !important;
-  border-color: var(--md-outline-variant) !important;
 }
 
-/* Contenido de Menús y Paneles (Shadow DOM ::part(content)) */
+/* Contenedor interno redondeado de menús y paneles (Shadow DOM y XUL scrollbox) */
+.menupopup-arrowscrollbox,
 menupopup::part(content),
 panel::part(content),
 .panel-arrowcontent {
@@ -432,13 +674,40 @@ panel::part(content),
   border: 1px solid var(--md-outline-variant) !important;
   border-radius: 10px !important;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4) !important;
+  overflow: hidden !important;
 }
 
+/* Ocultar flecha externa de los paneles para que no produzca esquinas o sombras rotas */
+.panel-arrow,
+.panel-arrowbox {
+  display: none !important;
+}
+
+/* Los paneles y subvistas internas deben ser transparentes para no sobresalir de los bordes redondeados */
 panelview,
 .panel-subview-body {
-  background-color: var(--md-surface-container-high) !important;
-  background: var(--md-surface-container-high) !important;
+  background: transparent !important;
+  background-color: transparent !important;
   color: #ffffff !important;
+}
+
+/* Popups de autocompletado y búsqueda */
+#PopupAutoComplete,
+#PopupSearchAutoComplete {
+  --panel-background: var(--md-surface-container-high) !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+#PopupAutoComplete .autocomplete-richlistbox,
+#PopupSearchAutoComplete .autocomplete-richlistbox {
+  background-color: var(--md-surface-container-high) !important;
+  border: 1px solid var(--md-outline-variant) !important;
+  border-radius: 10px !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4) !important;
+  overflow: hidden !important;
 }
 
 menuitem,

@@ -136,6 +136,7 @@ PACMAN_PACKAGES=(
     btop
     imagemagick
     zram-generator
+    less
 
     # Fuentes Tipográficas
     ttf-jetbrains-mono-nerd
