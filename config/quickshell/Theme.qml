@@ -42,9 +42,9 @@ QtObject {
     readonly property color borderFocus: "#d0bcff"
     readonly property color borderMuted: "#49454f"
 
-    // Alertas y errores
+    // Alertas y errores (evitar colisión con la señal reservada 'error' de QObject)
     readonly property color accentRed: "#ffb4ab"
-    readonly property color error: "#ffb4ab"
+    readonly property color colorError: "#ffb4ab"
     readonly property color colorOnError: "#690005"
     readonly property color accentBlue: "#a8c7fa"
     readonly property color accentGreen: "#a8dab5"

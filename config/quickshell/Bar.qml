@@ -176,7 +176,7 @@ PanelWindow {
                         radius: Theme.radiusPill
                         color: modelData.focused
                                ? Theme.primary
-                               : (modelData.urgent ? Theme.error : (itemWsMouse.containsMouse ? Theme.bgPillHover : "transparent"))
+                               : (modelData.urgent ? Theme.colorError : (itemWsMouse.containsMouse ? Theme.bgPillHover : "transparent"))
 
                         Text {
                             id: wsTxt
@@ -514,7 +514,7 @@ PanelWindow {
                         }
                         font.family: Theme.fontMono
                         font.pixelSize: 12
-                        color: (Pipewire.defaultAudioSink && Pipewire.defaultAudioSink.audio.muted) ? Theme.error : Theme.textMain
+                        color: (Pipewire.defaultAudioSink && Pipewire.defaultAudioSink.audio.muted) ? Theme.colorError : Theme.textMain
                     }
 
                     Text {
@@ -610,7 +610,7 @@ PanelWindow {
             height: 24
             width: 28
             radius: Theme.radiusPill
-            color: powerMouse.containsMouse ? Theme.error : Theme.bgPill
+            color: powerMouse.containsMouse ? Theme.colorError : Theme.bgPill
 
             Text {
                 anchors.centerIn: parent

@@ -42,9 +42,9 @@ QtObject {
     readonly property color borderFocus: "#{{colors.primary.default.hex_stripped}}"
     readonly property color borderMuted: "#{{colors.outline_variant.default.hex_stripped}}"
 
-    // Alertas y errores
+    // Alertas y errores (evitar colisión con señal reservada error de QObject)
     readonly property color accentRed: "#{{colors.error.default.hex_stripped}}"
-    readonly property color error: "#{{colors.error.default.hex_stripped}}"
+    readonly property color colorError: "#{{colors.error.default.hex_stripped}}"
     readonly property color colorOnError: "#{{colors.on_error.default.hex_stripped}}"
     readonly property color accentBlue: "#{{colors.primary.default.hex_stripped}}"
     readonly property color accentGreen: "#{{colors.tertiary.default.hex_stripped}}"
