@@ -245,8 +245,24 @@ def main():
     if not os.path.exists(papirus_bin):
         papirus_bin = "papirus-folders"
 
-    # 5. Priorizar el tema activo (Papirus-Dark) para refresco visual inmediato
-    active_theme = "Papirus-Dark"
+    # 5. Priorizar el tema activo según el modo (Papirus para light, Papirus-Dark para dark)
+    theme_mode = "dark"
+    if len(sys.argv) > 2 and sys.argv[2] in ["light", "dark"]:
+        theme_mode = sys.argv[2]
+    else:
+        conf_path = os.path.expanduser("~/.config/matugen/theme.conf")
+        if os.path.exists(conf_path):
+            try:
+                with open(conf_path, "r") as f:
+                    for line in f:
+                        if line.startswith("MODE="):
+                            val = line.split("=", 1)[1].strip().strip('"').strip("'")
+                            if val in ["light", "dark"]:
+                                theme_mode = val
+            except Exception:
+                pass
+
+    active_theme = "Papirus" if theme_mode == "light" else "Papirus-Dark"
     other_themes = [t for t in THEMES if t != active_theme]
 
     active_path = os.path.join(USER_ICONS_DIR, active_theme)

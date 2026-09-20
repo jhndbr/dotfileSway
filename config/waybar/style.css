@@ -369,9 +369,10 @@ tooltip label {
 }
 
 #custom-weather-icon {
-    font-size: 11.5px;
+    font-family: "JetBrainsMono Nerd Font", "Symbols Nerd Font", monospace;
+    font-size: 12px;
     padding: 0 2px;
-    min-width: 14px;
+    min-width: 12px;
     color: @text_secondary;
     transition: color 0.15s ease;
 }

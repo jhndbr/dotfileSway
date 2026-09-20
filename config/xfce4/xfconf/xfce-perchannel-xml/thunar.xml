@@ -2,20 +2,27 @@
 
 <channel name="thunar" version="1.0">
   <property name="last-view" type="string" value="ThunarIconView"/>
-  <property name="last-icon-view-zoom-level" type="string" value="THUNAR_ZOOM_LEVEL_100_PERCENT"/>
-  <property name="last-window-width" type="int" value="850"/>
-  <property name="last-window-height" type="int" value="600"/>
+  <property name="last-icon-view-zoom-level" type="string" value="THUNAR_ZOOM_LEVEL_150_PERCENT"/>
+  <property name="last-window-width" type="int" value="904"/>
+  <property name="last-window-height" type="int" value="784"/>
   <property name="last-window-maximized" type="bool" value="false"/>
   <property name="last-statusbar-visible" type="bool" value="false"/>
   <property name="last-menubar-visible" type="bool" value="false"/>
-  <property name="last-separator-position" type="int" value="185"/>
+  <property name="last-separator-position" type="int" value="137"/>
   <property name="last-show-hidden" type="bool" value="false"/>
-  <property name="misc-symbolic-icons-in-toolbar" type="bool" value="false"/>
-  <property name="last-toolbar-items" type="string" value="menu:1,back:1,forward:1,open-parent:0,open-home:0,new-tab:0,new-window:0,toggle-split-view:0,undo:0,redo:0,zoom-out:0,zoom-in:0,zoom-reset:0,view-as-icons:0,view-as-detailed-list:0,view-as-compact-list:0,view-switcher:0,location-bar:1,reload:0,search:1,uca-action-1787974507441071-1:0"/>
+  <property name="misc-symbolic-icons-in-toolbar" type="bool" value="true"/>
+  <property name="last-toolbar-items" type="string" value="menu:1,back:1,forward:1,open-parent:0,open-home:0,new-tab:0,new-window:0,toggle-split-view:0,undo:0,redo:0,zoom-out:0,zoom-in:0,zoom-reset:0,view-as-icons:0,view-as-detailed-list:0,view-as-compact-list:0,view-switcher:0,location-bar:0,reload:0,search:0,uca-action-1787974507441071-1:0,uca-action-ouch-compress-dialog:0,uca-action-ouch-compress-quick-tar:0,uca-action-ouch-compress-quick-zip:0,uca-action-open-zed-action:0"/>
   <property name="misc-single-click" type="bool" value="false"/>
   <property name="misc-use-csd" type="bool" value="false"/>
   <property name="last-sort-column" type="string" value="THUNAR_COLUMN_NAME"/>
   <property name="last-sort-order" type="string" value="GTK_SORT_ASCENDING"/>
+  <property name="shortcuts-icon-size" type="string" value="THUNAR_ICON_SIZE_16"/>
+  <property name="shortcuts-icon-emblems" type="bool" value="false"/>
+  <property name="tree-icon-emblems" type="bool" value="false"/>
+  <property name="misc-symbolic-icons-in-sidepane" type="bool" value="true"/>
+  <property name="misc-image-preview-mode" type="string" value="THUNAR_IMAGE_PREVIEW_MODE_EMBEDDED"/>
   <property name="misc-thumbnail-mode" type="string" value="THUNAR_THUMBNAIL_MODE_ALWAYS"/>
   <property name="misc-thumbnail-max-file-size" type="uint64" value="0"/>
+  <property name="last-details-view-zoom-level" type="string" value="THUNAR_ZOOM_LEVEL_100_PERCENT"/>
+  <property name="last-details-view-column-widths" type="string" value="50,50,152,50,50,50,50,50,471,50,50,74,50,113"/>
 </channel>

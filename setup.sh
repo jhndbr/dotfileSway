@@ -64,9 +64,20 @@ if [ "$CLEAN_INSTALL" = true ]; then
     echo ""
 fi
 
-# ── 1. Perfil de Dispositivo (PC de Escritorio) ─────────────────
-DEVICE_PROFILE="pc"
-echo -e "${YELLOW}🖥️  Perfil: ${BLUE}${BOLD}PC de Escritorio (Optimizado)${NC}\n"
+# ── 1. Perfil de Dispositivo (PC de Escritorio vs Laptop) ───────
+if [ -n "$CLI_DEVICE" ]; then
+    DEVICE_PROFILE="$CLI_DEVICE"
+elif ls /sys/class/power_supply/BAT* 1> /dev/null 2>&1; then
+    DEVICE_PROFILE="laptop"
+else
+    DEVICE_PROFILE="pc"
+fi
+
+if [ "$DEVICE_PROFILE" = "laptop" ]; then
+    echo -e "${YELLOW}💻 Perfil detectado: ${BLUE}${BOLD}Laptop / Notebook (Gestos, Touchpad, Batería)${NC}\n"
+else
+    echo -e "${YELLOW}🖥️  Perfil detectado: ${BLUE}${BOLD}PC de Escritorio (Optimizado)${NC}\n"
+fi
 
 # ── 2. Selección de Distribución de Teclado ────────────────────
 if [ -n "$CLI_KB" ]; then
@@ -172,6 +183,14 @@ for item in "${CONFIGS[@]}"; do
         cp -rf "$SCRIPT_DIR/config/$item/"* "$HOME/.config/$item/" 2>/dev/null || true
     fi
 done
+
+# Aplicar perfil de dispositivo específico (PC vs Laptop)
+if [ -f "$SCRIPT_DIR/config/sway/device.conf.$DEVICE_PROFILE" ]; then
+    cp -f "$SCRIPT_DIR/config/sway/device.conf.$DEVICE_PROFILE" "$HOME/.config/sway/device.conf"
+fi
+if [ "$DEVICE_PROFILE" = "laptop" ] && [ -f "$SCRIPT_DIR/config/waybar/config.laptop" ]; then
+    cp -f "$SCRIPT_DIR/config/waybar/config.laptop" "$HOME/.config/waybar/config"
+fi
 
 # ── 8. Distribución de Teclado ──────────────────────────────────
 if [ -f "$SCRIPT_DIR/scripts/keyboard-layout.sh" ]; then

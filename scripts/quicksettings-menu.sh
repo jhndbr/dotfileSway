@@ -6,6 +6,7 @@
 # ╚══════════════════════════════════════════════════════════════╝
 
 SCRIPTS_DIR="$HOME/.local/bin"
+[ ! -d "$SCRIPTS_DIR" ] && SCRIPTS_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # Función para formatear líneas con espacio uniforme y corchetes alineados
 format_item() {
@@ -82,8 +83,39 @@ if [ -f "$HOME/.config/sway/inputs.conf" ]; then
 fi
 ITEM_KB=$(format_item "⌨️" "Distribución Teclado" "$KB_LAYOUT")
 
+# Modo de Tema y Esquema de Color (Matugen)
+THEME_CONF="$HOME/.config/matugen/theme.conf"
+CURRENT_THEME_MODE="dark"
+CURRENT_THEME_SCHEME="scheme-tonal-spot"
+if [ -f "$THEME_CONF" ]; then
+    . "$THEME_CONF" 2>/dev/null || true
+    [ -n "$MODE" ] && CURRENT_THEME_MODE="$MODE"
+    [ -n "$SCHEME_TYPE" ] && CURRENT_THEME_SCHEME="$SCHEME_TYPE"
+fi
+
+if [ "$CURRENT_THEME_MODE" = "light" ]; then
+    ITEM_THEME_MODE=$(format_item "󰃮" "Modo de Color" "Claro")
+else
+    ITEM_THEME_MODE=$(format_item "󰃭" "Modo de Color" "Oscuro")
+fi
+
+case "$CURRENT_THEME_SCHEME" in
+    *vibrant*)      SCHEME_LABEL="Vibrant" ;;
+    *fidelity*)     SCHEME_LABEL="Fidelity" ;;
+    *expressive*)   SCHEME_LABEL="Expressive" ;;
+    *fruit-salad*)  SCHEME_LABEL="Fruit Salad" ;;
+    *rainbow*)      SCHEME_LABEL="Rainbow" ;;
+    *content*)      SCHEME_LABEL="Content" ;;
+    *monochrome*)   SCHEME_LABEL="Monochrome" ;;
+    *neutral*)      SCHEME_LABEL="Neutral" ;;
+    *)              SCHEME_LABEL="Tonal Spot" ;;
+esac
+ITEM_THEME_SCHEME=$(format_item "󰏘" "Esquema Matugen" "$SCHEME_LABEL")
+
 # ── 2. Lista de Opciones Formateada ────────────────────────────
 OPCIONES="$(format_item "󰍹" "Pantallas y Monitores" "Configurar")
+$ITEM_THEME_MODE
+$ITEM_THEME_SCHEME
 $ITEM_BT
 $ITEM_KB
 $(format_item "󰕾" "Salida de Audio" "Cambiar")
@@ -109,14 +141,66 @@ SELECCION=$(echo -e "$OPCIONES" | wofi --dmenu \
     --cache-file /dev/null \
     --insensitive \
     --width 500 \
-    --height 480 \
-    --lines 12)
+    --height 520 \
+    --lines 14)
 
 # Salir si se canceló
 [ -z "$SELECCION" ] && exit 0
 
 # ── 4. Ejecución de Acciones ────────────────────────────────────
 case "$SELECCION" in
+    *"Modo de Color"*)
+        MODE_OPTIONS="$(format_item "󰃭" "Modo Oscuro" "Dark")
+$(format_item "󰃮" "Modo Claro" "Light")
+$(format_item "󰔎" "Alternar Modo" "Toggle")"
+        MODE_SEL=$(echo -e "$MODE_OPTIONS" | wofi --dmenu \
+            --prompt "  󰔎  Modo de Color" \
+            --cache-file /dev/null \
+            --insensitive \
+            --width 420 \
+            --height 220 \
+            --lines 3)
+        case "$MODE_SEL" in
+            *"Modo Oscuro"*)
+                "$SCRIPTS_DIR/set-wallpaper.sh" --mode dark
+                ;;
+            *"Modo Claro"*)
+                "$SCRIPTS_DIR/set-wallpaper.sh" --mode light
+                ;;
+            *"Alternar"*)
+                "$SCRIPTS_DIR/set-wallpaper.sh" --mode toggle
+                ;;
+        esac
+        ;;
+    *"Esquema Matugen"*)
+        SCHEME_OPTIONS="$(format_item "󰏘" "Vibrant" "Saturado y vivo")
+$(format_item "󰏘" "Fidelity" "Fiel al wallpaper")
+$(format_item "󰏘" "Expressive" "Acentos coloridos")
+$(format_item "󰏘" "Tonal Spot" "Equilibrado (Defecto)")
+$(format_item "󰏘" "Fruit Salad" "Contrastante lúdico")
+$(format_item "󰏘" "Rainbow" "Multicolor")
+$(format_item "󰏘" "Content" "Tonos del contenido")
+$(format_item "󰏘" "Neutral" "Tonos discretos")
+$(format_item "󰏘" "Monochrome" "Escala de grises")"
+        SCHEME_SEL=$(echo -e "$SCHEME_OPTIONS" | wofi --dmenu \
+            --prompt "  󰏘  Esquema Matugen" \
+            --cache-file /dev/null \
+            --insensitive \
+            --width 480 \
+            --height 380 \
+            --lines 9)
+        case "$SCHEME_SEL" in
+            *"Vibrant"*)     "$SCRIPTS_DIR/set-wallpaper.sh" --scheme scheme-vibrant ;;
+            *"Fidelity"*)    "$SCRIPTS_DIR/set-wallpaper.sh" --scheme scheme-fidelity ;;
+            *"Expressive"*)  "$SCRIPTS_DIR/set-wallpaper.sh" --scheme scheme-expressive ;;
+            *"Tonal Spot"*)  "$SCRIPTS_DIR/set-wallpaper.sh" --scheme scheme-tonal-spot ;;
+            *"Fruit Salad"*) "$SCRIPTS_DIR/set-wallpaper.sh" --scheme scheme-fruit-salad ;;
+            *"Rainbow"*)     "$SCRIPTS_DIR/set-wallpaper.sh" --scheme scheme-rainbow ;;
+            *"Content"*)     "$SCRIPTS_DIR/set-wallpaper.sh" --scheme scheme-content ;;
+            *"Neutral"*)     "$SCRIPTS_DIR/set-wallpaper.sh" --scheme scheme-neutral ;;
+            *"Monochrome"*)  "$SCRIPTS_DIR/set-wallpaper.sh" --scheme scheme-monochrome ;;
+        esac
+        ;;
     *"Modo Cafeína"*|*"Cafeína"*)
         "$SCRIPTS_DIR/caffeine-toggle.sh"
         ;;

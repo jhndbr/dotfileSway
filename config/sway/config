@@ -102,8 +102,9 @@ bindsym $mod+Shift+c reload
 # Menú de apagado / sesión (Wofi nativo)
 bindsym $mod+Shift+e exec $scripts/power-menu.sh
 
-# Centro de Control / Quick Settings (Mod + X)
+# Centro de Control / Quick Settings (Mod + X / Ctrl + Mod + X)
 bindsym $mod+x exec $scripts/quicksettings-menu.sh
+bindsym Control+$mod+x exec $scripts/quicksettings-menu.sh
 
 # Gestor de monitores y pantallas
 bindsym $mod+p exec $scripts/monitor-manager.sh menu

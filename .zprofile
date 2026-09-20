@@ -32,8 +32,10 @@ export SDL_VIDEODRIVER=wayland
 # ── Java ────────────────────────────────────────────────────────
 export _JAVA_AWT_WM_NONREPARENTING=1
 
-# ── PATH ────────────────────────────────────────────────────────
-export PATH="$HOME/.local/bin:$HOME/.local/share/JetBrains/Toolbox/scripts:$PATH"
+# ── PATH (Deduplicación automática nativa de Zsh) ───────────────
+typeset -U path PATH
+path=("$HOME/.local/bin" "$HOME/.local/share/JetBrains/Toolbox/scripts" $path)
+export PATH
 
 # ── Autostart Sway en TTY1 ──────────────────────────────────────
 if [ -z "$WAYLAND_DISPLAY" ] && [ -z "$DISPLAY" ] && { [ "$XDG_VTNR" = "1" ] || [ "$(tty 2>/dev/null)" = "/dev/tty1" ]; }; then

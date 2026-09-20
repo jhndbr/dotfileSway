@@ -19,8 +19,10 @@ export XDG_CACHE_HOME="$HOME/.cache"
 export XDG_STATE_HOME="$HOME/.local/state"
 export STARSHIP_CONFIG="$HOME/.config/starship.toml"
 
-# PATH
-export PATH="$HOME/.local/bin:$HOME/.local/share/JetBrains/Toolbox/scripts:$PATH"
+# PATH (Deduplicación automática nativa de Zsh)
+typeset -U path PATH
+path=("$HOME/.local/bin" "$HOME/.local/share/JetBrains/Toolbox/scripts" $path)
+export PATH
 
 # ── 2. Autocompletado nativo ultra rápido (Caché 24h) ──────────
 setopt EXTENDED_GLOB
