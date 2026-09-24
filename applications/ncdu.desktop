@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Ncdu
+GenericName=Analizador de Uso de Disco
+Comment=Analizador interactivo del espacio en disco
+Exec=foot -a cli-ncdu -T Ncdu ncdu
+Icon=drive-harddisk
+Terminal=false
+Type=Application
+Categories=System;FileTools;ConsoleOnly;
+Keywords=disk;space;disco;memoria;limpieza;

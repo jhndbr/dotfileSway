@@ -1,124 +1,515 @@
 #!/usr/bin/env bash
 
 # ╔══════════════════════════════════════════════════════════════╗
-# ║        Visor & Seleccionador de Emojis para Sway             ║
+# ║        Visor & Selector Extendido de Emojis para Sway        ║
 # ║        Estilo Windows / macOS con Wofi + wl-clipboard        ║
 # ╚══════════════════════════════════════════════════════════════╝
 
-EMOJI_LIST="😀 Risa feliz
-😃 Carita sonriente
-😄 Sonrisa ojos felices
-😁 Sonrisa radiante
-😆 Risa carcajada
-😅 Risa sudor frío
-🤣 Risa rodando en el suelo
-😂 Risa lágrimas de alegría
-🙂 Sonrisa leve
-🙃 Carita al revés
-😉 Guiño
-😊 Carita sonrojada
-😇 Carita ángel
-🥰 Carita con corazones
-😍 Ojos de corazón
-🤩 Carita deslumbrada
-😘 Beso de corazón
-😗 Beso
-😚 Beso ojos cerrados
-😙 Beso sonrisa
-😋 Lengua fuera delicioso
-😛 Lengua fuera
-😜 Guiño lengua fuera
-🤪 Carita loca
-😝 Lengua fuera ojos cerrados
-🤑 Carita dinero
-🤗 Carita abrazo
-🤭 Mano en la boca
-🤫 Carita silencio
-🤔 Pensativo
-🤐 Boca con cierre
-🤨 Ceja levantada
-😐 Neutral
-😑 Sin expresión
-😶 Sin boca
-😏 Sonrisa picara
-😒 Descontento
-🙄 Ojos arriba
-😬 Mueca
-🤥 Mentiroso
-relajado 😌 Relajado
-prensado 😔 Pensativo triste
-bostezando 🥱 Bostezo
-durmiendo 😴 Durmiendo
-salud 😷 Mascarilla
-fiebre 🤒 Termómetro
-herida 🩹 Curita
-monóculo 🧐 Monóculo
-confundido 😕 Confundido
-preocupado 😟 Preocupado
-asombrado 😮 Sorprendido
-impresionado 😲 Impresionado
-ruborizado 😳 Sonrojado
-asustado 😱 Grito de miedo
-temeroso 😨 Temeroso
-ansioso 😰 Ansioso
-llorando 😢 Llorando
-desconsolado 😭 Llantos
-enojado 😠 Enojado
-furia 😡 Furia roja
-diablo 😈 Diablo sonriente
-calavera 💀 Calavera
-fuego 🔥 Fuego quemando
-100 💯 Cien puntos
-estrella ✨ Destellos estrellas
-corazón ❤️ Corazón rojo
-corazón negro 🖤 Corazón negro
-corazón púrpura 💜 Corazón púrpura
-corazón azul 💙 Corazón azul
-corazón verde 💚 Corazón verde
-corazón amarillo 💛 Corazón amarillo
-corazón roto 💔 Corazón roto
-manos juntas 🙏 Manos juntas por favor / gracias
-aplauso 👏 Aplauso
-pulgar arriba 👍 Pulgar arriba bien
-pulgar abajo 👎 Pulgar abajo mal
-puño 👊 Puño cerrado
-mano levantada ✋ Mano levantada
-victoria ✌️ Signo de victoria
-roca 🤘 Signo de rock
-fuerza 💡 Idea bombilla
-cohete 🚀 Cohete despegar
-computadora 💻 Laptop computadora
-código 💻 Programación código
-café ☕ Café caliente
-cerveza 🍺 Cerveza jarra
-pizza 🍕 Pizza
-hamburguesa 🍔 Hamburguesa
-taco 🌮 Taco
-sol ☀️ Sol brillante
-luna 🌙 Luna creciente
-relámpago ⚡ Relámpago
-lluvia 🌧️ Lluvia
-check ✔️ Visto check verde
-cruz ❌ Cruz roja cancelar
-alerta ⚠️ Advertencia peligro
-nota 🎵 Nota musical
-música 🎶 Notas de música
-regalo 🎁 Regalo fiesta
-fiesta 🎉 Fiesta cañón
-ok 👌 Signo OK
-saludo 🖐️ Mano abierta"
+EMOJI_LIST="😀  Risa feliz  [sonrisa alegre cara cara_feliz grin]
+😃  Carita sonriente  [sonrisa ojos abiertos happy]
+😄  Sonrisa con ojos felices  [alegria sonrisa smile]
+😁  Sonrisa radiante  [dientes sonrisa beaming]
+😆  Risa carcajada  [risa ojos cerrados lol xd]
+😅  Risa con sudor frío  [nervioso alivio sweat]
+🤣  Risas en el suelo  [rofl carcajadas muriendo_de_risa]
+😂  Risa con lágrimas  [llorar_de_risa alegria joy lol]
+🙂  Sonrisa leve  [amable suave slight_smile]
+🙃  Carita al revés  [ironia sarcasmo upside_down]
+😉  Guiño  [picaro complicidad wink]
+😊  Sonrisa sonrojada  [timido tierno blush]
+😇  Ángel  [inocente bueno halo angel]
+🥰  Carita con corazones  [enamorado tierno amor love]
+😍  Ojos de corazón  [enamorado fascinado heart_eyes]
+🤩  Ojos de estrella  [deslumbrado impresionado star_struck]
+😘  Beso de corazón  [beso amor carino kiss]
+😗  Beso  [silbido pico kissing]
+😚  Beso ojos cerrados  [tierno afecto]
+😙  Beso sonrisa  [amable beso]
+😋  Delicioso  [lengua sabroso rico yum]
+😛  Sacando la lengua  [broma juego tongue]
+😜  Guiño con lengua  [locura divertido joke]
+🤪  Carita alocada  [divertido loco zany]
+😝  Lengua ojos cerrados  [travesura burla]
+🤑  Carita con dinero  [plata rico ganancias money]
+🤗  Abrazo  [cariño afecto abrazo hug]
+🤭  Risa tímida  [mano en boca sorpresa giggle]
+🤫  Silencio  [secreto shh callar quiet]
+🤔  Pensativo  [pensando duda reflexionar think]
+🤐  Boca con cierre  [secreto silencio mudo zipper]
+🤨  Ceja levantada  [duda esceptico sospecha eyebrow]
+😐  Cara neutral  [sin comentarios neutro meh]
+😑  Sin expresión  [inexpresivo aburrido poker_face]
+😶  Sin boca  [sin palabras callado blank]
+😏  Sonrisa pícara  [coqueteo picaro smirk]
+😒  Descontento  [molesto fastidiado unamused]
+🙄  Ojos en blanco  [hartazgo ironia roll_eyes]
+😬  Mueca incómoda  [incomodo tension grimace]
+🤥  Nariz larga  [mentiroso pinocho liar]
+😌  Alivio relajado  [paz tranquilidad zen calm]
+😔  Desanimado  [triste pensativo down]
+🥱  Bostezo  [sueno cansado aburrido yawn]
+😴  Durmiendo  [sueno zzz noche asleep]
+😷  Mascarilla médica  [salud enfermo virus mask]
+🤒  Termómetro  [fiebre enfermo temperatura]
+🤕  Vendaje en la cabeza  [herido accidente golpe]
+🤢  Náuseas  [asco mareado verde sick]
+🤮  Vomitando  [asco enfermo puking]
+🤧  Estornudo  [resfrio alergia sneeze]
+🥵  Calor sofocante  [sudor caliente verano hot]
+🥶  Congelado de frío  [hielo temblando invierno cold]
+🥴  Atontado mareado  [ebrio borracho mareo woozy]
+😵  Mareado con cruces  [desmayado noqueado dizzy]
+🤯  Cabeza explotando  [asombro mente_explotada mind_blown]
+🤠  Vaquero  [sombrero western cowboy]
+🥳  Fiesta celebración  [cumpleaños festejo party]
+😎  Gafas de sol  [fachero genial pro cool]
+🤓  Gafas de empollón  [nerd friki inteligente estudio]
+🧐  Monóculo  [elegante observador inspector]
+😕  Confundido  [duda desconcertado confused]
+😟  Preocupado  [ansioso intranquilo worried]
+🙁  Levemente triste  [tristeza apenado sad]
+😮  Boca abierta  [sorpresa asombro wow]
+😯  Sorprendido  [anonadado callado surprised]
+😲  Atónito impresionado  [estupefacto asombrado]
+😳  Sonrojado atónito  [verguenza impacto shocked]
+🥺  Ojos suplicantes  [por favor tierno perrito please]
+😦  Boca abierta triste  [decepcion pena]
+😨  Temeroso  [miedo asustado fear]
+😰  Ansioso con sudor  [estres preocupacion anxiety]
+😥  Triste con alivio  [suspiro deprimido sad_relief]
+😢  Llorando  [lagrima pena triste cry]
+😭  Llanto desconsolado  [llorando fuerte dolor sob]
+😱  Grito de pánico  [terror asustado scream]
+😖  Afligido  [frustrado impotencia stressed]
+😣  Soportando dolor  [perseverancia molestia suffering]
+😞  Decepcionado  [desilusion pena disappointment]
+😓  Sudor frío abatido  [derrota frustracion sweat]
+😩  Agotado  [cansancio queja weary]
+😫  Cansado exhausto  [hartazgo agotamiento tired]
+😤  Resoplando orgullo  [triunfo enfado steam]
+😡  Furia roja  [enojado ira rabia angry]
+😠  Enojado  [molesto enfado mad]
+🤬  Insultos censurados  [maldiciones rabia cursing]
+😈  Diablillo sonriente  [travesura maldad devil]
+👿  Diablo enfadado  [demonio furioso anger]
+💀  Calavera  [muerto calaca dead skeleton skull]
+☠️  Calavera con tibias  [pirata veneno peligro danger]
+💩  Popó sonriente  [caca divertida poop]
+🤡  Payaso  [broma circo payasada clown]
+👹  Ogro japonés  [ogre mascara monstruo]
+👻  Fantasma  [espiritu boo halloween ghost]
+👽  Extraterrestre  [alien ufo ovni espacio]
+👾  Monstruo pixelado  [alien retro videojuego 8bit]
+🤖  Robot  [tecnologia bot android ai]
+😺  Gato sonriente  [michi gatito cat_smile]
+😸  Gato risa ojos felices  [gato risa cat_grin]
+😹  Gato llorando de risa  [gato alegre cat_joy]
+😻  Gato ojos corazón  [gato enamorado cat_love]
+😼  Gato sonrisa pícara  [gato smirk cat_smirk]
+😽  Gato dando beso  [gato beso cat_kiss]
+🙀  Gato asustado  [gato shock cat_scream]
+😿  Gato llorando  [gato lagrima cat_sad]
+😾  Gato enojado  [gato furioso cat_mad]
+🙈  Mono ojos tapados  [no ver verguenza see_no_evil]
+🙉  Mono oídos tapados  [no oir sordo hear_no_evil]
+🙊  Mono boca tapada  [no hablar secreto speak_no_evil]
+💌  Carta de amor  [mensaje sobre carta_amor]
+💘  Corazón con flecha  [cupido enamorado romance]
+💝  Corazón con cinta  [regalo amor carino]
+💖  Corazón brillante  [destellos carino sparkle_heart]
+💗  Corazón creciente  [emocion palpitante growing_heart]
+💓  Corazón latiendo  [palpitar pulso beating_heart]
+💞  Corazones girando  [revoloteo afecto revolving_hearts]
+💕  Dos corazones  [pareja amor two_hearts]
+💟  Decoración de corazón  [adorno corazon]
+💔  Corazón roto  [desamor tristeza dolor broken_heart]
+❤️  Corazón rojo  [amor pasion love red_heart]
+🧡  Corazón naranja  [amistad carino orange_heart]
+💛  Corazón amarillo  [alegria luz yellow_heart]
+💚  Corazón verde  [esperanza naturaleza green_heart]
+💙  Corazón azul  [confianza paz blue_heart]
+💜  Corazón púrpura  [magia elegancia purple_heart]
+🤎  Corazón marrón  [tierra chocolate brown_heart]
+🖤  Corazón negro  [oscuro elegancia black_heart]
+🤍  Corazón blanco  [pureza paz white_heart]
+💯  Cien puntos  [perfecto total 100 hundred]
+💢  Símbolo de ira  [enojo anime comic anger]
+💥  Explosión  [choque impacto boom bang]
+💫  Estrellas mareo  [mareado destello dizzy]
+💦  Gotas de sudor  [agua esfuerzo sudor drops]
+💨  Ráfaga de viento  [rapido corriendo huida dash]
+🕳️  Agujero  [hoyo negro vacio hole]
+💣  Bomba  [dinamita mecha peligro bomb]
+💬  Burbuja de diálogo  [charla mensaje chat comment]
+👁️‍🗨️  Ojo en burbuja  [antibullying testigo discurso]
+🗨️  Burbuja de voz izquierda  [dialogo hablar speech]
+🗯️  Burbuja de ira  [grito queja anger_bubble]
+💭  Burbuja de pensamiento  [sueno idea thinking]
+💤  Durmiendo Zzz  [sueno noche zzz sleep]
+👋  Mano saludando  [hola adios saludo wave]
+🤚  Dorso de mano levantado  [espera alto stop]
+🖐️  Mano abierta con dedos  [cinco saludo high_five]
+✋  Mano levantada  [alto detente stop hand]
+🖖  Saludo vulcano  [spock star_trek llar]
+👌  Signo OK  [perfecto bien de_acuerdo ok_hand]
+🤌  Mano pellizco  [italiano que dices gesture]
+🤏  Poco  [pequeno poquito pizca tiny]
+✌️  Signo de victoria  [paz amor dos victory peace]
+🤞  Dedos cruzados  [suerte deseo esperanza cross_fingers]
+🤟  Te quiero en señas  [amor afecto ily love_you]
+🤘  Signo de rock  [metal cornisa fiesta rock_on]
+🤙  Llamame shaka  [buena onda surfer call_me]
+👈  Señalando a la izquierda  [alli izquierda point_left]
+👉  Señalando a la derecha  [alli derecha point_right]
+👆  Señalando arriba  [arriba mira point_up]
+👇  Señalando abajo  [abajo mira point_down]
+☝️  Dedo índice arriba  [atencion uno point_up]
+👍  Pulgar arriba  [bien aprobado de_acuerdo like thumbs_up]
+👎  Pulgar abajo  [mal desaprobado no dislike thumbs_down]
+✊  Puño levantado  [fuerza resistencia lucha fist]
+👊  Puño al frente  [saludo choque golpe brofist]
+🤛  Puño izquierda  [choque puños fist_left]
+🤜  Puño derecha  [choque puños fist_right]
+👏  Aplausos  [bravo felicitaciones clap]
+🙌  Manos levantadas  [festejo alabanza victoria celebrate]
+👐  Manos abiertas  [ofrecer abrazo abierto open_hands]
+🤲  Palmas juntas arriba  [oracion recibir ofrenda palms_up]
+🤝  Apretón de manos  [trato acuerdo negocio handshake]
+🙏  Manos juntas  [por favor gracias rezar plegaria pray]
+✍️  Escribiendo con mano  [escribir lapiz autor write]
+💅  Esmalte de uñas  [manicura diva glam relajado polish]
+🤳  Selfie  [autofoto camara telefono]
+💪  Bíceps flexionado  [fuerza musculo power flex strong]
+🦵  Pierna  [extremidad correr patada leg]
+🦶  Pie  [caminar pisada huella foot]
+👂  Oreja  [escuchar oido atencion ear]
+👃  Nariz  [oler olfato nose]
+🧠  Cerebro  [mente inteligencia pensar brain]
+👀  Ojos mirando  [mirar observando atencion eyes]
+👁️  Ojo único  [vision mirar ver eye]
+👅  Lengua  [gusto saborear tongue]
+👄  Boca  [labios beso hablar mouth]
+🔥  Fuego ardiente  [llama calor trending lit flame fire]
+✨  Destellos  [brillo magia estrellas sparkles]
+⭐  Estrella dorada  [calificacion estrella star]
+🌟  Estrella brillante  [resplandor brillo glowing_star]
+⚡  Relámpago  [electricidad rayo energia trueno volt zap]
+☀️  Sol brillante  [soleado dia calor verano sun]
+🌤️  Sol tras nube  [parcialmente nublado]
+⛅  Sol con nubes  [nublado dia]
+🌥️  Sol cubierto  [nubes clima]
+☁️  Nube  [nublado cielo nube cloud]
+🌧️  Lluvia  [agua tormenta mal_tiempo rain]
+⛈️  Tormenta eléctrica  [rayos trueno tormenta storm]
+🌩️  Relámpago en nube  [descarga relampago lightning]
+❄️  Copo de nieve  [frio nieve invierno snow]
+⛄  Muñeco de nieve  [navidad frio snowman]
+🌈  Arcoíris  [colores arcoiris diversidad rainbow]
+🌊  Ola de mar  [agua oceano tsunami surf wave]
+🌙  Luna creciente  [noche sueno luna moon]
+🌑  Luna nueva  [oscuridad eclipse]
+🪐  Planeta anillado  [saturno espacio astronomia planet]
+🌍  Planeta Tierra  [globo mundo planeta earth]
+🚀  Cohete espacial  [despegue nave rapido launch rocket]
+🛸  Platillo volador  [ovni extraterrestre ufo]
+🛰️  Satélite  [espacio comunicacion orbit satellite]
+💻  Laptop computadora  [ordenador programacion portatil tech pc]
+🖥️  Computadora de escritorio  [pantalla monitor pc desktop]
+⌨️  Teclado  [escribir mecanografia typing keyboard]
+🖱️  Ratón de computadora  [mouse click puntero]
+🖨️  Impresora  [imprimir papel printer]
+📱  Teléfono móvil  [celular smartphone iphone android phone]
+📲  Móvil con flecha  [llamada mensaje notificacion incoming]
+☎️  Teléfono clásico  [telefono fijo call]
+📟  Buscapersonas  [pager retro]
+📠  Fax  [oficina documento fax]
+🔋  Batería  [energia carga pila battery]
+🔌  Enchufe eléctrico  [corriente conectar plug]
+💡  Bombilla de luz  [idea ocurrencia brillante luz bulb]
+🔦  Linterna  [luz noche buscar flashlight]
+🕯️  Vela encendida  [fuego cera luz candle]
+🗑️  Papelera de reciclaje  [basura borrar trash bin]
+📁  Carpeta de archivos  [directorio carpeta folder]
+📂  Carpeta abierta  [abrir archivos open_folder]
+📄  Página de documento  [texto papel archivo document]
+📅  Calendario  [fecha agenda dia calendar]
+📊  Gráfico de barras  [estadistica finanzas chart]
+📈  Gráfico en alza  [ganancias crecimiento stocks up]
+📉  Gráfico en baja  [perdidas caida stocks down]
+📦  Caja de paquete  [envio correo encomienda package]
+📫  Buzón con bandera  [correo cartas mailbox]
+📬  Buzón lleno  [mensajes cartas email]
+✉️  Sobre de carta  [mensaje email correo letter]
+📧  Correo electrónico  [email mensaje e-mail]
+📝  Nota con lápiz  [escribir memo apuntes note]
+💼  Maletín ejecutivo  [trabajo oficina negocio briefcase]
+🔍  Lupa de búsqueda  [buscar explorar lupa search]
+🔎  Lupa derecha  [buscar detalle find]
+🔒  Candado cerrado  [seguridad bloqueo lock]
+🔓  Candado abierto  [desbloqueado libre unlock]
+🔑  Llave  [acceso abrir clave key]
+🗝️  Llave antigua  [antiguo cofre secret]
+🔨  Martillo  [herramienta construccion hammer]
+🛠️  Herramientas llave y martillo  [ajustes reparacion tools]
+🔧  Llave inglesa  [configuracion reparar wrench]
+⚙️  Engranaje  [ajustes sistema configuracion gear]
+☕  Café caliente  [desayuno espresso cafe coffee]
+🍵  Té caliente  [infusion verde matcha tea]
+🧉  Mate  [argentina uruguay mate yerba]
+🍺  Cerveza  [jarra alcohol bar brindar beer]
+🍻  Jarras de cerveza brindando  [brindis fiesta cheers beers]
+🍷  Copa de vino  [vino tinto brindar wine]
+🍸  Cóctel  [trago fiesta bar cocktail]
+🍹  Trago tropical  [playa trago fruta tropical]
+🍾  Botella de champán  [festejo descorchar fiesta champagne]
+🍕  Pizza  [porción comida queso italiano pizza]
+🍔  Hamburguesa  [comida_rapida carne burger]
+🍟  Papas fritas  [fast_food papas french_fries]
+🌭  Panchos perrito caliente  [hot_dog comida]
+🍿  Palomitas de maíz  [pochoclos cine pelicula popcorn]
+🥓  Panceta tocino  [bacon desayuno]
+🍳  Huevo frito en sartén  [cocinar desayuno egg]
+🧇  Waffle  [desayuno dulce]
+🥞  Panqueques  [hotcakes dulce pancakes]
+🧀  Queso  [lacteo comida cheese]
+🥩  Corte de carne  [asado bife steak]
+🍗  Pata de pollo  [pollo frito meat]
+🍖  Carne con hueso  [comida asado]
+🌮  Taco mexicano  [mexico comida taco]
+🌯  Burrito  [comida wrap burrito]
+🥪  Sándwich  [emparedado almuerzo sandwich]
+🥗  Ensalada verde  [saludable dieta salad]
+🍣  Sushi  [japon comida pescado sushi]
+🍜  Ramen fideos  [sopa caliente noodles ramen]
+🍝  Espaguetis  [pasta italiana noodles spaghetti]
+🍞  Pan  [horno panaderia bread]
+🍎  Manzana roja  [fruta saludable apple]
+🍌  Banana plátano  [fruta potasio banana]
+🍉  Sandía  [fruta verano watermelon]
+🍇  Uvas  [vino fruta grapes]
+🍓  Frutilla fresa  [dulce fruta strawberry]
+🍒  Cerezas  [fruta cherries]
+🍑  Durazno melocotón  [fruta peach]
+🥑  Palta aguacate  [verde ensalada avocado]
+🎮  Mando de videojuegos  [juegos gamer joystick controller]
+🕹️  Palanca joystick arcade  [retro arcade gamer]
+🎲  Dado  [azar juego suerte casino dice]
+♟️  Peón de ajedrez  [estrategia ajedrez chess]
+🎯  Diana en el blanco  [punteria objetivo acierto target]
+🏆  Trofeo de oro  [ganador campeon premio cup trophy]
+🥇  Medalla de oro  [primer puesto victoria gold_medal]
+🥈  Medalla de plata  [segundo puesto silver_medal]
+🥉  Medalla de bronce  [tercer puesto bronze_medal]
+⚽  Pelota de fútbol  [deporte futbol soccer ball]
+🏀  Pelota de básquetbol  [baloncesto deporte basketball]
+🏈  Fútbol americano  [deporte rugby football]
+⚾  Béisbol  [pelota bate baseball]
+🎾  Tenis  [pelota raqueta tennis]
+🏐  Voleibol  [playa voley volleyball]
+🥊  Guante de boxeo  [combate pelea boxing]
+🥋  Uniforme de artes marciales  [karate judo martial_arts]
+🛹  Monopatín skate  [skateboarding patineta]
+🚲  Bicicleta  [ciclismo bici bike]
+🚗  Auto coche rojo  [transporte vehiculo car]
+🏎️  Auto de carreras  [f1 velocidad racing]
+🏍️  Motocicleta  [moto vehiculo bike]
+✈️  Avión  [vuelo viaje turismo airplane]
+🎵  Nota musical  [cancion musica sonido note]
+🎶  Múltiples notas musicales  [melodia musica notes music]
+🎧  Auriculares  [escuchar audio musica headphones]
+🎤  Micrófono  [cantar voz karaoke mic]
+🎸  Guitarra  [instrumento rock musica guitar]
+🎹  Teclado de piano  [piano musica teclas]
+🥁  Tambor  [bateria percusion drum]
+🎺  Trompeta  [viento jazz trompeta]
+🎻  Violín  [clasica cuerda violin]
+📻  Radio  [musica emisora vintage radio]
+🎬  Claqueta de cine  [pelicula rodaje accion movie]
+🎨  Paleta de artista  [pintura arte dibujo design art]
+🧵  Carrete de hilo  [coser costura sewing]
+🧶  Ovillo de lana  [tejer tejido yarn]
+🐶  Cara de perro  [mascota perrito canino dog]
+🐱  Cara de gato  [mascota gatito felino cat]
+🐭  Ratón  [roedor queso mouse]
+🐹  Hámster  [mascota tierno hamster]
+🐰  Conejo  [orejas tierno bunny rabbit]
+🦊  Zorro  [astuto naranja fox]
+🐻  Oso  [peluche bosque bear]
+🐼  Panda  [bambu oso tierno]
+🐨  Koala  [australia eucalipto]
+🐯  Tigre  [felino rayas tiger]
+🦁  León  [rey selva lion]
+🐮  Vaca  [leche campo cow]
+🐷  Cerdo  [chancho granja pig]
+🐸  Rana  [anfibio verde frog]
+🐵  Cara de mono  [selva simio monkey]
+🐔  Gallina  [granja ave chicken]
+🐧  Pingüino  [antartida frio penguin]
+🐦  Pájaro  [ave volar bird]
+🦆  Pato  [laguna cua duck]
+🦅  Águila  [ave rapaz volar eagle]
+🦉  Búho  [noche sabiduria owl]
+🐺  Lobo  [manada aullido wolf]
+🐗  Jabalí  [selva cerdo wild_boar]
+🐴  Caballo  [carrera equino horse]
+🦄  Unicornio  [magia fantasia unicorn]
+🐝  Abeja  [miel picadura bee]
+🐛  Oruga  [gusano insecto bug]
+🦋  Mariposa  [alas colores butterfly]
+🐌  Caracol  [lento concha snail]
+🐞  Mariquita  [vaquita de san antonio ladybug]
+🐜  Hormiga  [trabajo insecto ant]
+🕷️  Araña  [red telarana spider]
+🦂  Escorpión  [veneno desierto scorpion]
+🦀  Cangrejo  [mar pinzas crab]
+🦞  Langosta  [marisco mar lobster]
+🦐  Camarón  [marisco gamba shrimp]
+🦑  Calamar  [tentaculos oceano squid]
+🐙  Pulpo  [mar tentaculos octopus]
+🐠  Pez tropical  [colores acuario fish]
+🐟  Pez  [agua mar pescado]
+🐬  Delfín  [mar inteligente dolphin]
+🐳  Ballena  [oceano gigante whale]
+🦈  Tiburón  [dientes depredador shark]
+🐊  Cocodrilo  [pantano reptil crocodile]
+🐢  Tortuga  [lenta caparazon turtle]
+🦎  Lagartija  [reptil iguana lizard]
+🐍  Serpiente  [vibora reptil snake]
+🐲  Dragón  [mitologia fuego dragon]
+🌲  Árbol de pino  [bosque abeto pine]
+🌳  Árbol caduco  [naturaleza sombra tree]
+🌴  Palmera  [playa tropical palm]
+🌵  Cactus  [desierto espinas cactus]
+🌷  Tulipán  [flor jardin tulip]
+🌸  Flor de cerezo  [sakura rosa blossom]
+🌹  Rosa roja  [amor flor rose]
+🌻  Girasol  [amarillo sol sunflower]
+🌼  Margarita  [flor blanca daisy]
+🍀  Trébol de cuatro hojas  [suerte fortuna clover]
+🍁  Hoja de arce  [otono canada maple]
+🍂  Hojas caídas  [otono viento fallen_leaves]
+🍄  Hongo seta  [champinon bosque mushroom]
+🎉  Cañón de confeti  [fiesta festejo celebration party]
+🎊  Bola de confeti  [celebracion fiesta]
+🎁  Regalo con lazo  [cumpleaños presente gift]
+🎈  Globo de fiesta  [cumpleaños aire balloon]
+🎂  Torta pastel de cumpleaños  [festejo vela cake]
+🎆  Fuegos artificiales  [ano_nuevo fiesta fireworks]
+🎇  Bengala  [chispas fiesta sparkler]
+🧨  Petardo  [polvora cohete firecracker]
+🎃  Calabaza de Halloween  [miedo noche pumpkin]
+🎄  Árbol de Navidad  [fiestas pino christmas_tree]
+🎋  Árbol de Tanabata  [deseos japon banner]
+🎍  Adorno de pino japonés  [ano nuevo kadomatsu]
+🎎  Muñecas japonesas  [hinamatsuri dolls]
+🎏  Carpas de viento  [koinobori banderas]
+🎐  Campanilla de viento  [verano furin wind_chime]
+🎗️  Lazo conmemorativo  [apoyo recuerdo ribbon]
+🎟️  Boleto de entrada  [ticket pase]
+🎫  Boleto ticket  [concierto cine ticket]
+🏷️  Etiqueta de precio  [tag label]
+🛒  Carrito de compras  [supermercado tienda shopping_cart]
+🛍️  Bolsas de compras  [compras compras shopping]
+💰  Bolsa de dinero  [dolares plata riqueza money_bag]
+💵  Billete de dólar  [dinero efectivo cash dollar]
+💳  Tarjeta de crédito  [pago banco credit_card]
+💎  Diamante gema  [joya lujo valioso diamond]
+⚖️  Balanza de la justicia  [ley justicia equilibrio scale]
+🧲  Imán  [atraccion magnetismo magnet]
+🧪  Tubo de ensayo  [quimica ciencia laboratorio test_tube]
+🧫  Placa de Petri  [biologia bacterias petri_dish]
+🧬  Hélice de ADN  [genetica ciencia dna]
+🔬  Microscopio  [laboratorio ciencia microscope]
+🔭  Telescopio  [astronomia estrellas telescope]
+📡  Antena parabólica  [comunicacion senal satellite]
+💉  Jeringa  [vacuna inyeccion sangre syringe]
+💊  Píldora pastilla  [medicina salud farmacia pill]
+🩺  Estetoscopio  [medico doctor hospital]
+🚪  Puerta cerrada  [habitacion entrada door]
+🪑  Silla  [mueble asiento chair]
+🛏️  Cama  [dormir descanso bed]
+🛋️  Sofá  [sillon comodidad couch]
+🚽  Inodoro váter  [bano retrete toilet]
+🚿  Ducha  [bano agua shower]
+🛁  Bañera  [bano relajacion bathtub]
+🧴  Botella de loción  [shampoo crema lotion]
+🧻  Rollo de papel  [higienico toalla paper]
+🧼  Jabón  [limpieza bano soap]
+🧽  Esponja  [lavar limpiar sponge]
+🧹  Escoba  [barrer limpieza broom]
+🧺  Cesta canasta  [ropa picnic basket]
+🔔  Campana de notificación  [alerta aviso timbre bell]
+🔕  Campana silenciada  [silencio no_molestar bell_off]
+📢  Megáfono altavoz  [anuncio grito loudspeaker]
+📣  Bocina de mano  [aliento megafono cheer]
+🔍  Lupa de búsqueda  [buscar explorar find search]
+🏷️  Etiqueta  [precio tag]
+🔖  Marcador de libros  [guardar lectura bookmark]
+🔗  Eslabón de cadena  [enlace link url]
+📌  Chincheta tachuela  [fijar mapa pin pushpin]
+📍  Marcador de ubicación  [mapa gps lugar location]
+🚩  Bandera roja  [red_flag aviso advertencia]
+🏁  Bandera a cuadros  [carreras meta fin finish]
+🏳️  Bandera blanca  [paz rendicion peace]
+🏴  Bandera negra  [pirata rebelde black_flag]
+🏳️‍🌈  Bandera del orgullo  [arcoiris lgbt pride]
+🏳️‍⚧️  Bandera transgénero  [trans orgullo trans_flag]
+⚠️  Advertencia de peligro  [cuidado alerta warning]
+⛔  Entrada prohibida  [alto stop no_entry]
+🚫  Prohibido  [prohibicion cancelar cancel]
+❌  Cruz roja cancelar  [error incorrecto cruz cross]
+⭕  Círculo rojo  [correcto marca circle]
+✔️  Marca de verificación  [bien correcto check]
+✅  Casilla marcada verde  [aprobado listo checkmark]
+❎  Casilla cruzada  [desmarcado error cross_box]
+➕  Signo más  [sumar positivo plus]
+➖  Signo menos  [restar negativo minus]
+➗  Signo de división  [matematica dividir divide]
+✖️  Signo de multiplicación  [multiplicar por times]
+♾️  Infinito  [eterno bucle infinity]
+💲  Signo de dólar  [moneda precio dinero dollar]
+💱  Cambio de divisas  [moneda cambio exchange]
+©️  Copyright  [derecho autor marca]
+®️  Marca registrada  [registro legal]
+™️  Marca comercial  [trademark]
+🔘  Botón de radio  [opcion seleccion button]
+🔴  Círculo rojo  [color rojo red_circle]
+🟠  Círculo naranja  [color naranja]
+🟡  Círculo amarillo  [color amarillo]
+🟢  Círculo verde  [color verde]
+🔵  Círculo azul  [color azul]
+🟣  Círculo morado  [color violeta]
+🟤  Círculo café  [color marron]
+⚫  Círculo negro  [color negro]
+⚪  Círculo blanco  [color blanco]
+🟥  Cuadrado rojo  [rojo red_square]
+🟧  Cuadrado naranja  [naranja]
+🟨  Cuadrado amarillo  [amarillo]
+🟩  Cuadrado verde  [verde]
+🟦  Cuadrado azul  [azul]
+🟪  Cuadrado morado  [morado]
+🟫  Cuadrado marrón  [marron]
+⬛  Cuadrado negro  [negro]
+⬜  Cuadrado blanco  [blanco]"
 
-SELECTED=$(echo "$EMOJI_LIST" | wofi --dmenu --prompt "Emojis" --lines 12 --width 450)
+# Lanzar wofi con búsqueda instantánea
+SELECTED=$(echo "$EMOJI_LIST" | wofi --dmenu --prompt "🔍 Buscar Emoji..." --lines 13 --width 560 --insensitive)
 
 if [ -n "$SELECTED" ]; then
+    # Extraer exactamente el emoji (primer token antes de los espacios)
     EMOJI=$(echo "$SELECTED" | awk '{print $1}')
+    
+    # Copiar al portapapeles de Wayland
     echo -n "$EMOJI" | wl-copy
     
+    # Si wtype está disponible, escribirlo en la aplicación activa
     if command -v wtype &>/dev/null; then
         wtype "$EMOJI" 2>/dev/null || true
     fi
 
+    # Notificación sutil con Dunst
     if command -v dunstify &>/dev/null; then
-        dunstify -a "Emoji Picker" -r 9921 "😀 Emoji Copiado" "$EMOJI pegado en el portapapeles" || true
+        NAME=$(echo "$SELECTED" | sed -E 's/^[^ ]+ +//; s/ +\[.*//')
+        dunstify -a "Emoji Picker" -r 9921 -u low "Emoji Copiado" "$EMOJI  $NAME" || true
     fi
 fi

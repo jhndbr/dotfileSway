@@ -56,6 +56,14 @@ output_path = '~/.config/dunst/dunstrc'
 input_path = '~/.config/matugen/templates/wofi-style.css'
 output_path = '~/.config/wofi/style.css'
 
+[templates.newsboat]
+input_path = '~/.config/matugen/templates/newsboat-colors'
+output_path = '~/.config/newsboat/colors'
+
+[templates.btop]
+input_path = '~/.config/matugen/templates/btop.theme'
+output_path = '~/.config/btop/themes/dank-theme.theme'
+
 [templates.joplin_chrome]
 input_path = '~/.config/matugen/templates/joplin-userchrome.css'
 output_path = '~/.config/joplin-desktop/userchrome.css'

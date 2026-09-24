@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Newsboat
+GenericName=Lector de Noticias RSS
+Comment=Lector de fuentes RSS / Atom en la terminal
+Exec=foot -a cli-newsboat -T Newsboat newsboat
+Icon=newsboat
+Terminal=false
+Type=Application
+Categories=Network;News;ConsoleOnly;
+Keywords=rss;atom;feed;noticias;lector;news;

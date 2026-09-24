@@ -1,4 +1,5 @@
 show=drun
+term=foot
 width=500
 height=380
 prompt=  Buscar...

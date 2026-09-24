@@ -79,3 +79,20 @@ placessidebar row,
   outline-width: 0;
   box-shadow: none;
 }
+
+/* ── Cuadros de diálogo y MessageDialog (botones legibles) ── */
+messagedialog button,
+dialog button,
+.dialog-action-area button,
+.dialog-action-box button {
+  color: @dialog_fg_color;
+  background-color: alpha(currentColor, 0.1);
+}
+messagedialog button:hover,
+dialog button:hover,
+.dialog-action-area button:hover,
+.dialog-action-box button:hover {
+  color: @dialog_fg_color;
+  background-color: alpha(currentColor, 0.18);
+}
+

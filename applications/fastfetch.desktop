@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Fastfetch
+GenericName=Información del Sistema
+Comment=Muestra información estética del hardware y sistema
+Exec=foot -a cli-fastfetch -T Fastfetch zsh -c "fastfetch; echo; read -k 1"
+Icon=utilities-system-monitor
+Terminal=false
+Type=Application
+Categories=System;ConsoleOnly;
+Keywords=system;info;neofetch;hardware;fastfetch;

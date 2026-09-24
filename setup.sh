@@ -124,7 +124,7 @@ mkdir -p ~/.local/bin
 echo -e "${YELLOW}📦 Creando backup en $BACKUP_DIR${NC}"
 mkdir -p "$BACKUP_DIR"
 
-CONFIGS=(sway waybar wofi dunst foot swaylock gammastep gtk-3.0 gtk-4.0 environment.d qt5ct qt6ct matugen zed Thunar xfce4 xdg-desktop-portal fontconfig mpv fastfetch cava)
+CONFIGS=(sway waybar wofi dunst foot swaylock gammastep gtk-3.0 gtk-4.0 environment.d qt5ct qt6ct matugen zed Thunar xfce4 xdg-desktop-portal xdg-desktop-portal-wlr fontconfig mpv fastfetch cava newsboat nchat btop lazygit)
 
 for item in "${CONFIGS[@]}"; do
     if [ -d "$HOME/.config/$item" ]; then
@@ -184,6 +184,14 @@ for item in "${CONFIGS[@]}"; do
     fi
 done
 
+# Soporte dual para Newsboat (legacy ~/.newsboat y XDG ~/.config/newsboat)
+if [ -d "$HOME/.config/newsboat" ]; then
+    mkdir -p "$HOME/.newsboat"
+    ln -sf "$HOME/.config/newsboat/config" "$HOME/.newsboat/config"
+    ln -sf "$HOME/.config/newsboat/urls" "$HOME/.newsboat/urls"
+    [ -f "$HOME/.config/newsboat/colors" ] && ln -sf "$HOME/.config/newsboat/colors" "$HOME/.newsboat/colors"
+fi
+
 # Aplicar perfil de dispositivo específico (PC vs Laptop)
 if [ -f "$SCRIPT_DIR/config/sway/device.conf.$DEVICE_PROFILE" ]; then
     cp -f "$SCRIPT_DIR/config/sway/device.conf.$DEVICE_PROFILE" "$HOME/.config/sway/device.conf"
@@ -218,6 +226,13 @@ fi
 rm -f "$HOME/.local/share/applications/yazi.desktop" 2>/dev/null || true
 rm -f "$HOME/.local/bin/yazi-open-with.sh" 2>/dev/null || true
 rm -rf "$HOME/.config/yazi" 2>/dev/null || true
+
+# Instalar accesos directos de escritorio (.desktop) incluyendo aplicaciones CLI
+if [ -d "$SCRIPT_DIR/applications" ]; then
+    echo -e "  ${GREEN}→${NC} Instalando accesos directos para aplicaciones CLI..."
+    mkdir -p "$HOME/.local/share/applications"
+    cp -rf "$SCRIPT_DIR/applications/"* "$HOME/.local/share/applications/" 2>/dev/null || true
+fi
 
 # Actualizar base de datos de aplicaciones y predeterminar Thunar
 if command -v update-desktop-database &>/dev/null; then

@@ -1,0 +1,29 @@
+# ╔══════════════════════════════════════════════════════════════╗
+# ║             Configuración Estética de Lazygit                ║
+# ║             Dotfiles Sway - Dank / Material Harmonized       ║
+# ╚══════════════════════════════════════════════════════════════╝
+
+gui:
+  nerdFontsVersion: "3"
+  border: "rounded"
+  showFileTree: true
+  showRandomTip: false
+  showCommandLog: false
+  theme:
+    activeBorderColor:
+      - cyan
+      - bold
+    inactiveBorderColor:
+      - gray
+    optionsTextColor:
+      - blue
+    selectedLineBgColor:
+      - default
+    cherryPickedCommitBgColor:
+      - cyan
+    cherryPickedCommitFgColor:
+      - blue
+    unstagedChangesColor:
+      - red
+    defaultFgColor:
+      - default

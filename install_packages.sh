@@ -134,6 +134,13 @@ PACMAN_PACKAGES=(
     fzf
     jq
     btop
+    newsboat
+    lazygit
+    cava
+    ncdu
+    fastfetch
+    cmatrix
+    tty-clock
     imagemagick
     zram-generator
     less

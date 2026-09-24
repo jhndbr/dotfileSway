@@ -1,0 +1,24 @@
+# ╔══════════════════════════════════════════════════════════════╗
+# ║        Colores Dinámicos de Newsboat para Matugen            ║
+# ║        Sincronizado con Material 3 y la paleta de la terminal║
+# ╚══════════════════════════════════════════════════════════════╝
+
+color background          default   default
+color listnormal          default   default
+color listnormal_unread   color4    default   bold
+color listfocus           color0    color4    bold
+color listfocus_unread    color0    color4    bold
+color info                color14   color0    bold
+color article             default   default
+
+# Resaltado dentro de los artículos
+highlight article "^Feed:.*"                 color4  default bold
+highlight article "^Title:.*"                color6  default bold
+highlight article "^Author:.*"               color2  default
+highlight article "^Date:.*"                 color3  default
+highlight article "^Link:.*"                 color4  default underline
+highlight article "^Flags:.*"                color5  default
+highlight article "\\[[0-9]+\\]"             color6  default bold
+highlight article "https?://[^ ]+"           color4  default underline
+highlight article "^(>[^>].*)"               color8  default
+highlight article "(^|\\s)[*#_~`][^*#_~`]+[*#_~`]($|\\s)" color3 default

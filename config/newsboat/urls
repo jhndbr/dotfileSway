@@ -1,0 +1,108 @@
+# ╔══════════════════════════════════════════════════════════════╗
+# ║          Fuentes RSS de Newsboat (URLs, Tags y Vistas)       ║
+# ║          Dotfiles Sway - Curation Completa Global & Local     ║
+# ╚══════════════════════════════════════════════════════════════╝
+
+# ── VISTAS VIRTUALES (Query Feeds: Agrupan artículos por categoría) ──
+"query:🐧 01. Linux & Open Source:tags # \"linux\""
+"query:🛡️ 02. Hacking & Ciberseguridad:tags # \"hacking\""
+"query:💻 03. Dev & Ingeniería de Software:tags # \"dev\""
+"query:📈 04. Economía & Mercados (Global):tags # \"economia\" and tags # \"global\""
+"query:🇦🇷 05. Economía & Finanzas (Argentina):tags # \"economia\" and tags # \"local\""
+"query:🌍 06. Geopolítica & Internacional:tags # \"internacional\" or tags # \"geopolitica\""
+"query:🇦🇷 07. Noticias Argentina (Local):tags # \"noticias\" and tags # \"local\""
+"query:🎬 08. Cine & Series:tags # \"cine\""
+"query:🎮 09. Videojuegos & Gaming:tags # \"gaming\""
+"query:🔥 10. Todo lo no leído:unread = \"yes\""
+
+# ════════════════════════════════════════════════════════════════
+# 1. LINUX, SISTEMAS & OPEN SOURCE
+# ════════════════════════════════════════════════════════════════
+https://archlinux.org/feeds/news/                  "linux" "arch" "distros" "global" "!Arch Linux News"
+https://www.phoronix.com/rss.php                   "linux" "hardware" "benchmarks" "global" "!Phoronix"
+https://lwn.net/headlines/rss                      "linux" "kernel" "opensource" "global" "!LWN.net"
+https://www.muylinux.com/feed/                     "linux" "opensource" "hispano" "!MuyLinux"
+https://desdelinux.net/feed/                       "linux" "tutoriales" "hispano" "!DesdeLinux"
+https://www.omgubuntu.co.uk/feed                   "linux" "ubuntu" "apps" "global" "!OMG! Ubuntu"
+
+# ════════════════════════════════════════════════════════════════
+# 2. COMPUTACIÓN, DESARROLLO & TECH GLOBAL / LOCAL
+# ════════════════════════════════════════════════════════════════
+https://news.ycombinator.com/rss                   "dev" "tech" "startups" "global" "!Hacker News"
+https://lobste.rs/rss                              "dev" "programming" "systems" "global" "!Lobste.rs"
+https://github.blog/feed/                          "dev" "git" "opensource" "global" "!GitHub Blog"
+https://blog.cloudflare.com/rss/                   "dev" "redes" "infraestructura" "global" "!Cloudflare Blog"
+https://hacks.mozilla.org/feed/                    "dev" "web" "rust" "global" "!Mozilla Hacks"
+https://dev.to/feed                                "dev" "software" "comunidad" "global" "!Dev.to"
+https://feeds.arstechnica.com/arstechnica/technology-lab "tech" "sistemas" "global" "!Ars Technica"
+https://www.theverge.com/rss/index.xml             "tech" "gadgets" "global" "!The Verge"
+https://feeds.weblogssl.com/genbeta                "tech" "software" "dev" "hispano" "!Genbeta"
+https://feeds.weblogssl.com/xataka2                "tech" "gadgets" "hispano" "!Xataka"
+https://hipertextual.com/feed                      "tech" "ciencia" "cultura" "hispano" "!Hipertextual"
+
+# ════════════════════════════════════════════════════════════════
+# 3. HACKING, CIBERSEGURIDAD & INFOSEC
+# ════════════════════════════════════════════════════════════════
+https://feeds.feedburner.com/TheHackersNews        "hacking" "ciberseguridad" "amenazas" "global" "!The Hacker News"
+https://krebsonsecurity.com/feed/                  "hacking" "ciberseguridad" "investigacion" "global" "!Krebs on Security"
+https://www.bleepingcomputer.com/feed/             "hacking" "ransomware" "malware" "global" "!BleepingComputer"
+https://www.darkreading.com/rss.xml                "hacking" "infosec" "vulnerabilidades" "global" "!Dark Reading"
+https://www.schneier.com/feed/atom/                "hacking" "privacidad" "criptografia" "global" "!Schneier on Security"
+https://feeds.feedburner.com/securityweek          "hacking" "ciberseguridad" "enterprise" "global" "!SecurityWeek"
+https://isc.sans.edu/rssfeed.xml                   "hacking" "telemetria" "analisis" "global" "!SANS Internet Storm Center"
+https://portswigger.net/research/rss               "hacking" "websec" "exploits" "global" "!PortSwigger Research"
+https://googleprojectzero.blogspot.com/feeds/posts/default "hacking" "zero-day" "investigacion" "global" "!Google Project Zero"
+https://www.malwarebytes.com/blog/feed/index.xml   "hacking" "malware" "analisis" "global" "!Malwarebytes Labs"
+https://www.cisa.gov/cybersecurity-advisories/all.xml "hacking" "alertas" "advisories" "global" "!CISA Advisories"
+https://unaaldia.hispasec.com/feed                 "hacking" "ciberseguridad" "hispano" "!Una al Día (Hispasec)"
+https://noticiasseguridad.com/feed/                "hacking" "ciberseguridad" "latam" "hispano" "!Noticias Seguridad (LATAM)"
+https://www.elladodelmal.com/feeds/posts/default   "hacking" "seguridad" "hispano" "!Chema Alonso (El Lado del Mal)"
+
+# ════════════════════════════════════════════════════════════════
+# 4. ECONOMÍA, FINANZAS & MERCADOS (GLOBAL & ARGENTINA)
+# ════════════════════════════════════════════════════════════════
+# ── Global & Mercados ──
+https://www.ft.com/rss/home                        "economia" "mercados" "global" "!Financial Times"
+https://feeds.content.dowjones.io/public/rss/mw_topstories "economia" "wallstreet" "global" "!MarketWatch"
+https://www.cnbc.com/id/20910258/device/rss/rss.html "economia" "macro" "global" "!CNBC Economy"
+https://www.coindesk.com/arc/outboundfeeds/rss/    "economia" "crypto" "bitcoin" "global" "!CoinDesk"
+
+# ── Local (Argentina & LATAM) ──
+https://www.ambito.com/rss/pages/economia.xml      "economia" "finanzas" "dolar" "local" "!Ámbito Financiero - Economía"
+https://www.cronista.com/files/rss/news.xml        "economia" "mercados" "negocios" "local" "!El Cronista Comercial"
+https://eleconomista.com.ar/feed/                  "economia" "macro" "politica-economica" "local" "!El Economista (Argentina)"
+https://www.baenegocios.com/feed/economia.xml      "economia" "empresas" "finanzas" "local" "!BAE Negocios"
+
+# ════════════════════════════════════════════════════════════════
+# 5. NOTICIAS GENERALES & GEOPOLÍTICA (GLOBAL & LOCAL)
+# ════════════════════════════════════════════════════════════════
+# ── Internacional / Geopolítica ──
+https://feeds.bbci.co.uk/mundo/rss.xml             "noticias" "internacional" "geopolitica" "hispano" "!BBC News Mundo"
+https://feeds.bbci.co.uk/news/world/rss.xml        "noticias" "internacional" "geopolitica" "global" "!BBC News World"
+https://rss.dw.com/rdf/rss-sp-all                  "noticias" "internacional" "geopolitica" "hispano" "!DW Español (Deutsche Welle)"
+https://elpais.com/rss/elpais/portada.xml          "noticias" "internacional" "opinion" "hispano" "!El País Internacional"
+https://www.france24.com/es/rss                    "noticias" "internacional" "geopolitica" "hispano" "!France 24 Español"
+https://www.aljazeera.com/xml/rss/all.xml          "noticias" "internacional" "medio-oriente" "global" "!Al Jazeera English"
+
+# ── Argentina (Local) ──
+https://www.clarin.com/rss/lo-ultimo/              "noticias" "actualidad" "politica" "local" "!Clarín - Lo Último"
+https://www.infobae.com/arc/outboundfeeds/rss/     "noticias" "actualidad" "politica" "local" "!Infobae"
+https://www.lanacion.com.ar/arc/outboundfeeds/rss/ "noticias" "actualidad" "politica" "local" "!La Nación"
+https://www.perfil.com/feed                        "noticias" "analisis" "politica" "local" "!Perfil"
+https://www.cadena3.com/rss/noticias.xml          "noticias" "federal" "argentina" "local" "!Cadena 3"
+
+# ════════════════════════════════════════════════════════════════
+# 6. ENTRETENIMIENTO, CINE, SERIES & VIDEOJUEGOS
+# ════════════════════════════════════════════════════════════════
+# ── Cine & Series ──
+https://feeds.weblogssl.com/espinof                "entretenimiento" "cine" "series" "hispano" "!Espinof (Cine & Series)"
+https://www.sensacine.com/rss/noticias.xml         "entretenimiento" "cine" "estrenos" "hispano" "!SensaCine"
+https://collider.com/feed/                         "entretenimiento" "cine" "series" "global" "!Collider"
+https://www.ign.com/rss/articles/feed?tags=movies,tv "entretenimiento" "cine" "series" "global" "!IGN Movies & TV"
+https://www.indiewire.com/feed/                    "entretenimiento" "cine" "festivales" "global" "!IndieWire"
+https://www.slashfilm.com/feed/                    "entretenimiento" "cine" "analisis" "global" "!SlashFilm"
+
+# ── Videojuegos & Gaming ──
+https://feeds.weblogssl.com/vidaextra              "entretenimiento" "gaming" "videojuegos" "hispano" "!VidaExtra"
+https://www.eurogamer.es/feed                      "entretenimiento" "gaming" "analisis" "hispano" "!Eurogamer ES"
+https://www.pcgamer.com/rss/                       "entretenimiento" "gaming" "pc" "hardware" "global" "!PC Gamer"

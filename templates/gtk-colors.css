@@ -5331,22 +5331,22 @@ calendar:indeterminate {
 
 messagedialog.csd.background button {
   outline-color: alpha(@accent_color,0.5);
-  color: rgba(0, 0, 6, 0.8);
+  color: @dialog_fg_color;
   background-color: alpha(currentColor,0.1);
 }
 messagedialog.csd.background button:hover {
   outline-color: alpha(@accent_color,0.5);
-  color: rgba(0, 0, 6, 0.8);
+  color: @dialog_fg_color;
   background-color: alpha(currentColor,0.15);
 }
 messagedialog.csd.background button:checked, messagedialog.csd.background button:active {
   outline-color: alpha(@accent_color,0.5);
-  color: rgba(0, 0, 6, 0.8);
+  color: @dialog_fg_color;
   background-color: alpha(currentColor,0.3);
 }
 messagedialog.csd.background button:backdrop {
   outline-color: transparent;
-  color: alpha(rgba(0, 0, 6, 0.8),0.5);
+  color: alpha(@dialog_fg_color,0.5);
   background-color: alpha(currentColor,0.1);
 }
 messagedialog.csd.background button:backdrop:hover {
@@ -5366,7 +5366,7 @@ messagedialog.csd.background button:backdrop:checked:active {
 }
 messagedialog.csd.background button:disabled {
   outline-color: transparent;
-  color: alpha(rgba(0, 0, 6, 0.8),0.5);
+  color: alpha(@dialog_fg_color,0.5);
   background-color: alpha(currentColor,0.1);
 }
 messagedialog .titlebar, messagedialog .titlebar:backdrop {

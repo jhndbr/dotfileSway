@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Nchat
+GenericName=Cliente TUI de Mensajería
+Comment=Cliente de mensajería para Telegram y WhatsApp en terminal
+Exec=foot -a cli-nchat -T Nchat nchat
+Icon=org.telegram.desktop
+Terminal=false
+Type=Application
+Categories=Network;Chat;ConsoleOnly;
+Keywords=chat;telegram;whatsapp;mensajeria;tui;

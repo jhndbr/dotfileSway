@@ -99,15 +99,12 @@ tooltip label {
 
 #custom-menu,
 #workspaces,
-#window,
+#tray,
 #clock,
-#custom-media,
-#custom-cava,
 #weather,
 #quicksettings,
 #controls,
 #hardware,
-#tray,
 #custom-power {
     background: @bg_pill;
     border: none;
@@ -123,14 +120,12 @@ tooltip label {
 /* Cambio tonal fluido en hover (Elevación Nivel 2) */
 #custom-menu:hover,
 #workspaces:hover,
+#tray:hover,
 #clock:hover,
-#custom-media:hover,
-#custom-cava:hover,
 #weather:hover,
 #quicksettings:hover,
 #controls:hover,
-#hardware:hover,
-#tray:hover {
+#hardware:hover {
     background: @bg_pill_hover;
     color: @text_primary;
     border: none;
@@ -227,14 +222,14 @@ tooltip label {
 
 #workspaces button {
     color: @text_secondary;
-    padding: 0 7px;
-    margin: 2px 1px;
+    padding: 0 8px;
+    margin: 2px 1.5px;
     border-radius: 999px;
     border: none;
     background: transparent;
-    min-width: 18px;
+    min-width: 20px;
     min-height: 18px;
-    font-size: 10px;
+    font-size: 10.5px;
     font-weight: 500;
     box-shadow: none;
     transition: background 0.15s ease, color 0.15s ease;
@@ -260,19 +255,24 @@ tooltip label {
     border: none;
 }
 
-/* Título de la ventana activa */
+/* Título de la ventana activa en foco (Dinámico con Máximo Contraste Matugen) */
 #window {
-    background: @bg_pill;
+    background: @col_tertiary_container;
     border: none;
     border-radius: 999px;
-    color: @text_primary;
+    color: @col_on_tertiary_container;
     font-size: 10.5px;
-    font-weight: 500;
-    padding: 0 10px;
+    font-weight: 600;
+    padding: 0 11px;
+    margin: 3px 2.5px;
+    min-height: 22px;
+    box-shadow: none;
+    transition: background 0.18s cubic-bezier(0.2, 0, 0, 1), color 0.18s ease;
 }
 
 #window:hover {
-    background: @bg_pill_hover;
+    background: alpha(@col_tertiary_container, 0.85);
+    color: @col_on_tertiary_container;
 }
 
 /* ══════════════════════════════════════════════════════════════
@@ -299,15 +299,22 @@ tooltip label {
    ║  DERECHA — Media · CAVA · Clima · QuickSettings · Hardware  ║
    ══════════════════════════════════════════════════════════════ */
 
-/* Reproductor multimedia */
+/* Reproductor multimedia & Visualizador CAVA Fusionados (Píldora Única Compacta) */
 #custom-media {
+    font-family: "JetBrainsMono Nerd Font", monospace;
     font-size: 10.5px;
     font-weight: 500;
-    border-radius: 999px;
+    border-top-left-radius: 999px;
+    border-bottom-left-radius: 999px;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
     border: none;
-    padding: 0 9px;
+    padding: 0 4px 0 7px;
+    margin: 3px 0 3px 2.5px;
+    min-width: 120px;
     color: @text_secondary;
     background: @bg_pill;
+    transition: background 0.18s cubic-bezier(0.2, 0, 0, 1), color 0.18s ease;
 }
 
 #custom-media.Playing {
@@ -320,36 +327,44 @@ tooltip label {
     background: alpha(@col_primary_container, 0.85);
 }
 
-#custom-media.Paused {
+#custom-media.Paused,
+#custom-media.stopped {
     color: @text_muted;
     background: @bg_pill;
+    opacity: 1;
 }
 
-#custom-media.Paused:hover {
+#custom-media.Paused:hover,
+#custom-media.stopped:hover {
     color: @text_secondary;
     background: @bg_pill_hover;
 }
 
-#custom-media.stopped {
-    opacity: 0.5;
-}
-
-/* Visualizador CAVA */
+/* Visualizador CAVA — Parte derecha de la píldora fusionada (Fondo y Ancho Sincronizados) */
 #custom-cava {
     font-family: "JetBrainsMono Nerd Font", monospace;
     font-size: 11px;
-    color: @col_secondary;
+    color: @text_muted;
     background: @bg_pill;
     border: none;
-    border-radius: 999px;
-    padding: 0 8px;
-    min-width: 40px;
-    letter-spacing: 1px;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-top-right-radius: 999px;
+    border-bottom-right-radius: 999px;
+    padding: 0 8px 0 0;
+    margin: 3px 2.5px 3px 0;
+    min-width: 42px;
+    letter-spacing: 0.5px;
+    transition: background 0.18s cubic-bezier(0.2, 0, 0, 1), color 0.18s ease;
 }
 
 #custom-cava.active {
-    color: @col_on_tertiary_container;
-    background: @col_tertiary_container;
+    color: @col_tertiary;
+    background: @col_primary_container;
+}
+
+#custom-cava.active:hover {
+    background: alpha(@col_primary_container, 0.85);
 }
 
 #custom-cava.silent {
@@ -357,7 +372,8 @@ tooltip label {
     background: @bg_pill;
 }
 
-#custom-cava:hover {
+#custom-cava:hover,
+#custom-cava.silent:hover {
     background: @bg_pill_hover;
 }
 
@@ -552,6 +568,15 @@ tooltip label {
     padding: 0 8px;
     border: none;
     border-radius: 999px;
+}
+
+#tray > .passive {
+    -gtk-icon-effect: dim;
+}
+
+#tray > .needs-attention {
+    -gtk-icon-effect: highlight;
+    background: @col_error;
 }
 
 /* Botón de apagado / Sesión */

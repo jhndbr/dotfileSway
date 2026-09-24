@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Aplicaciones CLI
+GenericName=Lanzador de Apps de Terminal
+Comment=Menú rápido de aplicaciones de consola y terminal
+Exec=/home/jhon/.local/bin/cli-apps-menu.sh
+Icon=utilities-terminal
+Terminal=false
+Type=Application
+Categories=Utility;ConsoleOnly;
+Keywords=terminal;cli;tui;apps;newsboat;nchat;btop;lazygit;

@@ -281,6 +281,14 @@ output_path = '$HOME/.config/cava/config'
 input_path = '$TEMPLATES_DIR/swayosd-style.css'
 output_path = '$HOME/.config/swayosd/style.css'
 
+[templates.newsboat]
+input_path = '$TEMPLATES_DIR/newsboat-colors'
+output_path = '$HOME/.config/newsboat/colors'
+
+[templates.btop]
+input_path = '$TEMPLATES_DIR/btop.theme'
+output_path = '$HOME/.config/btop/themes/dank-theme.theme'
+
 [templates.joplin_chrome]
 input_path = '$TEMPLATES_DIR/joplin-userchrome.css'
 output_path = '$HOME/.config/joplin-desktop/userchrome.css'
@@ -466,6 +474,24 @@ flowboxchild:selected,
   background-color: alpha(currentColor, 0.12);
   border-radius: 12px;
 }
+
+/* ── Cuadros de diálogo y MessageDialog (botones legibles) ── */
+messagedialog button,
+dialog button,
+window.dialog button,
+.dialog-action-area button,
+.dialog-action-box button {
+  color: @dialog_fg_color;
+  background-color: alpha(currentColor, 0.1);
+}
+messagedialog button:hover,
+dialog button:hover,
+window.dialog button:hover,
+.dialog-action-area button:hover,
+.dialog-action-box button:hover {
+  color: @dialog_fg_color;
+  background-color: alpha(currentColor, 0.18);
+}
 '
 
 GTK3_FIXES='
@@ -547,6 +573,22 @@ placessidebar row,
   outline-style: none;
   outline-width: 0;
   box-shadow: none;
+}
+
+/* ── Cuadros de diálogo y MessageDialog (botones legibles) ── */
+messagedialog button,
+dialog button,
+.dialog-action-area button,
+.dialog-action-box button {
+  color: @dialog_fg_color;
+  background-color: alpha(currentColor, 0.1);
+}
+messagedialog button:hover,
+dialog button:hover,
+.dialog-action-area button:hover,
+.dialog-action-box button:hover {
+  color: @dialog_fg_color;
+  background-color: alpha(currentColor, 0.18);
 }
 '
 

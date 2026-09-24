@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Lazygit
+GenericName=Interfaz Git para Terminal
+Comment=Simple terminal UI for git commands
+Exec=foot -a cli-lazygit -T "Lazygit" lazygit
+Icon=git
+Terminal=false
+Type=Application
+Categories=Development;RevisionControl;ConsoleOnly;
+Keywords=git;version control;terminal;

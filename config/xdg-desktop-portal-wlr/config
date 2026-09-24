@@ -1,0 +1,5 @@
+[screencast]
+max_fps=60
+chooser_type=dmenu
+chooser_cmd=wofi --dmenu -p "Seleccionar para compartir/grabar:"
+force_mod_linear=1

@@ -46,8 +46,8 @@ try:
         
         is_silent = all(v == "0" for v in vals)
         if is_silent:
-            # Baseline visualizer icon when silent
-            bars = " ▂ ▂ ▂ "
+            # Baseline visualizer icon when silent (fixed 8 bars)
+            bars = "".join(dict_bars[0] for _ in range(8))
             css_class = "silent"
             tooltip = "Visualizador CAVA (En espera)"
         else:

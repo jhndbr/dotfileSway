@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Cava
+GenericName=Visualizador de Audio
+Comment=Visualizador de audio en tiempo real para terminal
+Exec=foot -a cli-cava -T Cava cava
+Icon=multimedia-volume-control
+Terminal=false
+Type=Application
+Categories=AudioVideo;Audio;ConsoleOnly;
+Keywords=audio;sound;visualizer;musica;cava;

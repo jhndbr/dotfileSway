@@ -38,11 +38,73 @@
         "tooltip": true
     },
 
-    /* ── Espacios de Trabajo Estilo Cápsula macOS ────────────────── */
+    /* ── Espacios de Trabajo con Iconos de Aplicaciones ─────────── */
     "sway/workspaces": {
         "disable-scroll": false,
         "all-outputs": true,
-        "format": "{name}",
+        "format": "{name}  {windows}",
+        "format-window-separator": " ",
+        "window-rewrite-default": "󰖯",
+        "window-rewrite": {
+            "class<.*brave.*>": "󰊯",
+            "class<.*chrome.*>": "󰊯",
+            "class<.*chromium.*>": "󰊯",
+            "class<.*firefox.*>": "󰈹",
+            "class<.*zen.*>": "󰈹",
+            "class<.*ghostty.*>": "󰞷",
+            "class<.*foot.*>": "󰞷",
+            "class<.*kitty.*>": "󰄛",
+            "class<.*alacritty.*>": "󰞷",
+            "class<.*wezterm.*>": "󰞷",
+            "class<.*code.*>": "󰨞",
+            "class<.*vscodium.*>": "󰨞",
+            "class<.*zed.*>": "󰅩",
+            "class<.*jetbrains.*|.*idea.*>": "󰅩",
+            "class<.*vim.*|.*nvim.*>": "",
+            "class<.*openplc.*>": "󰑣",
+            "class<.*antigravity.*>": "󰧑",
+            "class<.*thunar.*>": "󰝰",
+            "class<.*nautilus.*>": "󰝰",
+            "class<.*dolphin.*>": "󰝰",
+            "class<.*spotify.*>": "󰓇",
+            "class<.*strawberry.*>": "󰎆",
+            "class<.*youtube.*music.*>": "󰐃",
+            "class<.*discord.*>": "󰙯",
+            "class<.*vesktop.*>": "󰙯",
+            "class<.*telegram.*>": "󰒓",
+            "class<.*thunderbird.*>": "󰇮",
+            "class<.*tuba.*>": "󰈹",
+            "class<.*pavucontrol.*>": "󰕾",
+            "class<.*blueman.*>": "󰂯",
+            "class<.*mpv.*>": "󰎆",
+            "class<.*vlc.*>": "󰕼",
+            "class<.*audacity.*>": "󰎇",
+            "class<.*obs.*>": "󰑋",
+            "class<.*steam.*>": "󰓓",
+            "class<.*pcsx2.*>": "󰊴",
+            "class<.*counter-strike.*|.*cs2.*|.*half-life.*>": "󰊴",
+            "class<.*games.*|.*game.*|.*lutris.*|.*heroic.*>": "󰊴",
+            "class<.*gimp.*>": "󰽉",
+            "class<.*inkscape.*>": "󰽉",
+            "class<.*libreoffice.*|.*soffice.*>": "󰈙",
+            "class<.*joplin.*>": "󱓧",
+            "class<.*obsidian.*>": "󱓧",
+            "class<.*zotero.*>": "󱓧",
+            "class<.*calibre.*>": "󰂿",
+            "class<.*zathura.*>": "󰈦",
+            "class<.*evince.*>": "󰈙",
+            "class<.*localsend.*>": "󰒍",
+            "class<.*qbittorrent.*>": "󰇚",
+            "class<.*virt-manager.*|.*qemu.*>": "󰢹",
+            "class<.*timeshift.*>": "󰁯",
+            "class<.*btop.*|.*htop.*>": "󰻠",
+            "class<.*calculator.*>": "󰃬",
+            "class<.*scrcpy.*>": "󰄡",
+            "class<.*nwg-look.*|.*qt5ct.*|.*qt6ct.*>": "󰒓",
+            "class<.*imv.*>": "󰋩",
+            "class<.*swayimg.*>": "󰋩",
+            "class<.*wofi.*>": "󰣇"
+        },
         "persistent-workspaces": {
             "*": 5
         }
@@ -87,24 +149,19 @@
         "interval": 1
     },
 
-    /* ── Mini Reproductor Multimedia Flotante ────────────────────── */
+    /* ── Mini Reproductor Multimedia (Compacto con Marquee) ──────── */
     "custom/media": {
-        "format": "{icon} {text}",
+        "format": "{}",
         "return-type": "json",
-        "max-length": 35,
-        "format-icons": {
-            "Playing": "󰎆",
-            "Paused": "󰏤",
-            "Stopped": "󰝚",
-            "default": "󰝚"
-        },
-        "escape": true,
-        "exec": "playerctl -a metadata --format '{\"text\": \"{{markup_escape(artist)}} — {{markup_escape(title)}}\", \"tooltip\": \"{{playerName}} · {{status}}\\n{{markup_escape(artist)}} — {{markup_escape(title)}}\", \"alt\": \"{{status}}\", \"class\": \"{{status}}\"}' -F 2>/dev/null",
+        "max-length": 25,
+        "exec": "~/.local/bin/waybar-media.py",
+        "interval": 1,
         "on-click": "playerctl play-pause",
         "on-click-right": "playerctl next",
         "on-click-middle": "playerctl previous",
         "on-scroll-up": "playerctl volume 0.05+",
-        "on-scroll-down": "playerctl volume 0.05-"
+        "on-scroll-down": "playerctl volume 0.05-",
+        "smooth-scrolling-threshold": 1
     },
 
     /* ── Centro de Control (QuickSettings Wofi) ──────────────────── */

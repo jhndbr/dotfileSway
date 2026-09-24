@@ -1,0 +1,54 @@
+# ╔══════════════════════════════════════════════════════════════╗
+# ║             Configuración General de Newsboat                ║
+# ║             Dotfiles Sway - Dank / Material Design           ║
+# ╚══════════════════════════════════════════════════════════════╝
+
+# ── Navegador y Enlaces ─────────────────────────────────────────
+browser "xdg-open %u"
+
+# ── Comportamiento de Descarga y Caché ─────────────────────────
+auto-reload no
+reload-time 60
+reload-threads 4
+download-retries 3
+download-timeout 20
+cleanup-on-quit yes
+
+# ── Formato de Interfaz ─────────────────────────────────────────
+feedlist-format "%4i %n %12u  %t"
+articlelist-format "%4i %f %D  %?T?|%-18T| ?%t"
+datetime-format "%d/%m %H:%M"
+
+# ── Vista de Artículo ───────────────────────────────────────────
+text-width 86
+scrolloff 2
+show-read-feeds yes
+show-read-articles yes
+
+# ── Navegación estilo Vim ───────────────────────────────────────
+unbind-key j
+unbind-key k
+unbind-key J
+unbind-key K
+unbind-key g
+unbind-key G
+
+bind-key j down
+bind-key k up
+bind-key J next-feed
+bind-key K prev-feed
+bind-key g home
+bind-key G end
+bind-key d pagedown
+bind-key u pageup
+
+# Atajos útiles
+bind-key o open
+bind-key r reload
+bind-key R reload-all
+bind-key A mark-feed-read
+bind-key C mark-all-feeds-read
+
+# ── Inclusión de Colores Dinámicos ──────────────────────────────
+# Intenta cargar los colores de Matugen si existen
+include ~/.config/newsboat/colors
