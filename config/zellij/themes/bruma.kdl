@@ -1,0 +1,137 @@
+// Tema "bruma" — paleta de azules grisáceos y beige cálido
+//
+// Azul noche    #2B3B58  (43, 59, 88)
+// Azul pizarra  #526380  (82, 99, 128)
+// Azul neblina  #7A87A0  (122, 135, 160)
+// Gris lavanda  #9DA1B0  (157, 161, 176)
+// Gris perla    #B6B5BD  (182, 181, 189)
+// Beige cálido  #DECEC6  (222, 206, 198)
+
+themes {
+    bruma {
+        text_unselected {
+            base 222 206 198
+            background 43 59 88
+            emphasis_0 122 135 160
+            emphasis_1 157 161 176
+            emphasis_2 182 181 189
+            emphasis_3 222 206 198
+        }
+        text_selected {
+            base 222 206 198
+            background 82 99 128
+            emphasis_0 122 135 160
+            emphasis_1 157 161 176
+            emphasis_2 182 181 189
+            emphasis_3 222 206 198
+        }
+        ribbon_unselected {
+            base 43 59 88
+            background 122 135 160
+            emphasis_0 82 99 128
+            emphasis_1 157 161 176
+            emphasis_2 182 181 189
+            emphasis_3 222 206 198
+        }
+        ribbon_selected {
+            base 43 59 88
+            background 222 206 198
+            emphasis_0 82 99 128
+            emphasis_1 122 135 160
+            emphasis_2 157 161 176
+            emphasis_3 182 181 189
+        }
+        table_title {
+            base 222 206 198
+            background 43 59 88
+            emphasis_0 122 135 160
+            emphasis_1 157 161 176
+            emphasis_2 182 181 189
+            emphasis_3 222 206 198
+        }
+        table_cell_unselected {
+            base 182 181 189
+            background 43 59 88
+            emphasis_0 122 135 160
+            emphasis_1 157 161 176
+            emphasis_2 182 181 189
+            emphasis_3 222 206 198
+        }
+        table_cell_selected {
+            base 222 206 198
+            background 82 99 128
+            emphasis_0 122 135 160
+            emphasis_1 157 161 176
+            emphasis_2 182 181 189
+            emphasis_3 222 206 198
+        }
+        list_unselected {
+            base 182 181 189
+            background 43 59 88
+            emphasis_0 122 135 160
+            emphasis_1 157 161 176
+            emphasis_2 182 181 189
+            emphasis_3 222 206 198
+        }
+        list_selected {
+            base 222 206 198
+            background 82 99 128
+            emphasis_0 122 135 160
+            emphasis_1 157 161 176
+            emphasis_2 182 181 189
+            emphasis_3 222 206 198
+        }
+        frame_unselected {
+            base 82 99 128
+            background 0
+            emphasis_0 122 135 160
+            emphasis_1 157 161 176
+            emphasis_2 182 181 189
+            emphasis_3 222 206 198
+        }
+        frame_selected {
+            base 222 206 198
+            background 0
+            emphasis_0 182 181 189
+            emphasis_1 157 161 176
+            emphasis_2 122 135 160
+            emphasis_3 82 99 128
+        }
+        frame_highlight {
+            base 157 161 176
+            background 0
+            emphasis_0 222 206 198
+            emphasis_1 182 181 189
+            emphasis_2 157 161 176
+            emphasis_3 122 135 160
+        }
+        exit_code_success {
+            base 122 135 160
+            background 0
+            emphasis_0 157 161 176
+            emphasis_1 182 181 189
+            emphasis_2 222 206 198
+            emphasis_3 43 59 88
+        }
+        exit_code_error {
+            base 222 206 198
+            background 0
+            emphasis_0 182 181 189
+            emphasis_1 157 161 176
+            emphasis_2 122 135 160
+            emphasis_3 82 99 128
+        }
+        multiplayer_user_colors {
+            player_1 222 206 198
+            player_2 182 181 189
+            player_3 157 161 176
+            player_4 122 135 160
+            player_5 82 99 128
+            player_6 43 59 88
+            player_7 222 206 198
+            player_8 182 181 189
+            player_9 157 161 176
+            player_10 122 135 160
+        }
+    }
+}

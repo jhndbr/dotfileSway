@@ -124,7 +124,7 @@ mkdir -p ~/.local/bin
 echo -e "${YELLOW}📦 Creando backup en $BACKUP_DIR${NC}"
 mkdir -p "$BACKUP_DIR"
 
-CONFIGS=(sway waybar wofi dunst foot swaylock gammastep gtk-3.0 gtk-4.0 environment.d qt5ct qt6ct matugen zed Thunar xfce4 xdg-desktop-portal xdg-desktop-portal-wlr fontconfig mpv fastfetch cava newsboat nchat btop lazygit joplin-desktop)
+CONFIGS=(sway waybar wofi dunst foot swaylock gammastep gtk-3.0 gtk-4.0 environment.d qt5ct qt6ct matugen zed Thunar xfce4 xdg-desktop-portal xdg-desktop-portal-wlr fontconfig mpv fastfetch cava newsboat nchat btop lazygit htop zellij joplin-desktop)
 
 for item in "${CONFIGS[@]}"; do
     if [ -d "$HOME/.config/$item" ]; then
