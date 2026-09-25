@@ -7,7 +7,77 @@
 
 set -e
 
-WALLPAPER_INPUT="${1:-$HOME/Pictures/1.jpg}"
+THEME_CONF_DIR="$HOME/.config/matugen"
+THEME_CONF="$THEME_CONF_DIR/theme.conf"
+mkdir -p "$THEME_CONF_DIR"
+
+# Valores por defecto
+MODE="dark"
+SCHEME_TYPE="scheme-tonal-spot"
+SOURCE_COLOR_INDEX="0"
+CONTRAST="0.0"
+CURRENT_WALLPAPER="$HOME/Pictures/1.jpg"
+
+if [ -f "$THEME_CONF" ]; then
+    # shellcheck disable=SC1090
+    source "$THEME_CONF" 2>/dev/null || true
+fi
+
+IMG_ARG=""
+while [ $# -gt 0 ]; do
+    case "$1" in
+        -m|--mode)
+            MODE="$2"
+            shift 2
+            ;;
+        --toggle-mode)
+            if [ "$MODE" = "light" ]; then
+                MODE="dark"
+            else
+                MODE="light"
+            fi
+            shift 1
+            ;;
+        -t|--type)
+            SCHEME_TYPE="$2"
+            [[ "$SCHEME_TYPE" != scheme-* ]] && SCHEME_TYPE="scheme-$SCHEME_TYPE"
+            shift 2
+            ;;
+        -i|--index)
+            SOURCE_COLOR_INDEX="$2"
+            shift 2
+            ;;
+        -c|--contrast)
+            CONTRAST="$2"
+            shift 2
+            ;;
+        -h|--help)
+            echo "Uso: set-wallpaper.sh [IMAGEN] [OPCIONES]"
+            echo "Opciones:"
+            echo "  -m, --mode <dark|light>     Modo de color (Oscuro o Claro)"
+            echo "      --toggle-mode           Alternar entre modo oscuro y claro"
+            echo "  -t, --type <TIPO>           Esquema Material 3 (fidelity, tonal-spot, vibrant, expressive, etc.)"
+            echo "  -i, --index <0-4>           Índice de color dominante (0 a 4)"
+            echo "  -c, --contrast <-1.0..1.0>  Nivel de contraste"
+            exit 0
+            ;;
+        *)
+            CLEAN_PATH="${1/#\~/$HOME}"
+            if [ -f "$CLEAN_PATH" ]; then
+                IMG_ARG="$CLEAN_PATH"
+            fi
+            shift 1
+            ;;
+    esac
+done
+
+if [ -n "$IMG_ARG" ]; then
+    WALLPAPER_INPUT="$IMG_ARG"
+    CURRENT_WALLPAPER="$WALLPAPER_INPUT"
+else
+    WALLPAPER_INPUT="${CURRENT_WALLPAPER:-$HOME/Pictures/1.jpg}"
+fi
+
 WALLPAPER_INPUT="${WALLPAPER_INPUT/#\~/$HOME}"
 
 if [ ! -f "$WALLPAPER_INPUT" ]; then
@@ -22,6 +92,15 @@ if [ "$WALLPAPER_INPUT" != "$TARGET_WALLPAPER" ]; then
     cp -f "$WALLPAPER_INPUT" "$TARGET_WALLPAPER"
 fi
 
+# Guardar estado actualizado en theme.conf
+cat << EOF > "$THEME_CONF"
+MODE="$MODE"
+SCHEME_TYPE="$SCHEME_TYPE"
+SOURCE_COLOR_INDEX="$SOURCE_COLOR_INDEX"
+CONTRAST="$CONTRAST"
+CURRENT_WALLPAPER="$WALLPAPER_INPUT"
+EOF
+
 # Generar fondo desenfocado para la pantalla de bloqueo (Swaylock Blur)
 BLUR_WALLPAPER="$HOME/Pictures/1_blur.png"
 if command -v magick &>/dev/null; then
@@ -32,11 +111,15 @@ if command -v swaymsg &>/dev/null && pgrep -x sway &>/dev/null; then
     swaymsg "output * bg '$WALLPAPER_INPUT' fill" &
 fi
 
-echo "🎨 Generando paleta de colores dinámicas desde: $WALLPAPER_INPUT..."
+echo "🎨 Generando paleta dinámica ($MODE / $SCHEME_TYPE / index $SOURCE_COLOR_INDEX) desde: $WALLPAPER_INPUT..."
 
 # ── 2. Extraer colores con Pywal (sin secuencias de escape OSC 4) ─
 rm -rf "$HOME/.cache/wal/colors.json" 2>/dev/null || true
-wal -i "$CONVERTED_PNG" -n -q -s -t 2>/dev/null || true
+if [ "$MODE" = "light" ]; then
+    wal -i "$CONVERTED_PNG" -n -q -s -t -l 2>/dev/null || true
+else
+    wal -i "$CONVERTED_PNG" -n -q -s -t 2>/dev/null || true
+fi
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 GEN_DANK16=""
@@ -71,6 +154,12 @@ elif [ -d "$HOME/Documents/dotfileSway/templates" ]; then
     cp -rf "$HOME/Documents/dotfileSway/templates/"* "$TEMPLATES_DIR/" 2>/dev/null || true
 fi
 
+if [ "$MODE" = "light" ]; then
+    VSCODE_TEMPLATE="$TEMPLATES_DIR/vscode-color-theme-light.json"
+else
+    VSCODE_TEMPLATE="$TEMPLATES_DIR/vscode-color-theme-dark.json"
+fi
+
 # Configuración de Matugen vinculando las plantillas de Dank Linux
 cat << EOF > "$HOME/.config/matugen/config.toml"
 [config]
@@ -88,7 +177,7 @@ input_path = '$TEMPLATES_DIR/dank-zed.json'
 output_path = '$HOME/.config/zed/themes/dank-zed-theme.json'
 
 [templates.vscode]
-input_path = '$TEMPLATES_DIR/vscode-color-theme-dark.json'
+input_path = '$VSCODE_TEMPLATE'
 output_path = '$HOME/.vscode/extensions/danklinux.dms-theme-0.0.3/themes/dankshell-dark.json'
 
 [templates.qt5ct]
@@ -153,10 +242,15 @@ output_path = '$HOME/.config/matugen/generated/thunderbird-userchrome.css'
 EOF
 
 # ── 4. Ejecutar Matugen standalone importando dank16.json si existe ───────
+MATUGEN_OPTS=(-m "$MODE" -t "$SCHEME_TYPE" --source-color-index "$SOURCE_COLOR_INDEX")
+if [ -n "$CONTRAST" ] && [ "$CONTRAST" != "0" ] && [ "$CONTRAST" != "0.0" ]; then
+    MATUGEN_OPTS+=(--contrast "$CONTRAST")
+fi
+
 if [ -f "/tmp/dank16.json" ]; then
-    matugen image "$CONVERTED_PNG" -m dark --source-color-index 0 --import-json /tmp/dank16.json
+    matugen image "$CONVERTED_PNG" "${MATUGEN_OPTS[@]}" --import-json /tmp/dank16.json
 else
-    matugen image "$CONVERTED_PNG" -m dark --source-color-index 0
+    matugen image "$CONVERTED_PNG" "${MATUGEN_OPTS[@]}"
 fi
 
 # ── 4.1. Sincronizar dinámicamente temas en TODOS los perfiles de Firefox y Thunderbird ──
@@ -484,11 +578,16 @@ elif [ -f "$SCRIPT_DIR/sync-icon-color.py" ]; then
     python3 "$SCRIPT_DIR/sync-icon-color.py" "$CONVERTED_PNG" &>/dev/null &
 fi
 
-# ── 7. Asegurar estilo Qt en Fusion, Papirus-Dark y kdeglobals ──
+# ── 7. Asegurar estilo Qt en Fusion, Papirus/Papirus-Dark y kdeglobals ──
 sed -i 's/^style=.*/style=Fusion/' "$HOME/.config/qt5ct/qt5ct.conf" 2>/dev/null || true
 sed -i 's/^style=.*/style=Fusion/' "$HOME/.config/qt6ct/qt6ct.conf" 2>/dev/null || true
-sed -i 's/^icon_theme=.*/icon_theme=Papirus-Dark/' "$HOME/.config/qt5ct/qt5ct.conf" 2>/dev/null || true
-sed -i 's/^icon_theme=.*/icon_theme=Papirus-Dark/' "$HOME/.config/qt6ct/qt6ct.conf" 2>/dev/null || true
+if [ "$MODE" = "light" ]; then
+    sed -i 's/^icon_theme=.*/icon_theme=Papirus/' "$HOME/.config/qt5ct/qt5ct.conf" 2>/dev/null || true
+    sed -i 's/^icon_theme=.*/icon_theme=Papirus/' "$HOME/.config/qt6ct/qt6ct.conf" 2>/dev/null || true
+else
+    sed -i 's/^icon_theme=.*/icon_theme=Papirus-Dark/' "$HOME/.config/qt5ct/qt5ct.conf" 2>/dev/null || true
+    sed -i 's/^icon_theme=.*/icon_theme=Papirus-Dark/' "$HOME/.config/qt6ct/qt6ct.conf" 2>/dev/null || true
+fi
 
 # ── 8. Recargar componentes del escritorio, Sway y Foot ───────────────
 pkill -SIGUSR2 waybar 2>/dev/null || true
@@ -545,13 +644,34 @@ unset GTK_THEME 2>/dev/null || true
 gsettings set org.gnome.desktop.interface font-name 'Inter 10' 2>/dev/null || true
 gsettings set org.gnome.desktop.interface monospace-font-name 'JetBrainsMono Nerd Font 10' 2>/dev/null || true
 gsettings set org.gnome.desktop.interface document-font-name 'Inter 10' 2>/dev/null || true
-gsettings set org.gnome.desktop.interface icon-theme 'Papirus-Dark' 2>/dev/null || true
-gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark' 2>/dev/null || true
 
-# Alternar gtk-theme para forzar a GTK3 y aplicaciones abiertas a recargar el CSS inmediatamente
-gsettings set org.gnome.desktop.interface gtk-theme 'Adwaita' 2>/dev/null || true
-sleep 0.05
-gsettings set org.gnome.desktop.interface gtk-theme 'adw-gtk3-dark' 2>/dev/null || true
+if [ "$MODE" = "light" ]; then
+    gsettings set org.gnome.desktop.interface icon-theme 'Papirus' 2>/dev/null || true
+    gsettings set org.gnome.desktop.interface color-scheme 'prefer-light' 2>/dev/null || true
+    gsettings set org.gnome.desktop.interface gtk-theme 'adw-gtk3-dark' 2>/dev/null || true
+    sleep 0.05
+    gsettings set org.gnome.desktop.interface gtk-theme 'Adwaita' 2>/dev/null || true
+
+    sed -i 's/^gtk-application-prefer-dark-theme=.*/gtk-application-prefer-dark-theme=false/' "$HOME/.config/gtk-3.0/settings.ini" 2>/dev/null || true
+    sed -i 's/^gtk-application-prefer-dark-theme=.*/gtk-application-prefer-dark-theme=false/' "$HOME/.config/gtk-4.0/settings.ini" 2>/dev/null || true
+    sed -i 's/^gtk-icon-theme-name=.*/gtk-icon-theme-name=Papirus/' "$HOME/.config/gtk-3.0/settings.ini" 2>/dev/null || true
+    sed -i 's/^gtk-icon-theme-name=.*/gtk-icon-theme-name=Papirus/' "$HOME/.config/gtk-4.0/settings.ini" 2>/dev/null || true
+    sed -i 's/^gtk-theme-name=.*/gtk-theme-name=Adwaita/' "$HOME/.config/gtk-3.0/settings.ini" 2>/dev/null || true
+    sed -i 's/^gtk-theme-name=.*/gtk-theme-name=Adwaita/' "$HOME/.config/gtk-4.0/settings.ini" 2>/dev/null || true
+else
+    gsettings set org.gnome.desktop.interface icon-theme 'Papirus-Dark' 2>/dev/null || true
+    gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark' 2>/dev/null || true
+    gsettings set org.gnome.desktop.interface gtk-theme 'Adwaita' 2>/dev/null || true
+    sleep 0.05
+    gsettings set org.gnome.desktop.interface gtk-theme 'adw-gtk3-dark' 2>/dev/null || true
+
+    sed -i 's/^gtk-application-prefer-dark-theme=.*/gtk-application-prefer-dark-theme=true/' "$HOME/.config/gtk-3.0/settings.ini" 2>/dev/null || true
+    sed -i 's/^gtk-application-prefer-dark-theme=.*/gtk-application-prefer-dark-theme=true/' "$HOME/.config/gtk-4.0/settings.ini" 2>/dev/null || true
+    sed -i 's/^gtk-icon-theme-name=.*/gtk-icon-theme-name=Papirus-Dark/' "$HOME/.config/gtk-3.0/settings.ini" 2>/dev/null || true
+    sed -i 's/^gtk-icon-theme-name=.*/gtk-icon-theme-name=Papirus-Dark/' "$HOME/.config/gtk-4.0/settings.ini" 2>/dev/null || true
+    sed -i 's/^gtk-theme-name=.*/gtk-theme-name=adw-gtk3-dark/' "$HOME/.config/gtk-3.0/settings.ini" 2>/dev/null || true
+    sed -i 's/^gtk-theme-name=.*/gtk-theme-name=adw-gtk3-dark/' "$HOME/.config/gtk-4.0/settings.ini" 2>/dev/null || true
+fi
 
 # Reiniciar demonio de Thunar para que cargue los estilos y colores nuevos
 thunar -q 2>/dev/null || true
@@ -568,7 +688,10 @@ fi
 
 # ── 11. Notificación ──────────────────────────────────────────────
 if command -v dunstify &>/dev/null; then
-    dunstify -a "DMS Matugen" -r 8812 "🎨 Tema Dinámico Aplicado" "Sway, Waybar, Foot, Qt, Iconos, Swaylock, Wofi y GTK sincronizados" || true
+    MODE_LABEL="Oscuro"
+    [ "$MODE" = "light" ] && MODE_LABEL="Claro"
+    SCHEME_LABEL="${SCHEME_TYPE#scheme-}"
+    dunstify -a "Matugen" -r 8812 "🎨 Tema Aplicado" "Modo: $MODE_LABEL | Paleta: $SCHEME_LABEL | Tono: #$SOURCE_COLOR_INDEX" || true
 fi
 
-echo "✅ Tema dinámico Dank aplicado exitosamente a todo el escritorio."
+echo "✅ Tema dinámico Matugen ($MODE / $SCHEME_TYPE / index $SOURCE_COLOR_INDEX) aplicado exitosamente."

@@ -162,49 +162,186 @@ sidebar-main,
 }
 
 /* Iconos de páginas (Favicons) limpios y destacados */
-#tabbrowser-tabs[orient="vertical"] .tab-icon-image,
-.tabbrowser-tab[orient="vertical"] .tab-icon-image {
+#tabbrowser-tabs[orient="vertical"] .tab-icon-image:not([busy]),
+.tabbrowser-tab[orient="vertical"] .tab-icon-image:not([busy]) {
   width: 18px !important;
   height: 18px !important;
   opacity: 1 !important;
   filter: none !important;
-  display: inline-block !important;
+  display: block !important;
+  margin: 0 !important;
 }
 
-#tabbrowser-tabs[orient="vertical"] .tab-icon-stack,
-.tabbrowser-tab[orient="vertical"] .tab-icon-stack {
+/* Ocultar favicon viejo mientras carga para mostrar limpiamente la animación de carga */
+#tabbrowser-tabs[orient="vertical"] .tab-icon-image[busy],
+.tabbrowser-tab[orient="vertical"] .tab-icon-image[busy],
+.tabbrowser-tab[orient="vertical"][busy] .tab-icon-image {
+  display: none !important;
+}
+
+/* Animación de carga (Throbber) centrada */
+#tabbrowser-tabs[orient="vertical"] .tab-throbber[busy],
+.tabbrowser-tab[orient="vertical"] .tab-throbber[busy],
+.tabbrowser-tab[orient="vertical"][busy] .tab-throbber {
+  display: block !important;
+  width: 18px !important;
+  height: 18px !important;
+  margin: 0 auto !important;
+}
+
+#tabbrowser-tabs[orient="vertical"] .tab-throbber:not([busy]),
+.tabbrowser-tab[orient="vertical"] .tab-throbber:not([busy]) {
+  display: none !important;
+}
+
+#tabbrowser-tabs[orient="vertical"] .tab-throbber::before,
+.tabbrowser-tab[orient="vertical"] .tab-throbber::before {
+  fill: var(--md-primary) !important;
+}
+
+/* Centrado perfecto del favicon en modo vertical colapsado */
+#tabbrowser-tabs[orient="vertical"]:not([expanded]) .tabbrowser-tab {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+}
+
+#tabbrowser-tabs[orient="vertical"]:not([expanded]) .tab-stack {
+  display: grid !important;
+  grid-template-areas: "tabspace" !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+#tabbrowser-tabs[orient="vertical"]:not([expanded]) .tab-stack > * {
+  grid-area: tabspace !important;
+}
+
+#tabbrowser-tabs[orient="vertical"]:not([expanded]) .tab-background {
+  margin: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 36px !important;
+  border-radius: 8px !important;
+}
+
+#tabbrowser-tabs[orient="vertical"]:not([expanded]) .tab-content {
+  position: relative !important;
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 36px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+}
+
+/* Ocultar elementos laterales para no desfasar el favicon del centro */
+#tabbrowser-tabs[orient="vertical"]:not([expanded]) .tab-label-container,
+#tabbrowser-tabs[orient="vertical"]:not([expanded]) .tab-close-button,
+#tabbrowser-tabs[orient="vertical"]:not([expanded]) .tab-audio-button {
+  display: none !important;
+}
+
+/* Stack de icono centrado en el medio exacto del fondo */
+#tabbrowser-tabs[orient="vertical"]:not([expanded]) .tab-icon-stack {
+  position: static !important;
   width: 20px !important;
   height: 20px !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-}
-
-/* Centrado perfecto del favicon en modo colapsado */
-#tabbrowser-tabs[orient="vertical"]:not([expanded]) .tabbrowser-tab {
-  display: flex !important;
-  justify-content: center !important;
-}
-
-#tabbrowser-tabs[orient="vertical"]:not([expanded]) .tab-content {
-  padding: 0 !important;
-  display: flex !important;
-  justify-content: center !important;
-  align-items: center !important;
-  margin: 0 !important;
-}
-
-#tabbrowser-tabs[orient="vertical"]:not([expanded]) .tab-icon-stack {
   margin: 0 auto !important;
 }
 
-#tabbrowser-tabs[orient="vertical"]:not([expanded]) .tab-background {
-  margin: 0 !important;
+/* ── Indicadores a la derecha uno sobre otro (Micro arriba, Audio abajo) ── */
+
+/* Icono de Micrófono / Grabación (arriba a la derecha del fondo) */
+#tabbrowser-tabs[orient="vertical"]:not([expanded]) .tab-sharing-icon-overlay {
+  position: absolute !important;
+  top: 2px !important;
+  inset-block-start: 2px !important;
+  right: 2px !important;
+  inset-inline-end: 2px !important;
+  width: 12px !important;
+  height: 12px !important;
+  fill: var(--md-error, #ff5449) !important;
+  color: var(--md-error, #ff5449) !important;
+  z-index: 3 !important;
+  pointer-events: auto !important;
 }
 
-/* Separación limpia en modo vertical expandido */
+#tabbrowser-tabs[orient="vertical"]:not([expanded]) .tab-sharing-icon-overlay[sharing] {
+  display: block !important;
+}
+
+#tabbrowser-tabs[orient="vertical"]:not([expanded]) .tab-sharing-icon-overlay:not([sharing]) {
+  display: none !important;
+}
+
+/* Icono de Volumen / Audio (abajo a la derecha del fondo) */
+#tabbrowser-tabs[orient="vertical"]:not([expanded]) .tab-icon-overlay {
+  position: absolute !important;
+  bottom: 2px !important;
+  inset-block-end: 2px !important;
+  right: 2px !important;
+  inset-inline-end: 2px !important;
+  width: 12px !important;
+  height: 12px !important;
+  padding: 1px !important;
+  box-sizing: border-box !important;
+  border-radius: 50% !important;
+  background-color: var(--md-surface-container-high) !important;
+  fill: var(--md-primary) !important;
+  color: var(--md-primary) !important;
+  z-index: 3 !important;
+  pointer-events: auto !important;
+  transition: transform 0.15s ease, background-color 0.15s ease !important;
+}
+
+#tabbrowser-tabs[orient="vertical"]:not([expanded]) .tab-icon-overlay:is([soundplaying], [muted], [activemedia-blocked]) {
+  display: block !important;
+}
+
+#tabbrowser-tabs[orient="vertical"]:not([expanded]) .tab-icon-overlay:not([soundplaying], [muted], [activemedia-blocked]) {
+  display: none !important;
+}
+
+#tabbrowser-tabs[orient="vertical"]:not([expanded]) .tab-icon-overlay:hover {
+  background-color: var(--md-primary) !important;
+  fill: var(--md-on-primary) !important;
+  color: var(--md-on-primary) !important;
+  transform: scale(1.1) !important;
+}
+
+/* Modo vertical expandido */
 #tabbrowser-tabs[orient="vertical"][expanded] .tab-icon-stack {
+  position: relative !important;
+  width: 20px !important;
+  height: 20px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
   margin-inline-end: 8px !important;
+}
+
+#tabbrowser-tabs[orient="vertical"][expanded] .tab-sharing-icon-overlay {
+  position: absolute !important;
+  top: -4px !important;
+  right: -4px !important;
+  width: 12px !important;
+  height: 12px !important;
+  fill: var(--md-error, #ff5449) !important;
+  z-index: 3 !important;
+}
+
+#tabbrowser-tabs[orient="vertical"][expanded] .tab-sharing-icon-overlay[sharing] {
+  display: block !important;
+}
+
+#tabbrowser-tabs[orient="vertical"][expanded] .tab-sharing-icon-overlay:not([sharing]) {
+  display: none !important;
 }
 
 /* Pestañas de la barra lateral (fxview-tab-row y sidebar-tab-row) */

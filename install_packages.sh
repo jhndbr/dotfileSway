@@ -94,7 +94,6 @@ PACMAN_PACKAGES=(
     udiskie
     power-profiles-daemon
     gamemode
-    lib32-gamemode
 
     # Portales e Integración Wayland / XDG
     xdg-desktop-portal
@@ -113,7 +112,7 @@ PACMAN_PACKAGES=(
     poppler-glib
     webp-pixbuf-loader
     libgsf
-    p7zip
+    7zip
     ouch
     zenity
 
@@ -164,6 +163,14 @@ PACMAN_PACKAGES=(
 log_info "Instalando paquetes oficiales con pacman..."
 sudo pacman -S --needed --noconfirm "${PACMAN_PACKAGES[@]}"
 log_success "Paquetes oficiales instalados con éxito"
+
+# ── 5. Soporte opcional Multilib (32-bit para juegos/Wine/Steam) ─
+if grep -q "^\s*\[multilib\]" /etc/pacman.conf; then
+    log_info "Instalando soporte lib32-gamemode (repositorio [multilib] detectado)..."
+    sudo pacman -S --needed --noconfirm lib32-gamemode 2>/dev/null || log_warn "No se pudo instalar lib32-gamemode"
+else
+    log_warn "Repositorio [multilib] no activo en /etc/pacman.conf. Se omite lib32-gamemode (opcional para juegos de 32 bits)."
+fi
 
 log_info "Actualizando caché de fuentes del sistema..."
 fc-cache -f > /dev/null 2>&1 || true

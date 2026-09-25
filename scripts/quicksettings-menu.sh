@@ -82,8 +82,54 @@ if [ -f "$HOME/.config/sway/inputs.conf" ]; then
 fi
 ITEM_KB=$(format_item "⌨️" "Distribución Teclado" "$KB_LAYOUT")
 
+# Apariencia y Paleta Dinámica (Matugen)
+THEME_CONF="$HOME/.config/matugen/theme.conf"
+THEME_MODE="dark"
+THEME_TYPE="scheme-tonal-spot"
+THEME_INDEX="0"
+if [ -f "$THEME_CONF" ]; then
+    # shellcheck disable=SC1090
+    source "$THEME_CONF" 2>/dev/null || true
+    [ -n "$MODE" ] && THEME_MODE="$MODE"
+    [ -n "$SCHEME_TYPE" ] && THEME_TYPE="$SCHEME_TYPE"
+    [ -n "$SOURCE_COLOR_INDEX" ] && THEME_INDEX="$SOURCE_COLOR_INDEX"
+fi
+
+if [ "$THEME_MODE" = "light" ]; then
+    ITEM_THEME_MODE=$(format_item "󰖙" "Modo de Apariencia" "Claro")
+else
+    ITEM_THEME_MODE=$(format_item "󰖔" "Modo de Apariencia" "Oscuro")
+fi
+
+case "$THEME_TYPE" in
+    "scheme-fidelity")    TYPE_LABEL="Fidelidad" ;;
+    "scheme-content")     TYPE_LABEL="Contenido" ;;
+    "scheme-vibrant")     TYPE_LABEL="Vibrante" ;;
+    "scheme-expressive")  TYPE_LABEL="Expresivo" ;;
+    "scheme-tonal-spot")  TYPE_LABEL="Tonal Spot" ;;
+    "scheme-fruit-salad") TYPE_LABEL="Fruit Salad" ;;
+    "scheme-rainbow")     TYPE_LABEL="Arcoíris" ;;
+    "scheme-neutral")     TYPE_LABEL="Neutro" ;;
+    "scheme-monochrome")  TYPE_LABEL="Monocromo" ;;
+    *)                    TYPE_LABEL="${THEME_TYPE#scheme-}" ;;
+esac
+ITEM_THEME_TYPE=$(format_item "󰏘" "Estilo de Paleta" "$TYPE_LABEL")
+ITEM_THEME_INDEX=$(format_item "󰌁" "Variante de Color" "Tono $THEME_INDEX")
+
+# Resolver ruta a set-wallpaper.sh
+if [ -x "$HOME/.local/bin/set-wallpaper.sh" ]; then
+    WALLPAPER_SCRIPT="$HOME/.local/bin/set-wallpaper.sh"
+elif [ -x "$(dirname "${BASH_SOURCE[0]}")/set-wallpaper.sh" ]; then
+    WALLPAPER_SCRIPT="$(dirname "${BASH_SOURCE[0]}")/set-wallpaper.sh"
+else
+    WALLPAPER_SCRIPT="set-wallpaper.sh"
+fi
+
 # ── 2. Lista de Opciones Formateada ────────────────────────────
 OPCIONES="$(format_item "󰍹" "Pantallas y Monitores" "Configurar")
+$ITEM_THEME_MODE
+$ITEM_THEME_TYPE
+$ITEM_THEME_INDEX
 $ITEM_BT
 $ITEM_KB
 $(format_item "󰕾" "Salida de Audio" "Cambiar")
@@ -110,14 +156,59 @@ SELECCION=$(echo -e "$OPCIONES" | wofi --dmenu \
     --cache-file /dev/null \
     --insensitive \
     --width 500 \
-    --height 520 \
-    --lines 14)
+    --height 580 \
+    --lines 17)
 
 # Salir si se canceló
 [ -z "$SELECCION" ] && exit 0
 
 # ── 4. Ejecución de Acciones ────────────────────────────────────
 case "$SELECCION" in
+    *"Modo de Apariencia"*)
+        MODE_OPTIONS="$(format_item "󰖔" "Modo Oscuro (Dark)" "$([ "$THEME_MODE" = "dark" ] && echo "Activo")")
+$(format_item "󰖙" "Modo Claro (Light)" "$([ "$THEME_MODE" = "light" ] && echo "Activo")")"
+        MODE_SEL=$(echo -e "$MODE_OPTIONS" | wofi --dmenu --prompt "  󰔎  Modo de Apariencia" --width 420 --height 180 --lines 2)
+        case "$MODE_SEL" in
+            *"Oscuro"*)
+                "$WALLPAPER_SCRIPT" --mode dark
+                ;;
+            *"Claro"*)
+                "$WALLPAPER_SCRIPT" --mode light
+                ;;
+        esac
+        ;;
+    *"Estilo de Paleta"*)
+        PALETTE_OPTIONS="$(format_item "󰓎" "scheme-fidelity" "Fidelidad al Fondo")
+$(format_item "󰝤" "scheme-tonal-spot" "Equilibrado (Default)")
+$(format_item "󰑮" "scheme-vibrant" "Colores Vivos / Saturados")
+$(format_item "󰓥" "scheme-expressive" "Acentos Creativos")
+$(format_item "󰅩" "scheme-content" "Matiz del Fondo")
+$(format_item "󰌯" "scheme-fruit-salad" "Fresco y Contrastado")
+$(format_item "󰌮" "scheme-rainbow" "Gama Cromática")
+$(format_item "󰄲" "scheme-neutral" "Sobrio y Desaturado")
+$(format_item "󰎞" "scheme-monochrome" "Gris Monocromático")"
+        PALETTE_SEL=$(echo -e "$PALETTE_OPTIONS" | wofi --dmenu --prompt "  󰏘  Paleta Material 3" --width 520 --height 430 --lines 9)
+        if [ -n "$PALETTE_SEL" ]; then
+            SELECTED_TYPE=$(echo "$PALETTE_SEL" | awk '{print $2}')
+            if [ -n "$SELECTED_TYPE" ]; then
+                "$WALLPAPER_SCRIPT" --type "$SELECTED_TYPE"
+            fi
+        fi
+        ;;
+    *"Variante de Color"*)
+        VARIANT_OPTIONS="$(format_item "󰌁" "Índice 0" "Color Primario Dominante")
+$(format_item "󰌁" "Índice 1" "Color Secundario")
+$(format_item "󰌁" "Índice 2" "Color Terciario")
+$(format_item "󰌁" "Índice 3" "Color Acento")
+$(format_item "󰌁" "Índice 4" "Color Alternativo")"
+        VARIANT_SEL=$(echo -e "$VARIANT_OPTIONS" | wofi --dmenu --prompt "  󰌁  Tono Base del Fondo" --width 460 --height 280 --lines 5)
+        if [ -n "$VARIANT_SEL" ]; then
+            SELECTED_IDX=$(echo "$VARIANT_SEL" | grep -oE 'Índice [0-4]' | awk '{print $2}')
+            if [ -n "$SELECTED_IDX" ]; then
+                "$WALLPAPER_SCRIPT" --index "$SELECTED_IDX"
+            fi
+        fi
+        ;;
     *"Modo Cafeína"*|*"Cafeína"*)
         "$SCRIPTS_DIR/caffeine-toggle.sh"
         ;;

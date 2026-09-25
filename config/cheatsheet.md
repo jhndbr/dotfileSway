@@ -15,7 +15,7 @@
 | `Super + Q` | Cerrar ventana activa |
 | `Super + W` | Alternar ventana flotante / tiling |
 | `Super + F` | Pantalla completa (Fullscreen) |
-| `Super + X` | **Centro de Control** (Quick Settings) |
+| `Super + X` / `Super + Ctrl + X` | **Centro de Control** (Modo Claro/Oscuro, Paletas Matugen, Monitores, etc.) |
 | `Super + V` | Historial de portapapeles (**Cliphist**) |
 | `Super + .` *(Punto)* | Selector de emojis |
 | `Super + E` / `Super + Y` | Explorador de archivos (**Yazi**) |
