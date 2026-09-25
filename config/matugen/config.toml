@@ -56,6 +56,10 @@ output_path = '~/.config/dunst/dunstrc'
 input_path = '~/.config/matugen/templates/wofi-style.css'
 output_path = '~/.config/wofi/style.css'
 
+[templates.swayosd]
+input_path = '~/.config/matugen/templates/swayosd-style.css'
+output_path = '~/.config/swayosd/style.css'
+
 [templates.newsboat]
 input_path = '~/.config/matugen/templates/newsboat-colors'
 output_path = '~/.config/newsboat/colors'

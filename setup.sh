@@ -124,7 +124,7 @@ mkdir -p ~/.local/bin
 echo -e "${YELLOW}📦 Creando backup en $BACKUP_DIR${NC}"
 mkdir -p "$BACKUP_DIR"
 
-CONFIGS=(sway waybar wofi dunst foot swaylock gammastep gtk-3.0 gtk-4.0 environment.d qt5ct qt6ct matugen zed Thunar xfce4 xdg-desktop-portal xdg-desktop-portal-wlr fontconfig mpv fastfetch cava newsboat nchat btop lazygit)
+CONFIGS=(sway waybar wofi dunst foot swaylock gammastep gtk-3.0 gtk-4.0 environment.d qt5ct qt6ct matugen zed Thunar xfce4 xdg-desktop-portal xdg-desktop-portal-wlr fontconfig mpv fastfetch cava newsboat nchat btop lazygit joplin-desktop)
 
 for item in "${CONFIGS[@]}"; do
     if [ -d "$HOME/.config/$item" ]; then
@@ -133,10 +133,12 @@ for item in "${CONFIGS[@]}"; do
 done
 
 # Backup archivos individuales de ~/.config si existen
-for cfg_file in mimeapps.list starship.toml; do
-    if [ -f "$HOME/.config/$cfg_file" ]; then
-        cp -f "$HOME/.config/$cfg_file" "$BACKUP_DIR/$cfg_file" 2>/dev/null || true
-    fi
+for cfg_file in mimeapps.list starship.toml *flags.conf; do
+    for found in $HOME/.config/$cfg_file; do
+        if [ -f "$found" ]; then
+            cp -f "$found" "$BACKUP_DIR/" 2>/dev/null || true
+        fi
+    done
 done
 
 # Backup archivos de home
@@ -222,6 +224,21 @@ if [ -f "$SCRIPT_DIR/config/starship.toml" ]; then
     cp -f "$SCRIPT_DIR/config/starship.toml" "$HOME/.config/starship.toml"
 fi
 
+# Copiar archivos de flags (Electron, Brave / Wayland)
+for flag_file in "$SCRIPT_DIR/config/"*flags.conf; do
+    if [ -f "$flag_file" ]; then
+        echo -e "  ${GREEN}→${NC} Instalando banderas de inicio (${BLUE}$(basename "$flag_file")${NC})..."
+        cp -f "$flag_file" "$HOME/.config/"
+    fi
+done
+
+# Instalar archivos de aplicaciones auxiliares (header.puml para diagramas PlantUML en Joplin)
+if [ -d "$SCRIPT_DIR/aplicaciones" ]; then
+    echo -e "  ${GREEN}→${NC} Instalando recursos en ${BLUE}~/Aplicaciones${NC}..."
+    mkdir -p "$HOME/Aplicaciones"
+    cp -rf "$SCRIPT_DIR/aplicaciones/"* "$HOME/Aplicaciones/" 2>/dev/null || true
+fi
+
 # Limpiar accesos residuales de Yazi si existieran
 rm -f "$HOME/.local/share/applications/yazi.desktop" 2>/dev/null || true
 rm -f "$HOME/.local/bin/yazi-open-with.sh" 2>/dev/null || true
@@ -259,6 +276,10 @@ fi
 
 if [ -f "$HOME/.config/gtk-3.0/bookmarks" ]; then
     sed -i "s|file:///home/[^/]*|file://$HOME|g" "$HOME/.config/gtk-3.0/bookmarks" 2>/dev/null || true
+fi
+
+if [ -f "$HOME/.config/joplin-desktop/settings.json" ]; then
+    sed -i "s|/home/[^/]*/Aplicaciones|$HOME/Aplicaciones|g" "$HOME/.config/joplin-desktop/settings.json" 2>/dev/null || true
 fi
 
 # ── 9. Copiar archivos de home (.zshrc, .zprofile, .gitconfig) ──

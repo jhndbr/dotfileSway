@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Btop
+GenericName=Monitor de Sistema
+Comment=Resource monitor that shows usage and stats for processor, memory, disks, network and processes
+Exec=foot -a cli-btop -T "Btop — Monitor de Sistema" btop
+Icon=btop
+Terminal=false
+Type=Application
+Categories=System;Monitor;ConsoleOnly;
+Keywords=system;process;task;monitor;

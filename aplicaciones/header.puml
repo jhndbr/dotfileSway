@@ -1,0 +1,142 @@
+' ============================================
+' PLANTUML HEADER · BLANCO + TRANSPARENTE
+' ============================================
+
+skinparam backgroundColor transparent
+
+skinparam defaultFontColor white
+skinparam defaultFontName "JetBrains Mono"
+skinparam defaultFontSize 14
+
+' Texto
+skinparam ArrowColor white
+skinparam ArrowFontColor white
+skinparam ArrowFontColor white
+
+' Clases
+skinparam ClassFontColor white
+skinparam ClassAttributeFontColor white
+skinparam ClassStereotypeFontColor white
+skinparam ClassBorderColor white
+skinparam ClassBackgroundColor transparent
+
+' Interfaces
+skinparam InterfaceFontColor white
+skinparam InterfaceBorderColor white
+skinparam InterfaceBackgroundColor transparent
+
+' Abstract
+skinparam AbstractClassFontColor white
+skinparam AbstractClassBorderColor white
+skinparam AbstractClassBackgroundColor transparent
+
+' Enumeraciones
+skinparam EnumFontColor white
+skinparam EnumBorderColor white
+skinparam EnumBackgroundColor transparent
+
+' Notas
+skinparam NoteFontColor white
+skinparam NoteBorderColor white
+skinparam NoteBackgroundColor transparent
+
+' Paquetes
+skinparam PackageFontColor white
+skinparam PackageBorderColor white
+skinparam PackageBackgroundColor transparent
+
+' Componentes
+skinparam ComponentFontColor white
+skinparam ComponentBorderColor white
+skinparam ComponentBackgroundColor transparent
+
+' Objetos
+skinparam ObjectFontColor white
+skinparam ObjectBorderColor white
+skinparam ObjectBackgroundColor transparent
+
+' Casos de uso
+skinparam UsecaseFontColor white
+skinparam UsecaseBorderColor white
+skinparam UsecaseBackgroundColor transparent
+
+' Actores
+skinparam ActorFontColor white
+skinparam ActorBorderColor white
+
+' Títulos y leyendas
+skinparam TitleFontColor white
+skinparam HeaderFontColor white
+skinparam FooterFontColor white
+skinparam LegendFontColor white
+skinparam LegendBackgroundColor transparent
+skinparam LegendBorderColor white
+
+' Líneas generales
+skinparam BorderColor white
+skinparam HyperlinkColor white
+skinparam Shadowing false
+' Rectángulos
+skinparam RectangleFontColor white
+skinparam RectangleBorderColor white
+skinparam RectangleBackgroundColor transparent
+
+' Participantes
+skinparam ParticipantFontColor white
+skinparam ParticipantBorderColor white
+skinparam ParticipantBackgroundColor transparent
+
+' Map
+skinparam MapFontColor white
+skinparam MapBorderColor white
+skinparam MapBackgroundColor transparent
+
+' Actividades
+skinparam ActivityFontColor white
+skinparam ActivityBorderColor white
+skinparam ActivityBackgroundColor transparent
+
+' Decisiones / condiciones
+skinparam ActivityDiamondFontColor white
+skinparam ActivityDiamondBorderColor white
+skinparam ActivityDiamondBackgroundColor transparent
+
+' Líneas
+skinparam ActivityArrowColor white
+
+' Inicio / fin
+skinparam ActivityStartColor white
+skinparam ActivityEndColor white
+
+' Sombra
+skinparam shadowing false
+
+' ============================================
+' PACKAGES
+' ============================================
+skinparam PackageFontColor white
+skinparam PackageBorderColor white
+skinparam PackageBackgroundColor transparent
+
+' ============================================
+' NODES
+' ============================================
+skinparam NodeFontColor white
+skinparam NodeBorderColor white
+skinparam NodeBackgroundColor transparent
+
+' ============================================
+' LÍNEAS
+' ============================================
+skinparam ArrowColor white
+skinparam LineColor white
+skinparam ArrowFontColor white
+' ============================================
+' STATES
+' ============================================
+
+skinparam StateFontColor white
+skinparam StateBorderColor white
+skinparam StateBackgroundColor transparent
+skinparam StateAttributeFontColor white
+skinparam StateAttributeFontColor white

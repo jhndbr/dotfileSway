@@ -101,6 +101,7 @@ PACMAN_PACKAGES=(
     xdg-desktop-portal-wlr
     xdg-desktop-portal-gtk
     xdg-utils
+    xdg-terminal-exec
 
     # Gestor de Archivos Thunar, Miniaturas & Utilidades de Compresión
     thunar
@@ -176,6 +177,42 @@ log_success "Paquetes oficiales instalados con éxito"
 log_info "Actualizando caché de fuentes del sistema..."
 fc-cache -f > /dev/null 2>&1 || true
 log_success "Caché de fuentes actualizada"
+
+# ── 5.1. Aplicaciones Adicionales / AUR (Joplin & Nchat) ───────
+if ! command -v joplin-desktop &>/dev/null && ! command -v joplin &>/dev/null; then
+    log_info "Verificando disponibilidad de Joplin..."
+    if pacman -Si joplin-beta &>/dev/null; then
+        sudo pacman -S --needed --noconfirm joplin-beta 2>/dev/null || true
+        log_success "Joplin instalado vía pacman"
+    elif pacman -Si joplin-desktop &>/dev/null; then
+        sudo pacman -S --needed --noconfirm joplin-desktop 2>/dev/null || true
+        log_success "Joplin instalado vía pacman"
+    elif command -v yay &>/dev/null; then
+        yay -S --needed --noconfirm joplin-desktop 2>/dev/null || true
+        log_success "Joplin instalado vía yay (AUR)"
+    elif command -v paru &>/dev/null; then
+        paru -S --needed --noconfirm joplin-desktop 2>/dev/null || true
+        log_success "Joplin instalado vía paru (AUR)"
+    else
+        log_warn "Joplin no pudo instalarse automáticamente. Puedes instalarlo con: yay -S joplin-desktop"
+    fi
+fi
+
+if ! command -v nchat &>/dev/null; then
+    log_info "Verificando disponibilidad de Nchat (Mensajería Telegram en terminal)..."
+    if pacman -Si nchat &>/dev/null; then
+        sudo pacman -S --needed --noconfirm nchat 2>/dev/null || true
+        log_success "Nchat instalado vía pacman / chaotic-aur"
+    elif command -v yay &>/dev/null; then
+        yay -S --needed --noconfirm nchat 2>/dev/null || true
+        log_success "Nchat instalado vía yay (AUR)"
+    elif command -v paru &>/dev/null; then
+        paru -S --needed --noconfirm nchat 2>/dev/null || true
+        log_success "Nchat instalado vía paru (AUR)"
+    else
+        log_warn "Nchat no pudo instalarse automáticamente. Puedes instalarlo con: yay -S nchat"
+    fi
+fi
 
 
 # ── 6. Helper Script papirus-folders ───────────────────────────

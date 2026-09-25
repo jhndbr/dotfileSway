@@ -7,53 +7,53 @@
 @define-color destructive_fg_color #690005;
 @define-color error_bg_color #ffb4ab;
 @define-color error_fg_color #690005;
-@define-color accent_fg_color #102f60;
-@define-color accent_bg_color #adc6ff;
-@define-color accent_color #adc6ff;
-@define-color window_bg_color #111318;
-@define-color window_fg_color #e2e2e9;
-@define-color view_bg_color #111318;
-@define-color view_fg_color #e2e2e9;
-@define-color headerbar_bg_color #111318;
-@define-color headerbar_fg_color #e2e2e9;
-@define-color sidebar_bg_color #1e1f25;
-@define-color sidebar_fg_color #e2e2e9;
-@define-color card_bg_color #1e1f25;
-@define-color card_fg_color #e2e2e9;
-@define-color popover_bg_color #1e1f25;
-@define-color popover_fg_color #e2e2e9;
-@define-color dialog_bg_color #111318;
-@define-color dialog_fg_color #e2e2e9;
-@define-color button_bg_color #282a2f;
-@define-color button_fg_color #e2e2e9;
-@define-color button_hover_bg_color #33353a;
-@define-color button_active_bg_color #2b4678;
-@define-color button_active_fg_color #d8e2ff;
+@define-color accent_fg_color #00390b;
+@define-color accent_bg_color #9bd595;
+@define-color accent_color #9bd595;
+@define-color window_bg_color #12131a;
+@define-color window_fg_color #e3e1ec;
+@define-color view_bg_color #12131a;
+@define-color view_fg_color #e3e1ec;
+@define-color headerbar_bg_color #12131a;
+@define-color headerbar_fg_color #e3e1ec;
+@define-color sidebar_bg_color #1f1f27;
+@define-color sidebar_fg_color #e3e1ec;
+@define-color card_bg_color #1f1f27;
+@define-color card_fg_color #e3e1ec;
+@define-color popover_bg_color #1f1f27;
+@define-color popover_fg_color #e3e1ec;
+@define-color dialog_bg_color #12131a;
+@define-color dialog_fg_color #e3e1ec;
+@define-color button_bg_color #292931;
+@define-color button_fg_color #e3e1ec;
+@define-color button_hover_bg_color #34343c;
+@define-color button_active_bg_color #1c511f;
+@define-color button_active_fg_color #b6f2af;
 
 /* ── Material Design 3 Palette Tokens ── */
-@define-color mat_primary #adc6ff;
-@define-color mat_on_primary #102f60;
-@define-color mat_primary_container #2b4678;
-@define-color mat_on_primary_container #d8e2ff;
-@define-color mat_secondary #bfc6dc;
-@define-color mat_on_secondary #293041;
-@define-color mat_secondary_container #3f4759;
-@define-color mat_on_secondary_container #dbe2f9;
-@define-color mat_tertiary #debcdf;
-@define-color mat_on_tertiary #402843;
-@define-color mat_tertiary_container #583e5b;
-@define-color mat_on_tertiary_container #fbd7fc;
-@define-color mat_surface #111318;
-@define-color mat_on_surface #e2e2e9;
-@define-color mat_surface_variant #44474f;
-@define-color mat_on_surface_variant #c4c6d0;
-@define-color mat_surface_container #1e1f25;
-@define-color mat_surface_container_high #282a2f;
-@define-color mat_surface_container_highest #33353a;
-@define-color mat_surface_container_low #1a1b20;
-@define-color mat_surface_container_lowest #0c0e13;
-@define-color mat_outline #8e9099;
-@define-color mat_outline_variant #44474f;
+@define-color mat_primary #9bd595;
+@define-color mat_on_primary #00390b;
+@define-color mat_primary_container #1c511f;
+@define-color mat_on_primary_container #b6f2af;
+@define-color mat_secondary #eeb8ca;
+@define-color mat_on_secondary #492534;
+@define-color mat_secondary_container #623b4a;
+@define-color mat_on_secondary_container #ffd9e4;
+@define-color mat_tertiary #bec3fa;
+@define-color mat_on_tertiary #272c5a;
+@define-color mat_tertiary_container #3e4372;
+@define-color mat_on_tertiary_container #dfe0ff;
+@define-color mat_surface #12131a;
+@define-color mat_on_surface #e3e1ec;
+@define-color mat_surface_variant #454654;
+@define-color mat_on_surface_variant #c6c5d6;
+@define-color mat_surface_container #1f1f27;
+@define-color mat_surface_container_high #292931;
+@define-color mat_surface_container_highest #34343c;
+@define-color mat_surface_container_low #1a1b23;
+@define-color mat_surface_container_lowest #0d0e15;
+@define-color mat_outline #8f8f9f;
+@define-color mat_outline_variant #454654;
 @define-color mat_error #ffb4ab;
 @define-color mat_on_error #690005;
 @define-color mat_error_container #93000a;
@@ -241,8 +241,8 @@ textview text selection, .view:selected, iconview:selected,
 .view text:selected,
 iconview text:selected,
 textview text:selected {
-  background-color: #2b4678;
-  color: #d8e2ff;
+  background-color: #1c511f;
+  color: #b6f2af;
 }
 .view, iconview,
 .view text,
@@ -7836,11 +7836,11 @@ window.background:not(.solid-csd):not(.csd) > notebook > stack:not(:only-child) 
   background-color: @button_active_bg_color;
 }
 
-@define-color button_bg_color #282a2f;
-@define-color button_fg_color #e2e2e9;
-@define-color button_hover_bg_color #33353a;
-@define-color button_active_bg_color #2b4678;
-@define-color button_active_fg_color #d8e2ff;
+@define-color button_bg_color #292931;
+@define-color button_fg_color #e3e1ec;
+@define-color button_hover_bg_color #34343c;
+@define-color button_active_bg_color #1c511f;
+@define-color button_active_fg_color #b6f2af;
 
 /* Matugen Colors */
 

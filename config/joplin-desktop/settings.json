@@ -1,0 +1,10 @@
+{
+	"$schema": "https://joplinapp.org/schema/settings.json",
+	"editor.codeView": true,
+	"theme": 2,
+	"locale": "es_ES",
+	"spellChecker.languages": [
+		"es-ES"
+	],
+	"plugin-com.github.marc0l92.joplin-plugin-plantUML.diagramHeaderFile": "/home/jhon/Aplicaciones/header.puml"
+}

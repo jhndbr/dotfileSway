@@ -33,8 +33,9 @@
     /* ── Menú de Inicio Minimalista (Estilo Apple / Linux) ───────── */
     "custom/menu": {
         "format": "󰣇",
-        "tooltip-format": "Lanzador de Aplicaciones (Wofi)",
+        "tooltip-format": "Lanzador de Aplicaciones (Click Izq: Wofi | Click Der: Menú CLI)",
         "on-click": "wofi --show drun",
+        "on-click-right": "~/.local/bin/cli-apps-menu.sh",
         "tooltip": true
     },
 
@@ -103,7 +104,16 @@
             "class<.*nwg-look.*|.*qt5ct.*|.*qt6ct.*>": "󰒓",
             "class<.*imv.*>": "󰋩",
             "class<.*swayimg.*>": "󰋩",
-            "class<.*wofi.*>": "󰣇"
+            "class<.*wofi.*>": "󰣇",
+            "class<.*cli-newsboat.*>": "📰",
+            "class<.*cli-nchat.*>": "💬",
+            "class<.*cli-btop.*>": "📊",
+            "class<.*cli-lazygit.*>": "🐙",
+            "class<.*cli-cava.*>": "🎵",
+            "class<.*cli-ncdu.*>": "💾",
+            "class<.*cli-fastfetch.*>": "🚀",
+            "class<.*cli-cmatrix.*>": "🟩",
+            "class<.*cli-clock.*>": "🕒"
         },
         "persistent-workspaces": {
             "*": 5
@@ -128,14 +138,27 @@
         "rewrite": {
             "(.*) — Mozilla Firefox": "󰈹  $1",
             "(.*) - foot": "󰞷  $1",
-            "(.*) — yazi": "󰝰  $1",
-            "yazi": "󰝰  Yazi",
+            "(.*) — Brave": "󰊯  $1",
+            "(.*) — Brave Origin": "󰊯  $1",
             "(.*) - Visual Studio Code": "󰨞  $1",
             "(.*) - Code": "󰨞  $1",
             "(.*) - Zed": "󰅩  $1",
             "(.*) — Spotify": "󰓇  $1",
+            "(.*) — Joplin": "󱓧  $1",
+            "Joplin": "󱓧  Joplin",
+            "joplin": "󱓧  Joplin",
+            "Thunar": "󰝰  Thunar",
             "Volume Control": "󰕾  Pavucontrol",
-            "Bluetooth Devices": "󰂯  Blueman"
+            "Bluetooth Devices": "󰂯  Blueman",
+            "Newsboat — Lector RSS": "📰  Newsboat",
+            "Nchat — Mensajería": "💬  Nchat",
+            "Btop — Monitor de Sistema": "📊  Btop",
+            "Lazygit": "🐙  Lazygit",
+            "Cava — Audio": "🎵  Cava",
+            "Ncdu — Uso de Disco": "💾  Ncdu",
+            "Fastfetch — Info": "🚀  Fastfetch",
+            "CMatrix": "🟩  CMatrix",
+            "Clock": "🕒  Reloj"
         },
         "tooltip": false
     },

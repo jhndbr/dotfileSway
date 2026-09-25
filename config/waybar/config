@@ -32,8 +32,9 @@
     /* ── Menú de Inicio Minimalista ──────────────────────────────── */
     "custom/menu": {
         "format": "󰣇",
-        "tooltip-format": "Lanzador de Aplicaciones (Wofi)",
+        "tooltip-format": "Lanzador de Aplicaciones (Click Izq: Wofi | Click Der: Menú CLI)",
         "on-click": "wofi --show drun",
+        "on-click-right": "~/.local/bin/cli-apps-menu.sh",
         "tooltip": true
     },
 
@@ -102,7 +103,16 @@
             "class<.*nwg-look.*|.*qt5ct.*|.*qt6ct.*>": "󰒓",
             "class<.*imv.*>": "󰋩",
             "class<.*swayimg.*>": "󰋩",
-            "class<.*wofi.*>": "󰣇"
+            "class<.*wofi.*>": "󰣇",
+            "class<.*cli-newsboat.*>": "📰",
+            "class<.*cli-nchat.*>": "💬",
+            "class<.*cli-btop.*>": "📊",
+            "class<.*cli-lazygit.*>": "🐙",
+            "class<.*cli-cava.*>": "🎵",
+            "class<.*cli-ncdu.*>": "💾",
+            "class<.*cli-fastfetch.*>": "🚀",
+            "class<.*cli-cmatrix.*>": "🟩",
+            "class<.*cli-clock.*>": "🕒"
         },
         "persistent-workspaces": {
             "*": 5
@@ -123,6 +133,7 @@
             "google-chrome": "󰊯  Chrome",
             "chromium": "󰊯  Chromium",
             "Brave-browser": "󰊯  Brave",
+            "brave-origin": "󰊯  Brave",
             "foot": "󰞷  Terminal",
             "kitty": "󰄛  Kitty",
             "alacritty": "󰞷  Alacritty",
@@ -148,13 +159,24 @@
             "vlc": "󰕼  VLC",
             "Gimp": "󰽉  GIMP",
             "inkscape": "󰽉  Inkscape",
+            "joplin": "󱓧  Joplin",
+            "Joplin": "󱓧  Joplin",
             "obsidian": "󱓧  Obsidian",
             "btop": "󰻠  btop",
             "org.gnome.Calculator": "󰃬  Calculadora",
             "org.gnome.Evince": "󰈙  Documentos",
             "imv": "󰋩  Visor",
             "swayimg": "󰋩  Visor",
-            "wofi": "󰣇  Lanzador"
+            "wofi": "󰣇  Lanzador",
+            "cli-newsboat": "📰  Newsboat",
+            "cli-nchat": "💬  Nchat",
+            "cli-btop": "📊  Btop",
+            "cli-lazygit": "🐙  Lazygit",
+            "cli-cava": "🎵  Cava",
+            "cli-ncdu": "💾  Ncdu",
+            "cli-fastfetch": "🚀  Fastfetch",
+            "cli-cmatrix": "🟩  CMatrix",
+            "cli-clock": "🕒  Reloj"
         },
         "tooltip": true,
         "tooltip-format": "{title}"
