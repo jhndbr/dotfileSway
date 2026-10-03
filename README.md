@@ -1,17 +1,18 @@
-# dotfileSway
+# dotfileSway (Sway & MangoWM)
 
-> Configuración completa de **Sway WM** para Arch Linux — Estilo **macOS Monochromatic**
+> Configuración dual de **Sway WM** y **MangoWM** para Arch Linux — Estilo **macOS Monochromatic**
 >
-> **Estado:** Probado y verificado en una Máquina Virtual (VM) con **Arch Linux Minimal**.
+> **Estado:** Probado y verificado en **Arch Linux**. Permite alternar libremente entre Sway y MangoWM sin romper ninguna configuración.
 
-Dotfiles minimalistas, elegantes y funcionales para un entorno de escritorio basado en Sway/Wayland.
+Dotfiles minimalistas, elegantes y funcionales para un entorno de escritorio basado en Sway y MangoWM sobre Wayland.
 
 ---
 
 ## Características
 
 - **Estética macOS Monochromatic** — Paleta monocromática oscura con acentos blancos
-- **Sway WM** — Tiling window manager con gaps, bordes y reglas inteligentes
+- **Sway WM & MangoWM** — Tiling window manager modular con gaps, bordes y reglas inteligentes (intercambiables vía `~/.config/wm-session`)
+
 - **Waybar** — Barra superior translúcida con módulos completos
 - **Wofi** — Launcher estilo Spotlight con fuzzy matching
 - **Dunst** — Notificaciones con esquinas redondeadas y glassmorphism

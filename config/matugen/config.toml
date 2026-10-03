@@ -44,9 +44,11 @@ output_path = '~/.config/cava/config'
 input_path = '~/.config/matugen/templates/swaylock.conf'
 output_path = '~/.config/swaylock/config'
 
-[templates.sway]
-input_path = '~/.config/matugen/templates/sway-colors'
-output_path = '~/.config/sway/dank-colors'
+
+[templates.mango]
+input_path = '~/.config/matugen/templates/mango-colors.conf'
+output_path = '~/.config/mango/dank-colors'
+
 
 [templates.dunst]
 input_path = '~/.config/matugen/templates/dunstrc'

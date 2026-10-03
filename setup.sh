@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # ╔══════════════════════════════════════════════════════════════╗
-# ║      Script de Instalación y Configuración de Sway           ║
+# ║      Script de Instalación y Configuración de MangoWM        ║
 # ║      Soporte Inteligente para PC de Escritorio & Laptop      ║
 # ╚══════════════════════════════════════════════════════════════╝
 
@@ -21,12 +21,17 @@ BACKUP_DIR="$HOME/.config/dotfiles-backup/$(date +%Y%m%d_%H%M%S)"
 CLEAN_INSTALL=false
 CLI_DEVICE=""
 CLI_KB=""
+WM_SESSION="mango"
 
 # ── Parseo de argumentos / flags ────────────────────────────────
 while [[ $# -gt 0 ]]; do
     case "$1" in
         -c|--clean|--force|-f)
             CLEAN_INSTALL=true
+            shift
+            ;;
+        --skip-deps|--no-deps)
+            SKIP_DEPS=true
             shift
             ;;
         --keyboard|--kb)
@@ -39,6 +44,7 @@ while [[ $# -gt 0 ]]; do
             echo "Opciones:"
             echo "  -c, --clean, -f, --force    Borra las configuraciones previas en ~/.config y scripts"
             echo "                              antes de copiar las nuevas (crea un backup previo)."
+            echo "  --no-deps, --skip-deps      No pregunta ni instala dependencias de paquetes."
             echo "  --keyboard [es|us|us-intl|dual]  Fuerza la distribución de teclado."
             echo "  -h, --help                  Muestra este mensaje de ayuda."
             echo ""
@@ -54,9 +60,11 @@ done
 
 echo -e "${CYAN}${BOLD}"
 echo "╔══════════════════════════════════════════════════════════════╗"
-echo "║      🚀 Instalación de Dotfiles Sway (PC de Escritorio)     ║"
+echo "║      🚀 Instalación de Dotfiles (MangoWM Exclusivo)         ║"
 echo "╚══════════════════════════════════════════════════════════════╝"
 echo -e "${NC}"
+
+
 
 if [ "$CLEAN_INSTALL" = true ]; then
     echo -e "${YELLOW}🧹 Modo instalación limpia activado (--clean / --force)${NC}"
@@ -83,7 +91,7 @@ fi
 if [ -n "$CLI_KB" ]; then
     KB_LAYOUT="$CLI_KB"
 else
-    echo -e "${YELLOW}⌨️  Distribución del teclado para Sway:${NC}"
+    echo -e "${YELLOW}⌨️  Distribución del teclado:${NC}"
     echo "     1) Español (es) — Latinoamericano / España"
     echo "     2) Inglés EE.UU. (us) — QWERTY estándar"
     echo "     3) Inglés Internacional (us intl) — Con acentos vía dead keys ('+a = á, ~+n = ñ)"
@@ -100,8 +108,16 @@ else
 fi
 echo -e "   ${GREEN}✓ Distribución configurada: ${BOLD}$KB_LAYOUT${NC}\n"
 
+# ── 2.1. Entorno de Ventanas (MangoWM Exclusivo) ───────────────
+WM_SESSION="mango"
+echo -e "   ${GREEN}✓ Entorno configurado: ${BOLD}MangoWM (mango)${NC}\n"
+
+
+
 # ── 3. Instalación de paquetes ──────────────────────────────────
-if [ -f "$SCRIPT_DIR/install_packages.sh" ]; then
+if [ "$SKIP_DEPS" = true ]; then
+    echo -e "  ${BLUE}→ Omitiendo instalación de paquetes (--no-deps)${NC}"
+elif [ -f "$SCRIPT_DIR/install_packages.sh" ]; then
     echo -e "${YELLOW}▶ ¿Instalar dependencias del sistema?${NC}"
     read -rp "  [s/N]: " install_deps
     if [[ "$install_deps" =~ ^[sS]$ ]]; then
@@ -124,7 +140,8 @@ mkdir -p ~/.local/bin
 echo -e "${YELLOW}📦 Creando backup en $BACKUP_DIR${NC}"
 mkdir -p "$BACKUP_DIR"
 
-CONFIGS=(sway waybar wofi dunst foot swaylock gammastep gtk-3.0 gtk-4.0 environment.d qt5ct qt6ct matugen zed Thunar xfce4 xdg-desktop-portal xdg-desktop-portal-wlr fontconfig mpv fastfetch cava newsboat nchat btop lazygit htop zellij joplin-desktop)
+CONFIGS=(mango waybar wofi dunst foot swaylock gammastep gtk-3.0 gtk-4.0 environment.d qt5ct qt6ct matugen zed Thunar xfce4 xdg-desktop-portal xdg-desktop-portal-wlr fontconfig mpv fastfetch cava newsboat nchat btop lazygit htop zellij joplin-desktop)
+
 
 for item in "${CONFIGS[@]}"; do
     if [ -d "$HOME/.config/$item" ]; then
@@ -195,19 +212,26 @@ if [ -d "$HOME/.config/newsboat" ]; then
 fi
 
 # Aplicar perfil de dispositivo específico (PC vs Laptop)
-if [ -f "$SCRIPT_DIR/config/sway/device.conf.$DEVICE_PROFILE" ]; then
-    cp -f "$SCRIPT_DIR/config/sway/device.conf.$DEVICE_PROFILE" "$HOME/.config/sway/device.conf"
+if [ -f "$SCRIPT_DIR/config/mango/device.conf.$DEVICE_PROFILE" ]; then
+    mkdir -p "$HOME/.config/mango"
+    cp -f "$SCRIPT_DIR/config/mango/device.conf.$DEVICE_PROFILE" "$HOME/.config/mango/device.conf"
 fi
 if [ "$DEVICE_PROFILE" = "laptop" ] && [ -f "$SCRIPT_DIR/config/waybar/config.laptop" ]; then
     cp -f "$SCRIPT_DIR/config/waybar/config.laptop" "$HOME/.config/waybar/config"
 fi
 
-# ── 8. Distribución de Teclado ──────────────────────────────────
+
+# ── 8. Distribución de Teclado y Sesión ─────────────────────────
 if [ -f "$SCRIPT_DIR/scripts/keyboard-layout.sh" ]; then
     bash "$SCRIPT_DIR/scripts/keyboard-layout.sh" set "$KB_LAYOUT"
-    cp -f "$HOME/.config/sway/inputs.conf" "$SCRIPT_DIR/config/sway/inputs.conf" 2>/dev/null || true
+    cp -f "$HOME/.config/mango/inputs.conf" "$SCRIPT_DIR/config/mango/inputs.conf" 2>/dev/null || true
     echo -e "  ${GREEN}✓ Distribución de teclado $KB_LAYOUT aplicada${NC}"
 fi
+
+# Guardar sesión en ~/.config/wm-session
+echo "$WM_SESSION" > "$HOME/.config/wm-session"
+echo -e "  ${GREEN}✓ Sesión predeterminada ($WM_SESSION) guardada en ~/.config/wm-session${NC}"
+
 
 # Copiar mimeapps.list
 if [ -f "$SCRIPT_DIR/config/mimeapps.list" ]; then
@@ -329,15 +353,19 @@ echo "╔═══════════════════════�
 echo "║  ✅ ¡Configuración aplicada exitosamente!                   ║"
 echo "╠══════════════════════════════════════════════════════════════╣"
 echo "║  Perfil de hardware: $DEVICE_PROFILE"
+echo "║  Entorno de Ventanas: $WM_SESSION"
 echo "║  Teclado:            $KB_LAYOUT"
 echo "║  Backup guardado en: $BACKUP_DIR"
 echo "╚══════════════════════════════════════════════════════════════╝"
+
 echo -e "${NC}"
 
-# ── 14. Recargar Sway si está corriendo ─────────────────────────
-if command -v swaymsg &> /dev/null && pgrep -x sway &> /dev/null; then
-    swaymsg reload || true
-    echo -e "  ${GREEN}✓ Sway recargado en vivo con la nueva configuración${NC}"
-else
-    echo -e "${BLUE}💡 Podés iniciar tu sesión con Sway o recargar con Mod+Shift+C.${NC}"
+# ── 14. Recargar MangoWM si está corriendo ───────────────
+if command -v mmsg &> /dev/null && (pgrep -x mango &> /dev/null || [ -n "$MANGO_INSTANCE_SIGNATURE" ]); then
+    mmsg dispatch reload_config || true
+    echo -e "  ${GREEN}✓ MangoWM recargado en vivo con la nueva configuración${NC}"
 fi
+if ! pgrep -x mango &> /dev/null; then
+    echo -e "${BLUE}💡 Podés iniciar tu sesión con MangoWM ejecutando 'mango' o iniciando sesión en TTY1.${NC}"
+fi
+

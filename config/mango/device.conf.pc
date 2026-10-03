@@ -1,0 +1,4 @@
+# ╔══════════════════════════════════════════════════════════════╗
+# ║        Configuración para PC de Escritorio (MangoWM)         ║
+# ║        Optimizado sin batería, sin backlight, sin touchpad   ║
+# ╚══════════════════════════════════════════════════════════════╝

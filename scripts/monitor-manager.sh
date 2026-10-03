@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 # ╔══════════════════════════════════════════════════════════════╗
-# ║        Gestor Simple de Monitores para Sway & Waybar         ║
-# ║        Sin daemons - Rápido, ligero y configurable           ║
+# ║        Gestor Simple de Monitores para MangoWM & Waybar      ║
+# ║        Usa wlr-randr y mmsg — Rápido, ligero y nativo        ║
 # ╚══════════════════════════════════════════════════════════════╝
 
 set -eo pipefail
 
-OUTPUTS_CONF="$HOME/.config/sway/outputs.conf"
+MANGO_MONITOR_CONF="$HOME/.config/mango/monitor.conf"
 
 notify() {
     local title="$1"
@@ -19,7 +19,18 @@ notify() {
 }
 
 get_outputs_json() {
-    swaymsg -t get_outputs -r 2>/dev/null || echo "[]"
+    if command -v wlr-randr >/dev/null 2>&1; then
+        wlr-randr --json 2>/dev/null | jq '[.[] | {
+            name: .name,
+            active: .enabled,
+            rect: {x: (.position.x // 0), y: (.position.y // 0)},
+            scale: (.scale // 1.0),
+            current_mode: ((.modes // []) | map(select(.current == true))[0] // {width: 1920, height: 1080, refresh: 60}),
+            modes: [(.modes // [])[] | {width: .width, height: .height, refresh: (.refresh | floor)}]
+        }]' 2>/dev/null || echo "[]"
+    else
+        echo "[]"
+    fi
 }
 
 # ── 1. Salida JSON para Waybar ──────────────────────────────────
@@ -28,7 +39,7 @@ waybar_status() {
     data=$(get_outputs_json)
 
     if [ "$data" = "[]" ] || [ -z "$data" ]; then
-        echo '{"text":"󰍹","tooltip":"No se detectaron salidas de Sway","class":"offline","alt":"offline"}'
+        echo '{"text":"󰍹","tooltip":"No se detectaron pantallas","class":"offline","alt":"offline"}'
         return
     fi
 
@@ -74,7 +85,7 @@ waybar_status() {
 
     while IFS= read -r line; do
         tooltip+=$'\n'"$line"
-    done < <(echo "$data" | jq -r '.[] | "• \(.name) [\(if .active then "ACTIVO" else "INACTIVO" end)]\n  Res: \(.current_mode.width // 0)x\(.current_mode.height // 0) @ \((.current_mode.refresh // 0) / 1000 | floor)Hz\n  Escala: \(.scale // 1.0) | Pos: (\(.rect.x),\(.rect.y))"')
+    done < <(echo "$data" | jq -r '.[] | "• \(.name) [\(if .active then "ACTIVO" else "INACTIVO" end)]\n  Res: \(.current_mode.width // 0)x\(.current_mode.height // 0) @ \(if (.current_mode.refresh // 0) > 1000 then (.current_mode.refresh / 1000) else .current_mode.refresh end | floor)Hz\n  Escala: \(.scale // 1.0) | Pos: (\(.rect.x),\(.rect.y))"')
 
     tooltip+=$'\n'"───────────────────────────────"
     tooltip+=$'\n'"󰌌 Clic izquierdo: Menú de opciones"
@@ -99,19 +110,18 @@ auto_detect() {
         local name
         name=$(echo "$data" | jq -r '.[0].name // empty')
         if [ -n "$name" ]; then
-            swaymsg output "$name" enable pos 0 0
+            wlr-randr --output "$name" --on --pos 0,0 2>/dev/null || true
             notify "Monitor Único" "Configurado $name como pantalla principal"
         fi
     else
-        # Primer monitor (generalmente integrado eDP-1)
         local out1 out2
         out1=$(echo "$data" | jq -r '.[0].name')
         out2=$(echo "$data" | jq -r '.[1].name')
         local w1
         w1=$(echo "$data" | jq -r '.[0].current_mode.width // 1920')
 
-        swaymsg output "$out1" enable pos 0 0
-        swaymsg output "$out2" enable pos "$w1" 0
+        wlr-randr --output "$out1" --on --pos 0,0 2>/dev/null || true
+        wlr-randr --output "$out2" --on --pos "$w1",0 2>/dev/null || true
         notify "Dual Monitor Activado" "$out1 (0,0) + $out2 ($w1,0)"
     fi
 
@@ -137,8 +147,8 @@ action_extend_right() {
     fi
 
     w1=$(echo "$data" | jq -r '.[0].current_mode.width // 1920')
-    swaymsg output "$out1" enable pos 0 0
-    swaymsg output "$out2" enable pos "$w1" 0
+    wlr-randr --output "$out1" --on --pos 0,0 2>/dev/null || true
+    wlr-randr --output "$out2" --on --pos "$w1",0 2>/dev/null || true
     action_save_config
     notify "Pantallas Extendidas" "Secundaria ($out2) a la derecha de $out1"
 }
@@ -156,8 +166,8 @@ action_extend_left() {
     fi
 
     w2=$(echo "$data" | jq -r '.[1].current_mode.width // 1920')
-    swaymsg output "$out2" enable pos 0 0
-    swaymsg output "$out1" enable pos "$w2" 0
+    wlr-randr --output "$out2" --on --pos 0,0 2>/dev/null || true
+    wlr-randr --output "$out1" --on --pos "$w2",0 2>/dev/null || true
     action_save_config
     notify "Pantallas Extendidas" "Secundaria ($out2) a la izquierda de $out1"
 }
@@ -174,8 +184,8 @@ action_mirror() {
         return
     fi
 
-    swaymsg output "$out1" enable pos 0 0
-    swaymsg output "$out2" enable pos 0 0
+    wlr-randr --output "$out1" --on --pos 0,0 2>/dev/null || true
+    wlr-randr --output "$out2" --on --pos 0,0 2>/dev/null || true
     action_save_config
     notify "Modo Espejo" "Pantallas duplicadas en posición 0,0"
 }
@@ -187,9 +197,9 @@ action_only_primary() {
     out1=$(echo "$data" | jq -r '.[0].name')
     out2=$(echo "$data" | jq -r '.[1].name // empty')
 
-    swaymsg output "$out1" enable pos 0 0
+    wlr-randr --output "$out1" --on --pos 0,0 2>/dev/null || true
     if [ -n "$out2" ]; then
-        swaymsg output "$out2" disable
+        wlr-randr --output "$out2" --off 2>/dev/null || true
     fi
     action_save_config
     notify "Solo Pantalla Principal" "Activada: $out1"
@@ -207,8 +217,8 @@ action_only_secondary() {
         return
     fi
 
-    swaymsg output "$out2" enable pos 0 0
-    swaymsg output "$out1" disable
+    wlr-randr --output "$out2" --on --pos 0,0 2>/dev/null || true
+    wlr-randr --output "$out1" --off 2>/dev/null || true
     action_save_config
     notify "Solo Pantalla Secundaria" "Activada: $out2 (Principal desactivada)"
 }
@@ -231,7 +241,7 @@ action_resolution_menu() {
 
     # Listar resoluciones disponibles
     local modes
-    modes=$(echo "$data" | jq -r --arg name "$chosen_out" '.[] | select(.name == $name) | .modes[] | "\(.width)x\(.height) @ \((.refresh / 1000 | floor))Hz"' | sort -u -r -V)
+    modes=$(echo "$data" | jq -r --arg name "$chosen_out" '.[] | select(.name == $name) | .modes[] | "\(.width)x\(.height) @ \(.refresh)Hz"' | sort -u -r -V)
 
     if [ -z "$modes" ]; then
         notify "Aviso" "No se pudieron obtener resoluciones automáticas para $chosen_out"
@@ -250,9 +260,9 @@ action_resolution_menu() {
 
     if [ -n "$res" ]; then
         if [ -n "$hz" ] && [ "$hz" -gt 0 ] 2>/dev/null; then
-            swaymsg output "$chosen_out" mode "${res}@${hz}Hz" || swaymsg output "$chosen_out" mode "$res"
+            wlr-randr --output "$chosen_out" --mode "${res}@${hz}Hz" 2>/dev/null || wlr-randr --output "$chosen_out" --mode "$res" 2>/dev/null || true
         else
-            swaymsg output "$chosen_out" mode "$res"
+            wlr-randr --output "$chosen_out" --mode "$res" 2>/dev/null || true
         fi
         action_save_config
         notify "Resolución Guardada" "$chosen_out: $chosen_mode (Permanente)"
@@ -279,7 +289,7 @@ action_scale_menu() {
     local val
     val=$(echo "$chosen_scale" | awk '{print $1}')
     if [ -n "$val" ]; then
-        swaymsg output "$chosen_out" scale "$val"
+        wlr-randr --output "$chosen_out" --scale "$val" 2>/dev/null || true
         action_save_config
         notify "Escala Guardada" "$chosen_out: Escala fijada en $val (Permanente)"
     fi
@@ -288,30 +298,36 @@ action_scale_menu() {
 action_save_config() {
     local data
     data=$(get_outputs_json)
-    mkdir -p "$(dirname "$OUTPUTS_CONF")"
+    mkdir -p "$(dirname "$MANGO_MONITOR_CONF")"
 
+    # Generar configuración para MangoWM
     {
         echo "# ╔══════════════════════════════════════════════════════════════╗"
-        echo "# ║        Configuración Guardada de Monitores                   ║"
+        echo "# ║        Configuración Guardada de Monitores (MangoWM)         ║"
         echo "# ║        Generado automáticamente por monitor-manager.sh       ║"
         echo "# ╚══════════════════════════════════════════════════════════════╝"
         echo ""
-    } > "$OUTPUTS_CONF"
+    } > "$MANGO_MONITOR_CONF"
 
     while IFS= read -r line; do
-        [ -n "$line" ] && echo "$line" >> "$OUTPUTS_CONF"
-    done < <(echo "$data" | jq -r '.[] | if .active then "output \(.name) enable mode \(.current_mode.width // 1920)x\(.current_mode.height // 1080)@\((.current_mode.refresh // 60000) / 1000 | floor)Hz pos \(.rect.x) \(.rect.y) scale \(.scale) adaptive_sync on allow_tearing yes max_render_time 1" else "output \(.name) disable" end')
+        [ -n "$line" ] && echo "$line" >> "$MANGO_MONITOR_CONF"
+    done < <(echo "$data" | jq -r '.[] | if .active then "monitorrule=name:\(.name),width:\(.current_mode.width // 1920),height:\(.current_mode.height // 1080),refresh:\(if (.current_mode.refresh // 60) > 1000 then (.current_mode.refresh / 1000) else .current_mode.refresh end | floor),x:\(.rect.x),y:\(.rect.y),scale:\((.scale // 1) | tostring | sub("\\.0+$"; "")),vrr:1" else empty end')
 
     # Sincronizar con repo si existe
-    local repo_outputs="$HOME/Documentos/Github/dotfileSway/config/sway/outputs.conf"
-    if [ -f "$repo_outputs" ] && [ "$OUTPUTS_CONF" != "$repo_outputs" ]; then
-        cp -f "$OUTPUTS_CONF" "$repo_outputs" 2>/dev/null || true
+    local repo_mango_mon="$HOME/Documentos/Github/dotfileSway/config/mango/monitor.conf"
+    if [ -f "$repo_mango_mon" ] && [ "$MANGO_MONITOR_CONF" != "$repo_mango_mon" ]; then
+        cp -f "$MANGO_MONITOR_CONF" "$repo_mango_mon" 2>/dev/null || true
     fi
+
+    # Recargar compositor en vivo
+    action_reload_wm
 }
 
-action_reload_sway() {
-    swaymsg reload
-    notify "Sway Recargado" "Se recargó la configuración de Sway y monitores"
+action_reload_wm() {
+    if command -v mmsg &>/dev/null; then
+        mmsg dispatch reload_config 2>/dev/null || true
+        notify "MangoWM Recargado" "Se recargó la configuración de monitores de MangoWM"
+    fi
 }
 
 # ── 3. Menú Principal Wofi ──────────────────────────────────────
@@ -335,7 +351,7 @@ menu() {
     opciones+="󰑮  Configurar Resolución y Refresco\n"
     opciones+="󰹑  Configurar Escala (Scaling)\n"
     opciones+="💾  Guardar Configuración Actual\n"
-    opciones+="🔄  Recargar Sway"
+    opciones+="🔄  Recargar MangoWM"
 
     local seleccion
     seleccion=$(echo -e "$opciones" | wofi --dmenu \
@@ -374,8 +390,8 @@ menu() {
         *"Guardar Configuración"*)
             action_save_config
             ;;
-        *"Recargar Sway"*)
-            action_reload_sway
+        *"Recargar MangoWM"*)
+            action_reload_wm
             ;;
     esac
 }
@@ -395,7 +411,7 @@ case "$1" in
         action_save_config
         ;;
     reload)
-        action_reload_sway
+        action_reload_wm
         ;;
     *)
         menu

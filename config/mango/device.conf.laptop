@@ -1,0 +1,18 @@
+# ╔══════════════════════════════════════════════════════════════╗
+# ║        Configuración para Laptop / Notebook (MangoWM)        ║
+# ║        Touchpad, Gestos, Brillo, Batería                     ║
+# ╚══════════════════════════════════════════════════════════════╝
+
+# ── Touchpad habilitado con gestos naturales ────────────────────
+disable_trackpad=0
+tap_to_click=1
+tap_and_drag=1
+drag_lock=1
+trackpad_natural_scrolling=1
+trackpad_disable_while_typing=1
+
+# ── Gestos táctiles Touchpad (3 y 4 dedos) ──────────────────────
+gesturebind=none,left,3,viewtoleft_have_client
+gesturebind=none,right,3,viewtoright_have_client
+gesturebind=none,up,4,togglefloating
+gesturebind=none,down,4,focusmodetoggle

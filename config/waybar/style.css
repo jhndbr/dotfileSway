@@ -64,11 +64,12 @@
    ══════════════════════════════════════════════════════════════ */
 
 window#waybar {
-    background: @bg_bar;
+    background: alpha(@mat_surface, 0.88);
     border: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 0;
     box-shadow: none;
-    transition: background-color 0.2s cubic-bezier(0.2, 0, 0, 1);
+    transition: background-color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 window#waybar.hidden {
@@ -83,13 +84,13 @@ tooltip {
     background: @mat_surface_container_highest;
     border: none;
     border-radius: 8px;
-    padding: 6px 10px;
+    padding: 5px 8px;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.40);
 }
 
 tooltip label {
     color: @text_primary;
-    font-size: 10.5px;
+    font-size: 10px;
 }
 
 /* ══════════════════════════════════════════════════════════════
@@ -99,8 +100,8 @@ tooltip label {
 
 #custom-menu,
 #workspaces,
+#group-workspaces,
 #tray,
-#clock,
 #weather,
 #quicksettings,
 #controls,
@@ -109,19 +110,19 @@ tooltip label {
     background: @bg_pill;
     border: none;
     border-radius: 999px;
-    padding: 0 9px;
-    margin: 3px 2.5px;
-    min-height: 22px;
+    padding: 0 7px;
+    margin: 2px 2px;
+    min-height: 20px;
     color: @text_primary;
     box-shadow: none;
-    transition: background 0.18s cubic-bezier(0.2, 0, 0, 1), color 0.18s ease;
+    transition: background 0.18s cubic-bezier(0.16, 1, 0.3, 1), color 0.18s ease;
 }
 
 /* Cambio tonal fluido en hover (Elevación Nivel 2) */
 #custom-menu:hover,
 #workspaces:hover,
+#group-workspaces:hover,
 #tray:hover,
-#clock:hover,
 #weather:hover,
 #quicksettings:hover,
 #controls:hover,
@@ -192,15 +193,16 @@ tooltip label {
 /* Lanzador de aplicaciones */
 #custom-menu {
     font-family: "JetBrainsMono Nerd Font", "Symbols Nerd Font", monospace;
-    font-size: 13px;
+    font-size: 12px;
     color: @col_primary;
     background: @bg_pill;
     border: none;
     border-radius: 999px;
     padding: 0 2px 0 0;
-    margin: 3px 2.5px 3px 4px;
-    min-width: 22px;
-    min-height: 22px;
+    margin: 2px 2px 2px 4px;
+    min-width: 20px;
+    min-height: 20px;
+    box-shadow: none;
 }
 
 #custom-menu:hover {
@@ -213,7 +215,75 @@ tooltip label {
     padding: 0;
 }
 
-/* Espacios de trabajo (Workspaces) */
+/* ══════════════════════════════════════════════════════════════
+   ║  ESPACIOS DE TRABAJO (MangoWM Group & Custom WS Buttons)    ║
+   ══════════════════════════════════════════════════════════════ */
+
+#group-workspaces {
+    background: @bg_pill;
+    border: none;
+    border-radius: 999px;
+    padding: 0 3px;
+    margin: 2px 2px;
+    min-height: 20px;
+    box-shadow: none;
+}
+
+#custom-ws1, #custom-ws2, #custom-ws3, #custom-ws4, #custom-ws5,
+#custom-ws6, #custom-ws7, #custom-ws8, #custom-ws9 {
+    color: @text_secondary;
+    padding: 0 6px;
+    margin: 1.5px 1px;
+    border-radius: 999px;
+    border: none;
+    background: transparent;
+    min-width: 16px;
+    min-height: 17px;
+    font-size: 10px;
+    font-weight: 500;
+    box-shadow: none;
+    transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+#custom-ws1:hover, #custom-ws2:hover, #custom-ws3:hover, #custom-ws4:hover, #custom-ws5:hover,
+#custom-ws6:hover, #custom-ws7:hover, #custom-ws8:hover, #custom-ws9:hover {
+    background: alpha(@mat_on_surface, 0.10);
+    color: @text_primary;
+}
+
+/* Espacios vacíos: Texto tenue y limpio */
+#custom-ws1.empty, #custom-ws2.empty, #custom-ws3.empty, #custom-ws4.empty, #custom-ws5.empty,
+#custom-ws6.empty, #custom-ws7.empty, #custom-ws8.empty, #custom-ws9.empty {
+    color: @text_muted;
+}
+
+/* Espacios ocupados (con aplicaciones abiertas): Texto principal nítido */
+#custom-ws1.occupied, #custom-ws2.occupied, #custom-ws3.occupied, #custom-ws4.occupied, #custom-ws5.occupied,
+#custom-ws6.occupied, #custom-ws7.occupied, #custom-ws8.occupied, #custom-ws9.occupied {
+    color: @text_primary;
+    font-weight: 500;
+}
+
+/* Espacio Activo: Destacado con color primario vibrante y sin bordes iluminados */
+#custom-ws1.active, #custom-ws2.active, #custom-ws3.active, #custom-ws4.active, #custom-ws5.active,
+#custom-ws6.active, #custom-ws7.active, #custom-ws8.active, #custom-ws9.active {
+    background: @col_primary;
+    color: @col_on_primary;
+    font-weight: 700;
+    border: none;
+    box-shadow: none;
+}
+
+/* Espacio urgente */
+#custom-ws1.urgent, #custom-ws2.urgent, #custom-ws3.urgent, #custom-ws4.urgent, #custom-ws5.urgent,
+#custom-ws6.urgent, #custom-ws7.urgent, #custom-ws8.urgent, #custom-ws9.urgent {
+    background: @col_error;
+    color: @col_on_error;
+    border: none;
+    box-shadow: none;
+}
+
+/* Compatibilidad heredada para ext/workspaces si está activo */
 #workspaces {
     padding: 0 3px;
     border: none;
@@ -222,77 +292,76 @@ tooltip label {
 
 #workspaces button {
     color: @text_secondary;
-    padding: 0 8px;
-    margin: 2px 1.5px;
+    padding: 0 6px;
+    margin: 1.5px 1px;
     border-radius: 999px;
     border: none;
     background: transparent;
-    min-width: 20px;
-    min-height: 18px;
-    font-size: 10.5px;
+    min-width: 16px;
+    min-height: 17px;
+    font-size: 10px;
     font-weight: 500;
-    box-shadow: none;
-    transition: background 0.15s ease, color 0.15s ease;
+    transition: all 0.15s ease;
 }
 
-#workspaces button:hover {
-    background: alpha(@mat_on_surface, 0.10);
-    color: @text_primary;
-}
-
-/* Workspace enfocado: Tono de acento dinámico Material */
-#workspaces button.focused {
-    background: @bg_pill_active;
-    color: @col_on_primary_container;
-    font-weight: 600;
+#workspaces button.focused,
+#workspaces button.active {
+    background: @col_primary;
+    color: @col_on_primary;
+    font-weight: 700;
     border: none;
     box-shadow: none;
-}
-
-#workspaces button.urgent {
-    background: @col_error_container;
-    color: @col_on_error_container;
-    border: none;
-}
-
-/* Título de la ventana activa en foco (Dinámico con Máximo Contraste Matugen) */
-#window {
-    background: @col_tertiary_container;
-    border: none;
-    border-radius: 999px;
-    color: @col_on_tertiary_container;
-    font-size: 10.5px;
-    font-weight: 600;
-    padding: 0 11px;
-    margin: 3px 2.5px;
-    min-height: 22px;
-    box-shadow: none;
-    transition: background 0.18s cubic-bezier(0.2, 0, 0, 1), color 0.18s ease;
-}
-
-#window:hover {
-    background: alpha(@col_tertiary_container, 0.85);
-    color: @col_on_tertiary_container;
 }
 
 /* ══════════════════════════════════════════════════════════════
-   ║  CENTRO — Clima · Reloj                                     ║
+   ║  VENTANA ACTIVA (Título dinámico / macOS style)             ║
+   ══════════════════════════════════════════════════════════════ */
+
+#custom-window,
+#window {
+    background: @bg_pill;
+    border: none;
+    border-radius: 999px;
+    color: @text_primary;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 0 10px;
+    margin: 2px 2px;
+    min-height: 20px;
+    box-shadow: none;
+    transition: background 0.18s cubic-bezier(0.16, 1, 0.3, 1), color 0.18s ease;
+}
+
+#custom-window:hover,
+#window:hover {
+    background: @bg_pill_hover;
+    color: @text_primary;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   ║  CENTRO — Clima · Reloj con Color Dinámico (macOS Style)    ║
    ══════════════════════════════════════════════════════════════ */
 
 #clock {
-    font-weight: 500;
+    background: alpha(@col_primary, 0.18);
+    color: @col_primary;
     font-size: 10.5px;
+    font-weight: 700;
     letter-spacing: 0.2px;
     border-radius: 999px;
-    padding: 0 11px;
-    color: @text_primary;
-    background: @bg_pill;
     border: none;
+    padding: 0 12px;
+    margin: 2px 2px;
+    min-height: 20px;
+    box-shadow: none;
+    transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 #clock:hover {
-    background: @bg_pill_hover;
-    color: @text_primary;
+    background: alpha(@col_primary, 0.28);
+    color: @col_primary;
+    border: none;
+    box-shadow: none;
 }
 
 /* ══════════════════════════════════════════════════════════════
@@ -302,7 +371,7 @@ tooltip label {
 /* Reproductor multimedia & Visualizador CAVA Fusionados (Píldora Única Compacta) */
 #custom-media {
     font-family: "JetBrainsMono Nerd Font", monospace;
-    font-size: 10.5px;
+    font-size: 10px;
     font-weight: 500;
     border-top-left-radius: 999px;
     border-bottom-left-radius: 999px;
@@ -310,10 +379,12 @@ tooltip label {
     border-bottom-right-radius: 0;
     border: none;
     padding: 0 4px 0 7px;
-    margin: 3px 0 3px 2.5px;
-    min-width: 120px;
+    margin: 2px 0 2px 2px;
+    min-width: 100px;
+    min-height: 20px;
     color: @text_secondary;
     background: @bg_pill;
+    box-shadow: none;
     transition: background 0.18s cubic-bezier(0.2, 0, 0, 1), color 0.18s ease;
 }
 
@@ -343,7 +414,7 @@ tooltip label {
 /* Visualizador CAVA — Parte derecha de la píldora fusionada (Fondo y Ancho Sincronizados) */
 #custom-cava {
     font-family: "JetBrainsMono Nerd Font", monospace;
-    font-size: 11px;
+    font-size: 10px;
     color: @text_muted;
     background: @bg_pill;
     border: none;
@@ -351,10 +422,12 @@ tooltip label {
     border-bottom-left-radius: 0;
     border-top-right-radius: 999px;
     border-bottom-right-radius: 999px;
-    padding: 0 8px 0 0;
-    margin: 3px 2.5px 3px 0;
-    min-width: 42px;
+    padding: 0 7px 0 0;
+    margin: 2px 2px 2px 0;
+    min-width: 38px;
+    min-height: 20px;
     letter-spacing: 0.5px;
+    box-shadow: none;
     transition: background 0.18s cubic-bezier(0.2, 0, 0, 1), color 0.18s ease;
 }
 
@@ -582,15 +655,16 @@ tooltip label {
 /* Botón de apagado / Sesión */
 #custom-power {
     font-family: "JetBrainsMono Nerd Font", "Symbols Nerd Font", monospace;
-    font-size: 12px;
+    font-size: 11.5px;
     padding: 0 1px 0 0;
     color: @text_muted;
     background: @bg_pill;
     border: none;
     border-radius: 999px;
-    margin: 3px 4px 3px 2.5px;
-    min-width: 22px;
-    min-height: 22px;
+    margin: 2px 4px 2px 2px;
+    min-width: 20px;
+    min-height: 20px;
+    box-shadow: none;
 }
 
 #custom-power label {

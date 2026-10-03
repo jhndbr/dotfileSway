@@ -37,11 +37,18 @@ case "$SELECCION" in
         grim "$FILE" && wl-copy < "$FILE" && notify-send -i "$FILE" "📸 Screenshot" "Pantalla completa guardada y copiada al portapapeles."
         ;;
     "Ventana activa")
-        GEOMETRY=$(swaymsg -t get_tree | jq -r '.. | select(.focused?) | .rect | "\(.x),\(.y) \(.width)x\(.height)"')
+        GEOMETRY=""
+        if command -v mmsg &>/dev/null; then
+            GEOMETRY=$(mmsg get focusing-client 2>/dev/null | jq -r 'if .x != null then "\(.x),\(.y) \(.width)x\(.height)" else empty end')
+        fi
+        if [ -z "$GEOMETRY" ] || [ "$GEOMETRY" = "null" ]; then
+            GEOMETRY=$(slurp -d -b 1c1c1eaa -c ffffffff -s ffffff20 -w 1 2>/dev/null || true)
+        fi
         if [ -n "$GEOMETRY" ] && [ "$GEOMETRY" != "null" ]; then
             grim -g "$GEOMETRY" "$FILE" && wl-copy < "$FILE" && notify-send -i "$FILE" "📸 Screenshot" "Ventana activa guardada y copiada al portapapeles."
         fi
         ;;
+
     "Área con delay (3s)")
         notify-send "📸 Screenshot" "Selecciona el área en 3 segundos..."
         sleep 3

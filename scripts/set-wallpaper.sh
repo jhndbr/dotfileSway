@@ -143,9 +143,10 @@ if command -v magick &>/dev/null; then
     (magick "$WALLPAPER_INPUT" -filter Gaussian -resize 25% -define filter:sigma=2.5 -resize 400% "$BLUR_WALLPAPER" 2>/dev/null || true) &
 fi
 
-if command -v swaymsg &>/dev/null && pgrep -x sway &>/dev/null; then
-    swaymsg "output * bg '$WALLPAPER_INPUT' fill" &
-fi
+pkill -x swaybg 2>/dev/null || true
+swaybg -i "$WALLPAPER_INPUT" -m fill >/dev/null 2>&1 &
+
+
 
 echo "🎨 Generando paleta dinámica (Modo: $CURRENT_MODE | Esquema: $CURRENT_SCHEME) desde: $WALLPAPER_INPUT..."
 
@@ -261,9 +262,11 @@ output_path = '$HOME/.config/foot/dank-colors.ini'
 input_path = '$TEMPLATES_DIR/swaylock.conf'
 output_path = '$HOME/.config/swaylock/config'
 
-[templates.sway]
-input_path = '$TEMPLATES_DIR/sway-colors'
-output_path = '$HOME/.config/sway/dank-colors'
+
+[templates.mango]
+input_path = '$TEMPLATES_DIR/mango-colors.conf'
+output_path = '$HOME/.config/mango/dank-colors'
+
 
 [templates.dunst]
 input_path = '$TEMPLATES_DIR/dunstrc'
@@ -622,29 +625,29 @@ sed -i 's/^style=.*/style=Fusion/' "$HOME/.config/qt6ct/qt6ct.conf" 2>/dev/null 
 sed -i "s/^icon_theme=.*/icon_theme=$QT_ICON_THEME/" "$HOME/.config/qt5ct/qt5ct.conf" 2>/dev/null || true
 sed -i "s/^icon_theme=.*/icon_theme=$QT_ICON_THEME/" "$HOME/.config/qt6ct/qt6ct.conf" 2>/dev/null || true
 
-# ── 8. Recargar componentes del escritorio, Sway y Foot ───────────────
-pkill -SIGUSR2 waybar 2>/dev/null || true
+pkill -x waybar 2>/dev/null || true
+(sleep 0.2; waybar -c "$HOME/.config/waybar/config" -s "$HOME/.config/waybar/style.css" >/dev/null 2>&1 &)
 pkill -SIGUSR1 foot 2>/dev/null || true
 pkill -SIGUSR1 cava 2>/dev/null || true
 pkill -f waybar-cava.py 2>/dev/null || true
-if command -v swaymsg &>/dev/null && pgrep -x sway &>/dev/null; then
-    swaymsg reload 2>/dev/null || true
+if command -v mmsg &>/dev/null && (pgrep -x mango &>/dev/null || [ -n "$MANGO_INSTANCE_SIGNATURE" ]); then
+    mmsg dispatch reload_config 2>/dev/null || true
 fi
 if pgrep -x dunst &>/dev/null; then
     killall dunst 2>/dev/null || true
     dunst &>/dev/null &
 fi
 # Reiniciar swayosd-server asegurando que el proceso anterior libere el socket antes de levantar el nuevo
-if command -v swaymsg &>/dev/null && pgrep -x sway &>/dev/null; then
-    if pgrep -x swayosd-server &>/dev/null; then
-        pkill -x swayosd-server 2>/dev/null || true
-        for _ in {1..20}; do
-            pgrep -x swayosd-server &>/dev/null || break
-            sleep 0.05
-        done
-    fi
-    swaymsg "exec swayosd-server --style '$HOME/.config/swayosd/style.css'" 2>/dev/null || true
+if pgrep -x swayosd-server &>/dev/null; then
+    pkill -x swayosd-server 2>/dev/null || true
+    for _ in {1..20}; do
+        pgrep -x swayosd-server &>/dev/null || break
+        sleep 0.05
+    done
 fi
+swayosd-server --style "$HOME/.config/swayosd/style.css" >/dev/null 2>&1 &
+
+
 
 # ── 9. Sincronizar copias en el repositorio de dotfiles ──────────
 DOTFILES_DIR=""
@@ -655,7 +658,7 @@ elif [ -d "$HOME/Documentos/Github/dotfileSway/config" ]; then
 fi
 
 if [ -n "$DOTFILES_DIR" ] && [ -d "$DOTFILES_DIR" ]; then
-    mkdir -p "$DOTFILES_DIR/config/gtk-3.0" "$DOTFILES_DIR/config/gtk-4.0" "$DOTFILES_DIR/config/zed/themes" "$DOTFILES_DIR/config/foot" "$DOTFILES_DIR/config/wofi" "$DOTFILES_DIR/scripts" "$DOTFILES_DIR/config/qt5ct" "$DOTFILES_DIR/config/qt6ct"
+    mkdir -p "$DOTFILES_DIR/config/gtk-3.0" "$DOTFILES_DIR/config/gtk-4.0" "$DOTFILES_DIR/config/zed/themes" "$DOTFILES_DIR/config/foot" "$DOTFILES_DIR/config/wofi" "$DOTFILES_DIR/scripts" "$DOTFILES_DIR/config/qt5ct" "$DOTFILES_DIR/config/qt6ct" "$DOTFILES_DIR/config/mango"
     cp -f "$HOME/.config/gtk-3.0/dank-colors.css" "$DOTFILES_DIR/config/gtk-3.0/dank-colors.css" 2>/dev/null || true
     cp -f "$HOME/.config/gtk-4.0/dank-colors.css" "$DOTFILES_DIR/config/gtk-4.0/dank-colors.css" 2>/dev/null || true
     cp -f "$HOME/.config/gtk-3.0/settings.ini" "$DOTFILES_DIR/config/gtk-3.0/settings.ini" 2>/dev/null || true
@@ -665,6 +668,7 @@ if [ -n "$DOTFILES_DIR" ] && [ -d "$DOTFILES_DIR" ]; then
     cp -f "$HOME/.config/zed/themes/dank-zed-theme.json" "$DOTFILES_DIR/config/zed/themes/dank-zed-theme.json" 2>/dev/null || true
     cp -f "$HOME/.config/foot/foot.ini" "$DOTFILES_DIR/config/foot/foot.ini" 2>/dev/null || true
     cp -f "$HOME/.config/wofi/style.css" "$DOTFILES_DIR/config/wofi/style.css" 2>/dev/null || true
+    cp -f "$HOME/.config/mango/dank-colors" "$DOTFILES_DIR/config/mango/dank-colors" 2>/dev/null || true
 fi
 
 # ── 10. Refrescar GTK, Tipografía e Iconos en tiempo real vía D-Bus ─

@@ -1,14 +1,14 @@
 # ╔══════════════════════════════════════════════════════════════╗
-# ║              Variables de Entorno — Wayland/Sway             ║
+# ║              Variables de Entorno — Wayland / MangoWM        ║
 # ╚══════════════════════════════════════════════════════════════╝
 
 # ── Limpieza de variables residuales ─────────────────────────────
 unset ZDOTDIR 2>/dev/null || true
 
-# ── Wayland / Sway ──────────────────────────────────────────────
+# ── Sesión Wayland (MangoWM Exclusivo) ───────────────────────────
 export XDG_SESSION_TYPE=wayland
-export XDG_SESSION_DESKTOP=sway
-export XDG_CURRENT_DESKTOP=sway
+export XDG_SESSION_DESKTOP=mango
+export XDG_CURRENT_DESKTOP="mango:wlroots"
 
 # ── Qt ──────────────────────────────────────────────────────────
 export QT_QPA_PLATFORM=wayland
@@ -37,7 +37,10 @@ typeset -U path PATH
 path=("$HOME/.local/bin" "$HOME/.local/share/JetBrains/Toolbox/scripts" $path)
 export PATH
 
-# ── Autostart Sway en TTY1 ──────────────────────────────────────
+# ── Autostart de MangoWM en TTY1 ─────────────────────────────────
 if [ -z "$WAYLAND_DISPLAY" ] && [ -z "$DISPLAY" ] && { [ "$XDG_VTNR" = "1" ] || [ "$(tty 2>/dev/null)" = "/dev/tty1" ]; }; then
-    exec sway
+    exec mango
 fi
+
+
+

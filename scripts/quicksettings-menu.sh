@@ -70,18 +70,21 @@ fi
 
 # Distribución de Teclado
 KB_LAYOUT="es"
-if [ -f "$HOME/.config/sway/inputs.conf" ]; then
-    if grep -q 'xkb_layout "us,es"' "$HOME/.config/sway/inputs.conf"; then
-        KB_LAYOUT="us+es"
-    elif grep -q 'xkb_variant "intl"' "$HOME/.config/sway/inputs.conf"; then
+if command -v ~/.local/bin/keyboard-layout.sh &>/dev/null; then
+    KB_LAYOUT=$(~/.local/bin/keyboard-layout.sh current 2>/dev/null || echo "es")
+elif [ -f "$HOME/.config/mango/inputs.conf" ]; then
+    if grep -q 'xkb_rules_layout=us,es' "$HOME/.config/mango/inputs.conf"; then
+        KB_LAYOUT="dual"
+    elif grep -q 'xkb_rules_variant=intl' "$HOME/.config/mango/inputs.conf"; then
         KB_LAYOUT="us-intl"
-    elif grep -q 'xkb_layout "us"' "$HOME/.config/sway/inputs.conf"; then
+    elif grep -q 'xkb_rules_layout=us' "$HOME/.config/mango/inputs.conf"; then
         KB_LAYOUT="us"
-    elif grep -q 'xkb_layout "es"' "$HOME/.config/sway/inputs.conf"; then
+    elif grep -q 'xkb_rules_layout=es' "$HOME/.config/mango/inputs.conf"; then
         KB_LAYOUT="es"
     fi
 fi
 ITEM_KB=$(format_item "⌨️" "Distribución Teclado" "$KB_LAYOUT")
+
 
 # Modo de Tema y Esquema de Color (Matugen)
 THEME_CONF="$HOME/.config/matugen/theme.conf"

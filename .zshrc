@@ -181,11 +181,14 @@ alias tidal='cd ~/Documentos/Github/tuidal && uv run tidal_tui'
 alias chatia='cd ~/Documentos/Github/chatia && uv run chatia'
 alias anti='~/Aplicaciones/Antigravity-x64/antigravity'
 
-# Sway
-alias sway-reload='swaymsg reload'
-alias sway-log='journalctl --user -b -u sway'
-alias sway-error='cat ~/.sway_error.log | grep -E "(ERROR|WARN)" | tail -n 40'
-alias sway-log-full='cat ~/.sway_error.log'
+# MangoWM
+alias mango-reload='mmsg dispatch reload_config'
+alias mango-check='mango -c ~/.config/mango/config.conf -p'
+alias mango-tags='mmsg get all-tags'
+alias mango-clients='mmsg get all-clients'
+alias mango-monitors='mmsg get all-monitors'
+alias mango-focus='mmsg get focusing-client'
+
 
 # Limpieza
 alias cleanup='sudo pacman -Rns $(pacman -Qdtq) 2>/dev/null; yay -Sc --noconfirm 2>/dev/null'

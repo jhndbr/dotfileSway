@@ -1,7 +1,7 @@
 {
     "layer": "top",
     "position": "top",
-    "height": 38,
+    "height": 28,
     "spacing": 0,
     "margin-top": 0,
     "margin-left": 0,
@@ -11,26 +11,25 @@
 
     "modules-left": [
         "custom/menu",
-        "sway/workspaces",
-        "sway/mode",
-        "sway/scratchpad",
-        "sway/window"
+        "group/workspaces",
+        "custom/window"
     ],
 
     "modules-center": [
+        "group/weather",
         "clock"
     ],
 
     "modules-right": [
         "custom/media",
+        "custom/cava",
         "tray",
-        "custom/quicksettings",
         "group/controls",
         "group/hardware",
         "custom/power"
     ],
 
-    /* ── Menú de Inicio Minimalista (Estilo Apple / Linux) ───────── */
+    /* ── Menú de Inicio Minimalista ──────────────────────────────── */
     "custom/menu": {
         "format": "󰣇",
         "tooltip-format": "Lanzador de Aplicaciones (Click Izq: Wofi | Click Der: Menú CLI)",
@@ -39,131 +38,155 @@
         "tooltip": true
     },
 
-    /* ── Espacios de Trabajo con Iconos de Aplicaciones ─────────── */
-    "sway/workspaces": {
-        "disable-scroll": false,
-        "all-outputs": true,
-        "format": "{name}  {windows}",
-        "format-window-separator": " ",
-        "window-rewrite-default": "󰖯",
-        "window-rewrite": {
-            "class<.*brave.*>": "󰊯",
-            "class<.*chrome.*>": "󰊯",
-            "class<.*chromium.*>": "󰊯",
-            "class<.*firefox.*>": "󰈹",
-            "class<.*zen.*>": "󰈹",
-            "class<.*ghostty.*>": "󰞷",
-            "class<.*foot.*>": "󰞷",
-            "class<.*kitty.*>": "󰄛",
-            "class<.*alacritty.*>": "󰞷",
-            "class<.*wezterm.*>": "󰞷",
-            "class<.*code.*>": "󰨞",
-            "class<.*vscodium.*>": "󰨞",
-            "class<.*zed.*>": "󰅩",
-            "class<.*jetbrains.*|.*idea.*>": "󰅩",
-            "class<.*vim.*|.*nvim.*>": "",
-            "class<.*openplc.*>": "󰑣",
-            "class<.*antigravity.*>": "󰧑",
-            "class<.*thunar.*>": "󰝰",
-            "class<.*nautilus.*>": "󰝰",
-            "class<.*dolphin.*>": "󰝰",
-            "class<.*spotify.*>": "󰓇",
-            "class<.*strawberry.*>": "󰎆",
-            "class<.*youtube.*music.*>": "󰐃",
-            "class<.*discord.*>": "󰙯",
-            "class<.*vesktop.*>": "󰙯",
-            "class<.*telegram.*>": "󰒓",
-            "class<.*thunderbird.*>": "󰇮",
-            "class<.*tuba.*>": "󰈹",
-            "class<.*pavucontrol.*>": "󰕾",
-            "class<.*blueman.*>": "󰂯",
-            "class<.*mpv.*>": "󰎆",
-            "class<.*vlc.*>": "󰕼",
-            "class<.*audacity.*>": "󰎇",
-            "class<.*obs.*>": "󰑋",
-            "class<.*steam.*>": "󰓓",
-            "class<.*pcsx2.*>": "󰊴",
-            "class<.*counter-strike.*|.*cs2.*|.*half-life.*>": "󰊴",
-            "class<.*games.*|.*game.*|.*lutris.*|.*heroic.*>": "󰊴",
-            "class<.*gimp.*>": "󰽉",
-            "class<.*inkscape.*>": "󰽉",
-            "class<.*libreoffice.*|.*soffice.*>": "󰈙",
-            "class<.*joplin.*>": "󱓧",
-            "class<.*obsidian.*>": "󱓧",
-            "class<.*zotero.*>": "󱓧",
-            "class<.*calibre.*>": "󰂿",
-            "class<.*zathura.*>": "󰈦",
-            "class<.*evince.*>": "󰈙",
-            "class<.*localsend.*>": "󰒍",
-            "class<.*qbittorrent.*>": "󰇚",
-            "class<.*virt-manager.*|.*qemu.*>": "󰢹",
-            "class<.*timeshift.*>": "󰁯",
-            "class<.*btop.*|.*htop.*>": "󰻠",
-            "class<.*calculator.*>": "󰃬",
-            "class<.*scrcpy.*>": "󰄡",
-            "class<.*nwg-look.*|.*qt5ct.*|.*qt6ct.*>": "󰒓",
-            "class<.*imv.*>": "󰋩",
-            "class<.*swayimg.*>": "󰋩",
-            "class<.*wofi.*>": "󰣇",
-            "class<.*cli-newsboat.*>": "📰",
-            "class<.*cli-nchat.*>": "💬",
-            "class<.*cli-btop.*>": "📊",
-            "class<.*cli-lazygit.*>": "🐙",
-            "class<.*cli-cava.*>": "🎵",
-            "class<.*cli-ncdu.*>": "💾",
-            "class<.*cli-fastfetch.*>": "🚀",
-            "class<.*cli-cmatrix.*>": "🟩",
-            "class<.*cli-clock.*>": "🕒"
+    /* ── Espacios de Trabajo con Iconos de Aplicaciones (MangoWM) ── */
+    "group/workspaces": {
+        "orientation": "horizontal",
+        "modules": [
+            "custom/ws1",
+            "custom/ws2",
+            "custom/ws3",
+            "custom/ws4",
+            "custom/ws5",
+            "custom/ws6",
+            "custom/ws7",
+            "custom/ws8",
+            "custom/ws9"
+        ]
+    },
+
+    "custom/ws1": {
+        "exec": "~/.local/bin/waybar-mango-workspaces.py 1",
+        "return-type": "json",
+        "signal": 1,
+        "interval": 2,
+        "on-click": "mmsg dispatch view,1",
+        "on-scroll-up": "mmsg dispatch viewtoleft",
+        "on-scroll-down": "mmsg dispatch viewtoright",
+        "tooltip": true
+    },
+    "custom/ws2": {
+        "exec": "~/.local/bin/waybar-mango-workspaces.py 2",
+        "return-type": "json",
+        "signal": 1,
+        "interval": 2,
+        "on-click": "mmsg dispatch view,2",
+        "on-scroll-up": "mmsg dispatch viewtoleft",
+        "on-scroll-down": "mmsg dispatch viewtoright",
+        "tooltip": true
+    },
+    "custom/ws3": {
+        "exec": "~/.local/bin/waybar-mango-workspaces.py 3",
+        "return-type": "json",
+        "signal": 1,
+        "interval": 2,
+        "on-click": "mmsg dispatch view,3",
+        "on-scroll-up": "mmsg dispatch viewtoleft",
+        "on-scroll-down": "mmsg dispatch viewtoright",
+        "tooltip": true
+    },
+    "custom/ws4": {
+        "exec": "~/.local/bin/waybar-mango-workspaces.py 4",
+        "return-type": "json",
+        "signal": 1,
+        "interval": 2,
+        "on-click": "mmsg dispatch view,4",
+        "on-scroll-up": "mmsg dispatch viewtoleft",
+        "on-scroll-down": "mmsg dispatch viewtoright",
+        "tooltip": true
+    },
+    "custom/ws5": {
+        "exec": "~/.local/bin/waybar-mango-workspaces.py 5",
+        "return-type": "json",
+        "signal": 1,
+        "interval": 2,
+        "on-click": "mmsg dispatch view,5",
+        "on-scroll-up": "mmsg dispatch viewtoleft",
+        "on-scroll-down": "mmsg dispatch viewtoright",
+        "tooltip": true
+    },
+    "custom/ws6": {
+        "exec": "~/.local/bin/waybar-mango-workspaces.py 6",
+        "return-type": "json",
+        "signal": 1,
+        "interval": 2,
+        "on-click": "mmsg dispatch view,6",
+        "on-scroll-up": "mmsg dispatch viewtoleft",
+        "on-scroll-down": "mmsg dispatch viewtoright",
+        "tooltip": true
+    },
+    "custom/ws7": {
+        "exec": "~/.local/bin/waybar-mango-workspaces.py 7",
+        "return-type": "json",
+        "signal": 1,
+        "interval": 2,
+        "on-click": "mmsg dispatch view,7",
+        "on-scroll-up": "mmsg dispatch viewtoleft",
+        "on-scroll-down": "mmsg dispatch viewtoright",
+        "tooltip": true
+    },
+    "custom/ws8": {
+        "exec": "~/.local/bin/waybar-mango-workspaces.py 8",
+        "return-type": "json",
+        "signal": 1,
+        "interval": 2,
+        "on-click": "mmsg dispatch view,8",
+        "on-scroll-up": "mmsg dispatch viewtoleft",
+        "on-scroll-down": "mmsg dispatch viewtoright",
+        "tooltip": true
+    },
+    "custom/ws9": {
+        "exec": "~/.local/bin/waybar-mango-workspaces.py 9",
+        "return-type": "json",
+        "signal": 1,
+        "interval": 2,
+        "on-click": "mmsg dispatch view,9",
+        "on-scroll-up": "mmsg dispatch viewtoleft",
+        "on-scroll-down": "mmsg dispatch viewtoright",
+        "tooltip": true
+    },
+
+    /* ── Título de la Ventana Activa ─────────────────────────────── */
+    "custom/window": {
+        "exec": "~/.local/bin/waybar-mango-workspaces.py window",
+        "return-type": "json",
+        "signal": 1,
+        "interval": 2,
+        "max-length": 45,
+        "tooltip": true
+    },
+
+    /* ── Clima Drawer en el Centro ───────────────────────────────── */
+    "group/weather": {
+        "orientation": "horizontal",
+        "drawer": {
+            "transition-duration": 300,
+            "transition-left-to-right": true
         },
-        "persistent-workspaces": {
-            "*": 5
-        }
+        "modules": [
+            "custom/weather-icon",
+            "custom/weather-text"
+        ]
     },
 
-    "sway/mode": {
-        "format": "󰩨 {}",
-        "max-length": 50
-    },
-
-    "sway/scratchpad": {
-        "format": "󰖯 {count}",
-        "show-empty": false,
-        "tooltip": true,
-        "tooltip-format": "{app}: {title}"
-    },
-
-    "sway/window": {
+    "custom/weather-icon": {
         "format": "{}",
-        "max-length": 40,
-        "rewrite": {
-            "(.*) — Mozilla Firefox": "󰈹  $1",
-            "(.*) - foot": "󰞷  $1",
-            "(.*) — Brave": "󰊯  $1",
-            "(.*) — Brave Origin": "󰊯  $1",
-            "(.*) - Visual Studio Code": "󰨞  $1",
-            "(.*) - Code": "󰨞  $1",
-            "(.*) - Zed": "󰅩  $1",
-            "(.*) — Spotify": "󰓇  $1",
-            "(.*) — Joplin": "󱓧  $1",
-            "Joplin": "󱓧  Joplin",
-            "joplin": "󱓧  Joplin",
-            "Thunar": "󰝰  Thunar",
-            "Volume Control": "󰕾  Pavucontrol",
-            "Bluetooth Devices": "󰂯  Blueman",
-            "Newsboat — Lector RSS": "📰  Newsboat",
-            "Nchat — Mensajería": "💬  Nchat",
-            "Btop — Monitor de Sistema": "📊  Btop",
-            "Lazygit": "🐙  Lazygit",
-            "Cava — Audio": "🎵  Cava",
-            "Ncdu — Uso de Disco": "💾  Ncdu",
-            "Fastfetch — Info": "🚀  Fastfetch",
-            "CMatrix": "🟩  CMatrix",
-            "Clock": "🕒  Reloj"
-        },
-        "tooltip": false
+        "return-type": "json",
+        "exec": "~/.local/bin/waybar-weather.sh icon",
+        "interval": 300,
+        "tooltip": true,
+        "on-click": "xdg-open 'https://wttr.in' 2>/dev/null || true"
     },
 
-    /* ── Reloj y Fecha (Estilo Barra de Menú macOS) ──────────────── */
+    "custom/weather-text": {
+        "format": "{}",
+        "return-type": "json",
+        "exec": "~/.local/bin/waybar-weather.sh text",
+        "interval": 300,
+        "tooltip": true,
+        "on-click": "xdg-open 'https://wttr.in' 2>/dev/null || true"
+    },
+
+    /* ── Reloj y Fecha (Centro) ──────────────────────────────────── */
     "clock": {
         "format": "{:%a %d %b  %H:%M}",
         "format-alt": "{:%A %d de %B, %Y  ·  %H:%M:%S}",
@@ -172,7 +195,7 @@
         "interval": 1
     },
 
-    /* ── Mini Reproductor Multimedia (Compacto con Marquee) ──────── */
+    /* ── Mini Reproductor Multimedia ─────────────────────────────── */
     "custom/media": {
         "format": "{}",
         "return-type": "json",
@@ -187,24 +210,105 @@
         "smooth-scrolling-threshold": 1
     },
 
-    /* ── Centro de Control (QuickSettings Wofi) ──────────────────── */
-    "custom/quicksettings": {
-        "format": "󰒓",
-        "tooltip-format": "Centro de Control &amp; Herramientas\n(Pantallas, Luz Cálida, Notificaciones, etc.)",
-        "on-click": "~/.local/bin/quicksettings-menu.sh",
+    /* ── Visualizador CAVA ───────────────────────────────────────── */
+    "custom/cava": {
+        "format": "{}",
+        "return-type": "json",
+        "exec": "~/.local/bin/waybar-cava.py",
         "tooltip": true
     },
 
-    /* ── Grupo Unificado de Controles de Hardware ────────────────── */
+    /* ── Centro de Control (Luz Nocturna y Cafeína) ──────────────── */
+    "group/quicksettings": {
+        "orientation": "inherit",
+        "drawer": {
+            "transition-duration": 300,
+            "children-class": "quicksettings-drawer",
+            "transition-left-to-right": false,
+            "click-to-reveal": true
+        },
+        "modules": [
+            "custom/quicksettings",
+            "custom/gammastep",
+            "custom/caffeine"
+        ]
+    },
+
+    "custom/quicksettings": {
+        "format": "󰒓",
+        "tooltip-format": "Centro de Control\nClick para expandir / ocultar Luz Nocturna y Modo Cafeína",
+        "tooltip": true
+    },
+
+    "custom/gammastep": {
+        "format": "{icon}",
+        "format-icons": {
+            "active": "󰌵",
+            "inactive": "󰌶"
+        },
+        "return-type": "json",
+        "exec": "if pgrep -x gammastep >/dev/null; then echo '{\"alt\": \"active\", \"tooltip\": \"Luz Nocturna: Activada\\nClic para desactivar\", \"class\": \"active\"}'; else echo '{\"alt\": \"inactive\", \"tooltip\": \"Luz Nocturna: Desactivada\\nClic para activar\", \"class\": \"inactive\"}'; fi",
+        "interval": 2,
+        "on-click": "~/.local/bin/gammastep-toggle.sh; pkill -RTMIN+8 waybar",
+        "signal": 8,
+        "tooltip": true
+    },
+
+    "custom/caffeine": {
+        "format": "{icon}",
+        "format-icons": {
+            "active": "󰅶",
+            "inactive": "󰾪"
+        },
+        "return-type": "json",
+        "exec": "if [ -f \"$HOME/.config/caffeine_active\" ] || [ -f \"${XDG_RUNTIME_DIR:-/tmp}/caffeine_active\" ]; then echo '{\"alt\": \"active\", \"tooltip\": \"Modo Cafeína: Activado\\nClic para desactivar\", \"class\": \"active\"}'; else echo '{\"alt\": \"inactive\", \"tooltip\": \"Modo Cafeína: Desactivado\\nClic para activar\", \"class\": \"inactive\"}'; fi",
+        "interval": 2,
+        "on-click": "~/.local/bin/caffeine-toggle.sh; pkill -RTMIN+9 waybar",
+        "signal": 9,
+        "tooltip": true
+    },
+
+    /* ── Grupo Unificado de Controles de Hardware (Red, Audio, Batería) ─── */
     "group/controls": {
         "orientation": "horizontal",
         "spacing": 0,
         "modules": [
             "group/network",
-            "group/backlight",
             "group/audio",
             "group/battery"
         ]
+    },
+
+    /* ── Batería Drawer (Solo Laptops) ───────────────────────────── */
+    "group/battery": {
+        "orientation": "horizontal",
+        "drawer": {
+            "transition-duration": 300,
+            "transition-left-to-right": true
+        },
+        "modules": [
+            "battery#icon",
+            "battery#text"
+        ]
+    },
+    "battery#icon": {
+        "states": {
+            "good": 80,
+            "warning": 30,
+            "critical": 15
+        },
+        "format": "{icon}",
+        "format-charging": "󰂄",
+        "format-plugged": "󰚥",
+        "format-full": "󰁹",
+        "format-icons": ["󰂎", "󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"],
+        "tooltip-format": "Batería: {capacity}%\n{timeTo} — {power:.1f}W",
+        "interval": 10
+    },
+    "battery#text": {
+        "format": "{capacity}%",
+        "tooltip-format": "{timeTo}\n{power:.1f}W",
+        "interval": 10
     },
 
     /* ── Audio Drawer ────────────────────────────────────────────── */
@@ -239,35 +343,11 @@
         "tooltip-format": "Audio: {volume}%\n{desc}"
     },
     "pulseaudio#text": {
-        "format": "{volume}",
+        "format": "{volume}%",
         "on-click": "pavucontrol",
         "on-click-right": "pactl set-sink-mute @DEFAULT_SINK@ toggle",
         "scroll-step": 5,
         "tooltip-format": "{desc}"
-    },
-
-    /* ── Brillo Drawer ───────────────────────────────────────────── */
-    "group/backlight": {
-        "orientation": "horizontal",
-        "drawer": {
-            "transition-duration": 300,
-            "transition-left-to-right": true
-        },
-        "modules": [
-            "backlight#icon",
-            "backlight#text"
-        ]
-    },
-    "backlight#icon": {
-        "format": "{icon}",
-        "format-icons": ["󰃞", "󰃟", "󰃠"],
-        "scroll-step": 5,
-        "tooltip-format": "Brillo: {percent}%"
-    },
-    "backlight#text": {
-        "format": "{percent}",
-        "scroll-step": 5,
-        "tooltip-format": "Brillo: {percent}%"
     },
 
     /* ── Red Drawer ──────────────────────────────────────────────── */
@@ -295,45 +375,13 @@
         "interval": 5
     },
     "network#text": {
-        "format-wifi": "{signalStrength}",
+        "format-wifi": "{signalStrength}%",
         "format-ethernet": "LAN",
         "format-linked": "Sin IP",
         "format-disconnected": "OFF",
         "tooltip-format-wifi": "{essid}\n↑ {bandwidthUpBits}  ↓ {bandwidthDownBits}",
         "on-click": "nm-connection-editor",
         "interval": 5
-    },
-
-    /* ── Batería Drawer ──────────────────────────────────────────── */
-    "group/battery": {
-        "orientation": "horizontal",
-        "drawer": {
-            "transition-duration": 300,
-            "transition-left-to-right": true
-        },
-        "modules": [
-            "battery#icon",
-            "battery#text"
-        ]
-    },
-    "battery#icon": {
-        "states": {
-            "good": 80,
-            "warning": 30,
-            "critical": 15
-        },
-        "format": "{icon}",
-        "format-charging": "󰂄",
-        "format-plugged": "󰚥",
-        "format-full": "󰁹",
-        "format-icons": ["󰂎", "󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"],
-        "tooltip-format": "Batería: {capacity}%\n{timeTo} — {power:.1f}W",
-        "interval": 10
-    },
-    "battery#text": {
-        "format": "{capacity}",
-        "tooltip-format": "{timeTo}\n{power:.1f}W",
-        "interval": 10
     },
 
     /* ── Monitor de Sistema / Hardware Unificado (Click-to-Reveal) ── */
@@ -350,13 +398,13 @@
             "group/cpu",
             "group/memory",
             "group/disk",
-            "group/temperature"
+            "temperature"
         ]
     },
 
     "custom/hardware-toggle": {
         "format": "",
-        "tooltip-format": "Estadísticas del Sistema\nClick para expandir / ocultar",
+        "tooltip-format": "Estadísticas de Hardware (CPU, RAM, Disco, Temperatura)\nClick para expandir / ocultar",
         "tooltip": true
     },
 
@@ -375,7 +423,7 @@
         "on-click": "foot -e btop"
     },
     "cpu#text": {
-        "format": "{usage}",
+        "format": "{usage}%",
         "interval": 3,
         "tooltip-format": "CPU: {usage}%\n{avg_frequency} GHz",
         "on-click": "foot -e btop"
@@ -396,7 +444,7 @@
         "on-click": "foot -e btop"
     },
     "memory#text": {
-        "format": "{percentage}",
+        "format": "{percentage}%",
         "interval": 5,
         "tooltip-format": "RAM: {used:0.1f} GiB / {total:0.1f} GiB ({percentage}%)\nSwap: {swapUsed:0.1f} GiB / {swapTotal:0.1f} GiB",
         "on-click": "foot -e btop"
@@ -418,38 +466,30 @@
         "on-click": "foot -e btop"
     },
     "disk#text": {
-        "format": "{percentage_used}",
+        "format": "{percentage_used}%",
         "interval": 30,
         "path": "/",
         "tooltip-format": "Disco: {used} de {total} ({percentage_used}% usado)\nLibre: {free}",
         "on-click": "foot -e btop"
     },
 
-    /* ── Temperatura ─────────────────────────────────────────────── */
-    "group/temperature": {
-        "orientation": "horizontal",
-        "modules": [
-            "temperature#icon",
-            "temperature#text"
-        ]
-    },
-    "temperature#icon": {
-        "format": "󰔏",
+    /* ── Temperatura en Drawer Hardware (CPU k10temp) ────────────── */
+    "temperature": {
+        "hwmon-path": "/sys/class/hwmon/hwmon1/temp1_input",
         "critical-threshold": 80,
-        "tooltip-format": "Temperatura: {temperatureC}°C",
-        "on-click": "foot -e btop"
-    },
-    "temperature#text": {
-        "format": "{temperatureC}°",
-        "format-critical": "{temperatureC}°",
-        "critical-threshold": 80,
-        "tooltip-format": "Temperatura: {temperatureC}°C",
+        "warning-threshold": 65,
+        "format": "{icon} {temperatureC}°C",
+        "format-critical": "󰔏 {temperatureC}°C",
+        "format-icons": ["󱃃", "󰔏", "󱃂"],
+        "interval": 3,
+        "tooltip-format": "Temperatura CPU: {temperatureC}°C\nClic para abrir btop",
         "on-click": "foot -e btop"
     },
 
+    /* ── Bandeja del Sistema ─────────────────────────────────────── */
     "tray": {
-        "icon-size": 14,
-        "spacing": 6
+        "icon-size": 12,
+        "spacing": 5
     },
 
     /* ── Menú de Apagado / Sesión ────────────────────────────────── */
