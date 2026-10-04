@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+# ╔══════════════════════════════════════════════════════════════╗
+# ║        Antigravity Wrapper — Clean Window Chrome             ║
+# ║        Elimina botones de control (minimizar, maximizar,     ║
+# ║        cerrar) ejecutando con app.asar parcheado vía bwrap   ║
+# ╚══════════════════════════════════════════════════════════════╝
+
+PATCHED_ASAR="$HOME/.local/share/antigravity/app.asar"
+
+if [ -f "$PATCHED_ASAR" ] && command -v bwrap >/dev/null 2>&1; then
+    exec bwrap --dev-bind / / --ro-bind "$PATCHED_ASAR" /opt/Antigravity/resources/app.asar /opt/Antigravity/antigravity "$@"
+else
+    exec /opt/Antigravity/antigravity "$@"
+fi

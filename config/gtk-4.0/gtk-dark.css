@@ -69,7 +69,7 @@ popover contents {
   padding: 4px;
 }
 
-/* ── Eliminar bordes y recuadros en la barra lateral ── */
+/* ── Eliminar bordes y recuadros en la barra lateral (Carpeta personal, Recientes, etc.) ── */
 sidebar,
 .sidebar,
 navigation-sidebar,

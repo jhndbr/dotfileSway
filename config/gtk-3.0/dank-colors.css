@@ -8,52 +8,52 @@
 @define-color error_bg_color #ffb4ab;
 @define-color error_fg_color #690005;
 @define-color accent_fg_color #233600;
-@define-color accent_bg_color #b5d086;
-@define-color accent_color #b5d086;
-@define-color window_bg_color #12140e;
-@define-color window_fg_color #e3e3d8;
-@define-color view_bg_color #12140e;
-@define-color view_fg_color #e3e3d8;
-@define-color headerbar_bg_color #12140e;
-@define-color headerbar_fg_color #e3e3d8;
-@define-color sidebar_bg_color #1e2019;
-@define-color sidebar_fg_color #e3e3d8;
-@define-color card_bg_color #1e2019;
-@define-color card_fg_color #e3e3d8;
-@define-color popover_bg_color #1e2019;
-@define-color popover_fg_color #e3e3d8;
-@define-color dialog_bg_color #12140e;
-@define-color dialog_fg_color #e3e3d8;
-@define-color button_bg_color #292b23;
-@define-color button_fg_color #e3e3d8;
-@define-color button_hover_bg_color #34362e;
-@define-color button_active_bg_color #384d12;
-@define-color button_active_fg_color #d1eca0;
+@define-color accent_bg_color #99da00;
+@define-color accent_color #99da00;
+@define-color window_bg_color #111509;
+@define-color window_fg_color #e1e5d1;
+@define-color view_bg_color #111509;
+@define-color view_fg_color #e1e5d1;
+@define-color headerbar_bg_color #111509;
+@define-color headerbar_fg_color #e1e5d1;
+@define-color sidebar_bg_color #1d2115;
+@define-color sidebar_fg_color #e1e5d1;
+@define-color card_bg_color #1d2115;
+@define-color card_fg_color #e1e5d1;
+@define-color popover_bg_color #1d2115;
+@define-color popover_fg_color #e1e5d1;
+@define-color dialog_bg_color #111509;
+@define-color dialog_fg_color #e1e5d1;
+@define-color button_bg_color #272c1f;
+@define-color button_fg_color #e1e5d1;
+@define-color button_hover_bg_color #323629;
+@define-color button_active_bg_color #354e00;
+@define-color button_active_fg_color #aff800;
 
 /* ── Material Design 3 Palette Tokens ── */
-@define-color mat_primary #b5d086;
+@define-color mat_primary #99da00;
 @define-color mat_on_primary #233600;
-@define-color mat_primary_container #384d12;
-@define-color mat_on_primary_container #d1eca0;
-@define-color mat_secondary #c1caab;
-@define-color mat_on_secondary #2b331d;
-@define-color mat_secondary_container #414a32;
-@define-color mat_on_secondary_container #dde6c6;
-@define-color mat_tertiary #a0d0c9;
-@define-color mat_on_tertiary #013733;
-@define-color mat_tertiary_container #1f4e49;
-@define-color mat_on_tertiary_container #bcece5;
-@define-color mat_surface #12140e;
-@define-color mat_on_surface #e3e3d8;
-@define-color mat_surface_variant #45483d;
-@define-color mat_on_surface_variant #c5c8b9;
-@define-color mat_surface_container #1e2019;
-@define-color mat_surface_container_high #292b23;
-@define-color mat_surface_container_highest #34362e;
-@define-color mat_surface_container_low #1a1c15;
-@define-color mat_surface_container_lowest #0d0f09;
-@define-color mat_outline #8f9284;
-@define-color mat_outline_variant #45483d;
+@define-color mat_primary_container #354e00;
+@define-color mat_on_primary_container #aff800;
+@define-color mat_secondary #b4cea5;
+@define-color mat_on_secondary #203619;
+@define-color mat_secondary_container #364d2d;
+@define-color mat_on_secondary_container #cfebc0;
+@define-color mat_tertiary #9fd3a7;
+@define-color mat_on_tertiary #05391a;
+@define-color mat_tertiary_container #21502f;
+@define-color mat_on_tertiary_container #bbefc2;
+@define-color mat_surface #111509;
+@define-color mat_on_surface #e1e5d1;
+@define-color mat_surface_variant #44493a;
+@define-color mat_on_surface_variant #c4c9b6;
+@define-color mat_surface_container #1d2115;
+@define-color mat_surface_container_high #272c1f;
+@define-color mat_surface_container_highest #323629;
+@define-color mat_surface_container_low #191d11;
+@define-color mat_surface_container_lowest #0c1005;
+@define-color mat_outline #8e9381;
+@define-color mat_outline_variant #44493a;
 @define-color mat_error #ffb4ab;
 @define-color mat_on_error #690005;
 @define-color mat_error_container #93000a;
@@ -241,8 +241,8 @@ textview text selection, .view:selected, iconview:selected,
 .view text:selected,
 iconview text:selected,
 textview text:selected {
-  background-color: #384d12;
-  color: #d1eca0;
+  background-color: #354e00;
+  color: #aff800;
 }
 .view, iconview,
 .view text,
@@ -6069,14 +6069,14 @@ scrolledwindow list separator.horizontal {
 }
 
 decoration {
-  border-radius: 15px 15px 0 0;
+  border-radius: 0;
   border-width: 0px;
-  box-shadow: 0 3px 8px 1px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(0, 0, 0, 0.05);
-  margin: 10px;
+  box-shadow: none;
+  margin: 0px;
 }
 decoration:backdrop {
-  box-shadow: 0 3px 8px 1px transparent, 0 2px 6px 2px rgba(0, 0, 0, 0.14), 0 0 0 1px rgba(0, 0, 0, 0.02);
-  transition: 200ms ease-out;
+  box-shadow: none;
+  transition: none;
 }
 .maximized decoration, .fullscreen decoration {
   border-radius: 0;
@@ -7836,11 +7836,11 @@ window.background:not(.solid-csd):not(.csd) > notebook > stack:not(:only-child) 
   background-color: @button_active_bg_color;
 }
 
-@define-color button_bg_color #292b23;
-@define-color button_fg_color #e3e3d8;
-@define-color button_hover_bg_color #34362e;
-@define-color button_active_bg_color #384d12;
-@define-color button_active_fg_color #d1eca0;
+@define-color button_bg_color #272c1f;
+@define-color button_fg_color #e1e5d1;
+@define-color button_hover_bg_color #323629;
+@define-color button_active_bg_color #354e00;
+@define-color button_active_fg_color #aff800;
 
 /* Matugen Colors */
 

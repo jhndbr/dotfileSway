@@ -14,7 +14,7 @@ window#osd {
     padding: 14px 22px;
     border-radius: 20px;
     border: 1px solid rgba(255, 255, 255, 0.10);
-    background: alpha(#{{colors.surface.default.hex_stripped}}, 0.88);
+    background: alpha(#111509, 0.88);
     background-clip: padding-box;
     box-shadow: none;
 }
@@ -26,7 +26,7 @@ window#osd {
 }
 
 image, label {
-    color: #{{colors.on_surface.default.hex_stripped}};
+    color: #e1e5d1;
 }
 
 progressbar:disabled,
@@ -45,12 +45,12 @@ trough {
     min-height: 5px;
     border-radius: 999px;
     border: none;
-    background: alpha(#{{colors.on_surface.default.hex_stripped}}, 0.15);
+    background: alpha(#e1e5d1, 0.15);
 }
 
 progress {
     min-height: 5px;
     border-radius: 999px;
     border: none;
-    background: #{{colors.primary.default.hex_stripped}};
+    background: #99da00;
 }

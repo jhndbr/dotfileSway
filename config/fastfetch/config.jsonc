@@ -55,7 +55,7 @@
         {
             "type": "wm",
             "key": "󰨇  Compositor",
-            "format": "Sway",
+            "format": "MangoWM",
             "keyColor": "magenta"
         },
         {

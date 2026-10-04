@@ -1,0 +1,26 @@
+[Desktop Entry]
+Actions=new-empty-window;
+Categories=TextEditor;Development;IDE;
+Comment=entorno de desarrollo integrado impulsado por IA
+Exec=/home/jhon/.local/bin/antigravity %F
+GenericName=Text Editor
+Icon=antigravity
+Keywords=vscode;
+Name=Antigravity
+NoDisplay=false
+Path=
+PrefersNonDefaultGPU=false
+StartupNotify=false
+StartupWMClass=Antigravity
+Terminal=false
+TerminalOptions=
+Type=Application
+X-KDE-SubstituteUID=false
+X-KDE-Username=
+
+[Desktop Action new-empty-window]
+Exec=/home/jhon/.local/bin/antigravity --new-window %F
+Icon=antigravity
+Name[es_ES]=Nueva ventana vacía
+Name=New Empty Window
+MimeType=x-scheme-handler/antigravity;application/x-antigravity-workspace;

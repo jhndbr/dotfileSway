@@ -82,10 +82,10 @@ window#waybar.hidden {
 
 tooltip {
     background: @mat_surface_container_highest;
-    border: none;
+    border: 1px solid rgba(255, 255, 255, 0.12);
     border-radius: 8px;
     padding: 5px 8px;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.40);
+    box-shadow: none;
 }
 
 tooltip label {

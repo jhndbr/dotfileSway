@@ -227,7 +227,7 @@ input_path = '$TEMPLATES_DIR/gtk-colors.css'
 output_path = '$HOME/.config/gtk-3.0/dank-colors.css'
 
 [templates.gtk4]
-input_path = '$TEMPLATES_DIR/gtk-colors.css'
+input_path = '$TEMPLATES_DIR/gtk4-colors.css'
 output_path = '$HOME/.config/gtk-4.0/dank-colors.css'
 
 [templates.zed]
@@ -510,24 +510,25 @@ GTK3_FIXES='
   outline-style: none;
 }
 
-/* ── Fondo sólido de ventana para evitar transparencia indeseada ── */
-window,
-window.background,
-window.csd,
-.background {
+/* ── Fondo de ventana y decoraciones (evita recuadros en capas Wayland) ── */
+window.csd:not(#window):not(#osd),
+window:not(#window):not(#osd) {
   background-color: @window_bg_color;
   color: @window_fg_color;
 }
 
-window.csd decoration,
-window decoration,
-decoration {
+window.csd:not(#window):not(#osd) decoration,
+window:not(#window):not(#osd) decoration {
   background-color: @window_bg_color;
   border-style: none;
   border-width: 0;
   box-shadow: none;
   margin: 0;
   padding: 0;
+}
+
+decoration {
+  box-shadow: none;
 }
 
 /* ── Menús y Popovers GTK3 ── */
@@ -599,7 +600,15 @@ rm -f "$HOME/.config/gtk-3.0/gtk.css" \
       "$HOME/.config/gtk-4.0/gtk.css" \
       "$HOME/.config/gtk-4.0/gtk-dark.css"
 
-printf '@import url("dank-colors.css");\n%s\n' "$GTK3_FIXES" \
+# Wofi carga su CSS con la misma prioridad que gtk.css, por lo que el tema
+# (dank-colors.css) pisaba sus reglas: ventana raíz con fondo cuadrado detrás
+# de las esquinas redondeadas y colores de selección incorrectos. Importarlo
+# aquí, DESPUÉS del tema, hace que gane. Sus selectores están acotados a
+# #window y sus colores usan prefijo wofi_, así que no afecta a otras apps.
+WOFI_IMPORT=''
+[ -f "$HOME/.config/wofi/style.css" ] && WOFI_IMPORT='@import url("../wofi/style.css");'
+
+printf '@import url("dank-colors.css");\n%s\n%s\n' "$WOFI_IMPORT" "$GTK3_FIXES" \
     > "$HOME/.config/gtk-3.0/gtk.css"
 printf '@import url("dank-colors.css");\n%s\n' "$GTK4_FIXES" \
     > "$HOME/.config/gtk-4.0/gtk.css"
@@ -666,8 +675,11 @@ if [ -n "$DOTFILES_DIR" ] && [ -d "$DOTFILES_DIR" ]; then
     cp -f "$HOME/.config/qt5ct/qt5ct.conf" "$DOTFILES_DIR/config/qt5ct/qt5ct.conf" 2>/dev/null || true
     cp -f "$HOME/.config/qt6ct/qt6ct.conf" "$DOTFILES_DIR/config/qt6ct/qt6ct.conf" 2>/dev/null || true
     cp -f "$HOME/.config/zed/themes/dank-zed-theme.json" "$DOTFILES_DIR/config/zed/themes/dank-zed-theme.json" 2>/dev/null || true
-    cp -f "$HOME/.config/foot/foot.ini" "$DOTFILES_DIR/config/foot/foot.ini" 2>/dev/null || true
+    cp -f "$HOME/.config/gtk-3.0/gtk.css" "$DOTFILES_DIR/config/gtk-3.0/gtk.css" 2>/dev/null || true
+    cp -f "$HOME/.config/gtk-4.0/gtk.css" "$DOTFILES_DIR/config/gtk-4.0/gtk.css" 2>/dev/null || true
+    cp -f "$HOME/.config/gtk-4.0/gtk-dark.css" "$DOTFILES_DIR/config/gtk-4.0/gtk-dark.css" 2>/dev/null || true
     cp -f "$HOME/.config/wofi/style.css" "$DOTFILES_DIR/config/wofi/style.css" 2>/dev/null || true
+    cp -f "$HOME/.config/swayosd/style.css" "$DOTFILES_DIR/config/swayosd/style.css" 2>/dev/null || true
     cp -f "$HOME/.config/mango/dank-colors" "$DOTFILES_DIR/config/mango/dank-colors" 2>/dev/null || true
 fi
 
@@ -694,11 +706,13 @@ for ini in "$HOME/.config/gtk-3.0/settings.ini" "$HOME/.config/gtk-4.0/settings.
         sed -i "s/^gtk-theme-name=.*/gtk-theme-name=$DESKTOP_GTK_THEME/" "$ini" 2>/dev/null || true
         sed -i "s/^gtk-icon-theme-name=.*/gtk-icon-theme-name=$DESKTOP_ICON_THEME/" "$ini" 2>/dev/null || true
         sed -i "s/^gtk-application-prefer-dark-theme=.*/gtk-application-prefer-dark-theme=$DARK_PREF/" "$ini" 2>/dev/null || true
+        sed -i "s/^gtk-decoration-layout=.*/gtk-decoration-layout=:/" "$ini" 2>/dev/null || true
     fi
 done
 
 gsettings set org.gnome.desktop.interface icon-theme "$DESKTOP_ICON_THEME" 2>/dev/null || true
 gsettings set org.gnome.desktop.interface color-scheme "$DESKTOP_COLOR_SCHEME" 2>/dev/null || true
+gsettings set org.gnome.desktop.wm.preferences button-layout ":" 2>/dev/null || true
 
 # Alternar gtk-theme para forzar a GTK3 y aplicaciones abiertas a recargar el CSS inmediatamente
 gsettings set org.gnome.desktop.interface gtk-theme 'Adwaita' 2>/dev/null || true

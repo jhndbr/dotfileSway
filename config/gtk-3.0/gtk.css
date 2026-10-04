@@ -1,4 +1,5 @@
 @import url("dank-colors.css");
+@import url("../wofi/style.css");
 
 /* ── Focus Outline ── */
 * {
@@ -12,24 +13,25 @@
   outline-style: none;
 }
 
-/* ── Fondo sólido de ventana para evitar transparencia indeseada ── */
-window,
-window.background,
-window.csd,
-.background {
+/* ── Fondo de ventana y decoraciones (evita recuadros en capas Wayland) ── */
+window.csd:not(#window):not(#osd),
+window:not(#window):not(#osd) {
   background-color: @window_bg_color;
   color: @window_fg_color;
 }
 
-window.csd decoration,
-window decoration,
-decoration {
+window.csd:not(#window):not(#osd) decoration,
+window:not(#window):not(#osd) decoration {
   background-color: @window_bg_color;
   border-style: none;
   border-width: 0;
   box-shadow: none;
   margin: 0;
   padding: 0;
+}
+
+decoration {
+  box-shadow: none;
 }
 
 /* ── Menús y Popovers GTK3 ── */

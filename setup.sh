@@ -273,6 +273,7 @@ if [ -d "$SCRIPT_DIR/applications" ]; then
     echo -e "  ${GREEN}→${NC} Instalando accesos directos para aplicaciones CLI..."
     mkdir -p "$HOME/.local/share/applications"
     cp -rf "$SCRIPT_DIR/applications/"* "$HOME/.local/share/applications/" 2>/dev/null || true
+    sed -i "s|/home/[^/]*/.local/bin/antigravity|$HOME/.local/bin/antigravity|g" "$HOME/.local/share/applications/antigravity.desktop" 2>/dev/null || true
 fi
 
 # Actualizar base de datos de aplicaciones y predeterminar Thunar
@@ -282,6 +283,26 @@ fi
 if command -v xdg-mime &>/dev/null; then
     xdg-mime default thunar.desktop inode/directory 2>/dev/null || true
     xdg-mime default thunar.desktop application/x-gnome-saved-search 2>/dev/null || true
+fi
+
+# Optimización estética para Antigravity IDE (ocultar controles de ventana en tiling)
+if [ -f "/opt/Antigravity/resources/app.asar" ] && command -v node &>/dev/null && command -v bwrap &>/dev/null; then
+    mkdir -p "$HOME/.local/share/antigravity"
+    node -e '
+    const fs = require("fs");
+    const src = "/opt/Antigravity/resources/app.asar";
+    const dst = process.env.HOME + "/.local/share/antigravity/app.asar";
+    try {
+        let buf = fs.readFileSync(src);
+        const target = Buffer.from("return process.platform === \x27darwin\x27;");
+        const replacement = Buffer.from("return true;                         ");
+        const idx = buf.indexOf(target);
+        if (idx !== -1) {
+            replacement.copy(buf, idx);
+            fs.writeFileSync(dst, buf);
+        }
+    } catch (e) {}
+    ' 2>/dev/null || true
 fi
 
 # Configurar miniaturas automáticas en Thunar (siempre activas y sin límite de tamaño)
