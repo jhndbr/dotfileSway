@@ -635,7 +635,7 @@ sed -i "s/^icon_theme=.*/icon_theme=$QT_ICON_THEME/" "$HOME/.config/qt5ct/qt5ct.
 sed -i "s/^icon_theme=.*/icon_theme=$QT_ICON_THEME/" "$HOME/.config/qt6ct/qt6ct.conf" 2>/dev/null || true
 
 pkill -x waybar 2>/dev/null || true
-(sleep 0.2; waybar -c "$HOME/.config/waybar/config" -s "$HOME/.config/waybar/style.css" >/dev/null 2>&1 &)
+(sleep 0.2; setsid waybar -c "$HOME/.config/waybar/config" -s "$HOME/.config/waybar/style.css" </dev/null >/dev/null 2>&1 &)
 pkill -SIGUSR1 foot 2>/dev/null || true
 pkill -SIGUSR1 cava 2>/dev/null || true
 pkill -f waybar-cava.py 2>/dev/null || true

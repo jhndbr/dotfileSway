@@ -229,6 +229,10 @@ def daemon_main():
         t = threading.Thread(target=watcher_thread, args=(watch_cmd,), daemon=True)
         t.start()
 
+    # Periodo de gracia inicial: dar tiempo a Waybar para arrancar y registrar sus manejadores
+    # de señales (SIGRTMIN+1) antes de enviarle señales en tiempo real (evita terminación accidental)
+    time.sleep(1.0)
+
     # Bucle de debounce y señalización
     while True:
         time.sleep(0.04)

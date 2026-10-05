@@ -8,10 +8,10 @@
      - Todos los selectores están acotados a #window (la ventana de wofi).
      - Los colores usan el prefijo wofi_ para no redefinir los del tema GTK. */
 
-@define-color wofi_bg     #111509;
-@define-color wofi_fg     #e1e5d1;
-@define-color wofi_accent #99da00;
-@define-color wofi_on_acc #233600;
+@define-color wofi_bg     #131313;
+@define-color wofi_fg     #e2e2e2;
+@define-color wofi_accent #adc6ff;
+@define-color wofi_on_acc #002e69;
 
 /* ── Palette Aliases & Glass Tokens ──────────────────────────── */
 @define-color wofi_card        alpha(@wofi_bg, 0.90);
