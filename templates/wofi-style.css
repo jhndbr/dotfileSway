@@ -13,11 +13,11 @@
 @define-color wofi_accent {{colors.primary.default.hex}};
 @define-color wofi_on_acc {{colors.on_primary.default.hex}};
 
-/* ── Palette Aliases & Glass Tokens ──────────────────────────── */
-@define-color wofi_card        alpha(@wofi_bg, 0.90);
-@define-color wofi_pill        alpha(@wofi_fg, 0.07);
-@define-color wofi_pill_hover  alpha(@wofi_fg, 0.15);
-@define-color wofi_border      alpha(@wofi_fg, 0.10);
+/* ── Palette Aliases & Solid Flat Tokens (Estilo macOS Spotlight) ── */
+@define-color wofi_card        @wofi_bg;
+@define-color wofi_pill        alpha(@wofi_fg, 0.08);
+@define-color wofi_pill_hover  alpha(@wofi_fg, 0.16);
+@define-color wofi_border      alpha(@wofi_fg, 0.14);
 
 #window,
 #window * {

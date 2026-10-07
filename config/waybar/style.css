@@ -10,8 +10,8 @@
    ║  DESIGN TOKENS — Material 3 Elevation & Matugen Dynamic    ║
    ══════════════════════════════════════════════════════════════ */
 
-/* Superficie de la barra: Sólida, profunda y con presencia (Nivel 0) */
-@define-color bg_bar                  alpha(@mat_surface, 0.94);
+/* Superficie de la barra: Sólida plana estilo macOS Menu Bar (Nivel 0) */
+@define-color bg_bar                  @mat_surface;
 
 /* Tokens de acento dinámicos */
 @define-color col_primary             @mat_primary;
@@ -31,8 +31,8 @@
 @define-color col_error_container     @mat_error_container;
 @define-color col_on_error_container  @mat_on_error_container;
 
-/* Superficies de cápsulas elevadas (Nivel 1 & 2): Claramente visibles sobre la barra */
-@define-color bg_pill                 alpha(@mat_surface_container_high, 0.90);
+/* Superficies de cápsulas elevadas (Nivel 1 & 2): Sólidas y nítidas */
+@define-color bg_pill                 @mat_surface_container;
 @define-color bg_pill_hover           @mat_surface_container_highest;
 @define-color bg_pill_active          @col_primary_container;
 
@@ -103,9 +103,13 @@ tooltip label {
 #group-workspaces,
 #tray,
 #weather,
+#group-weather,
 #quicksettings,
+#group-quicksettings,
 #controls,
+#group-controls,
 #hardware,
+#group-hardware,
 #custom-power {
     background: @bg_pill;
     border: none;
@@ -124,9 +128,13 @@ tooltip label {
 #group-workspaces:hover,
 #tray:hover,
 #weather:hover,
+#group-weather:hover,
 #quicksettings:hover,
+#group-quicksettings:hover,
 #controls:hover,
-#hardware:hover {
+#group-controls:hover,
+#hardware:hover,
+#group-hardware:hover {
     background: @bg_pill_hover;
     color: @text_primary;
     border: none;
@@ -232,46 +240,66 @@ tooltip label {
 #custom-ws1, #custom-ws2, #custom-ws3, #custom-ws4, #custom-ws5,
 #custom-ws6, #custom-ws7, #custom-ws8, #custom-ws9 {
     color: @text_secondary;
-    padding: 0 6px;
-    margin: 1.5px 1px;
+    padding: 0 7px;
+    margin: 1px 1.5px;
     border-radius: 999px;
     border: none;
     background: transparent;
     min-width: 16px;
-    min-height: 17px;
-    font-size: 10px;
+    min-height: 18px;
+    font-size: 10.5px;
     font-weight: 500;
     box-shadow: none;
-    transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 #custom-ws1:hover, #custom-ws2:hover, #custom-ws3:hover, #custom-ws4:hover, #custom-ws5:hover,
 #custom-ws6:hover, #custom-ws7:hover, #custom-ws8:hover, #custom-ws9:hover {
-    background: alpha(@mat_on_surface, 0.10);
+    background: alpha(@mat_on_surface, 0.12);
     color: @text_primary;
 }
 
-/* Espacios vacíos: Texto tenue y limpio */
+/* Espacios ocultos: 0 espacio en la barra para que solo se vean los que están en uso */
+#custom-ws1.hidden, #custom-ws2.hidden, #custom-ws3.hidden, #custom-ws4.hidden, #custom-ws5.hidden,
+#custom-ws6.hidden, #custom-ws7.hidden, #custom-ws8.hidden, #custom-ws9.hidden {
+    min-width: 0;
+    min-height: 0;
+    padding: 0;
+    margin: 0;
+    font-size: 0;
+    opacity: 0;
+    border: none;
+    background: transparent;
+}
+
+/* Espacios vacíos (si no están ocultos) */
 #custom-ws1.empty, #custom-ws2.empty, #custom-ws3.empty, #custom-ws4.empty, #custom-ws5.empty,
 #custom-ws6.empty, #custom-ws7.empty, #custom-ws8.empty, #custom-ws9.empty {
     color: @text_muted;
 }
 
-/* Espacios ocupados (con aplicaciones abiertas): Texto principal nítido */
+/* Espacios ocupados (con aplicaciones abiertas): Fondo sutil elevado y texto principal nítido */
 #custom-ws1.occupied, #custom-ws2.occupied, #custom-ws3.occupied, #custom-ws4.occupied, #custom-ws5.occupied,
 #custom-ws6.occupied, #custom-ws7.occupied, #custom-ws8.occupied, #custom-ws9.occupied {
     color: @text_primary;
-    font-weight: 500;
+    background: alpha(@mat_surface_container_highest, 0.40);
+    font-weight: 600;
 }
 
-/* Espacio Activo: Destacado con color primario vibrante y sin bordes iluminados */
+#custom-ws1.occupied:hover, #custom-ws2.occupied:hover, #custom-ws3.occupied:hover, #custom-ws4.occupied:hover, #custom-ws5.occupied:hover,
+#custom-ws6.occupied:hover, #custom-ws7.occupied:hover, #custom-ws8.occupied:hover, #custom-ws9.occupied:hover {
+    background: alpha(@mat_on_surface, 0.15);
+}
+
+/* Espacio Activo: Destacado con color primario vibrante y suave elevación */
 #custom-ws1.active, #custom-ws2.active, #custom-ws3.active, #custom-ws4.active, #custom-ws5.active,
 #custom-ws6.active, #custom-ws7.active, #custom-ws8.active, #custom-ws9.active {
     background: @col_primary;
     color: @col_on_primary;
     font-weight: 700;
+    padding: 0 9px;
     border: none;
-    box-shadow: none;
+    box-shadow: 0 1px 4px alpha(@mat_surface, 0.3);
 }
 
 /* Espacio urgente */
@@ -338,8 +366,20 @@ tooltip label {
     color: @text_primary;
 }
 
+/* Ocultar píldora cuando no hay ninguna ventana activa enfocada */
+#custom-window.empty,
+window#waybar.empty #window {
+    background: transparent;
+    padding: 0;
+    margin: 0;
+    min-width: 0;
+    min-height: 0;
+    opacity: 0;
+    border: none;
+}
+
 /* ══════════════════════════════════════════════════════════════
-   ║  CENTRO — Clima · Reloj con Color Dinámico (macOS Style)    ║
+   ║  CENTRO — Reloj macOS Style (Centrado Absoluto y Estable)   ║
    ══════════════════════════════════════════════════════════════ */
 
 #clock {

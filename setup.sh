@@ -140,7 +140,7 @@ mkdir -p ~/.local/bin
 echo -e "${YELLOW}📦 Creando backup en $BACKUP_DIR${NC}"
 mkdir -p "$BACKUP_DIR"
 
-CONFIGS=(mango waybar wofi dunst foot swaylock gammastep gtk-3.0 gtk-4.0 environment.d qt5ct qt6ct matugen zed Thunar xfce4 xdg-desktop-portal xdg-desktop-portal-wlr fontconfig mpv fastfetch cava newsboat nchat btop lazygit htop zellij joplin-desktop)
+CONFIGS=(mango waybar wofi dunst foot swaylock gammastep gtk-3.0 gtk-4.0 environment.d qt5ct qt6ct matugen zed Thunar xfce4 xdg-desktop-portal xdg-desktop-portal-wlr fontconfig mpv fastfetch cava newsboat nchat btop lazygit htop zellij joplin-desktop MangoHud)
 
 
 for item in "${CONFIGS[@]}"; do
@@ -248,10 +248,10 @@ if [ -f "$SCRIPT_DIR/config/starship.toml" ]; then
     cp -f "$SCRIPT_DIR/config/starship.toml" "$HOME/.config/starship.toml"
 fi
 
-# Copiar archivos de flags (Electron, Brave / Wayland)
-for flag_file in "$SCRIPT_DIR/config/"*flags.conf; do
+# Copiar archivos de flags (Electron, Brave / Wayland) y gaming
+for flag_file in "$SCRIPT_DIR/config/"*flags.conf "$SCRIPT_DIR/config/gamemode.ini"; do
     if [ -f "$flag_file" ]; then
-        echo -e "  ${GREEN}→${NC} Instalando banderas de inicio (${BLUE}$(basename "$flag_file")${NC})..."
+        echo -e "  ${GREEN}→${NC} Instalando configuración (${BLUE}$(basename "$flag_file")${NC})..."
         cp -f "$flag_file" "$HOME/.config/"
     fi
 done

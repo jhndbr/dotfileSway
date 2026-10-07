@@ -23,6 +23,8 @@ Dotfiles minimalistas, elegantes y funcionales para un entorno de escritorio bas
 - **Wlogout** — Menú de apagado visual con glassmorphism
 - **Gammastep** — Filtro de luz azul automático
 - **GTK 3/4 y Qt 5/6** — Tema oscuro dinámico basado en Adwaita y Fusion
+- **Gaming Hub & Baja Latencia** — Tearing a pantalla completa (`allow_tearing=2`), GameMode, MangoHud moderno y variables de aceleración Mesa/AMD (`mesa_glthread=true`, ACO). Atajo `Super+Shift+G`. Ver [GAMING_OPTIMIZATION.md](file:///home/jhon/Documentos/Github/dotfileSway/GAMING_OPTIMIZATION.md)
+- **Waybar Dinámica** — Espacios de trabajo inteligentes en MangoWM (muestra únicamente los escritorios activos o en uso)
 - **Zsh** — Shell con Oh My Zsh + Starship / Powerlevel10k + FZF
 - **Scripts** — Wallpaper dinámico, gestión de monitores, capturas de pantalla, volumen, brillo, selector de color y emojis
 

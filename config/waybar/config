@@ -16,14 +16,15 @@
     ],
 
     "modules-center": [
-        "group/weather",
         "clock"
     ],
 
     "modules-right": [
         "custom/media",
         "custom/cava",
+        "group/weather",
         "tray",
+        "group/quicksettings",
         "group/controls",
         "group/hardware",
         "custom/power"
@@ -58,90 +59,90 @@
         "exec": "~/.local/bin/waybar-mango-workspaces.py 1",
         "return-type": "json",
         "signal": 1,
-        "interval": 2,
-        "on-click": "mmsg dispatch view,1",
-        "on-scroll-up": "mmsg dispatch viewtoleft",
-        "on-scroll-down": "mmsg dispatch viewtoright",
+        "interval": 1,
+        "on-click": "mmsg dispatch view,1; ~/.local/bin/waybar-mango-workspaces.py update",
+        "on-scroll-up": "mmsg dispatch viewtoleft; ~/.local/bin/waybar-mango-workspaces.py update",
+        "on-scroll-down": "mmsg dispatch viewtoright; ~/.local/bin/waybar-mango-workspaces.py update",
         "tooltip": true
     },
     "custom/ws2": {
         "exec": "~/.local/bin/waybar-mango-workspaces.py 2",
         "return-type": "json",
         "signal": 1,
-        "interval": 2,
-        "on-click": "mmsg dispatch view,2",
-        "on-scroll-up": "mmsg dispatch viewtoleft",
-        "on-scroll-down": "mmsg dispatch viewtoright",
+        "interval": 1,
+        "on-click": "mmsg dispatch view,2; ~/.local/bin/waybar-mango-workspaces.py update",
+        "on-scroll-up": "mmsg dispatch viewtoleft; ~/.local/bin/waybar-mango-workspaces.py update",
+        "on-scroll-down": "mmsg dispatch viewtoright; ~/.local/bin/waybar-mango-workspaces.py update",
         "tooltip": true
     },
     "custom/ws3": {
         "exec": "~/.local/bin/waybar-mango-workspaces.py 3",
         "return-type": "json",
         "signal": 1,
-        "interval": 2,
-        "on-click": "mmsg dispatch view,3",
-        "on-scroll-up": "mmsg dispatch viewtoleft",
-        "on-scroll-down": "mmsg dispatch viewtoright",
+        "interval": 1,
+        "on-click": "mmsg dispatch view,3; ~/.local/bin/waybar-mango-workspaces.py update",
+        "on-scroll-up": "mmsg dispatch viewtoleft; ~/.local/bin/waybar-mango-workspaces.py update",
+        "on-scroll-down": "mmsg dispatch viewtoright; ~/.local/bin/waybar-mango-workspaces.py update",
         "tooltip": true
     },
     "custom/ws4": {
         "exec": "~/.local/bin/waybar-mango-workspaces.py 4",
         "return-type": "json",
         "signal": 1,
-        "interval": 2,
-        "on-click": "mmsg dispatch view,4",
-        "on-scroll-up": "mmsg dispatch viewtoleft",
-        "on-scroll-down": "mmsg dispatch viewtoright",
+        "interval": 1,
+        "on-click": "mmsg dispatch view,4; ~/.local/bin/waybar-mango-workspaces.py update",
+        "on-scroll-up": "mmsg dispatch viewtoleft; ~/.local/bin/waybar-mango-workspaces.py update",
+        "on-scroll-down": "mmsg dispatch viewtoright; ~/.local/bin/waybar-mango-workspaces.py update",
         "tooltip": true
     },
     "custom/ws5": {
         "exec": "~/.local/bin/waybar-mango-workspaces.py 5",
         "return-type": "json",
         "signal": 1,
-        "interval": 2,
-        "on-click": "mmsg dispatch view,5",
-        "on-scroll-up": "mmsg dispatch viewtoleft",
-        "on-scroll-down": "mmsg dispatch viewtoright",
+        "interval": 1,
+        "on-click": "mmsg dispatch view,5; ~/.local/bin/waybar-mango-workspaces.py update",
+        "on-scroll-up": "mmsg dispatch viewtoleft; ~/.local/bin/waybar-mango-workspaces.py update",
+        "on-scroll-down": "mmsg dispatch viewtoright; ~/.local/bin/waybar-mango-workspaces.py update",
         "tooltip": true
     },
     "custom/ws6": {
         "exec": "~/.local/bin/waybar-mango-workspaces.py 6",
         "return-type": "json",
         "signal": 1,
-        "interval": 2,
-        "on-click": "mmsg dispatch view,6",
-        "on-scroll-up": "mmsg dispatch viewtoleft",
-        "on-scroll-down": "mmsg dispatch viewtoright",
+        "interval": 1,
+        "on-click": "mmsg dispatch view,6; ~/.local/bin/waybar-mango-workspaces.py update",
+        "on-scroll-up": "mmsg dispatch viewtoleft; ~/.local/bin/waybar-mango-workspaces.py update",
+        "on-scroll-down": "mmsg dispatch viewtoright; ~/.local/bin/waybar-mango-workspaces.py update",
         "tooltip": true
     },
     "custom/ws7": {
         "exec": "~/.local/bin/waybar-mango-workspaces.py 7",
         "return-type": "json",
         "signal": 1,
-        "interval": 2,
-        "on-click": "mmsg dispatch view,7",
-        "on-scroll-up": "mmsg dispatch viewtoleft",
-        "on-scroll-down": "mmsg dispatch viewtoright",
+        "interval": 1,
+        "on-click": "mmsg dispatch view,7; ~/.local/bin/waybar-mango-workspaces.py update",
+        "on-scroll-up": "mmsg dispatch viewtoleft; ~/.local/bin/waybar-mango-workspaces.py update",
+        "on-scroll-down": "mmsg dispatch viewtoright; ~/.local/bin/waybar-mango-workspaces.py update",
         "tooltip": true
     },
     "custom/ws8": {
         "exec": "~/.local/bin/waybar-mango-workspaces.py 8",
         "return-type": "json",
         "signal": 1,
-        "interval": 2,
-        "on-click": "mmsg dispatch view,8",
-        "on-scroll-up": "mmsg dispatch viewtoleft",
-        "on-scroll-down": "mmsg dispatch viewtoright",
+        "interval": 1,
+        "on-click": "mmsg dispatch view,8; ~/.local/bin/waybar-mango-workspaces.py update",
+        "on-scroll-up": "mmsg dispatch viewtoleft; ~/.local/bin/waybar-mango-workspaces.py update",
+        "on-scroll-down": "mmsg dispatch viewtoright; ~/.local/bin/waybar-mango-workspaces.py update",
         "tooltip": true
     },
     "custom/ws9": {
         "exec": "~/.local/bin/waybar-mango-workspaces.py 9",
         "return-type": "json",
         "signal": 1,
-        "interval": 2,
-        "on-click": "mmsg dispatch view,9",
-        "on-scroll-up": "mmsg dispatch viewtoleft",
-        "on-scroll-down": "mmsg dispatch viewtoright",
+        "interval": 1,
+        "on-click": "mmsg dispatch view,9; ~/.local/bin/waybar-mango-workspaces.py update",
+        "on-scroll-up": "mmsg dispatch viewtoleft; ~/.local/bin/waybar-mango-workspaces.py update",
+        "on-scroll-down": "mmsg dispatch viewtoright; ~/.local/bin/waybar-mango-workspaces.py update",
         "tooltip": true
     },
 
@@ -188,7 +189,7 @@
 
     /* ── Reloj y Fecha (Centro) ──────────────────────────────────── */
     "clock": {
-        "format": "{:%a %d %b  %H:%M}",
+        "format": "{:%a %d %b · %H:%M}",
         "format-alt": "{:%A %d de %B, %Y  ·  %H:%M:%S}",
         "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
         "locale": "es_AR.UTF-8",

@@ -53,6 +53,9 @@ if ! pgrep -x swayosd-server >/dev/null; then
 fi
 
 # ── Portapapeles & Automontaje USB ──────────────────────────────
+if command -v wl-clip-persist >/dev/null 2>&1 && ! pgrep -x wl-clip-persist >/dev/null; then
+    wl-clip-persist --clipboard regular --reconnect-tries 0 >/dev/null 2>&1 &
+fi
 wl-paste --type text --watch cliphist store >/dev/null 2>&1 &
 wl-paste --type image --watch cliphist store >/dev/null 2>&1 &
 udiskie -N >/dev/null 2>&1 &

@@ -13,6 +13,7 @@ import time
 import signal
 import threading
 import subprocess
+import fcntl
 
 CACHE_DIR = "/tmp/waybar_mango"
 os.makedirs(CACHE_DIR, exist_ok=True)
@@ -73,115 +74,190 @@ def get_icon(appid, title):
     return "󰖯"
 
 def update_all():
+    lock_path = f"{CACHE_DIR}/update.lock"
+    lock_fd = None
     try:
-        tags_raw = subprocess.check_output(["mmsg", "get", "all-tags"], stderr=subprocess.DEVNULL, timeout=2).decode()
-        tags_data = json.loads(tags_raw).get("all_tags", [{}])[0].get("tags", [])
-    except Exception:
-        tags_data = [{"index": i, "is_active": (i == 1), "is_urgent": False, "client_count": 0} for i in range(1, 10)]
+        lock_fd = open(lock_path, "w")
+        fcntl.flock(lock_fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except (BlockingIOError, OSError):
+        if lock_fd:
+            try:
+                lock_fd.close()
+            except Exception:
+                pass
+        return
 
+    pid = os.getpid()
     try:
-        clients_raw = subprocess.check_output(["mmsg", "get", "all-clients"], stderr=subprocess.DEVNULL, timeout=2).decode()
-        clients_data = json.loads(clients_raw).get("clients", [])
-    except Exception:
-        clients_data = []
+        try:
+            tags_raw = subprocess.check_output(["mmsg", "get", "all-tags"], stderr=subprocess.DEVNULL, timeout=2).decode()
+            tags_data = json.loads(tags_raw).get("all_tags", [{}])[0].get("tags", [])
+        except Exception:
+            tags_data = [{"index": i, "is_active": (i == 1), "is_urgent": False, "client_count": 0} for i in range(1, 10)]
 
-    tag_clients = {i: [] for i in range(1, 10)}
-    for c in clients_data:
-        for t in c.get("tags", []):
-            if t in tag_clients:
-                tag_clients[t].append(c)
+        try:
+            clients_raw = subprocess.check_output(["mmsg", "get", "all-clients"], stderr=subprocess.DEVNULL, timeout=2).decode()
+            clients_data = json.loads(clients_raw).get("clients", [])
+        except Exception:
+            clients_data = []
 
-    for t in tags_data:
-        idx = t.get("index", 1)
-        is_active = t.get("is_active", False)
-        is_urgent = t.get("is_urgent", False)
-        cls_list = tag_clients.get(idx, [])
+        tag_clients = {i: [] for i in range(1, 10)}
+        for c in clients_data:
+            for t in c.get("tags", []):
+                if t in tag_clients:
+                    tag_clients[t].append(c)
 
-        icons = [get_icon(c.get("appid", ""), c.get("title", "")) for c in cls_list]
-        icons_str = " ".join(icons)
+        for t in tags_data:
+            idx = t.get("index", 1)
+            is_active = t.get("is_active", False)
+            is_urgent = t.get("is_urgent", False)
+            cls_list = tag_clients.get(idx, [])
 
-        # Si el espacio está vacío e inactivo y es mayor que 5, se oculta
-        if idx > 5 and not is_active and not cls_list:
-            payload = {"text": "", "alt": str(idx), "tooltip": "", "class": ["empty", "hidden"]}
-        else:
-            if icons_str:
-                text = f"{idx}  {icons_str}"
+            icons = [get_icon(c.get("appid", ""), c.get("title", "")) for c in cls_list]
+            icons_str = " ".join(icons)
+
+            # Ocultar cualquier espacio que no esté en uso (solo mostrar los activos o con ventanas)
+            if not is_active and not cls_list and not is_urgent:
+                payload = {"text": "", "alt": str(idx), "tooltip": "", "class": ["empty", "hidden"]}
             else:
-                text = f"{idx}"
+                if icons_str:
+                    text = f"{idx}  {icons_str}"
+                else:
+                    text = f"{idx}"
 
-            css_class = []
-            if is_active:
-                css_class.append("active")
-            if cls_list:
-                css_class.append("occupied")
+                css_class = []
+                if is_active:
+                    css_class.append("active")
+                if cls_list:
+                    css_class.append("occupied")
+                else:
+                    css_class.append("empty")
+                if is_urgent:
+                    css_class.append("urgent")
+
+                tooltip = f"Espacio {idx}" + (" (Activo)" if is_active else "")
+                if cls_list:
+                    tooltip += "\n" + "\n".join("• " + (c.get("appid") or "app") + " - " + (c.get("title") or "")[:35] for c in cls_list)
+
+                payload = {
+                    "text": text,
+                    "alt": str(idx),
+                    "tooltip": tooltip,
+                    "class": css_class
+                }
+
+            tmp_path = f"{CACHE_DIR}/ws_{idx}_{pid}.tmp"
+            dst_path = f"{CACHE_DIR}/ws_{idx}.json"
+            try:
+                with open(tmp_path, "w", encoding="utf-8") as f:
+                    json.dump(payload, f, ensure_ascii=False)
+                os.replace(tmp_path, dst_path)
+            except OSError:
+                pass
+
+        # Window title update
+        try:
+            win_raw = subprocess.check_output(["mmsg", "get", "focusing-client"], stderr=subprocess.DEVNULL, timeout=2).decode()
+            win = json.loads(win_raw)
+            if win and "title" in win and win.get("is_visible", True) and not win.get("is_minimized", False):
+                icon = get_icon(win.get("appid", ""), win.get("title", ""))
+                title = win.get("title", "")
+                if len(title) > 42:
+                    title = title[:39] + "..."
+                win_payload = {
+                    "text": f"{icon}  {title}",
+                    "tooltip": win.get("title", ""),
+                    "class": "focused"
+                }
             else:
-                css_class.append("empty")
-            if is_urgent:
-                css_class.append("urgent")
-
-            tooltip = f"Espacio {idx}" + (" (Activo)" if is_active else "")
-            if cls_list:
-                tooltip += "\n" + "\n".join("• " + (c.get("appid") or "app") + " - " + (c.get("title") or "")[:35] for c in cls_list)
-
-            payload = {
-                "text": text,
-                "alt": str(idx),
-                "tooltip": tooltip,
-                "class": css_class
-            }
-
-        tmp_path = f"{CACHE_DIR}/ws_{idx}.json.tmp"
-        dst_path = f"{CACHE_DIR}/ws_{idx}.json"
-        with open(tmp_path, "w", encoding="utf-8") as f:
-            json.dump(payload, f, ensure_ascii=False)
-        os.replace(tmp_path, dst_path)
-
-    # Window title update
-    try:
-        win_raw = subprocess.check_output(["mmsg", "get", "focusing-client"], stderr=subprocess.DEVNULL, timeout=2).decode()
-        win = json.loads(win_raw)
-        if win and "title" in win and win.get("is_visible", True) and not win.get("is_minimized", False):
-            icon = get_icon(win.get("appid", ""), win.get("title", ""))
-            title = win.get("title", "")
-            if len(title) > 42:
-                title = title[:39] + "..."
-            win_payload = {
-                "text": f"{icon}  {title}",
-                "tooltip": win.get("title", ""),
-                "class": "focused"
-            }
-        else:
+                win_payload = {"text": "", "class": "empty"}
+        except Exception:
             win_payload = {"text": "", "class": "empty"}
-    except Exception:
-        win_payload = {"text": "", "class": "empty"}
 
-    tmp_win = f"{CACHE_DIR}/window.json.tmp"
-    dst_win = f"{CACHE_DIR}/window.json"
-    with open(tmp_win, "w", encoding="utf-8") as f:
-        json.dump(win_payload, f, ensure_ascii=False)
-    os.replace(tmp_win, dst_win)
+        tmp_win = f"{CACHE_DIR}/window_{pid}.tmp"
+        dst_win = f"{CACHE_DIR}/window.json"
+        try:
+            with open(tmp_win, "w", encoding="utf-8") as f:
+                json.dump(win_payload, f, ensure_ascii=False)
+            os.replace(tmp_win, dst_win)
+        except OSError:
+            pass
+    finally:
+        if lock_fd:
+            try:
+                fcntl.flock(lock_fd, fcntl.LOCK_UN)
+                lock_fd.close()
+            except Exception:
+                pass
+
+def is_cache_fresh():
+    ws_file = f"{CACHE_DIR}/ws_1.json"
+    if not os.path.exists(ws_file):
+        return False
+    try:
+        return (time.time() - os.path.getmtime(ws_file)) < 0.8
+    except Exception:
+        return False
+
+def is_daemon_running():
+    pid_file = f"{CACHE_DIR}/daemon.pid"
+    if not os.path.exists(pid_file):
+        return False
+    try:
+        pid = int(open(pid_file).read().strip())
+        if pid == os.getpid():
+            return True
+        os.kill(pid, 0)
+        with open(f"/proc/{pid}/cmdline", "rb") as f:
+            cmd = f.read().decode(errors="ignore")
+            return "waybar-mango-workspaces" in cmd and "daemon" in cmd
+    except Exception:
+        return False
+
+def ensure_daemon():
+    if not is_daemon_running():
+        try:
+            subprocess.Popen(
+                ["python3", os.path.abspath(__file__), "daemon"],
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+                stdin=subprocess.DEVNULL,
+                start_new_session=True
+            )
+        except Exception:
+            pass
 
 def print_ws(idx):
-    ws_file = f"{CACHE_DIR}/ws_{idx}.json"
-    if not os.path.exists(ws_file):
+    if not is_cache_fresh():
         update_all()
-    if os.path.exists(ws_file):
-        with open(ws_file, "r", encoding="utf-8") as f:
-            sys.stdout.write(f.read())
-            sys.stdout.flush()
-    else:
-        print(json.dumps({"text": str(idx), "class": "empty"}))
+        ensure_daemon()
+    ws_file = f"{CACHE_DIR}/ws_{idx}.json"
+    for _ in range(3):
+        try:
+            if os.path.exists(ws_file):
+                with open(ws_file, "r", encoding="utf-8") as f:
+                    sys.stdout.write(f.read())
+                    sys.stdout.flush()
+                return
+        except OSError:
+            time.sleep(0.01)
+    print(json.dumps({"text": "", "class": ["empty", "hidden"]}))
 
 def print_window():
-    win_file = f"{CACHE_DIR}/window.json"
-    if not os.path.exists(win_file):
+    if not is_cache_fresh():
         update_all()
-    if os.path.exists(win_file):
-        with open(win_file, "r", encoding="utf-8") as f:
-            sys.stdout.write(f.read())
-            sys.stdout.flush()
-    else:
-        print(json.dumps({"text": "", "class": "empty"}))
+        ensure_daemon()
+    win_file = f"{CACHE_DIR}/window.json"
+    for _ in range(3):
+        try:
+            if os.path.exists(win_file):
+                with open(win_file, "r", encoding="utf-8") as f:
+                    sys.stdout.write(f.read())
+                    sys.stdout.flush()
+                return
+        except OSError:
+            time.sleep(0.01)
+    print(json.dumps({"text": "", "class": "empty"}))
 
 def daemon_main():
     # Asegurar instancia única
@@ -189,17 +265,18 @@ def daemon_main():
     if os.path.exists(pid_file):
         try:
             old_pid = int(open(pid_file).read().strip())
-            with open(f"/proc/{old_pid}/cmdline", "rb") as f:
-                cmd = f.read().decode(errors="ignore")
-                if "waybar-mango-workspaces" in cmd and old_pid != os.getpid():
-                    return
+            if old_pid != os.getpid():
+                os.kill(old_pid, 0)
+                with open(f"/proc/{old_pid}/cmdline", "rb") as f:
+                    cmd = f.read().decode(errors="ignore")
+                    if "waybar-mango-workspaces" in cmd and "daemon" in cmd:
+                        return
         except Exception:
             pass
 
     with open(pid_file, "w") as f:
         f.write(str(os.getpid()))
 
-    last_trigger = 0.0
     pending_update = False
     lock = threading.Lock()
 
@@ -229,9 +306,8 @@ def daemon_main():
         t = threading.Thread(target=watcher_thread, args=(watch_cmd,), daemon=True)
         t.start()
 
-    # Periodo de gracia inicial: dar tiempo a Waybar para arrancar y registrar sus manejadores
-    # de señales (SIGRTMIN+1) antes de enviarle señales en tiempo real (evita terminación accidental)
-    time.sleep(1.0)
+    # Periodo de gracia inicial
+    time.sleep(0.5)
 
     # Bucle de debounce y señalización
     while True:

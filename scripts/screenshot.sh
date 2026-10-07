@@ -11,8 +11,18 @@ FILE="$DIR/$(date +%Y%m%d_%H%M%S).png"
 # Opciones para Wofi
 OPCIONES="Seleccionar área (Guardar y Copiar)\nSeleccionar área (Solo Guardar)\nSeleccionar área (Solo Copiar)\nPantalla completa\nVentana activa\nÁrea con delay (3s)"
 
-# Seleccionar a través de Wofi dmenu
-SELECCION=$(echo -e "$OPCIONES" | wofi --dmenu --prompt "Captura de Pantalla:" -i --width 340 --height 270 --lines 6)
+# Si se pasa un argumento, usarlo directamente; si no, abrir menú interactivo Wofi
+if [ -n "$1" ]; then
+    case "$1" in
+        window|ventana) SELECCION="Ventana activa" ;;
+        full|fullscreen|completa) SELECCION="Pantalla completa" ;;
+        area) SELECCION="Seleccionar área (Guardar y Copiar)" ;;
+        *) SELECCION="$1" ;;
+    esac
+else
+    # Seleccionar a través de Wofi dmenu
+    SELECCION=$(echo -e "$OPCIONES" | wofi --dmenu --prompt "Captura de Pantalla:" -i --width 340 --height 270 --lines 6)
+fi
 
 case "$SELECCION" in
     "Seleccionar área (Guardar y Copiar)")
