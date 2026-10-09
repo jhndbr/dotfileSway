@@ -20,8 +20,7 @@
     ],
 
     "modules-right": [
-        "custom/media",
-        "custom/cava",
+        "mpris",
         "group/weather",
         "tray",
         "group/quicksettings",
@@ -59,7 +58,7 @@
         "exec": "~/.local/bin/waybar-mango-workspaces.py 1",
         "return-type": "json",
         "signal": 1,
-        "interval": 1,
+        "interval": "once",
         "on-click": "mmsg dispatch view,1; ~/.local/bin/waybar-mango-workspaces.py update",
         "on-scroll-up": "mmsg dispatch viewtoleft; ~/.local/bin/waybar-mango-workspaces.py update",
         "on-scroll-down": "mmsg dispatch viewtoright; ~/.local/bin/waybar-mango-workspaces.py update",
@@ -69,7 +68,7 @@
         "exec": "~/.local/bin/waybar-mango-workspaces.py 2",
         "return-type": "json",
         "signal": 1,
-        "interval": 1,
+        "interval": "once",
         "on-click": "mmsg dispatch view,2; ~/.local/bin/waybar-mango-workspaces.py update",
         "on-scroll-up": "mmsg dispatch viewtoleft; ~/.local/bin/waybar-mango-workspaces.py update",
         "on-scroll-down": "mmsg dispatch viewtoright; ~/.local/bin/waybar-mango-workspaces.py update",
@@ -79,7 +78,7 @@
         "exec": "~/.local/bin/waybar-mango-workspaces.py 3",
         "return-type": "json",
         "signal": 1,
-        "interval": 1,
+        "interval": "once",
         "on-click": "mmsg dispatch view,3; ~/.local/bin/waybar-mango-workspaces.py update",
         "on-scroll-up": "mmsg dispatch viewtoleft; ~/.local/bin/waybar-mango-workspaces.py update",
         "on-scroll-down": "mmsg dispatch viewtoright; ~/.local/bin/waybar-mango-workspaces.py update",
@@ -89,7 +88,7 @@
         "exec": "~/.local/bin/waybar-mango-workspaces.py 4",
         "return-type": "json",
         "signal": 1,
-        "interval": 1,
+        "interval": "once",
         "on-click": "mmsg dispatch view,4; ~/.local/bin/waybar-mango-workspaces.py update",
         "on-scroll-up": "mmsg dispatch viewtoleft; ~/.local/bin/waybar-mango-workspaces.py update",
         "on-scroll-down": "mmsg dispatch viewtoright; ~/.local/bin/waybar-mango-workspaces.py update",
@@ -99,7 +98,7 @@
         "exec": "~/.local/bin/waybar-mango-workspaces.py 5",
         "return-type": "json",
         "signal": 1,
-        "interval": 1,
+        "interval": "once",
         "on-click": "mmsg dispatch view,5; ~/.local/bin/waybar-mango-workspaces.py update",
         "on-scroll-up": "mmsg dispatch viewtoleft; ~/.local/bin/waybar-mango-workspaces.py update",
         "on-scroll-down": "mmsg dispatch viewtoright; ~/.local/bin/waybar-mango-workspaces.py update",
@@ -109,7 +108,7 @@
         "exec": "~/.local/bin/waybar-mango-workspaces.py 6",
         "return-type": "json",
         "signal": 1,
-        "interval": 1,
+        "interval": "once",
         "on-click": "mmsg dispatch view,6; ~/.local/bin/waybar-mango-workspaces.py update",
         "on-scroll-up": "mmsg dispatch viewtoleft; ~/.local/bin/waybar-mango-workspaces.py update",
         "on-scroll-down": "mmsg dispatch viewtoright; ~/.local/bin/waybar-mango-workspaces.py update",
@@ -119,7 +118,7 @@
         "exec": "~/.local/bin/waybar-mango-workspaces.py 7",
         "return-type": "json",
         "signal": 1,
-        "interval": 1,
+        "interval": "once",
         "on-click": "mmsg dispatch view,7; ~/.local/bin/waybar-mango-workspaces.py update",
         "on-scroll-up": "mmsg dispatch viewtoleft; ~/.local/bin/waybar-mango-workspaces.py update",
         "on-scroll-down": "mmsg dispatch viewtoright; ~/.local/bin/waybar-mango-workspaces.py update",
@@ -129,7 +128,7 @@
         "exec": "~/.local/bin/waybar-mango-workspaces.py 8",
         "return-type": "json",
         "signal": 1,
-        "interval": 1,
+        "interval": "once",
         "on-click": "mmsg dispatch view,8; ~/.local/bin/waybar-mango-workspaces.py update",
         "on-scroll-up": "mmsg dispatch viewtoleft; ~/.local/bin/waybar-mango-workspaces.py update",
         "on-scroll-down": "mmsg dispatch viewtoright; ~/.local/bin/waybar-mango-workspaces.py update",
@@ -139,7 +138,7 @@
         "exec": "~/.local/bin/waybar-mango-workspaces.py 9",
         "return-type": "json",
         "signal": 1,
-        "interval": 1,
+        "interval": "once",
         "on-click": "mmsg dispatch view,9; ~/.local/bin/waybar-mango-workspaces.py update",
         "on-scroll-up": "mmsg dispatch viewtoleft; ~/.local/bin/waybar-mango-workspaces.py update",
         "on-scroll-down": "mmsg dispatch viewtoright; ~/.local/bin/waybar-mango-workspaces.py update",
@@ -151,7 +150,7 @@
         "exec": "~/.local/bin/waybar-mango-workspaces.py window",
         "return-type": "json",
         "signal": 1,
-        "interval": 2,
+        "interval": "once",
         "max-length": 45,
         "tooltip": true
     },
@@ -196,27 +195,36 @@
         "interval": 1
     },
 
-    /* ── Mini Reproductor Multimedia (Compacto con Marquee) ──────── */
-    "custom/media": {
-        "format": "{}",
-        "return-type": "json",
-        "max-length": 25,
-        "exec": "~/.local/bin/waybar-media.py",
-        "interval": 1,
+    /* ── Reproductor Multimedia Nativo (MPRIS — DBus Event-driven) ─ */
+    "mpris": {
+        "format": "{player_icon}  {dynamic}",
+        "format-paused": "{status_icon} <i>{dynamic}</i>",
+        "player-icons": {
+            "default": "󰎆",
+            "brave": "󰊯",
+            "chromium": "󰊯",
+            "chrome": "󰊯",
+            "firefox": "󰈹",
+            "zen": "󰈹",
+            "spotify": "󰓇",
+            "strawberry": "󰎆",
+            "mpv": "󰎆",
+            "vlc": "󰕼"
+        },
+        "status-icons": {
+            "paused": "󰏤"
+        },
+        "dynamic-order": ["title", "artist"],
+        "dynamic-separator": " · ",
+        "dynamic-len": 28,
+        "max-length": 32,
+        "tooltip-format": "{player} ({status}): {title} - {artist}",
         "on-click": "playerctl play-pause",
         "on-click-right": "playerctl next",
         "on-click-middle": "playerctl previous",
         "on-scroll-up": "playerctl volume 0.05+",
         "on-scroll-down": "playerctl volume 0.05-",
         "smooth-scrolling-threshold": 1
-    },
-
-    /* ── Visualizador de Audio CAVA ──────────────────────────────── */
-    "custom/cava": {
-        "format": "{}",
-        "return-type": "json",
-        "exec": "~/.local/bin/waybar-cava.py",
-        "tooltip": true
     },
 
     /* ── Centro de Control (Drawer Plegable para Luz Nocturna y Cafeína) */
@@ -249,7 +257,7 @@
         },
         "return-type": "json",
         "exec": "if pgrep -x gammastep >/dev/null; then echo '{\"alt\": \"active\", \"tooltip\": \"Luz Nocturna: Activada\\nClic para desactivar\", \"class\": \"active\"}'; else echo '{\"alt\": \"inactive\", \"tooltip\": \"Luz Nocturna: Desactivada\\nClic para activar\", \"class\": \"inactive\"}'; fi",
-        "interval": 2,
+        "interval": 10,
         "on-click": "~/.local/bin/gammastep-toggle.sh; pkill -RTMIN+8 waybar",
         "signal": 8,
         "tooltip": true
@@ -263,7 +271,7 @@
         },
         "return-type": "json",
         "exec": "if [ -f \"$HOME/.config/caffeine_active\" ] || [ -f \"${XDG_RUNTIME_DIR:-/tmp}/caffeine_active\" ]; then echo '{\"alt\": \"active\", \"tooltip\": \"Modo Cafeína: Activado\\nClic para desactivar\", \"class\": \"active\"}'; else echo '{\"alt\": \"inactive\", \"tooltip\": \"Modo Cafeína: Desactivado\\nClic para activar\", \"class\": \"inactive\"}'; fi",
-        "interval": 2,
+        "interval": 10,
         "on-click": "~/.local/bin/caffeine-toggle.sh; pkill -RTMIN+9 waybar",
         "signal": 9,
         "tooltip": true
@@ -371,7 +379,7 @@
     },
 
     "custom/hardware-toggle": {
-        "format": "",
+        "format": "󰅁",
         "tooltip-format": "Estadísticas de Hardware (CPU, RAM, Disco, Temperatura)\nClick para expandir / ocultar",
         "tooltip": true
     },
@@ -462,7 +470,7 @@
 
     /* ── Menú de Apagado / Sesión ────────────────────────────────── */
     "custom/power": {
-        "format": "⏻",
+        "format": "󰐥",
         "tooltip-format": "Menú de Apagado y Sesión",
         "on-click": "~/.local/bin/power-menu.sh",
         "tooltip": true

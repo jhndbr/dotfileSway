@@ -51,9 +51,10 @@
     box-shadow: none;
     text-shadow: none;
     -gtk-icon-shadow: none;
-    font-family: "Inter", "SF Pro Display", "JetBrainsMono Nerd Font", sans-serif;
+    font-family: "Inter", "JetBrainsMono Nerd Font", sans-serif;
     font-size: 10.5px;
     font-weight: 500;
+    font-feature-settings: "tnum";
     min-height: 0;
     padding: 0;
     margin: 0;
@@ -90,7 +91,7 @@ tooltip {
 
 tooltip label {
     color: @text_primary;
-    font-size: 10px;
+    font-size: 10.5px;
 }
 
 /* ══════════════════════════════════════════════════════════════
@@ -101,6 +102,7 @@ tooltip label {
 #custom-menu,
 #workspaces,
 #group-workspaces,
+#mpris,
 #tray,
 #weather,
 #group-weather,
@@ -126,6 +128,7 @@ tooltip label {
 #custom-menu:hover,
 #workspaces:hover,
 #group-workspaces:hover,
+#mpris:hover,
 #tray:hover,
 #weather:hover,
 #group-weather:hover,
@@ -200,7 +203,6 @@ tooltip label {
 
 /* Lanzador de aplicaciones */
 #custom-menu {
-    font-family: "JetBrainsMono Nerd Font", "Symbols Nerd Font", monospace;
     font-size: 12px;
     color: @col_primary;
     background: @bg_pill;
@@ -351,8 +353,8 @@ tooltip label {
     border: none;
     border-radius: 999px;
     color: @text_primary;
-    font-size: 10px;
-    font-weight: 600;
+    font-size: 10.5px;
+    font-weight: 500;
     padding: 0 10px;
     margin: 2px 2px;
     min-height: 20px;
@@ -386,8 +388,8 @@ window#waybar.empty #window {
     background: alpha(@col_primary, 0.18);
     color: @col_primary;
     font-size: 10.5px;
-    font-weight: 700;
-    letter-spacing: 0.2px;
+    font-weight: 600;
+    letter-spacing: 0.1px;
     border-radius: 999px;
     border: none;
     padding: 0 12px;
@@ -405,88 +407,46 @@ window#waybar.empty #window {
 }
 
 /* ══════════════════════════════════════════════════════════════
-   ║  DERECHA — Media · CAVA · Clima · QuickSettings · Hardware  ║
+   ║  DERECHA — MPRIS · Clima · QuickSettings · Hardware         ║
    ══════════════════════════════════════════════════════════════ */
 
-/* Reproductor multimedia & Visualizador CAVA Fusionados (Píldora Única Compacta) */
-#custom-media {
-    font-family: "JetBrainsMono Nerd Font", monospace;
-    font-size: 10px;
+/* Reproductor multimedia nativo (MPRIS — Event-driven & Ultra-eficiente) */
+#mpris {
+    font-size: 10.5px;
     font-weight: 500;
-    border-top-left-radius: 999px;
-    border-bottom-left-radius: 999px;
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
+    border-radius: 999px;
     border: none;
-    padding: 0 4px 0 7px;
-    margin: 2px 0 2px 2px;
-    min-width: 100px;
+    padding: 0 9px;
+    margin: 2px 2px;
     min-height: 20px;
     color: @text_secondary;
     background: @bg_pill;
     box-shadow: none;
-    transition: background 0.18s cubic-bezier(0.2, 0, 0, 1), color 0.18s ease;
+    transition: background 0.18s cubic-bezier(0.16, 1, 0.3, 1), color 0.18s ease;
 }
 
-#custom-media.Playing {
+#mpris:hover {
+    background: @bg_pill_hover;
+    color: @text_primary;
+}
+
+#mpris.playing {
     color: @col_on_primary_container;
     background: @col_primary_container;
-    font-weight: 500;
+    font-weight: 600;
 }
 
-#custom-media.Playing:hover {
+#mpris.playing:hover {
     background: alpha(@col_primary_container, 0.85);
 }
 
-#custom-media.Paused,
-#custom-media.stopped {
+#mpris.paused {
     color: @text_muted;
     background: @bg_pill;
-    opacity: 1;
 }
 
-#custom-media.Paused:hover,
-#custom-media.stopped:hover {
+#mpris.paused:hover {
     color: @text_secondary;
-    background: @bg_pill_hover;
-}
-
-/* Visualizador CAVA — Parte derecha de la píldora fusionada (Fondo y Ancho Sincronizados) */
-#custom-cava {
-    font-family: "JetBrainsMono Nerd Font", monospace;
-    font-size: 10px;
-    color: @text_muted;
-    background: @bg_pill;
-    border: none;
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
-    border-top-right-radius: 999px;
-    border-bottom-right-radius: 999px;
-    padding: 0 7px 0 0;
-    margin: 2px 2px 2px 0;
-    min-width: 38px;
-    min-height: 20px;
-    letter-spacing: 0.5px;
-    box-shadow: none;
-    transition: background 0.18s cubic-bezier(0.2, 0, 0, 1), color 0.18s ease;
-}
-
-#custom-cava.active {
-    color: @col_tertiary;
-    background: @col_primary_container;
-}
-
-#custom-cava.active:hover {
-    background: alpha(@col_primary_container, 0.85);
-}
-
-#custom-cava.silent {
-    color: @text_muted;
-    background: @bg_pill;
-}
-
-#custom-cava:hover,
-#custom-cava.silent:hover {
     background: @bg_pill_hover;
 }
 
@@ -498,7 +458,6 @@ window#waybar.empty #window {
 }
 
 #custom-weather-icon {
-    font-family: "JetBrainsMono Nerd Font", "Symbols Nerd Font", monospace;
     font-size: 12px;
     padding: 0 2px;
     min-width: 12px;
@@ -527,8 +486,7 @@ window#waybar.empty #window {
 }
 
 #custom-quicksettings {
-    font-family: "JetBrainsMono Nerd Font", "Symbols Nerd Font", monospace;
-    font-size: 12.5px;
+    font-size: 12px;
     color: @text_secondary;
     padding: 0 3px;
     margin: 0 1px;
@@ -542,7 +500,6 @@ window#waybar.empty #window {
 
 #custom-gammastep,
 #custom-caffeine {
-    font-family: "JetBrainsMono Nerd Font", "Symbols Nerd Font", monospace;
     font-size: 12px;
     padding: 0 3px;
     margin: 0 1px;
@@ -590,7 +547,8 @@ window#waybar.empty #window {
 
 /* Sub-drawers */
 #network,
-#audio {
+#audio,
+#battery {
     margin: 0 1px;
     padding: 0;
 }
@@ -606,11 +564,11 @@ window#waybar.empty #window {
 /* Iconos de hardware e indicadores */
 #pulseaudio.icon,
 #network.icon,
+#battery.icon,
 #cpu.icon,
 #memory.icon,
 #disk.icon,
 #temperature.icon {
-    font-family: "JetBrainsMono Nerd Font", "Symbols Nerd Font", monospace;
     font-size: 12px;
     color: @text_secondary;
     padding: 0 2px;
@@ -619,12 +577,18 @@ window#waybar.empty #window {
 }
 
 #pulseaudio.icon.muted,
-#network.icon.disconnected {
+#network.icon.disconnected,
+#battery.icon.critical:not(.charging) {
     color: @col_error;
+}
+
+#battery.icon.warning:not(.charging) {
+    color: #f8e45c;
 }
 
 #controls:hover #pulseaudio.icon,
 #controls:hover #network.icon,
+#controls:hover #battery.icon,
 #hardware:hover #cpu.icon,
 #hardware:hover #memory.icon,
 #hardware:hover #disk.icon,
@@ -634,9 +598,8 @@ window#waybar.empty #window {
 
 /* Botón flecha para colapsar hardware */
 #custom-hardware-toggle {
-    font-family: "JetBrainsMono Nerd Font", "Symbols Nerd Font", monospace;
-    font-size: 11.5px;
-    font-weight: bold;
+    font-size: 12px;
+    font-weight: 600;
     color: @text_muted;
     padding: 0 2px;
     min-width: 12px;
@@ -650,11 +613,12 @@ window#waybar.empty #window {
 /* Texto numérico de métricas */
 #pulseaudio.text,
 #network.text,
+#battery.text,
 #cpu.text,
 #memory.text,
 #disk.text,
 #temperature.text {
-    font-size: 10px;
+    font-size: 10.5px;
     font-weight: 500;
     padding: 0 2px 0 1px;
     color: @text_secondary;
@@ -663,6 +627,7 @@ window#waybar.empty #window {
 
 #pulseaudio.text:hover,
 #network.text:hover,
+#battery.text:hover,
 #cpu.text:hover,
 #memory.text:hover,
 #disk.text:hover,
@@ -694,8 +659,7 @@ window#waybar.empty #window {
 
 /* Botón de apagado / Sesión */
 #custom-power {
-    font-family: "JetBrainsMono Nerd Font", "Symbols Nerd Font", monospace;
-    font-size: 11.5px;
+    font-size: 12px;
     padding: 0 1px 0 0;
     color: @text_muted;
     background: @bg_pill;
