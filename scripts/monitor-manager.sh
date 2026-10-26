@@ -311,7 +311,7 @@ action_save_config() {
 
     while IFS= read -r line; do
         [ -n "$line" ] && echo "$line" >> "$MANGO_MONITOR_CONF"
-    done < <(echo "$data" | jq -r '.[] | if .active then "monitorrule=name:\(.name),width:\(.current_mode.width // 1920),height:\(.current_mode.height // 1080),refresh:\(if (.current_mode.refresh // 60) > 1000 then (.current_mode.refresh / 1000) else .current_mode.refresh end | floor),x:\(.rect.x),y:\(.rect.y),scale:\((.scale // 1) | tostring | sub("\\.0+$"; "")),vrr:1" else empty end')
+    done < <(echo "$data" | jq -r '.[] | if .active then "monitor_rule=name:\(.name),width:\(.current_mode.width // 1920),height:\(.current_mode.height // 1080),refresh:\(if (.current_mode.refresh // 60) > 1000 then (.current_mode.refresh / 1000) else .current_mode.refresh end | floor),x:\(.rect.x),y:\(.rect.y),scale:\((.scale // 1) | tostring | sub("\\.0+$"; "")),vrr:1" else empty end')
 
     # Sincronizar con repo si existe
     local repo_mango_mon="$HOME/Documentos/Github/dotfileSway/config/mango/monitor.conf"

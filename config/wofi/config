@@ -1,7 +1,7 @@
 show=drun
 term=foot
 width=500
-height=380
+height=410
 prompt=  Buscar...
 allow_images=true
 image_size=28
@@ -12,4 +12,4 @@ hide_scroll=true
 no_actions=true
 matching=fuzzy
 allow_markup=true
-layer=overlay
+layer=top

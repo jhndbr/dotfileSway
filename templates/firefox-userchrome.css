@@ -4,23 +4,23 @@
  * ╚══════════════════════════════════════════════════════════════╝ */
 
 :root {
-  /* Tokens Material 3 */
+  /* Tokens Material 3 — Frosted Glass */
   --md-primary: {{colors.primary.dark.hex}};
   --md-on-primary: {{colors.on_primary.dark.hex}};
-  --md-primary-container: {{colors.primary_container.dark.hex}};
+  --md-primary-container: {{colors.primary_container.dark.hex}}d9;
   --md-on-primary-container: {{colors.on_primary_container.dark.hex}};
   --md-secondary: {{colors.secondary.dark.hex}};
   --md-on-secondary: {{colors.on_secondary.dark.hex}};
-  --md-surface: {{colors.surface.dark.hex}};
+  --md-surface: {{colors.surface.dark.hex}}bf;
   --md-on-surface: {{colors.on_surface.dark.hex}};
   --md-on-surface-variant: {{colors.on_surface_variant.dark.hex}};
-  --md-surface-container-lowest: {{colors.surface_container_lowest.dark.hex}};
-  --md-surface-container-low: {{colors.surface_container_low.dark.hex}};
-  --md-surface-container: {{colors.surface_container.dark.hex}};
-  --md-surface-container-high: {{colors.surface_container_high.dark.hex}};
-  --md-surface-container-highest: {{colors.surface_container_highest.dark.hex}};
+  --md-surface-container-lowest: {{colors.surface_container_lowest.dark.hex}}a6;
+  --md-surface-container-low: {{colors.surface_container_low.dark.hex}}b3;
+  --md-surface-container: {{colors.surface_container.dark.hex}}bf;
+  --md-surface-container-high: {{colors.surface_container_high.dark.hex}}d1;
+  --md-surface-container-highest: {{colors.surface_container_highest.dark.hex}}e0;
   --md-outline: {{colors.outline.dark.hex}};
-  --md-outline-variant: {{colors.outline_variant.dark.hex}};
+  --md-outline-variant: {{colors.outline_variant.dark.hex}}80;
   --md-error: {{colors.error.dark.hex}};
 
   /* Variables nativas de barras de herramientas */
@@ -90,11 +90,13 @@
 }
 
 /* ── Cajas y Contenedores Principales ────────────────────────── */
+#main-window,
 #navigator-toolbox,
 #nav-bar,
 #PersonalToolbar,
 #TabsToolbar {
   background-color: var(--md-surface-container-low) !important;
+  backdrop-filter: blur(14px) saturate(140%) !important;
   color: var(--md-on-surface) !important;
   border: none !important;
   box-shadow: none !important;
@@ -116,6 +118,7 @@ sidebar-main,
 #vertical-tabs,
 .vertical-tabs-container {
   background-color: var(--md-surface-container-low) !important;
+  backdrop-filter: blur(14px) saturate(140%) !important;
   color: var(--md-on-surface) !important;
   border: none !important;
   border-color: transparent !important;
@@ -558,6 +561,7 @@ sidebar-main toolbarbutton:hover,
 .urlbarView-body-outer,
 .urlbarView-body-inner {
   background-color: var(--md-surface-container-high) !important;
+  backdrop-filter: blur(16px) saturate(140%) !important;
   color: var(--md-on-surface) !important;
   border: none !important;
   border-radius: 0 0 12px 12px !important;
@@ -670,6 +674,7 @@ panel::part(content),
   appearance: none !important;
   background-color: var(--md-surface-container-high) !important;
   background: var(--md-surface-container-high) !important;
+  backdrop-filter: blur(16px) saturate(140%) !important;
   color: #ffffff !important;
   border: 1px solid var(--md-outline-variant) !important;
   border-radius: 10px !important;

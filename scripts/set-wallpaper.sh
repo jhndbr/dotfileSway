@@ -6,6 +6,7 @@
 # ╚══════════════════════════════════════════════════════════════╝
 
 set -e
+export PATH="$HOME/.local/bin:$PATH"
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_DIR="$(cd "$SCRIPT_DIR/.." 2>/dev/null && pwd || true)"
@@ -121,6 +122,11 @@ if [ ! -f "$WALLPAPER_INPUT" ]; then
     fi
 fi
 
+if command -v notify-send &>/dev/null; then
+    WALL_BASENAME="$(basename "$WALLPAPER_INPUT")"
+    notify-send "Fondo de Pantalla" "Aplicando '$WALL_BASENAME' y regenerando tema..." -i preferences-desktop-wallpaper -t 2000 2>/dev/null || true
+fi
+
 TARGET_WALLPAPER="$HOME/Pictures/1.jpg"
 CONVERTED_PNG="$WALLPAPER_INPUT"
 
@@ -174,6 +180,7 @@ mkdir -p "$HOME/.config/gtk-3.0" "$HOME/.config/gtk-4.0" "$HOME/.config/joplin-d
 mkdir -p "$HOME/.config/zed/themes"
 mkdir -p "$HOME/.config/qt5ct/colors" "$HOME/.config/qt6ct/colors"
 mkdir -p "$HOME/.config/kitty" "$HOME/.config/foot" "$HOME/.config/wofi" "$HOME/.config/swayosd"
+mkdir -p "$HOME/.config/lazygit" "$HOME/.config/fastfetch" "$HOME/.config/zellij/themes"
 
 # Detectar perfil activo de Thunderbird y asegurar carpeta chrome
 TB_PROFILE=$(find "$HOME/.thunderbird" -maxdepth 2 -type d -name "*.default-release" 2>/dev/null | head -n 1)
@@ -197,9 +204,12 @@ if [ -n "$FF_PROFILE" ]; then
     if [ ! -f "$FF_PROFILE/chrome/userContent.css" ]; then
         echo '@import "userChrome.css";' > "$FF_PROFILE/chrome/userContent.css"
     fi
-    # Asegurar que las hojas de estilo de usuario estén habilitadas en Firefox
+    # Asegurar que las hojas de estilo de usuario y transparencia estén habilitadas en Firefox
     if ! grep -q "toolkit.legacyUserProfileCustomizations.stylesheets" "$FF_PROFILE/user.js" 2>/dev/null; then
         echo 'user_pref("toolkit.legacyUserProfileCustomizations.stylesheets", true);' >> "$FF_PROFILE/user.js"
+    fi
+    if ! grep -q "browser.tabs.allow_transparent_browser" "$FF_PROFILE/user.js" 2>/dev/null; then
+        echo 'user_pref("browser.tabs.allow_transparent_browser", true);' >> "$FF_PROFILE/user.js"
     fi
 fi
 
@@ -299,6 +309,22 @@ output_path = '$HOME/.config/joplin-desktop/userchrome.css'
 [templates.joplin_style]
 input_path = '$TEMPLATES_DIR/joplin-userstyle.css'
 output_path = '$HOME/.config/joplin-desktop/userstyle.css'
+
+[templates.lazygit]
+input_path = '$TEMPLATES_DIR/lazygit-config.yml'
+output_path = '$HOME/.config/lazygit/config.yml'
+
+[templates.fastfetch]
+input_path = '$TEMPLATES_DIR/fastfetch-config.jsonc'
+output_path = '$HOME/.config/fastfetch/config.jsonc'
+
+[templates.starship]
+input_path = '$TEMPLATES_DIR/starship.toml'
+output_path = '$HOME/.config/starship.toml'
+
+[templates.zellij]
+input_path = '$TEMPLATES_DIR/zellij-theme.kdl'
+output_path = '$HOME/.config/zellij/themes/matugen.kdl'
 EOF
 
 if [ -n "$TB_PROFILE" ]; then
@@ -346,7 +372,7 @@ GTK4_FIXES='
   outline-style: none;
 }
 
-/* ── Fondo sólido de ventana para evitar huecos transparentes ── */
+/* ── Fondo translúcido de ventana (Frosted Glass sin doble capa en decoration) ── */
 window,
 window.background,
 window.csd,
@@ -360,7 +386,7 @@ window.devel,
 window.csd decoration,
 window decoration,
 decoration {
-  background-color: @window_bg_color;
+  background-color: transparent;
   border-style: none;
   border-width: 0;
   box-shadow: none;
@@ -510,7 +536,7 @@ GTK3_FIXES='
   outline-style: none;
 }
 
-/* ── Fondo de ventana y decoraciones (evita recuadros en capas Wayland) ── */
+/* ── Fondo translúcido de ventana y decoraciones (Frosted Glass sin doble capa) ── */
 window.csd:not(#window):not(#osd),
 window:not(#window):not(#osd) {
   background-color: @window_bg_color;
@@ -519,12 +545,35 @@ window:not(#window):not(#osd) {
 
 window.csd:not(#window):not(#osd) decoration,
 window:not(#window):not(#osd) decoration {
-  background-color: @window_bg_color;
+  background-color: transparent;
   border-style: none;
   border-width: 0;
   box-shadow: none;
   margin: 0;
   padding: 0;
+}
+
+/* ── Thunar File Manager: Frosted Glass & Translucent Views ── */
+.thunar,
+thunar-window,
+window.thunar {
+  background-color: @window_bg_color;
+}
+
+thunar-window .standard-view,
+thunar-window scrolledwindow,
+thunar-window treeview,
+thunar-window iconview,
+thunar-window .sidebar,
+thunar-window placessidebar,
+thunar-window paned,
+thunar-window .view {
+  background-color: transparent;
+}
+
+thunar-window .standard-view:backdrop,
+thunar-window scrolledwindow:backdrop {
+  background-color: transparent;
 }
 
 decoration {
@@ -616,11 +665,11 @@ printf '@import url("dank-colors.css");\n%s\n' "$GTK4_FIXES" \
     > "$HOME/.config/gtk-4.0/gtk-dark.css"
 
 
-# ── 6. Sincronizar color de iconos en segundo plano ─────
+# ── 6. Sincronizar color de iconos Papirus dinámicamente ─────
 if [ -f "$HOME/.local/bin/sync-icon-color.py" ]; then
-    python3 "$HOME/.local/bin/sync-icon-color.py" "$CONVERTED_PNG" "$CURRENT_MODE" &>/dev/null &
+    python3 "$HOME/.local/bin/sync-icon-color.py" "$CONVERTED_PNG" "$CURRENT_MODE" 2>/dev/null || true
 elif [ -f "$SCRIPT_DIR/sync-icon-color.py" ]; then
-    python3 "$SCRIPT_DIR/sync-icon-color.py" "$CONVERTED_PNG" "$CURRENT_MODE" &>/dev/null &
+    python3 "$SCRIPT_DIR/sync-icon-color.py" "$CONVERTED_PNG" "$CURRENT_MODE" 2>/dev/null || true
 fi
 
 # ── 7. Asegurar estilo Qt en Fusion, Papirus y kdeglobals ──
@@ -633,6 +682,10 @@ sed -i 's/^style=.*/style=Fusion/' "$HOME/.config/qt5ct/qt5ct.conf" 2>/dev/null 
 sed -i 's/^style=.*/style=Fusion/' "$HOME/.config/qt6ct/qt6ct.conf" 2>/dev/null || true
 sed -i "s/^icon_theme=.*/icon_theme=$QT_ICON_THEME/" "$HOME/.config/qt5ct/qt5ct.conf" 2>/dev/null || true
 sed -i "s/^icon_theme=.*/icon_theme=$QT_ICON_THEME/" "$HOME/.config/qt6ct/qt6ct.conf" 2>/dev/null || true
+sed -i 's|^color_scheme_path=.*|color_scheme_path='"$HOME"'/.config/qt5ct/colors/matugen.conf|' "$HOME/.config/qt5ct/qt5ct.conf" 2>/dev/null || true
+sed -i 's|^color_scheme_path=.*|color_scheme_path='"$HOME"'/.config/qt6ct/colors/matugen.conf|' "$HOME/.config/qt6ct/qt6ct.conf" 2>/dev/null || true
+sed -i 's/^custom_palette=.*/custom_palette=true/' "$HOME/.config/qt5ct/qt5ct.conf" 2>/dev/null || true
+sed -i 's/^custom_palette=.*/custom_palette=true/' "$HOME/.config/qt6ct/qt6ct.conf" 2>/dev/null || true
 
 pkill -x waybar 2>/dev/null || true
 (sleep 0.2; setsid waybar -c "$HOME/.config/waybar/config" -s "$HOME/.config/waybar/style.css" </dev/null >/dev/null 2>&1 &)
@@ -667,7 +720,7 @@ elif [ -d "$HOME/Documentos/Github/dotfileSway/config" ]; then
 fi
 
 if [ -n "$DOTFILES_DIR" ] && [ -d "$DOTFILES_DIR" ]; then
-    mkdir -p "$DOTFILES_DIR/config/gtk-3.0" "$DOTFILES_DIR/config/gtk-4.0" "$DOTFILES_DIR/config/zed/themes" "$DOTFILES_DIR/config/foot" "$DOTFILES_DIR/config/wofi" "$DOTFILES_DIR/scripts" "$DOTFILES_DIR/config/qt5ct" "$DOTFILES_DIR/config/qt6ct" "$DOTFILES_DIR/config/mango"
+    mkdir -p "$DOTFILES_DIR/config/gtk-3.0" "$DOTFILES_DIR/config/gtk-4.0" "$DOTFILES_DIR/config/zed/themes" "$DOTFILES_DIR/config/foot" "$DOTFILES_DIR/config/wofi" "$DOTFILES_DIR/scripts" "$DOTFILES_DIR/config/qt5ct" "$DOTFILES_DIR/config/qt6ct" "$DOTFILES_DIR/config/mango" "$DOTFILES_DIR/config/lazygit" "$DOTFILES_DIR/config/fastfetch" "$DOTFILES_DIR/config/zellij/themes"
     cp -f "$HOME/.config/gtk-3.0/dank-colors.css" "$DOTFILES_DIR/config/gtk-3.0/dank-colors.css" 2>/dev/null || true
     cp -f "$HOME/.config/gtk-4.0/dank-colors.css" "$DOTFILES_DIR/config/gtk-4.0/dank-colors.css" 2>/dev/null || true
     cp -f "$HOME/.config/gtk-3.0/settings.ini" "$DOTFILES_DIR/config/gtk-3.0/settings.ini" 2>/dev/null || true
@@ -681,6 +734,10 @@ if [ -n "$DOTFILES_DIR" ] && [ -d "$DOTFILES_DIR" ]; then
     cp -f "$HOME/.config/wofi/style.css" "$DOTFILES_DIR/config/wofi/style.css" 2>/dev/null || true
     cp -f "$HOME/.config/swayosd/style.css" "$DOTFILES_DIR/config/swayosd/style.css" 2>/dev/null || true
     cp -f "$HOME/.config/mango/dank-colors" "$DOTFILES_DIR/config/mango/dank-colors" 2>/dev/null || true
+    cp -f "$HOME/.config/lazygit/config.yml" "$DOTFILES_DIR/config/lazygit/config.yml" 2>/dev/null || true
+    cp -f "$HOME/.config/fastfetch/config.jsonc" "$DOTFILES_DIR/config/fastfetch/config.jsonc" 2>/dev/null || true
+    cp -f "$HOME/.config/starship.toml" "$DOTFILES_DIR/config/starship.toml" 2>/dev/null || true
+    cp -f "$HOME/.config/zellij/themes/matugen.kdl" "$DOTFILES_DIR/config/zellij/themes/matugen.kdl" 2>/dev/null || true
 fi
 
 # ── 10. Refrescar GTK, Tipografía e Iconos en tiempo real vía D-Bus ─
@@ -735,7 +792,9 @@ fi
 # ── 11. Notificación ──────────────────────────────────────────────
 SCHEME_CLEAN="${CURRENT_SCHEME#scheme-}"
 if command -v dunstify &>/dev/null; then
-    dunstify -a "DMS Matugen" -r 8812 "🎨 Tema Dinámico Aplicado" "Modo: ${CURRENT_MODE^} | Esquema: ${SCHEME_CLEAN^}" || true
+    dunstify -a "DMS Matugen" -r 8812 -i preferences-desktop-wallpaper "🎨 Tema Dinámico Aplicado" "Modo: ${CURRENT_MODE^} | Esquema: ${SCHEME_CLEAN^}" || true
+elif command -v notify-send &>/dev/null; then
+    notify-send "🎨 Tema Dinámico Aplicado" "Modo: ${CURRENT_MODE^} | Esquema: ${SCHEME_CLEAN^}" -i preferences-desktop-wallpaper -t 3000 || true
 fi
 
 echo "✅ Tema dinámico aplicado exitosamente: Modo=$CURRENT_MODE, Esquema=$CURRENT_SCHEME"

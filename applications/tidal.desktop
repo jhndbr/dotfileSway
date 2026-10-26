@@ -1,0 +1,8 @@
+[Desktop Entry]
+Version=1.0
+Terminal=false
+Type=Application
+Name=TIDAL
+Exec=/opt/brave-origin-bin/brave-origin --app=https://listen.tidal.com
+Icon=/home/jhon/.local/share/icons/hicolor/512x512/apps/brave-ilbcbhpbmggihnbldpmmbppiclfnifck-Default.png
+StartupWMClass=crx_ilbcbhpbmggihnbldpmmbppiclfnifck

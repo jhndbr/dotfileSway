@@ -3,13 +3,13 @@
 # ║        Generado automáticamente por Matugen                  ║
 # ╚══════════════════════════════════════════════════════════════╝
 
-bordercolor         = 0x2b3732ff
-focuscolor          = 0xbdd062ff
-urgentcolor         = 0xffb4abff
-rootcolor           = 0x0a1611ff
-maximizescreencolor = 0x16221dff
-overlaycolor        = 0x212c27ff
-globalcolor         = 0xc0ce7eff
-scratchpadcolor     = 0x7e968aff
-dropcolor           = 0xbdd06255
-splitcolor          = 0x8ad6b7ff
+border_color         = 0x353535ff
+focus_color          = 0x93d786ff
+urgent_color         = 0xffb4abff
+root_color           = 0x131313ff
+maximized_screen_color = 0x1f1f1fff
+overlay_color        = 0x2a2a2aff
+global_color         = 0xbaccb2ff
+scratchpad_color     = 0x919191ff
+drop_color           = 0x93d78655
+split_color          = 0xa0cfd3ff

@@ -1,11 +1,22 @@
 # ╔══════════════════════════════════════════════════════════════╗
-# ║           Configuración Minimalista de Starship              ║
-# ║           Estilo macOS Monocromático & Limpio                ║
+# ║           Configuración Dinámica de Starship                 ║
+# ║           Paleta Dinámica Matugen · Material You             ║
 # ╚══════════════════════════════════════════════════════════════╝
 
 add_newline = false
 command_timeout = 3000
 scan_timeout = 50
+
+palette = "matugen"
+
+[palettes.matugen]
+primary = "#93d786"
+secondary = "#baccb2"
+tertiary = "#a0cfd3"
+surface = "#131313"
+on_surface = "#e2e2e2"
+error = "#ffb4ab"
+outline = "#919191"
 
 format = """
 $directory\
@@ -16,7 +27,7 @@ $line_break\
 $character"""
 
 [directory]
-style = "bold white"
+style = "bold primary"
 truncation_length = 3
 truncation_symbol = "…/"
 read_only = " 🔒"
@@ -24,11 +35,11 @@ format = "[$path]($style)[$read_only]($read_only_style) "
 
 [git_branch]
 symbol = "󰘬 "
-style = "bold dimmed white"
+style = "bold secondary"
 format = "on [$symbol$branch]($style) "
 
 [git_status]
-style = "bold dimmed red"
+style = "bold error"
 format = "([$all_status$ahead_behind]($style) )"
 conflicted = "="
 ahead = "⇡${count}"
@@ -43,9 +54,9 @@ deleted = "✘"
 
 [cmd_duration]
 min_time = 2_000
-style = "dimmed yellow"
+style = "dimmed tertiary"
 format = "took [$duration]($style) "
 
 [character]
-success_symbol = "[❯](bold white)"
-error_symbol = "[❯](bold red)"
+success_symbol = "[❯](bold primary)"
+error_symbol = "[❯](bold error)"

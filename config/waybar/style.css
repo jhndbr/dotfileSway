@@ -31,9 +31,9 @@
 @define-color col_error_container     @mat_error_container;
 @define-color col_on_error_container  @mat_on_error_container;
 
-/* Superficies de cápsulas elevadas (Nivel 1 & 2): Sólidas y nítidas */
-@define-color bg_pill                 @mat_surface_container;
-@define-color bg_pill_hover           @mat_surface_container_highest;
+/* Superficies de cápsulas elevadas (Nivel 1 & 2): Translúcidas Frosted Glass */
+@define-color bg_pill                 alpha(@mat_surface_container, 0.74);
+@define-color bg_pill_hover           alpha(@mat_surface_container_highest, 0.88);
 @define-color bg_pill_active          @col_primary_container;
 
 /* Jerarquía tipográfica */
@@ -61,11 +61,11 @@
 }
 
 /* ══════════════════════════════════════════════════════════════
-   ║  BAR CONTAINER — Sólido, elegante y sin cortes bruscos      ║
+   ║  BAR CONTAINER — Frosted Glass con Blur de Capa             ║
    ══════════════════════════════════════════════════════════════ */
 
 window#waybar {
-    background: alpha(@mat_surface, 0.88);
+    background: alpha(@mat_surface, 0.68);
     border: none;
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 0;

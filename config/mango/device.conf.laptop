@@ -14,5 +14,5 @@ trackpad_disable_while_typing=1
 # ── Gestos táctiles Touchpad (3 y 4 dedos) ──────────────────────
 gesturebind=none,left,3,viewtoleft_have_client
 gesturebind=none,right,3,viewtoright_have_client
-gesturebind=none,up,4,togglefloating
-gesturebind=none,down,4,focusmodetoggle
+gesturebind=none,up,4,enteroverview
+gesturebind=none,down,4,leaveoverview

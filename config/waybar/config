@@ -23,7 +23,6 @@
         "mpris",
         "group/weather",
         "tray",
-        "group/quicksettings",
         "group/controls",
         "group/hardware",
         "custom/power"

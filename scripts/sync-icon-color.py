@@ -84,11 +84,12 @@ def classify_to_papirus(hue_deg, s, v):
 def get_image_vibrant_hsv(img_path):
     """
     Analiza directamente la imagen de fondo de pantalla para extraer
-    el tono (Hue) y saturación cromática dominante real.
+    el tono (Hue) y saturación cromática dominante real de forma rápida.
     """
     try:
         from PIL import Image
         img = Image.open(img_path).convert("RGB")
+        img.thumbnail((80, 80))
         import warnings
         with warnings.catch_warnings():
             warnings.simplefilter("ignore")
@@ -185,7 +186,9 @@ def ensure_user_icons():
 
 def apply_folder_color(papirus_bin, color_name, theme_path):
     """
-    Aplica color_name al tema en theme_path usando papirus-folders.
+    Aplica color_name al tema en theme_path usando papirus-folders
+    y asegura que todos los tamaños (incluyendo 16x16 usado en GTK file pickers)
+    tengan los enlaces simbólicos correctos.
     """
     result = subprocess.run(
         [papirus_bin, "-C", color_name, "-t", theme_path, "-o"],
@@ -194,38 +197,61 @@ def apply_folder_color(papirus_bin, color_name, theme_path):
     if result.returncode != 0:
         print(f"⚠ papirus-folders error en {theme_path}: {result.stderr.strip()}")
 
+    # papirus-folders omite 16x16 (usado en listas compactas y selectores de archivos GTK).
+    # Aseguramos que folder.svg y variantes apunten al color activo en todos los tamaños.
+    for size in ["16x16", "22x22", "24x24", "32x32", "48x48", "64x64"]:
+        places_dir = os.path.join(theme_path, size, "places")
+        if not os.path.isdir(places_dir):
+            continue
+
+        target_color_svg = f"folder-{color_name}.svg"
+        target_path = os.path.join(places_dir, target_color_svg)
+        link_path = os.path.join(places_dir, "folder.svg")
+        if os.path.exists(target_path):
+            try:
+                if os.path.islink(link_path) or os.path.exists(link_path):
+                    os.remove(link_path)
+                os.symlink(target_color_svg, link_path)
+            except Exception as e:
+                print(f"⚠ Error actualizando enlace {link_path}: {e}")
+
 
 def main():
     # 1. Asegurar que los iconos Papirus están instalados en el directorio de usuario
     ensure_user_icons()
 
-    # 2. Determinar el color desde el wallpaper directamente si está disponible
-    image_path = None
-    if len(sys.argv) > 1:
-        candidate = os.path.expanduser(sys.argv[1])
-        if os.path.isfile(candidate):
-            image_path = candidate
-    if not image_path:
-        default_target = os.path.expanduser("~/Pictures/1.jpg")
-        if os.path.isfile(default_target):
-            image_path = default_target
-
+    # 2. Priorizar el color de acento generado por Matugen (coherencia con GTK/Waybar/Thunar)
     color_name = None
     ref_desc = ""
 
-    if image_path:
-        hsv = get_image_vibrant_hsv(image_path)
-        if hsv:
-            h, s, v = hsv
-            color_name = classify_to_papirus(h, s, v)
-            r, g, b = colorsys.hsv_to_rgb(h / 360.0, s, v)
-            ref_desc = f"#{int(r*255):02x}{int(g*255):02x}{int(b*255):02x} (Hue {h:.1f}°)"
-
-    # Fallback al accent_bg_color de Matugen
-    if not color_name:
-        hex_color = get_matugen_accent()
+    hex_color = get_matugen_accent()
+    if hex_color:
         color_name = get_papirus_color(hex_color)
-        ref_desc = hex_color
+        ref_desc = f"Matugen accent {hex_color}"
+
+    # Si no se obtuvo de Matugen, extraer directamente del wallpaper
+    if not color_name:
+        image_path = None
+        if len(sys.argv) > 1:
+            candidate = os.path.expanduser(sys.argv[1])
+            if os.path.isfile(candidate):
+                image_path = candidate
+        if not image_path:
+            default_target = os.path.expanduser("~/Pictures/1.jpg")
+            if os.path.isfile(default_target):
+                image_path = default_target
+
+        if image_path:
+            hsv = get_image_vibrant_hsv(image_path)
+            if hsv:
+                h, s, v = hsv
+                color_name = classify_to_papirus(h, s, v)
+                r, g, b = colorsys.hsv_to_rgb(h / 360.0, s, v)
+                ref_desc = f"#{int(r*255):02x}{int(g*255):02x}{int(b*255):02x} (Hue {h:.1f}°)"
+
+    if not color_name:
+        color_name = "blue"
+        ref_desc = "default fallback"
 
     print(f"🎨 Color de carpetas/iconos Papirus: {color_name} (tono principal: {ref_desc})")
 

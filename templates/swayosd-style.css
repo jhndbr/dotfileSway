@@ -13,8 +13,8 @@ window.background {
 window#osd {
     padding: 14px 22px;
     border-radius: 18px;
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    background: #{{colors.surface_container_highest.default.hex_stripped}};
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    background: alpha(#{{colors.surface_container_highest.default.hex_stripped}}, 0.72);
     background-clip: padding-box;
     box-shadow: none;
 }

@@ -1,0 +1,62 @@
+# ╔══════════════════════════════════════════════════════════════╗
+# ║           Configuración Dinámica de Starship                 ║
+# ║           Paleta Dinámica Matugen · Material You             ║
+# ╚══════════════════════════════════════════════════════════════╝
+
+add_newline = false
+command_timeout = 3000
+scan_timeout = 50
+
+palette = "matugen"
+
+[palettes.matugen]
+primary = "{{colors.primary.default.hex}}"
+secondary = "{{colors.secondary.default.hex}}"
+tertiary = "{{colors.tertiary.default.hex}}"
+surface = "{{colors.surface.default.hex}}"
+on_surface = "{{colors.on_surface.default.hex}}"
+error = "{{colors.error.default.hex}}"
+outline = "{{colors.outline.default.hex}}"
+
+format = """
+$directory\
+$git_branch\
+$git_status\
+$cmd_duration\
+$line_break\
+$character"""
+
+[directory]
+style = "bold primary"
+truncation_length = 3
+truncation_symbol = "…/"
+read_only = " 🔒"
+format = "[$path]($style)[$read_only]($read_only_style) "
+
+[git_branch]
+symbol = "󰘬 "
+style = "bold secondary"
+format = "on [$symbol$branch]($style) "
+
+[git_status]
+style = "bold error"
+format = "([$all_status$ahead_behind]($style) )"
+conflicted = "="
+ahead = "⇡${count}"
+behind = "⇣${count}"
+diverged = "⇕⇡${ahead_count}⇣${behind_count}"
+untracked = "?"
+stashed = '\$'
+modified = "!"
+staged = "+"
+renamed = "»"
+deleted = "✘"
+
+[cmd_duration]
+min_time = 2_000
+style = "dimmed tertiary"
+format = "took [$duration]($style) "
+
+[character]
+success_symbol = "[❯](bold primary)"
+error_symbol = "[❯](bold error)"

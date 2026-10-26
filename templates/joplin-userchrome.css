@@ -4,21 +4,21 @@
  * ╚══════════════════════════════════════════════════════════════╝ */
 
 :root {
-  /* ── Paleta Dinámica Extraída por Matugen (Material You) ── */
-  --bg-main: {{colors.background.default.hex}};
-  --bg-surface: {{colors.surface_container.default.hex}};
-  --bg-surface-container: {{colors.surface_container.default.hex}};
-  --bg-surface-high: {{colors.surface_container_high.default.hex}};
-  --bg-surface-highest: {{colors.surface_container_highest.default.hex}};
+  /* ── Paleta Dinámica Extraída por Matugen (Material You — Frosted Glass) ── */
+  --bg-main: {{colors.background.default.hex}}bf;
+  --bg-surface: {{colors.surface_container.default.hex}}a6;
+  --bg-surface-container: {{colors.surface_container.default.hex}}b8;
+  --bg-surface-high: {{colors.surface_container_high.default.hex}}cc;
+  --bg-surface-highest: {{colors.surface_container_highest.default.hex}}e0;
   
   --primary: {{colors.primary.default.hex}};
-  --primary-container: {{colors.primary_container.default.hex}};
+  --primary-container: {{colors.primary_container.default.hex}}d9;
   --on-primary: {{colors.on_primary.default.hex}};
   --on-primary-container: {{colors.on_primary_container.default.hex}};
   
   --text-main: {{colors.on_surface.default.hex}};
   --text-muted: {{colors.on_surface_variant.default.hex}};
-  --border-color: {{colors.outline_variant.default.hex}};
+  --border-color: {{colors.outline_variant.default.hex}}80;
   --border-active: {{colors.outline.default.hex}};
   
   --font-family: 'Inter', system-ui, -apple-system, sans-serif;
@@ -43,7 +43,7 @@
 }
 
 /* ── Fuente y Fondo Global ── */
-body, .rli-root {
+html, body, .rli-root {
   font-family: var(--font-family) !important;
   background-color: var(--bg-main) !important;
   color: var(--text-main) !important;
@@ -55,6 +55,7 @@ body, .rli-root {
 .header,
 div[class*="header"] {
   background-color: var(--bg-surface) !important;
+  backdrop-filter: blur(12px) saturate(140%) !important;
   border-bottom: 1px solid var(--border-color) !important;
 }
 
@@ -93,6 +94,7 @@ div[class*="rli-sideBar"],
 .sidebar._scrollbar2,
 div.sidebar {
   background-color: var(--bg-surface) !important;
+  backdrop-filter: blur(12px) saturate(140%) !important;
   border-right: 1px solid var(--border-color) !important;
 }
 

@@ -1,12 +1,9 @@
 [Default Applications]
-# Navegador Web
-text/html=firefox.desktop
-x-scheme-handler/http=firefox.desktop
-x-scheme-handler/https=firefox.desktop
+text/html=brave-origin.desktop
+x-scheme-handler/http=brave-origin.desktop
+x-scheme-handler/https=brave-origin.desktop
 x-scheme-handler/chrome=firefox.desktop
 application/xhtml+xml=firefox.desktop
-
-# Editor de Texto / Código (Zed)
 text/plain=dev.zed.Zed.desktop
 text/markdown=dev.zed.Zed.desktop
 text/x-shellscript=dev.zed.Zed.desktop
@@ -17,12 +14,8 @@ application/json=dev.zed.Zed.desktop
 application/xml=dev.zed.Zed.desktop
 application/x-yaml=dev.zed.Zed.desktop
 application/toml=dev.zed.Zed.desktop
-
-# Visor de Documentos (Zathura)
 application/pdf=org.pwmt.zathura.desktop
 application/epub+zip=org.pwmt.zathura.desktop
-
-# Visor de Imágenes (imv)
 image/png=imv.desktop
 image/jpeg=imv.desktop
 image/jpg=imv.desktop
@@ -31,8 +24,6 @@ image/webp=imv.desktop
 image/svg+xml=imv.desktop
 image/bmp=imv.desktop
 image/tiff=imv.desktop
-
-# Reproductor Multimedia (MPV)
 video/mp4=mpv.desktop
 video/mkv=mpv.desktop
 video/webm=mpv.desktop
@@ -46,7 +37,27 @@ audio/wav=mpv.desktop
 audio/ogg=mpv.desktop
 audio/aac=mpv.desktop
 audio/m4a=mpv.desktop
-
-# Gestor de Archivos (Thunar)
 inode/directory=thunar.desktop
 application/x-gnome-saved-search=thunar.desktop
+application/zip=ouch.desktop
+application/x-tar=ouch.desktop
+application/x-compressed-tar=ouch.desktop
+application/x-bzip-compressed-tar=ouch.desktop
+application/x-xz-compressed-tar=ouch.desktop
+application/x-7z-compressed=ouch.desktop
+application/x-rar=ouch.desktop
+application/x-rar-compressed=ouch.desktop
+application/gzip=ouch.desktop
+application/x-bzip2=ouch.desktop
+application/x-xz=ouch.desktop
+application/x-zstd=ouch.desktop
+application/zstd=ouch.desktop
+x-scheme-handler/antigravity=antigravity.desktop
+x-scheme-handler/about=brave-origin.desktop
+x-scheme-handler/unknown=brave-origin.desktop
+x-scheme-handler/tabularis=tabularis-handler.desktop
+
+[Added Associations]
+x-scheme-handler/antigravity=antigravity.desktop;
+application/vnd.openxmlformats-officedocument.wordprocessingml.document=libreoffice-writer.desktop;libreoffice-startcenter.desktop;
+application/pdf=brave-origin.desktop;

@@ -13,7 +13,7 @@
   outline-style: none;
 }
 
-/* ── Fondo de ventana y decoraciones (evita recuadros en capas Wayland) ── */
+/* ── Fondo translúcido de ventana y decoraciones (Frosted Glass sin doble capa) ── */
 window.csd:not(#window):not(#osd),
 window:not(#window):not(#osd) {
   background-color: @window_bg_color;
@@ -22,12 +22,35 @@ window:not(#window):not(#osd) {
 
 window.csd:not(#window):not(#osd) decoration,
 window:not(#window):not(#osd) decoration {
-  background-color: @window_bg_color;
+  background-color: transparent;
   border-style: none;
   border-width: 0;
   box-shadow: none;
   margin: 0;
   padding: 0;
+}
+
+/* ── Thunar File Manager: Frosted Glass & Translucent Views ── */
+.thunar,
+thunar-window,
+window.thunar {
+  background-color: @window_bg_color;
+}
+
+thunar-window .standard-view,
+thunar-window scrolledwindow,
+thunar-window treeview,
+thunar-window iconview,
+thunar-window .sidebar,
+thunar-window placessidebar,
+thunar-window paned,
+thunar-window .view {
+  background-color: transparent;
+}
+
+thunar-window .standard-view:backdrop,
+thunar-window scrolledwindow:backdrop {
+  background-color: transparent;
 }
 
 decoration {

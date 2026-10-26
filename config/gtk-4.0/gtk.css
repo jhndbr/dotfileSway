@@ -12,7 +12,7 @@
   outline-style: none;
 }
 
-/* ── Fondo sólido de ventana para evitar huecos transparentes ── */
+/* ── Fondo translúcido de ventana (Frosted Glass sin doble capa en decoration) ── */
 window,
 window.background,
 window.csd,
@@ -26,7 +26,7 @@ window.devel,
 window.csd decoration,
 window decoration,
 decoration {
-  background-color: @window_bg_color;
+  background-color: transparent;
   border-style: none;
   border-width: 0;
   box-shadow: none;

@@ -4,7 +4,7 @@
         "type": "file",
         "source": "~/.config/fastfetch/cat.txt",
         "color": {
-            "1": "cyan"
+            "1": "#93d786"
         },
         "padding": {
             "top": 0,
@@ -15,8 +15,8 @@
     "display": {
         "separator": " 󰅂 ",
         "color": {
-            "keys": "magenta",
-            "title": "cyan"
+            "keys": "#baccb2",
+            "title": "#93d786"
         },
         "constants": [
             "───────────────────────────────────────────"
@@ -35,18 +35,18 @@
             "type": "os",
             "key": "󰣇  OS",
             "format": "{3}",
-            "keyColor": "blue"
+            "keyColor": "#93d786"
         },
         {
             "type": "command",
             "key": "󰌽  Kernel",
-            "keyColor": "blue",
+            "keyColor": "#93d786",
             "text": "uname -r | cut -d- -f1 | sed 's/^/Linux /'"
         },
         {
             "type": "packages",
             "key": "󰏖  Paquetes",
-            "keyColor": "blue"
+            "keyColor": "#93d786"
         },
         {
             "type": "custom",
@@ -56,19 +56,19 @@
             "type": "wm",
             "key": "󰨇  Compositor",
             "format": "MangoWM",
-            "keyColor": "magenta"
+            "keyColor": "#baccb2"
         },
         {
             "type": "terminal",
             "key": "󰞷  Terminal",
             "format": "{1}",
-            "keyColor": "magenta"
+            "keyColor": "#baccb2"
         },
         {
             "type": "shell",
             "key": "󰞷  Shell",
             "format": "{1}",
-            "keyColor": "magenta"
+            "keyColor": "#baccb2"
         },
         {
             "type": "custom",
@@ -78,19 +78,19 @@
             "type": "cpu",
             "key": "󰻠  CPU",
             "format": "{1}",
-            "keyColor": "green"
+            "keyColor": "#a0cfd3"
         },
         {
             "type": "gpu",
             "key": "󰢮  GPU",
             "format": "{2}",
-            "keyColor": "green"
+            "keyColor": "#a0cfd3"
         },
         {
             "type": "memory",
             "key": "󰍛  RAM",
             "format": "{1} / {2}",
-            "keyColor": "green"
+            "keyColor": "#a0cfd3"
         },
         {
             "type": "custom",

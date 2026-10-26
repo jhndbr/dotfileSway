@@ -226,6 +226,7 @@ if ! command -v papirus-folders &>/dev/null; then
     log_info "Instalando script papirus-folders en ~/.local/bin..."
     mkdir -p "$HOME/.local/bin"
     curl -sSLo "$HOME/.local/bin/papirus-folders" https://raw.githubusercontent.com/PapirusDevelopmentTeam/papirus-folders/master/papirus-folders
+    sed -i 's/sizes=(22x22/sizes=(16x16 22x22/' "$HOME/.local/bin/papirus-folders" 2>/dev/null || true
     chmod +x "$HOME/.local/bin/papirus-folders"
     log_success "papirus-folders instalado"
 fi

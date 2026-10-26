@@ -18,33 +18,55 @@
 	<video-files/>
 </action>
 <action>
+	<icon>preferences-desktop-wallpaper</icon>
+	<name>Establecer como fondo de pantalla</name>
+	<submenu></submenu>
+	<unique-id>set-wallpaper-action</unique-id>
+	<command>sh -c 'PATH="$HOME/.local/bin:$PATH" exec set-wallpaper.sh "$1"' _ %f</command>
+	<description>Establecer como fondo de pantalla y generar paleta dinámica Matugen</description>
+	<range></range>
+	<patterns>*.png;*.jpg;*.jpeg;*.webp;*.bmp;*.gif;*.PNG;*.JPG;*.JPEG;*.WEBP;*.BMP;*.GIF;*.avif;*.AVIF</patterns>
+	<image-files/>
+</action>
+<action>
 	<icon>package-x-generic</icon>
-	<name>Extraer aquí (Ouch)</name>
+	<name>Extraer aquí</name>
 	<submenu></submenu>
 	<unique-id>ouch-extract-here</unique-id>
-	<command>thunar-ouch.sh extract-here %F</command>
-	<description>Extraer directamente en este directorio usando ouch</description>
+	<command>sh -c 'PATH="$HOME/.local/bin:$PATH" exec thunar-ouch.sh extract-here "$@"' _ %F</command>
+	<description>Extraer inmediatamente en este directorio usando ouch</description>
 	<range></range>
-	<patterns>*.tar;*.tar.gz;*.tgz;*.tar.bz2;*.tbz2;*.tar.xz;*.txz;*.tar.zst;*.tzst;*.zip;*.rar;*.7z;*.gz;*.bz2;*.xz;*.zst;*.lz4;*.br;*.sz;*.TAR;*.TAR.GZ;*.TGZ;*.TAR.BZ2;*.TBZ2;*.TAR.XZ;*.TXZ;*.TAR.ZST;*.TZST;*.ZIP;*.RAR;*.7Z;*.GZ;*.BZ2;*.XZ;*.ZST</patterns>
+	<patterns>*.tar;*.tar.gz;*.tgz;*.tar.bz2;*.tbz2;*.tar.xz;*.txz;*.tar.zst;*.tzst;*.zip;*.rar;*.7z;*.gz;*.bz2;*.xz;*.zst;*.lz4;*.br;*.sz;*.z;*.TAR;*.TAR.GZ;*.TGZ;*.TAR.BZ2;*.TBZ2;*.TAR.XZ;*.TXZ;*.TAR.ZST;*.TZST;*.ZIP;*.RAR;*.7Z;*.GZ;*.BZ2;*.XZ;*.ZST;*.Z</patterns>
 	<other-files/>
 </action>
 <action>
 	<icon>folder-download</icon>
-	<name>Extraer en subcarpeta (Ouch)</name>
-	<submenu></submenu>
+	<name>Extraer en subcarpeta</name>
+	<submenu>Comprimir y Extraer</submenu>
 	<unique-id>ouch-extract-subdir</unique-id>
-	<command>thunar-ouch.sh extract-subdir %F</command>
-	<description>Extraer en una subcarpeta dedicada usando ouch</description>
+	<command>sh -c 'PATH="$HOME/.local/bin:$PATH" exec thunar-ouch.sh extract-subdir "$@"' _ %F</command>
+	<description>Extraer dentro de una subcarpeta dedicada usando ouch</description>
 	<range></range>
-	<patterns>*.tar;*.tar.gz;*.tgz;*.tar.bz2;*.tbz2;*.tar.xz;*.txz;*.tar.zst;*.tzst;*.zip;*.rar;*.7z;*.gz;*.bz2;*.xz;*.zst;*.lz4;*.br;*.sz;*.TAR;*.TAR.GZ;*.TGZ;*.TAR.BZ2;*.TBZ2;*.TAR.XZ;*.TXZ;*.TAR.ZST;*.TZST;*.ZIP;*.RAR;*.7Z;*.GZ;*.BZ2;*.XZ;*.ZST</patterns>
+	<patterns>*.tar;*.tar.gz;*.tgz;*.tar.bz2;*.tbz2;*.tar.xz;*.txz;*.tar.zst;*.tzst;*.zip;*.rar;*.7z;*.gz;*.bz2;*.xz;*.zst;*.lz4;*.br;*.sz;*.z;*.TAR;*.TAR.GZ;*.TGZ;*.TAR.BZ2;*.TBZ2;*.TAR.XZ;*.TXZ;*.TAR.ZST;*.TZST;*.ZIP;*.RAR;*.7Z;*.GZ;*.BZ2;*.XZ;*.ZST;*.Z</patterns>
+	<other-files/>
+</action>
+<action>
+	<icon>document-open-recent</icon>
+	<name>Ver contenido del archivo</name>
+	<submenu>Comprimir y Extraer</submenu>
+	<unique-id>ouch-view-archive</unique-id>
+	<command>sh -c 'PATH="$HOME/.local/bin:$PATH" exec thunar-ouch.sh view "$1"' _ %f</command>
+	<description>Visualizar el listado de archivos contenidos usando Ouch</description>
+	<range></range>
+	<patterns>*.tar;*.tar.gz;*.tgz;*.tar.bz2;*.tbz2;*.tar.xz;*.txz;*.tar.zst;*.tzst;*.zip;*.rar;*.7z;*.gz;*.bz2;*.xz;*.zst;*.lz4;*.br;*.sz;*.z;*.TAR;*.TAR.GZ;*.TGZ;*.TAR.BZ2;*.TBZ2;*.TAR.XZ;*.TXZ;*.TAR.ZST;*.TZST;*.ZIP;*.RAR;*.7Z;*.GZ;*.BZ2;*.XZ;*.ZST;*.Z</patterns>
 	<other-files/>
 </action>
 <action>
 	<icon>archive-insert</icon>
-	<name>Comprimir con Ouch...</name>
-	<submenu></submenu>
+	<name>Comprimir...</name>
+	<submenu>Comprimir y Extraer</submenu>
 	<unique-id>ouch-compress-dialog</unique-id>
-	<command>thunar-ouch.sh compress-dialog %F</command>
+	<command>sh -c 'PATH="$HOME/.local/bin:$PATH" exec thunar-ouch.sh compress-dialog "$@"' _ %F</command>
 	<description>Comprimir los elementos seleccionados eligiendo nombre y formato</description>
 	<range></range>
 	<patterns>*</patterns>
@@ -53,11 +75,11 @@
 </action>
 <action>
 	<icon>package-x-generic</icon>
-	<name>Comprimir rápido a .tar.gz (Ouch)</name>
-	<submenu></submenu>
-	<unique-id>ouch-compress-quick-tar</unique-id>
-	<command>thunar-ouch.sh compress-quick-tar %F</command>
-	<description>Comprimir inmediatamente los elementos a .tar.gz</description>
+	<name>Comprimir rápido a .zip</name>
+	<submenu>Comprimir y Extraer</submenu>
+	<unique-id>ouch-compress-quick-zip</unique-id>
+	<command>sh -c 'PATH="$HOME/.local/bin:$PATH" exec thunar-ouch.sh compress-quick-zip "$@"' _ %F</command>
+	<description>Comprimir inmediatamente los elementos a un archivo .zip</description>
 	<range></range>
 	<patterns>*</patterns>
 	<all-files/>
@@ -65,26 +87,15 @@
 </action>
 <action>
 	<icon>package-x-generic</icon>
-	<name>Comprimir rápido a .zip (Ouch)</name>
-	<submenu></submenu>
-	<unique-id>ouch-compress-quick-zip</unique-id>
-	<command>thunar-ouch.sh compress-quick-zip %F</command>
-	<description>Comprimir inmediatamente los elementos a .zip</description>
+	<name>Comprimir rápido a .tar.gz</name>
+	<submenu>Comprimir y Extraer</submenu>
+	<unique-id>ouch-compress-quick-tar</unique-id>
+	<command>sh -c 'PATH="$HOME/.local/bin:$PATH" exec thunar-ouch.sh compress-quick-tar "$@"' _ %F</command>
+	<description>Comprimir inmediatamente los elementos a un archivo .tar.gz</description>
 	<range></range>
 	<patterns>*</patterns>
 	<all-files/>
 	<directories/>
-</action>
-<action>
-	<icon>preferences-desktop-wallpaper</icon>
-	<name>Establecer como fondo de pantalla</name>
-	<submenu></submenu>
-	<unique-id>set-wallpaper-action</unique-id>
-	<command>set-wallpaper.sh %f</command>
-	<description>Establecer como fondo y regenerar tema Matugen</description>
-	<range></range>
-	<patterns>*.png;*.jpg;*.jpeg;*.webp;*.bmp;*.PNG;*.JPG;*.JPEG;*.WEBP;*.BMP</patterns>
-	<image-files/>
 </action>
 <action>
 	<icon>dev.zed.Zed</icon>

@@ -283,6 +283,9 @@ fi
 if command -v xdg-mime &>/dev/null; then
     xdg-mime default thunar.desktop inode/directory 2>/dev/null || true
     xdg-mime default thunar.desktop application/x-gnome-saved-search 2>/dev/null || true
+    for mime in application/zip application/x-tar application/x-compressed-tar application/x-bzip-compressed-tar application/x-xz-compressed-tar application/x-7z-compressed application/x-rar application/x-rar-compressed application/gzip application/x-bzip2 application/x-xz application/x-zstd application/zstd; do
+        xdg-mime default ouch.desktop "$mime" 2>/dev/null || true
+    done
 fi
 
 # Optimización estética para Antigravity IDE (ocultar controles de ventana en tiling)

@@ -1,6 +1,6 @@
 # ╔══════════════════════════════════════════════════════════════╗
-# ║             Configuración Estética de Lazygit                ║
-# ║             Dotfiles Sway - Dank / Material Harmonized       ║
+# ║             Configuración Dinámica de Lazygit                ║
+# ║             Generado dinámicamente con Matugen               ║
 # ╚══════════════════════════════════════════════════════════════╝
 
 gui:
@@ -11,19 +11,24 @@ gui:
   showCommandLog: false
   theme:
     activeBorderColor:
-      - cyan
+      - '#93d786'
       - bold
     inactiveBorderColor:
-      - gray
+      - '#474747'
+    searchingActiveBorderColor:
+      - '#a0cfd3'
+      - bold
     optionsTextColor:
-      - blue
+      - '#baccb2'
     selectedLineBgColor:
-      - default
+      - '#353535'
+    selectedRangeBgColor:
+      - '#2a2a2a'
     cherryPickedCommitBgColor:
-      - cyan
+      - '#1e4d51'
     cherryPickedCommitFgColor:
-      - blue
+      - '#bcebef'
     unstagedChangesColor:
-      - red
+      - '#ffb4ab'
     defaultFgColor:
-      - default
+      - '#e2e2e2'

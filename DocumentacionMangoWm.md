@@ -298,11 +298,11 @@ exec=bash ~/.config/mango/reload-settings.sh
 
 Reglas del monitor
 
-Puede configurar cada salida de pantalla individualmente utilizando la monitorrulepalabra clave.
+Puede configurar cada salida de pantalla individualmente utilizando la monitor_rulepalabra clave.
 
 Sintaxis:
 
-monitorrule=name:Values,Parameter:Values,Parameter:Values
+monitor_rule=name:Values,Parameter:Values,Parameter:Values
 
     Información: Si alguno de los campos coincidentes ( name, make, model, serial) está configurado, todos los campos configurados deben coincidir para que se considere una coincidencia. Úselo wlr-randrpara obtener el nombre, la marca, el modelo y el número de serie de su monitor.
 
@@ -336,7 +336,7 @@ Los clientes X11 —en particular los juegos a pantalla completa que restringen 
 Añade primary:1a la regla el monitor que quieras que X11 considere principal. Las reglas se comparan en orden y solo la primera que coincida se aplica a un monitor, así que coloca la primary:1regla que corresponda a tu pantalla. Si varias reglas lo solicitan, prevalece la primera. Si no hay ninguna primary:1regla, se usa el monitor de la primera regla que coincida, y el primer monitor conectado cuando ninguna regla coincide.
 
 # Play on the second display: make it the X11 primary output
-monitorrule=name:^DP-2$,width:2560,height:1440,refresh:144,x:1920,y:0,primary:1
+monitor_rule=name:^DP-2$,width:2560,height:1440,refresh:144,x:1920,y:0,primary:1
 
 Transformar valores
 Valor	Rotación
@@ -356,13 +356,13 @@ Valor	Rotación
 Ejemplos
 
 # Laptop display: 1080p, 60Hz, positioned at origin
-monitorrule=name:^eDP-1$,width:1920,height:1080,refresh:60,x:0,y:10
+monitor_rule=name:^eDP-1$,width:1920,height:1080,refresh:60,x:0,y:10
 
 # Match by make and model instead of name
-monitorrule=make:Chimei Innolux Corporation,model:0x15F5,width:1920,height:1080,refresh:60,x:0,y:0
+monitor_rule=make:Chimei Innolux Corporation,model:0x15F5,width:1920,height:1080,refresh:60,x:0,y:0
 
 # Virtual monitor with pattern matching
-monitorrule=name:HEADLESS-.*,width:1920,height:1080,refresh:60,x:1926,y:0,scale:1,rr:0,vrr:0
+monitor_rule=name:HEADLESS-.*,width:1920,height:1080,refresh:60,x:1926,y:0,scale:1,rr:0,vrr:0
 
 Formato de especificaciones del monitor
 
@@ -399,31 +399,31 @@ HDR
 Configuración	Por defecto	Descripción
 hdr_depth	2	Establece la profundidad HDR para la pantalla actual. 0es Predeterminado, 1es HDR8, 2es HDR10.
 
-    Primero debes habilitar HDR en monitorrule, consulta Monitores — Reglas de monitor
+    Primero debes habilitar HDR en monitor_rule, consulta Monitores — Reglas de monitor
     Debes configurarlo env=WLR_RENDERER,vulkanantes de que comience Mango.
 
 por ejemplo (debe volver a iniciar sesión una vez después de configurarlo):
 
 env=WLR_RENDERER,vulkan
-monitorrule=name:eDP-1,model:0x15F5,width:1920,height:1080,refresh:60,x:0,y:0,scale:1,vrr:0,rr:0:hdr:1
+monitor_rule=name:eDP-1,model:0x15F5,width:1920,height:1080,refresh:60,x:0,y:0,scale:1,vrr:0,rr:0:hdr:1
 
 Activar/desactivar HDR en tiempo de ejecución
 
-monitorruleEstablece el estado al iniciar; togglehdrlo cambia sin recargar la configuración, como lo output <name> hdr on|off|togglehace Sway.
+monitor_ruleEstablece el estado al iniciar; togglehdrlo cambia sin recargar la configuración, como lo output <name> hdr on|off|togglehace Sway.
 
 mmsg dispatch togglehdr              # toggle the focused monitor
 mmsg dispatch togglehdr,on           # force on
 mmsg dispatch togglehdr,off,eDP-1    # a named output
 mmsg dispatch togglehdr,toggle,all   # every output at once
 
-Sin argumentos, cambia el monitor enfocado. Recargar la configuración vuelve a aplicar monitorruley sobrescribe la togglehdrúltima configuración establecida.
+Sin argumentos, cambia el monitor enfocado. Recargar la configuración vuelve a aplicar monitor_ruley sobrescribe la togglehdrúltima configuración establecida.
 
 allSe aplica a todas las salidas habilitadas. En el modo de conmutación, toma una decisión para todas ellas: si alguna está encendida, todas se apagan, en lugar de cambiar el estado de cada salida individualmente. Las salidas que no admiten HDR se omiten sin que se modifique su estado.
 Dominar los metadatos de visualización
 
 hdr:1Solo declara los primarios BT.2020 y la función de transferencia PQ, pero deja los campos de visualización de masterización en cero, por lo que el panel no tiene nada con lo que mapear tonos. Configúrelos con los valores de su panel:
 
-monitorrule=name:eDP-1,...,hdr:1,hdr_max_lum:616,hdr_max_avg_lum:400
+monitor_rule=name:eDP-1,...,hdr:1,hdr_max_lum:616,hdr_max_avg_lum:400
 
 di-edid-decodeLos imprime bajo el bloque de datos de metadatos estáticos HDR . hdr_max_lum Se envía tanto como el pico de masterización como max_cll. Dejar cualquiera de los tres en 0 deja ese campo sin establecer, que es el comportamiento anterior.
 
@@ -435,7 +435,7 @@ Algunos paneles declaran HDR solo dentro de una extensión DisplayID 2.0 , con l
 
 hdr_force:1omite las dos comprobaciones derivadas de EDID:
 
-monitorrule=name:eDP-1,...,hdr:1,hdr_force:1,hdr_max_lum:616,hdr_max_avg_lum:400
+monitor_rule=name:eDP-1,...,hdr:1,hdr_force:1,hdr_max_lum:616,hdr_max_avg_lum:400
 
 No omite la comprobación del renderizador: las transformaciones de color de salida solo existen en el renderizador Vulkan, por lo que WLR_RENDERER=vulkanaún es necesaria.
 Configuración
@@ -448,7 +448,7 @@ Habilitar por ventana:
 
 Utiliza una regla de ventana para forzar el efecto de desgarro de pantalla en juegos específicos.
 
-windowrule=force_tearing:1,title:vkcube
+window_rule=force_tearing:1,title:vkcube
 
 Matriz de comportamiento de desgarro
 force_tearing\allow_tearing	DISCAPACITADO (0)	HABILITADO (1)	SOLO PANTALLA COMPLETA (2)
@@ -505,7 +505,7 @@ Escala de pantalla (ejemplo de escala 1.5)
 # don't scale xwayland in global to avoid blurry
 xwayland_ignore_scale=1
 # scale:1.5 to scale native wayland app
-monitorrule=name:eDP-1,width:1920,height:1080,refresh:60,x:0,y:0,scale:1.5
+monitor_rule=name:eDP-1,width:1920,height:1080,refresh:60,x:0,y:0,scale:1.5
 # use dpi to scale xwayland(1.5 * 96 = 144)
 exec-once=echo "Xft.dpi: 144" | xrdb -merge
 
@@ -516,7 +516,7 @@ Las aplicaciones basadas en Electron (VSCodium, Spotify, Discord, etc.) y los na
 Agregue una regla de ventana para abrir las aplicaciones afectadas maximizadas, lo que corrige el desenfoque:
 
 # VSCodium
-windowrule=force_fakemaximize:1,appid:codium
+window_rule=force_fakemaximize:1,appid:codium
 
 Monitores virtuales
 
@@ -870,7 +870,7 @@ enable_floating_snap	0	Ajustar las ventanas flotantes a los bordes o a otras ven
 snap_distance	30	Distancia máxima (píxeles) para activar el ajuste flotante.
 float_full_to_top	0	Permitir que las ventanas de pantalla completa, flotantes y de capa topcompartan una capa para que puedan cubrirse entre sí; cuál termina en la parte superior depende de cuál se abrió o elevó en último lugar. Cuando 0, se dividen en capas separadas: ventanas flotantes debajo, ventanas de pantalla completa encima de ventanas de capa top.
 no_border_when_single	0	Eliminar los bordes de las ventanas cuando solo una ventana sea visible en la etiqueta.
-smartgaps	0	Desactive los espacios cuando solo haya una ventana presente.
+smart_gaps	0	Desactive los espacios cuando solo haya una ventana presente.
 idleinhibit_ignore_visible	0	Permitir que los clientes invisibles (por ejemplo, reproductores de audio en segundo plano) inhiban el estado de inactividad.
 idleinhibit_when_fullscreen	0	Mantén la inactividad desactivada mientras una ventana de pantalla completa esté activa.
 tag_carousel	0	Habilitar el carrusel de etiquetas (recorrido por las etiquetas).
@@ -886,11 +886,11 @@ Dimensiones
 
 Controla el tamaño de los bordes y los espacios entre ventanas.
 Configuración	Por defecto	Descripción
-borderpx	4	Ancho del borde en píxeles.
-gappih	5	Espacio interior horizontal (entre ventanas).
-gappiv	5	Espacio interior vertical.
-gappoh	10	Espacio exterior horizontal (entre las ventanas y los bordes de la pantalla).
-gappov	10	Espacio exterior vertical.
+border_px	4	Ancho del borde en píxeles.
+gap_inner_horizontal	5	Espacio interior horizontal (entre ventanas).
+gap_inner_vertical	5	Espacio interior vertical.
+gap_outer_horizontal	10	Espacio exterior horizontal (entre las ventanas y los bordes de la pantalla).
+gap_outer_vertical	10	Espacio exterior vertical.
 Bandera
 
 Los colores se definen en 0xRRGGBBAAformato hexadecimal.
@@ -1136,7 +1136,7 @@ shadows_size	10	Size of the shadow.
 shadows_blur	15	Shadow blur amount.
 shadows_position_x	0	Shadow X offset.
 shadows_position_y	0	Shadow Y offset.
-shadowscolor	0x000000ff	Color of the shadow.
+shadows_color	0x000000ff	Color of the shadow.
 
 # Example shadows configuration
 shadows=1
@@ -1146,7 +1146,7 @@ shadows_size=12
 shadows_blur=15
 shadows_position_x=0
 shadows_position_y=0
-shadowscolor=0x000000ff
+shadows_color=0x000000ff
 Opacity & Corner Radius
 
 Control the transparency and roundness of your windows.
@@ -1345,7 +1345,7 @@ center_when_single_stack	1	(Center Tile) Center master when only one stack windo
 
 # Example master-stack configuration
 new_is_master=1
-smartgaps=0
+smart_gaps=0
 default_mfact=0.55
 default_nmaster=1
 tag_num=9
@@ -1403,11 +1403,11 @@ Format:
 
 
 # Set window rules that apply to every times when the window is opened
-windowrule=Parameter:Values,title:Values
-windowrule=Parameter:Values,Parameter:Values,appid:Values,title:Values
+window_rule=Parameter:Values,title:Values
+window_rule=Parameter:Values,Parameter:Values,appid:Values,title:Values
 # Set window rules that only apply once when the window is opened
-windowrule-once=Parameter:Values,title:Values
-windowrule-once=Parameter:Values,Parameter:Values,appid:Values,title:Values
+window_rule_once=Parameter:Values,title:Values
+window_rule_once=Parameter:Values,Parameter:Values,appid:Values,title:Values
 State & Behavior Parameters
 
 Parameter	Type	Values	Description
@@ -1494,34 +1494,34 @@ Examples
 
 
 # Set specific window size and position
-windowrule=width:1000,height:900,appid:yesplaymusic,title:Demons
+window_rule=width:1000,height:900,appid:yesplaymusic,title:Demons
 # Global keybindings for OBS Studio
-windowrule=globalkeybinding:ctrl+alt-o,appid:com.obsproject.Studio
-windowrule=globalkeybinding:ctrl+alt-n,appid:com.obsproject.Studio
-windowrule=isopensilent:1,appid:com.obsproject.Studio
+window_rule=globalkeybinding:ctrl+alt-o,appid:com.obsproject.Studio
+window_rule=globalkeybinding:ctrl+alt-n,appid:com.obsproject.Studio
+window_rule=isopensilent:1,appid:com.obsproject.Studio
 # Force tearing for games
-windowrule=force_tearing:1,title:vkcube
+window_rule=force_tearing:1,title:vkcube
 # Skip xdg-activation authentication for this app
-windowrule=activation_bypass:1,appid:org.example.App
-windowrule=force_tearing:1,title:Counter-Strike 2
+window_rule=activation_bypass:1,appid:org.example.App
+window_rule=force_tearing:1,title:Counter-Strike 2
 # Named scratchpad for file manager
-windowrule=isnamedscratchpad:1,width:1280,height:800,appid:st-yazi
+window_rule=isnamedscratchpad:1,width:1280,height:800,appid:st-yazi
 # Custom opacity for specific apps
-windowrule=focused_opacity:0.8,appid:firefox
-windowrule=unfocused_opacity:0.6,appid:foot
+window_rule=focused_opacity:0.8,appid:firefox
+window_rule=unfocused_opacity:0.6,appid:foot
 # Disable blur for selection tools
-windowrule=noblur:1,appid:slurp
+window_rule=noblur:1,appid:slurp
 # Position windows relative to screen center
-windowrule=offsetx:20,offsety:-30,width:800,height:600,appid:alacritty
+window_rule=offsetx:20,offsety:-30,width:800,height:600,appid:alacritty
 # Send to specific tag and monitor
-windowrule=tags:9,monitor:HDMI-A-1,appid:discord
+window_rule=tags:9,monitor:HDMI-A-1,appid:discord
 # Terminal swallowdby setup
-windowrule=isterm:1,appid:st
-windowrule=noswallow:1,appid:foot
+window_rule=isterm:1,appid:st
+window_rule=noswallow:1,appid:foot
 # Disable client-side decorations
-windowrule=allow_csd:1,appid:firefox
+window_rule=allow_csd:1,appid:firefox
 # Unmanaged global window (desktop pets, camera)
-windowrule=isunglobal:1,appid:cheese
+window_rule=isunglobal:1,appid:cheese
 # Named scratchpad toggle
 bind=alt,h,toggle_named_scratchpad,st-yazi,none,st -c st-yazi -e yazi
 Tag Rules
@@ -1533,10 +1533,10 @@ Warning: Layouts set in tag rules have a higher priority than monitor rule layou
 Format:
 
 
-tagrule=id:Values,Parameter:Values,Parameter:Values
-tagrule=id:Values,monitor_name:eDP-1,Parameter:Values,Parameter:Values
-tagrule=id:Values,monitor_make:xxx,monitor_model:xxx,Parameter:Values
-tagrule=id:*,Parameter:Values
+tag_rule=id:Values,Parameter:Values,Parameter:Values
+tag_rule=id:Values,monitor_name:eDP-1,Parameter:Values,Parameter:Values
+tag_rule=id:Values,monitor_make:xxx,monitor_model:xxx,Parameter:Values
+tag_rule=id:*,Parameter:Values
 Tip: See Layouts for detailed descriptions of each layout type.
 
 Parameter	Type	Values	Description
@@ -1558,23 +1558,23 @@ Examples
 
 
 # Set layout for all tags at once (equivalent to the two rules below)
-tagrule=id:*,layout_name:scroller
+tag_rule=id:*,layout_name:scroller
 # Set layout for specific tags
-tagrule=id:1,layout_name:scroller
-tagrule=id:2,layout_name:scroller
+tag_rule=id:1,layout_name:scroller
+tag_rule=id:2,layout_name:scroller
 # Limit to specific monitor
-tagrule=id:1,monitor_name:eDP-1,layout_name:scroller
-tagrule=id:2,monitor_name:eDP-1,layout_name:scroller
+tag_rule=id:1,monitor_name:eDP-1,layout_name:scroller
+tag_rule=id:2,monitor_name:eDP-1,layout_name:scroller
 # Persistent tags (1-4) with layout assignment
-tagrule=id:1,no_hide:1,layout_name:scroller
-tagrule=id:2,no_hide:1,layout_name:scroller
-tagrule=id:3,monitor_name:eDP-1,no_hide:1,layout_name:scroller
-tagrule=id:4,monitor_name:eDP-1,no_hide:1,layout_name:scroller
+tag_rule=id:1,no_hide:1,layout_name:scroller
+tag_rule=id:2,no_hide:1,layout_name:scroller
+tag_rule=id:3,monitor_name:eDP-1,no_hide:1,layout_name:scroller
+tag_rule=id:4,monitor_name:eDP-1,no_hide:1,layout_name:scroller
 # Advanced tag configuration with master layout settings
-tagrule=id:5,layout_name:tile,nmaster:2,mfact:0.6
-tagrule=id:6,monitor_name:HDMI-A-1,layout_name:monocle,no_render_border:1
+tag_rule=id:5,layout_name:tile,nmaster:2,mfact:0.6
+tag_rule=id:6,monitor_name:HDMI-A-1,layout_name:monocle,no_render_border:1
 # set scroller proportion for specific tag
-tagrule=id:1,layout_name:scroller,scroller_default_proportion_single:0.5,scroller_ignore_proportion_single:0,scroller_default_proportion:0.9,monitor_name:HDMI-A-1
+tag_rule=id:1,layout_name:scroller,scroller_default_proportion_single:0.5,scroller_ignore_proportion_single:0,scroller_default_proportion:0.9,monitor_name:HDMI-A-1
 Tip: For Waybar configuration with persistent tags, see Status Bar documentation.
 
 Layer Rules
@@ -1584,7 +1584,7 @@ You can set all parameters in one line. Target "layer shell" surfaces like statu
 Format:
 
 
-layerrule=layer_name:Values,Parameter:Values,Parameter:Values
+layer_rule=layer_name:Values,Parameter:Values,Parameter:Values
 Tip: You can use mmsg get last_open_surface to get the last open layer name for debugging.
 
 Parameter	Type	Values	Description
@@ -1601,13 +1601,13 @@ Examples
 
 
 # No blur or animation for slurp selection layer (avoids occlusion and ghosting in screenshots)
-layerrule=noanim:1,noblur:1,layer_name:selection
+layer_rule=noanim:1,noblur:1,layer_name:selection
 # Zoom animation for Rofi with multiple parameters
-layerrule=animation_type_open:zoom,noanim:0,layer_name:rofi
+layer_rule=animation_type_open:zoom,noanim:0,layer_name:rofi
 # Disable animations and shadows for notification daemon
-layerrule=noanim:1,noshadow:1,layer_name:swaync
+layer_rule=noanim:1,noshadow:1,layer_name:swaync
 # Multiple effects for launcher
-layerrule=animation_type_open:slide,animation_type_close:fade,noblur:1,layer_name:wofi
+layer_rule=animation_type_open:slide,animation_type_close:fade,noblur:1,layer_name:wofi
 
 
 Overview
@@ -1679,9 +1679,9 @@ Use none as a placeholder when you only want to match by one field.
 
 
 # Match by appid
-windowrule=isnamedscratchpad:1,width:1280,height:800,appid:st-yazi
+window_rule=isnamedscratchpad:1,width:1280,height:800,appid:st-yazi
 # Match by title
-windowrule=isnamedscratchpad:1,width:1000,height:700,title:kitty-scratch
+window_rule=isnamedscratchpad:1,width:1000,height:700,title:kitty-scratch
 2. Bind the Toggle Key
 
 Format: bind=MOD,KEY,toggle_named_scratchpad,appid,title,command
@@ -1720,8 +1720,8 @@ You can automatically assign applications to launch directly on the special work
 
 
 # Automatically open Spotify and Discord in the special workspace
-windowrule=tags:0,appid:spotify
-windowrule=tags:0,appid:discord
+window_rule=tags:0,appid:spotify
+window_rule=tags:0,appid:discord
 Configuration Options
 
 You can configure background dimming and custom layout gaps for the special workspace:
@@ -1730,10 +1730,10 @@ You can configure background dimming and custom layout gaps for the special work
 # Background dim level when special workspace is active (0.0 to 1.0, default 0.5)
 special_dim=0.5
 # Inner and outer gaps for windows on the special workspace
-special_gappih=10
-special_gappiv=10
-special_gappoh=20
-special_gappov=20
+special_gap_inner_horizontal=10
+special_gap_inner_vertical=10
+special_gap_outer_horizontal=20
+special_gap_outer_vertical=20
 
 Key Bindings
 Define keyboard shortcuts and modes.

@@ -60,23 +60,23 @@
     mouse_right_click = close_all
 
 [urgency_low]
-    background = "#1a1c15"
-    foreground = "#e3e3d8"
-    frame_color = "#45483d"
-    highlight = "#b5d086"
+    background = "#1b1b1dc4"
+    foreground = "#e4e2e3"
+    frame_color = "#45474c80"
+    highlight = "#bec6dd"
     timeout = 5
     default_icon = dialog-information
 
 [urgency_normal]
-    background = "#1e2019"
-    foreground = "#e3e3d8"
-    frame_color = "#45483d"
-    highlight = "#b5d086"
+    background = "#1f1f21c4"
+    foreground = "#e4e2e3"
+    frame_color = "#45474c80"
+    highlight = "#bec6dd"
     timeout = 8
     default_icon = dialog-information
 
 [urgency_critical]
-    background = "#93000a"
+    background = "#93000ae6"
     foreground = "#ffdad6"
     frame_color = "#ffb4ab"
     highlight = "#ffb4ab"
