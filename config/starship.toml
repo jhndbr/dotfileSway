@@ -10,13 +10,13 @@ scan_timeout = 50
 palette = "matugen"
 
 [palettes.matugen]
-primary = "#93d786"
-secondary = "#baccb2"
-tertiary = "#a0cfd3"
-surface = "#131313"
-on_surface = "#e2e2e2"
+primary = "#ffb59b"
+secondary = "#ebbcad"
+tertiary = "#b2c5ff"
+surface = "#181210"
+on_surface = "#eedfdb"
 error = "#ffb4ab"
-outline = "#919191"
+outline = "#a18c86"
 
 format = """
 $directory\
