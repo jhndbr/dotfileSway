@@ -1,0 +1,104 @@
+# ====================================================================
+# Sway Configuration Integration for Quickshell (SwayShell)
+# Debian Trixie (Debian 13)
+# ====================================================================
+
+# 1. Variables
+set $mod Mod4
+set $term foot
+set $qs ~/.config/quickshell/swayshell/scripts/start-shell.sh
+
+# 2. Appearance & Gaps (Minimalist & Aesthetic)
+default_border pixel 2
+default_floating_border pixel 2
+font pango:Inter, Roboto 10
+gaps inner 8
+gaps outer 4
+
+# Colors matching Catppuccin Mocha / SwayShell
+# class                 border  backgr. text    indicator child_border
+client.focused          #cba6f7 #1e1e2e #cdd6f4 #89b4fa   #cba6f7
+client.focused_inactive #313244 #1e1e2e #a6adc8 #313244   #313244
+client.unfocused        #1e1e2e #1e1e2e #6c7086 #1e1e2e   #1e1e2e
+client.urgent           #f38ba8 #1e1e2e #cdd6f4 #f38ba8   #f38ba8
+
+# 3. Disable native swaybar (Quickshell replaces it)
+# bar { mode invisible }
+
+# 4. Daemons & Autostart
+# Quickshell
+exec_always $qs
+
+# Clipboard daemon (cliphist + wl-paste)
+exec_always wl-paste --watch cliphist store
+exec_always wl-paste --type image --watch cliphist store
+
+# Apply matching GTK, Qt & Foot themes
+exec_always ~/.config/quickshell/swayshell/scripts/apply-theme.sh catppuccin
+
+# 5. Core Keybindings
+# Terminal (Foot)
+bindsym $mod+Return exec $term
+
+# Spotlight App Launcher (Mod + D)
+bindsym $mod+d exec $qs ipc call launcher toggle
+
+# Clipboard History Manager (Mod + V)
+bindsym $mod+v exec $qs ipc call clipboard toggle
+
+# Session / Power Menu (Mod + Shift + E)
+bindsym $mod+Shift+e exec $qs ipc call session toggle
+
+# Dropdown Calendar (Mod + C)
+bindsym $mod+c exec $qs ipc call calendar toggle
+
+# Kill focused window (Mod + Shift + Q)
+bindsym $mod+Shift+q kill
+
+# 6. Screenshots (grim + slurp + wl-clipboard + notify)
+# Mod + Shift + S o Print: Seleccionar región
+bindsym $mod+Shift+s exec ~/.config/quickshell/swayshell/scripts/screenshot.sh region
+bindsym Print        exec ~/.config/quickshell/swayshell/scripts/screenshot.sh region
+
+# Shift + Print: Pantalla completa
+bindsym Shift+Print  exec ~/.config/quickshell/swayshell/scripts/screenshot.sh fullscreen
+
+# Mod + Print: Ventana activa
+bindsym $mod+Print   exec ~/.config/quickshell/swayshell/scripts/screenshot.sh window
+
+# 7. Audio & Media Keybindings via Quickshell IPC
+bindsym XF86AudioRaiseVolume exec $qs ipc call audio raise
+bindsym XF86AudioLowerVolume exec $qs ipc call audio lower
+bindsym XF86AudioMute        exec $qs ipc call audio mute
+bindsym XF86AudioMicMute     exec $qs ipc call audio muteMic
+
+bindsym XF86AudioPlay        exec $qs ipc call media playPause
+bindsym XF86AudioNext        exec $qs ipc call media next
+bindsym XF86AudioPrev        exec $qs ipc call media previous
+
+# 8. Brightness Keybindings via Quickshell IPC
+bindsym XF86MonBrightnessUp   exec $qs ipc call brightness raise
+bindsym XF86MonBrightnessDown exec $qs ipc call brightness lower
+
+# 9. Workspaces Navigation
+bindsym $mod+1 workspace number 1
+bindsym $mod+2 workspace number 2
+bindsym $mod+3 workspace number 3
+bindsym $mod+4 workspace number 4
+bindsym $mod+5 workspace number 5
+bindsym $mod+6 workspace number 6
+bindsym $mod+7 workspace number 7
+bindsym $mod+8 workspace number 8
+bindsym $mod+9 workspace number 9
+bindsym $mod+0 workspace number 10
+
+bindsym $mod+Shift+1 move container to workspace number 1
+bindsym $mod+Shift+2 move container to workspace number 2
+bindsym $mod+Shift+3 move container to workspace number 3
+bindsym $mod+Shift+4 move container to workspace number 4
+bindsym $mod+Shift+5 move container to workspace number 5
+bindsym $mod+Shift+6 move container to workspace number 6
+bindsym $mod+Shift+7 move container to workspace number 7
+bindsym $mod+Shift+8 move container to workspace number 8
+bindsym $mod+Shift+9 move container to workspace number 9
+bindsym $mod+Shift+0 move container to workspace number 10

@@ -1,0 +1,208 @@
+# ====================================================================
+# Sway Desktop Configuration with SwayShell (Quickshell)
+# Debian GNU/Linux 13 (trixie)
+# ====================================================================
+
+# Mod key: Super (Windows key)
+set $mod Mod4
+
+# Preferred Applications
+set $term foot
+set $qs ~/.config/quickshell/swayshell/scripts/start-shell.sh
+set $menu $qs ipc call launcher toggle
+set $filemanager nautilus
+
+# Output & Wallpaper (120 Hz refresh rate)
+output eDP-1 mode 1920x1080@60Hz
+output * bg /home/jhon/Imágenes/962676.png fill
+
+# Input Configuration (Keyboard layout & touchpad tap)
+input type:keyboard {
+    xkb_layout "us"
+    xkb_options "grp:win_space_toggle"
+}
+
+input type:touchpad {
+    dwt enabled
+    tap enabled
+    natural_scroll enabled
+}
+
+# Appearance & Gaps
+default_border pixel 2
+default_floating_border pixel 2
+font pango:SF Pro 10
+title_align center
+gaps inner 6
+gaps horizontal 4
+gaps bottom 2
+gaps top 0
+
+# Prevent idle / screen blanking when watching videos in fullscreen
+#inhibit_idle fullscreen
+
+# Window floating modifier: hold Super and left-click drag / right-click resize
+floating_modifier $mod normal
+bindsym --whole-window $mod+button2 floating toggle
+
+# Theme Colors for Window Borders (dynamically synchronized via apply-theme.sh)
+# class                 border  backgr. text    indicator child_border
+client.focused          #cba6f7 #1e1e2e #cdd6f4 #89b4fa   #cba6f7
+client.focused_inactive #313244 #1e1e2e #a6adc8 #313244   #313244
+client.unfocused        #1e1e2e #1e1e2e #6c7086 #1e1e2e   #1e1e2e
+client.urgent           #f38ba8 #1e1e2e #cdd6f4 #f38ba8   #f38ba8
+
+# Daemons & Autostart with full GTK & Qt Wayland integration
+exec dbus-update-activation-environment --systemd WAYLAND_DISPLAY SWAYSOCK XDG_CURRENT_DESKTOP XDG_SESSION_TYPE DISPLAY QT_QPA_PLATFORM QT_QPA_PLATFORMTHEME QT_PLUGIN_PATH GTK_THEME GDK_BACKEND MOZ_ENABLE_WAYLAND
+exec systemctl --user import-environment WAYLAND_DISPLAY SWAYSOCK XDG_CURRENT_DESKTOP XDG_SESSION_TYPE DISPLAY QT_QPA_PLATFORM QT_QPA_PLATFORMTHEME QT_PLUGIN_PATH GTK_THEME GDK_BACKEND MOZ_ENABLE_WAYLAND
+exec systemctl --user restart xdg-desktop-portal
+exec_always $qs
+exec_always wl-paste --watch cliphist store
+exec_always wl-paste --type image --watch cliphist store
+exec_always ~/.config/quickshell/swayshell/scripts/apply-theme.sh catppuccin
+# Gestión de inactividad: atenúa a los 2m, apaga pantalla a los 4m y suspende a los 15m
+exec swayidle -w \
+    timeout 120 'brightnessctl -s set 10%' resume 'brightnessctl -r' \
+    timeout 240 'swaymsg "output * dpms off"' resume 'swaymsg "output * dpms on"' \
+    timeout 900 'systemctl suspend' \
+    before-sleep 'swaylock -f'
+# Core Application Keybindings
+bindsym $mod+Return       exec $term
+bindsym $mod+Shift+Return exec $term -T "Terminal Flotante"
+bindsym $mod+q            kill
+bindsym $mod+a            exec $menu
+bindsym $mod+d            exec $menu
+bindsym $mod+n            exec $filemanager
+bindsym $mod+c            exec $qs ipc call controlcenter toggle
+bindsym $mod+v            exec $qs ipc call clipboard toggle
+bindsym $mod+Shift+e      exec $qs ipc call session toggle
+bindsym $mod+g            exec $qs ipc call aichat toggle
+bindsym $mod+i            exec $qs ipc call aichat toggle
+bindsym $mod+Escape       exec swaylock
+bindsym $mod+Shift+Escape exec $term -T "Monitor del Sistema" -e htop
+
+# Wallpaper Controls
+bindsym $mod+Shift+w      exec ~/.config/quickshell/swayshell/scripts/set-wallpaper.sh random
+bindsym $mod+bracketright exec ~/.config/quickshell/swayshell/scripts/set-wallpaper.sh next
+bindsym $mod+bracketleft  exec ~/.config/quickshell/swayshell/scripts/set-wallpaper.sh prev
+
+# Window Management (Tiling & Floating)
+bindsym $mod+f           fullscreen toggle
+bindsym $mod+Shift+space floating toggle
+bindsym $mod+space       focus mode_toggle
+
+# Scratchpad (hidden overlay window)
+bindsym $mod+Shift+minus move scratchpad
+bindsym $mod+minus       scratchpad show
+
+# Focus navigation (Vim keys + Arrow keys)
+bindsym $mod+h     focus left
+bindsym $mod+j     focus down
+bindsym $mod+k     focus up
+bindsym $mod+l     focus right
+bindsym $mod+Left  focus left
+bindsym $mod+Down  focus down
+bindsym $mod+Up    focus up
+bindsym $mod+Right focus right
+
+# Move focused window (Vim keys + Arrow keys)
+bindsym $mod+Shift+h     move left
+bindsym $mod+Shift+j     move down
+bindsym $mod+Shift+k     move up
+bindsym $mod+Shift+l     move right
+bindsym $mod+Shift+Left  move left
+bindsym $mod+Shift+Down  move down
+bindsym $mod+Shift+Up    move up
+bindsym $mod+Shift+Right move right
+
+# Split orientation
+bindsym $mod+b       splith
+bindsym $mod+Shift+b splitv
+
+# Layout switching
+bindsym $mod+s layout stacking
+bindsym $mod+w layout tabbed
+bindsym $mod+e layout toggle split
+
+# Interactive Window Resizing Mode
+mode "resize" {
+    bindsym h     resize shrink width 20px
+    bindsym j     resize grow height 20px
+    bindsym k     resize shrink height 20px
+    bindsym l     resize grow width 20px
+    bindsym Left  resize shrink width 20px
+    bindsym Down  resize grow height 20px
+    bindsym Up    resize shrink height 20px
+    bindsym Right resize grow width 20px
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+bindsym $mod+r mode "resize"
+
+# Workspaces Navigation
+bindsym $mod+1 workspace number 1
+bindsym $mod+2 workspace number 2
+bindsym $mod+3 workspace number 3
+bindsym $mod+4 workspace number 4
+bindsym $mod+5 workspace number 5
+bindsym $mod+6 workspace number 6
+bindsym $mod+7 workspace number 7
+bindsym $mod+8 workspace number 8
+bindsym $mod+9 workspace number 9
+bindsym $mod+0 workspace number 10
+
+bindsym $mod+Shift+1 move container to workspace number 1
+bindsym $mod+Shift+2 move container to workspace number 2
+bindsym $mod+Shift+3 move container to workspace number 3
+bindsym $mod+Shift+4 move container to workspace number 4
+bindsym $mod+Shift+5 move container to workspace number 5
+bindsym $mod+Shift+6 move container to workspace number 6
+bindsym $mod+Shift+7 move container to workspace number 7
+bindsym $mod+Shift+8 move container to workspace number 8
+bindsym $mod+Shift+9 move container to workspace number 9
+bindsym $mod+Shift+0 move container to workspace number 10
+
+# Screenshots (grim + slurp + wl-clipboard + notify)
+bindsym $mod+Shift+s exec ~/.config/quickshell/swayshell/scripts/screenshot.sh region
+bindsym Print        exec ~/.config/quickshell/swayshell/scripts/screenshot.sh region
+bindsym Shift+Print  exec ~/.config/quickshell/swayshell/scripts/screenshot.sh fullscreen
+bindsym $mod+Print   exec ~/.config/quickshell/swayshell/scripts/screenshot.sh window
+
+# Hardware & Media Keys (Pipewire, Brightnessctl, MPRIS)
+bindsym XF86AudioRaiseVolume exec $qs ipc call audio raise
+bindsym XF86AudioLowerVolume exec $qs ipc call audio lower
+bindsym XF86AudioMute        exec $qs ipc call audio mute
+bindsym XF86AudioMicMute     exec $qs ipc call audio muteMic
+
+bindsym XF86MonBrightnessUp   exec $qs ipc call brightness raise
+bindsym XF86MonBrightnessDown exec $qs ipc call brightness lower
+
+bindsym XF86AudioPlay        exec $qs ipc call media playPause
+bindsym XF86AudioNext        exec $qs ipc call media next
+bindsym XF86AudioPrev        exec $qs ipc call media previous
+
+# Reload Sway configuration
+bindsym $mod+Shift+c reload
+
+# ====================================================================
+# Intelligent Window Rules (Smart Floating & Centering)
+# ====================================================================
+for_window [window_role="pop-up"] floating enable
+for_window [window_role="bubble"] floating enable
+for_window [window_role="task_dialog"] floating enable
+for_window [window_role="Preferences"] floating enable
+for_window [window_type="dialog"] floating enable
+for_window [window_type="menu"] floating enable
+
+# Utilities & Dialogs
+for_window [app_id="pavucontrol"] floating enable, resize set 740 500, move position center
+for_window [app_id="nm-connection-editor"] floating enable, move position center
+for_window [app_id="blueman-manager"] floating enable, resize set 680 460, move position center
+for_window [app_id="org.gnome.Calculator"] floating enable, move position center
+for_window [app_id="org.gnome.FileRoller"] floating enable, move position center
+for_window [title="Terminal Flotante"] floating enable, resize set 850 500, move position center
+for_window [title="Monitor del Sistema"] floating enable, resize set 950 600, move position center
+for_window [title="Picture-in-Picture"] floating enable, sticky enable, resize set 480 270, move position 1420 780
+for_window [title=".*Open.*|.*Save.*|.*Choose.*|.*File Upload.*|.*Guardar.*|.*Abrir.*"] floating enable, resize set 850 550, move position center
+for_window [app_id="firefox" title="Library"] floating enable, resize set 900 600, move position center
+for_window [app_id="mpv"] floating enable, resize set 960 540, move position center
