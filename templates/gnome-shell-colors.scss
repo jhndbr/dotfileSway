@@ -138,9 +138,9 @@ $contrast: 'normal' !default;
 $osd_bg_color: $m-surface-container;
 $osd_fg_color: $m-on-surface;
 
-$panel_bg_color: $m-surface;
+$panel_bg_color: if($variant == 'light', rgba($m-surface, 0.85), rgba($m-surface, 0.78));
 $panel_fg_color: $m-on-surface;
-$panel_border_color: if($variant == 'light', transparentize($m-outline, 0.8), transparent);
+$panel_border_color: if($variant == 'light', rgba($m-outline, 0.18), rgba($m-outline, 0.12));
 
 $card_bg_color: $m-surface-container-low;
 $card_shadow_color: rgba(0, 0, 0, 0.15);

@@ -1,0 +1,20 @@
+{
+  "dark": {
+    "bg": "{{colors.surface_container.dark.hex}}",
+    "bg_inactive": "{{colors.surface.dark.hex}}",
+    "fg": "{{colors.on_surface.dark.hex}}",
+    "fg_inactive": "{{colors.on_surface_variant.dark.hex}}",
+    "border": "{{colors.outline_variant.dark.hex}}",
+    "button": "{{colors.on_surface_variant.dark.hex}}",
+    "button_hover": "{{colors.primary.dark.hex}}"
+  },
+  "light": {
+    "bg": "{{colors.surface_container.light.hex}}",
+    "bg_inactive": "{{colors.surface.light.hex}}",
+    "fg": "{{colors.on_surface.light.hex}}",
+    "fg_inactive": "{{colors.on_surface_variant.light.hex}}",
+    "border": "{{colors.outline_variant.light.hex}}",
+    "button": "{{colors.on_surface_variant.light.hex}}",
+    "button_hover": "{{colors.primary.light.hex}}"
+  }
+}

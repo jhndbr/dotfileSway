@@ -19,19 +19,30 @@ echo "👀 Monitoring wallpaper and color scheme changes..."
 # Initial application
 "$APPLY_BIN" || true
 
-# Debounce loop
-LAST_RUN=0
+# Shared debounce state and flock across subshells
 DEBOUNCE_SECONDS=1
+LAST_RUN_FILE="/tmp/gnome-matugen-daemon-last-run"
+LOCK_FILE="/tmp/gnome-matugen-daemon.lock"
 
 handle_change() {
-  local NOW
-  NOW=$(date +%s)
-  if (( NOW - LAST_RUN >= DEBOUNCE_SECONDS )); then
-    LAST_RUN=$NOW
-    echo "🔔 Change detected! Re-generating theme..."
-    sleep 0.5
-    "$APPLY_BIN" || true
-  fi
+  (
+    # Non-blocking lock: if another event is already processing, ignore duplicate trigger
+    if ! flock -n 200; then
+      exit 0
+    fi
+    local LAST_RUN=0
+    if [[ -f "$LAST_RUN_FILE" ]]; then
+      LAST_RUN=$(cat "$LAST_RUN_FILE" 2>/dev/null || echo 0)
+    fi
+    local NOW
+    NOW=$(date +%s)
+    if (( NOW - LAST_RUN >= DEBOUNCE_SECONDS )); then
+      echo "$NOW" > "$LAST_RUN_FILE"
+      echo "🔔 Change detected! Re-generating theme..."
+      sleep 0.5
+      "$APPLY_BIN" || true
+    fi
+  ) 200>"$LOCK_FILE"
 }
 
 # Monitor gsettings changes concurrently
@@ -52,6 +63,7 @@ BG_PID3=$!
 
 cleanup() {
   kill "$BG_PID1" "$BG_PID2" "$BG_PID3" 2>/dev/null || true
+  rm -f "$LOCK_FILE" "$LAST_RUN_FILE" 2>/dev/null || true
 }
 trap cleanup EXIT INT TERM
 

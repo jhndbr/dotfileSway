@@ -1,0 +1,376 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# ==============================================================================
+# gnome-matugen-gdm
+# Applies and synchronizes Material You theming & wallpaper to GDM (GNOME Display Manager)
+# Compatible with GNOME 45, 46, 47, 48 on Debian 13 (Trixie)
+# ==============================================================================
+
+CONFIG_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/gnome-matugen"
+CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/gnome-matugen"
+DATA_DIR="${XDG_DATA_HOME:-$HOME/.local/share}"
+THEME_DIR="$DATA_DIR/themes/Material-You/gnome-shell"
+
+GDM_RESOURCE_DIR="/etc/gnome-shell"
+GDM_RESOURCE_TARGET="$GDM_RESOURCE_DIR/gnome-shell-theme.gresource"
+SYSTEM_RESOURCE="/usr/share/gnome-shell/gnome-shell-theme.gresource"
+SYSTEM_BACKUP="/usr/share/gnome-shell/gnome-shell-theme.gresource.bak"
+
+find_glib_compile() {
+  if command -v glib-compile-resources >/dev/null 2>&1; then
+    command -v glib-compile-resources
+  elif [[ -x "$HOME/.local/bin/glib-compile-resources" ]]; then
+    echo "$HOME/.local/bin/glib-compile-resources"
+  elif [[ -x "/usr/bin/glib-compile-resources" ]]; then
+    echo "/usr/bin/glib-compile-resources"
+  else
+    echo ""
+  fi
+}
+
+find_magick() {
+  if command -v magick >/dev/null 2>&1; then
+    command -v magick
+  elif command -v convert >/dev/null 2>&1; then
+    command -v convert
+  else
+    echo ""
+  fi
+}
+
+usage() {
+  cat << 'EOF'
+Usage:
+  gnome-matugen-gdm [COMMAND] [OPTIONS]
+
+Commands:
+  --setup, -s        Set up GDM theming (requires sudo once, allows non-root updates)
+  --update, -u       Recompile GDM theme with current wallpaper & Material You colors
+  --restore, -r      Restore factory GDM theme from backup
+  --status           Check GDM theming integration status
+  -h, --help         Show this help message
+
+Options:
+  --image <path>     Path to wallpaper/image (Default: auto-detect from GNOME)
+EOF
+}
+
+cmd_status() {
+  echo "🔍 GDM Theming Integration Status:"
+  echo "-----------------------------------"
+  if [[ -f "$SYSTEM_BACKUP" ]]; then
+    echo "  ✅ Factory backup exists: $SYSTEM_BACKUP"
+  else
+    echo "  ⚠️ Factory backup not found."
+  fi
+
+  if [[ -L "$SYSTEM_RESOURCE" ]]; then
+    local target
+    target="$(readlink -f "$SYSTEM_RESOURCE" || echo "")"
+    echo "  ✅ System GDM theme is symlinked to: $target"
+  else
+    echo "  ℹ️ System GDM theme is not symlinked (stock GDM active)."
+  fi
+
+  if [[ -d "$GDM_RESOURCE_DIR" ]]; then
+    if [[ -w "$GDM_RESOURCE_DIR" ]]; then
+      echo "  ✅ $GDM_RESOURCE_DIR is writable by current user ($USER) - dynamic updates enabled!"
+    else
+      echo "  ⚠️ $GDM_RESOURCE_DIR exists but is not writable by $USER."
+    fi
+  else
+    echo "  ℹ️ $GDM_RESOURCE_DIR does not exist yet. Run 'sudo gnome-matugen-gdm --setup'."
+  fi
+
+  if [[ -f "$GDM_RESOURCE_TARGET" ]]; then
+    local size
+    size="$(du -h "$GDM_RESOURCE_TARGET" | cut -f1)"
+    echo "  🎨 Active Material You GDM theme size: $size"
+  fi
+}
+
+cmd_setup() {
+  local target_user="${1:-${SUDO_USER:-$USER}}"
+
+  if [[ "$EUID" -ne 0 ]]; then
+    echo "🔒 GDM setup requires root privileges to configure /etc/gnome-shell and backup system files."
+    echo "Re-running with sudo..."
+    exec sudo "$0" --setup "$target_user"
+  fi
+
+  echo "⚙️ Setting up GDM Material You theming for user '$target_user'..."
+
+  # 1. Ensure dependencies are present
+  if ! command -v glib-compile-resources >/dev/null 2>&1; then
+    echo "📦 Installing libgio-2.0-dev-bin for glib-compile-resources..."
+    apt-get update -qq && apt-get install -y -qq libgio-2.0-dev-bin imagemagick || true
+  fi
+
+  # 2. Backup pristine system resource if not already done
+  if [[ -f "$SYSTEM_RESOURCE" && ! -L "$SYSTEM_RESOURCE" ]]; then
+    if [[ ! -f "$SYSTEM_BACKUP" ]]; then
+      cp "$SYSTEM_RESOURCE" "$SYSTEM_BACKUP"
+      echo "💾 Backed up stock GDM theme to $SYSTEM_BACKUP"
+    fi
+  elif [[ ! -f "$SYSTEM_BACKUP" && -f "$SYSTEM_RESOURCE" ]]; then
+    cp "$SYSTEM_RESOURCE" "$SYSTEM_BACKUP"
+    echo "💾 Backed up stock GDM theme to $SYSTEM_BACKUP"
+  fi
+
+  # 3. Create target directory with user ownership
+  mkdir -p "$GDM_RESOURCE_DIR"
+  chown -R "$target_user:$target_user" "$GDM_RESOURCE_DIR"
+  chmod 755 "$GDM_RESOURCE_DIR"
+
+  # 4. Create symlink from system resource to /etc/gnome-shell/gnome-shell-theme.gresource
+  ln -sf "$GDM_RESOURCE_TARGET" "$SYSTEM_RESOURCE"
+  echo "🔗 Linked $SYSTEM_RESOURCE -> $GDM_RESOURCE_TARGET"
+
+  # 5. Compile initial theme as target_user
+  local user_bin="/home/$target_user/.local/bin/gnome-matugen-gdm"
+  if [[ -x "$user_bin" ]]; then
+    su - "$target_user" -c "$user_bin --update" || true
+  elif command -v su >/dev/null 2>&1 && [[ -n "$target_user" && "$target_user" != "root" ]]; then
+    su - "$target_user" -c "PATH=\"\$HOME/.local/bin:\$PATH\" gnome-matugen-gdm --update" || true
+  else
+    cmd_update
+  fi
+
+  echo ""
+  echo "🎉 GDM Material You theming setup successfully!"
+  echo "Now whenever your wallpaper changes, GDM will automatically update with your theme."
+}
+
+cmd_restore() {
+  if [[ "$EUID" -ne 0 ]]; then
+    echo "🔒 GDM restore requires root privileges."
+    exec sudo "$0" --restore
+  fi
+
+  echo "🔄 Restoring stock GDM theme..."
+  if [[ -f "$SYSTEM_BACKUP" ]]; then
+    rm -f "$SYSTEM_RESOURCE"
+    cp "$SYSTEM_BACKUP" "$SYSTEM_RESOURCE"
+    rm -rf "$GDM_RESOURCE_DIR"
+    echo "✅ Stock GDM theme successfully restored from backup."
+  else
+    echo "❌ Error: Backup not found at $SYSTEM_BACKUP. Cannot restore automatically." >&2
+    exit 1
+  fi
+}
+
+cmd_update() {
+  local image_arg="${1:-}"
+
+  local glib_compile
+  glib_compile="$(find_glib_compile)"
+  if [[ -z "$glib_compile" ]]; then
+    echo "⚠️ Warning: glib-compile-resources not found. Cannot compile GDM theme." >&2
+    exit 0
+  fi
+
+  local magick_bin
+  magick_bin="$(find_magick)"
+
+  # Source of base assets: backup or system resource
+  local base_gresource=""
+  if [[ -f "$SYSTEM_BACKUP" ]]; then
+    base_gresource="$SYSTEM_BACKUP"
+  elif [[ -f "$SYSTEM_RESOURCE" && ! -L "$SYSTEM_RESOURCE" ]]; then
+    base_gresource="$SYSTEM_RESOURCE"
+  elif [[ -f "/usr/share/gnome-shell/gnome-shell-theme.gresource" ]]; then
+    base_gresource="/usr/share/gnome-shell/gnome-shell-theme.gresource"
+  fi
+
+  if [[ -z "$base_gresource" || ! -f "$base_gresource" ]]; then
+    echo "⚠️ Warning: Base gnome-shell-theme.gresource not found. Skipping GDM compile." >&2
+    exit 0
+  fi
+
+  # Determine wallpaper path
+  local wall_path="$image_arg"
+  if [[ -z "$wall_path" ]]; then
+    local uri
+    uri="$(gsettings get org.gnome.desktop.background picture-uri-dark 2>/dev/null || echo "")"
+    uri="${uri//\'/}"
+    if [[ -z "$uri" || "$uri" == "''" ]]; then
+      uri="$(gsettings get org.gnome.desktop.background picture-uri 2>/dev/null || echo "")"
+      uri="${uri//\'/}"
+    fi
+    if [[ "$uri" =~ ^file:// ]]; then
+      wall_path="${uri#file://}"
+      wall_path="$(python3 -c "import urllib.parse, sys; print(urllib.parse.unquote(sys.argv[1]))" "$wall_path" 2>/dev/null || echo "$wall_path")"
+    else
+      wall_path="$uri"
+    fi
+  fi
+
+  if [[ -z "$wall_path" || ! -f "$wall_path" ]]; then
+    if [[ -f "$HOME/.config/background" ]]; then
+      wall_path="$HOME/.config/background"
+    fi
+  fi
+
+  # Handle .jxl wallpaper
+  local temp_png=""
+  if [[ -n "$wall_path" && "${wall_path,,}" == *.jxl ]]; then
+    temp_png="$(mktemp /tmp/gdm_wall_XXXXXX.png)"
+    if command -v djxl >/dev/null 2>&1 && djxl "$wall_path" "$temp_png" >/dev/null 2>&1; then
+      wall_path="$temp_png"
+    elif [[ -n "$magick_bin" ]] && "$magick_bin" "$wall_path" "$temp_png" >/dev/null 2>&1; then
+      wall_path="$temp_png"
+    fi
+  fi
+
+  # Build directory
+  local build_dir
+  build_dir="$(mktemp -d /tmp/gdm_matugen_XXXXXX)"
+  cleanup_build() {
+    rm -rf "$build_dir"
+    if [[ -n "$temp_png" && -f "$temp_png" ]]; then
+      rm -f "$temp_png"
+    fi
+  }
+  trap cleanup_build EXIT
+
+  # Extract base SVG and helper files from stock gresource
+  for res in $(gresource list "$base_gresource" 2>/dev/null || true); do
+    local bname
+    bname="$(basename "$res")"
+    if [[ "$bname" == *.svg || "$bname" == "pad-osd.css" || "$bname" == "gnome-shell-high-contrast.css" ]]; then
+      gresource extract "$base_gresource" "$res" > "$build_dir/$bname" 2>/dev/null || true
+    fi
+  done
+
+  # Optimize wallpaper into build directory as gdm-wallpaper.jpg
+  local has_wallpaper=false
+  if [[ -n "$wall_path" && -f "$wall_path" && -n "$magick_bin" ]]; then
+    if "$magick_bin" "$wall_path" -resize 1920x1080^ -gravity center -extent 1920x1080 -quality 85 "$build_dir/gdm-wallpaper.jpg" >/dev/null 2>&1; then
+      has_wallpaper=true
+    fi
+  fi
+
+  # Get compiled Material You CSS
+  local css_content=""
+  if [[ -f "$THEME_DIR/gnome-shell.css" ]]; then
+    css_content="$(cat "$THEME_DIR/gnome-shell.css")"
+  fi
+
+  if [[ -z "$css_content" ]]; then
+    echo "⚠️ Material-You gnome-shell.css not found. Skipping GDM compile." >&2
+    exit 0
+  fi
+
+  # Append GDM background styling
+  local gdm_css="$css_content"
+  if [[ "$has_wallpaper" == "true" ]]; then
+    gdm_css="$gdm_css
+
+/* GDM Material You Login Screen Wallpaper */
+#lockDialogGroup {
+  background-color: #101410;
+  background-image: url(\"resource:///org/gnome/shell/theme/gdm-wallpaper.jpg\");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+}
+"
+  fi
+
+  echo "$gdm_css" > "$build_dir/gnome-shell.css"
+  echo "$gdm_css" > "$build_dir/gnome-shell-dark.css"
+  echo "$gdm_css" > "$build_dir/gnome-shell-light.css"
+
+  # Generate GResource XML
+  cat > "$build_dir/gnome-shell-theme.gresource.xml" << 'EOF'
+<?xml version="1.0" encoding="UTF-8"?>
+<gresources>
+  <gresource prefix="/org/gnome/shell/theme">
+EOF
+
+  for f in "$build_dir"/*; do
+    local fname
+    fname="$(basename "$f")"
+    if [[ "$fname" != *.xml && "$fname" != *.gresource* ]]; then
+      echo "    <file>$fname</file>" >> "$build_dir/gnome-shell-theme.gresource.xml"
+    fi
+  done
+
+  cat >> "$build_dir/gnome-shell-theme.gresource.xml" << 'EOF'
+  </gresource>
+</gresources>
+EOF
+
+  # Compile gresource
+  local tmp_target="$build_dir/gnome-shell-theme.gresource"
+  "$glib_compile" --target="$tmp_target" "$build_dir/gnome-shell-theme.gresource.xml"
+
+  # Ensure destination directory exists
+  mkdir -p "$GDM_RESOURCE_DIR"
+  chmod 644 "$tmp_target"
+
+  # Atomic install into /etc/gnome-shell/gnome-shell-theme.gresource
+  cp "$tmp_target" "$GDM_RESOURCE_TARGET.tmp"
+  chmod 644 "$GDM_RESOURCE_TARGET.tmp"
+  mv -f "$GDM_RESOURCE_TARGET.tmp" "$GDM_RESOURCE_TARGET"
+
+  echo "🔒 GDM login screen updated with current Material You wallpaper and colors."
+}
+
+# Main CLI dispatch
+IMAGE_ARG=""
+ACTION=""
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --setup|-s)
+      ACTION="setup"
+      shift
+      ;;
+    --update|-u)
+      ACTION="update"
+      shift
+      ;;
+    --restore|-r)
+      ACTION="restore"
+      shift
+      ;;
+    --status)
+      ACTION="status"
+      shift
+      ;;
+    --image)
+      IMAGE_ARG="${2:-}"
+      shift 2
+      ;;
+    -h|--help)
+      usage
+      exit 0
+      ;;
+    *)
+      echo "Unknown option: $1" >&2
+      usage
+      exit 1
+      ;;
+  esac
+done
+
+if [[ -z "$ACTION" ]]; then
+  ACTION="update"
+fi
+
+case "$ACTION" in
+  setup)
+    cmd_setup "${SUDO_USER:-$USER}"
+    ;;
+  update)
+    cmd_update "$IMAGE_ARG"
+    ;;
+  restore)
+    cmd_restore
+    ;;
+  status)
+    cmd_status
+    ;;
+esac

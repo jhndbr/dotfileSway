@@ -11,6 +11,13 @@ DATA_DIR="${XDG_DATA_HOME:-$HOME/.local/share}"
 TEMPLATES_DIR="$CONFIG_DIR/gnome-matugen/templates"
 THEME_DIR="$DATA_DIR/themes/Material-You/gnome-shell"
 
+# Prevent concurrent apply runs
+exec 200>/tmp/gnome-matugen-apply.lock
+if ! flock -w 10 200; then
+  echo "⚠️ Another instance of gnome-matugen-apply is currently running. Exiting." >&2
+  exit 0
+fi
+
 usage() {
   cat << 'EOF'
 Usage:
@@ -21,12 +28,15 @@ Options:
   --color <#hex>       Hex color value (e.g., "#3b82f6")
   --mode <dark|light>  Theme mode (Default: auto-detect from GNOME color-scheme)
   --type <type>        Scheme type (scheme-tonal-spot, scheme-expressive, scheme-fruit-salad, etc.)
+  --prefer <pref>      Color preference: saturation (default), darkness, lightness, value, etc.
+  --index <0-4>        Dominant color index (0 = most dominant)
   --contrast <float>   Contrast value between -1.0 and 1.0 (Default: 0.0)
   -h, --help           Show this help message
 
 Examples:
   gnome-matugen-apply
   gnome-matugen-apply --image ~/Pictures/wall.png --mode dark
+  gnome-matugen-apply --prefer saturation
   gnome-matugen-apply --color "#7c3aed"
 EOF
 }
@@ -62,6 +72,8 @@ COLOR_HEX=""
 MODE=""
 SCHEME_TYPE="scheme-tonal-spot"
 CONTRAST=""
+PREFER="saturation"
+INDEX=""
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -79,6 +91,14 @@ while [[ $# -gt 0 ]]; do
       ;;
     --type)
       SCHEME_TYPE="${2:-}"
+      shift 2
+      ;;
+    --prefer)
+      PREFER="${2:-}"
+      shift 2
+      ;;
+    --index)
+      INDEX="${2:-}"
       shift 2
       ;;
     --contrast)
@@ -201,7 +221,19 @@ else
 fi
 
 # Ensure output directories exist
-mkdir -p "$CONFIG_DIR/gtk-3.0" "$CONFIG_DIR/gtk-4.0" "$CONFIG_DIR/qt5ct/colors" "$CONFIG_DIR/qt6ct/colors" "$THEME_DIR"
+mkdir -p \
+  "$CONFIG_DIR/gtk-3.0" \
+  "$CONFIG_DIR/gtk-4.0" \
+  "$CONFIG_DIR/qt5ct/colors" \
+  "$CONFIG_DIR/qt6ct/colors" \
+  "$CONFIG_DIR/Kvantum/MaterialYou" \
+  "$THEME_DIR"
+
+# Ensure GTK4 template fallback if gtk4.css is not present
+GTK4_TEMPLATE="$TEMPLATES_DIR/gtk4.css"
+if [[ ! -f "$GTK4_TEMPLATE" ]]; then
+  GTK4_TEMPLATE="$TEMPLATES_DIR/gtk.css"
+fi
 
 # Create a temporary config for matugen
 TMP_CFG="$(mktemp --suffix=.toml)"
@@ -214,7 +246,7 @@ input_path = '$TEMPLATES_DIR/gtk.css'
 output_path = '$CONFIG_DIR/gtk-3.0/gtk.css'
 
 [templates.gtk4]
-input_path = '$TEMPLATES_DIR/gtk.css'
+input_path = '$GTK4_TEMPLATE'
 output_path = '$CONFIG_DIR/gtk-4.0/gtk.css'
 
 [templates.gnomeshell]
@@ -230,10 +262,37 @@ input_path = '$TEMPLATES_DIR/qtct.conf'
 output_path = '$CONFIG_DIR/qt6ct/colors/MaterialYou.conf'
 EOF
 
+if [[ -f "$TEMPLATES_DIR/kvantum.kvconfig" && -f "$TEMPLATES_DIR/kvantum.svg" ]]; then
+  cat >> "$TMP_CFG" << EOF
+
+[templates.kvantum_cfg]
+input_path = '$TEMPLATES_DIR/kvantum.kvconfig'
+output_path = '$CONFIG_DIR/Kvantum/MaterialYou/MaterialYou.kvconfig'
+
+[templates.kvantum_svg]
+input_path = '$TEMPLATES_DIR/kvantum.svg'
+output_path = '$CONFIG_DIR/Kvantum/MaterialYou/MaterialYou.svg'
+EOF
+fi
+
+if [[ -f "$TEMPLATES_DIR/qt-decoration.json" ]]; then
+  cat >> "$TMP_CFG" << EOF
+
+[templates.qt_decorations]
+input_path = '$TEMPLATES_DIR/qt-decoration.json'
+output_path = '$CONFIG_DIR/gnome-matugen/qt-decoration.json'
+EOF
+fi
+
 # Build matugen command args
 MATUGEN_ARGS=()
 if [[ -n "$IMAGE_PATH" ]]; then
   MATUGEN_ARGS+=(image "$IMAGE_PATH")
+  if [[ -n "$INDEX" ]]; then
+    MATUGEN_ARGS+=(--source-color-index "$INDEX")
+  elif [[ -n "$PREFER" ]]; then
+    MATUGEN_ARGS+=(--prefer "$PREFER")
+  fi
 else
   MATUGEN_ARGS+=(color hex "$COLOR_HEX")
 fi
@@ -244,10 +303,101 @@ if [[ -n "$CONTRAST" ]]; then
 fi
 
 # Run Matugen with fallback protection
-if ! "$MATUGEN_BIN" "${MATUGEN_ARGS[@]}"; then
+SUCCESS=false
+if "$MATUGEN_BIN" "${MATUGEN_ARGS[@]}"; then
+  SUCCESS=true
+elif [[ -n "$IMAGE_PATH" ]]; then
+  echo "⚠️ Matugen failed with primary preference ($PREFER). Retrying with --source-color-index 0..." >&2
+  if "$MATUGEN_BIN" image "$IMAGE_PATH" --source-color-index 0 -m "$MODE" -t "$SCHEME_TYPE" -c "$TMP_CFG"; then
+    SUCCESS=true
+  fi
+fi
+
+if [[ "$SUCCESS" != "true" ]]; then
   echo "⚠️ Matugen failed with the image source. Retrying with fallback color (#3584e4)..." >&2
   "$MATUGEN_BIN" color hex "#3584e4" -m "$MODE" -t "$SCHEME_TYPE" -c "$TMP_CFG"
 fi
+
+# Activate MaterialYou Kvantum theme if generated
+if [[ -f "$CONFIG_DIR/Kvantum/MaterialYou/MaterialYou.kvconfig" ]]; then
+  cat > "$CONFIG_DIR/Kvantum/kvantum.kvconfig" << 'EOF'
+[General]
+theme=MaterialYou
+EOF
+fi
+
+# Patch Qt Wayland window decorations (titlebars) to dynamically match Material You theme
+patch_qt_decorations() {
+  local json_file="$CONFIG_DIR/gnome-matugen/qt-decoration.json"
+  if [[ ! -f "$json_file" ]]; then
+    return 0
+  fi
+
+  python3 -c '
+import os, sys, json, shutil
+
+json_path = sys.argv[1]
+try:
+    with open(json_path) as f:
+        colors = json.load(f)
+except Exception:
+    sys.exit(0)
+
+user_plugin_dir = os.path.expanduser("~/.local/lib/qt6/plugins/wayland-decoration-client")
+target_so = os.path.join(user_plugin_dir, "libadwaita.so")
+clean_cache = os.path.expanduser("~/.cache/gnome-matugen/libadwaita.so.clean")
+sys_so = "/usr/lib/x86_64-linux-gnu/qt6/plugins/wayland-decoration-client/libadwaita.so"
+
+os.makedirs(os.path.dirname(clean_cache), exist_ok=True)
+if os.path.isfile(sys_so):
+    if not os.path.isfile(clean_cache):
+        shutil.copy2(sys_so, clean_cache)
+    source_so = sys_so
+elif os.path.isfile(clean_cache):
+    source_so = clean_cache
+elif os.path.isfile(target_so):
+    source_so = target_so
+else:
+    sys.exit(0)
+
+try:
+    with open(source_so, "rb") as f:
+        data = bytearray(f.read())
+
+    def hex_to_qrgb_bytes(hex_str):
+        hex_str = hex_str.lstrip("#")
+        r, g, b = int(hex_str[0:2], 16), int(hex_str[2:4], 16), int(hex_str[4:6], 16)
+        # x86-64 little-endian: mov esi, 0x00RRGGBB -> opcode 0xbe, BB, GG, RR, 0x00
+        return bytes([0xbe, b, g, r, 0x00])
+
+    dark_bg = hex_to_qrgb_bytes(colors.get("dark", {}).get("bg", "#303030"))
+    dark_bg_inact = hex_to_qrgb_bytes(colors.get("dark", {}).get("bg_inactive", "#242424"))
+    dark_fg = hex_to_qrgb_bytes(colors.get("dark", {}).get("fg", "#ffffff"))
+
+    light_bg = hex_to_qrgb_bytes(colors.get("light", {}).get("bg", "#ffffff"))
+    light_bg_inact = hex_to_qrgb_bytes(colors.get("light", {}).get("bg_inactive", "#fafafa"))
+    light_fg = hex_to_qrgb_bytes(colors.get("light", {}).get("fg", "#2e2e2e"))
+
+    data[0xb025:0xb02a] = dark_bg
+    data[0xb03a:0xb03f] = dark_bg_inact
+    data[0xb062:0xb067] = dark_fg
+
+    data[0xad17:0xad1c] = light_bg
+    data[0xad2c:0xad31] = light_bg_inact
+    data[0xad54:0xad59] = light_fg
+
+    os.makedirs(user_plugin_dir, exist_ok=True)
+    temp_target = target_so + ".tmp"
+    with open(temp_target, "wb") as f:
+        f.write(data)
+    os.replace(temp_target, target_so)
+    print("🎨 Patched Qt6 Wayland window decorations (libadwaita.so)")
+except Exception as e:
+    print(f"⚠️ Could not patch Qt decorations: {e}", file=sys.stderr)
+' "$json_file"
+}
+
+patch_qt_decorations
 
 # Compile GNOME Shell CSS
 echo "⚙️ Compiling GNOME Shell stylesheet..."
@@ -255,12 +405,47 @@ sassc "$TEMPLATES_DIR/gnome-shell.scss" "$THEME_DIR/gnome-shell.css"
 
 # Apply GNOME settings
 echo "✨ Updating GNOME Desktop settings..."
+CURRENT_GSETTINGS_SCHEME="$(gsettings get org.gnome.desktop.interface color-scheme 2>/dev/null || echo "")"
 if [[ "$MODE" == "dark" ]]; then
-  gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark' || true
+  if [[ "$CURRENT_GSETTINGS_SCHEME" != "'prefer-dark'" ]]; then
+    gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark' || true
+  fi
+  gsettings set org.gnome.desktop.interface gtk-theme 'Adwaita' || true
   gsettings set org.gnome.desktop.interface gtk-theme 'adw-gtk3-dark' || true
 else
-  gsettings set org.gnome.desktop.interface color-scheme 'prefer-light' || true
+  if [[ "$CURRENT_GSETTINGS_SCHEME" != "'prefer-light'" ]]; then
+    gsettings set org.gnome.desktop.interface color-scheme 'prefer-light' || true
+  fi
+  gsettings set org.gnome.desktop.interface gtk-theme 'Adwaita' || true
   gsettings set org.gnome.desktop.interface gtk-theme 'adw-gtk3' || true
+fi
+
+# Sync GNOME 47/48 native accent-color with extracted Material You primary color
+PRIMARY_HEX="$(grep -m1 '@define-color accent_color' "$CONFIG_DIR/gtk-4.0/gtk.css" 2>/dev/null | grep -oE '#[0-9a-fA-F]{6}' || echo "")"
+if [[ -n "$PRIMARY_HEX" ]] && gsettings writable org.gnome.desktop.interface accent-color >/dev/null 2>&1; then
+  CLOSEST_ACCENT="$(python3 -c '
+import sys, colorsys
+h_str = sys.argv[1].lstrip("#")
+r, g, b = [int(h_str[i:i+2], 16)/255.0 for i in (0, 2, 4)]
+targets = {
+    "blue": (0x35/255, 0x84/255, 0xe4/255),
+    "teal": (0x21/255, 0x90/255, 0xa4/255),
+    "green": (0x3a/255, 0x94/255, 0x4a/255),
+    "yellow": (0xc8/255, 0x88/255, 0x00/255),
+    "orange": (0xed/255, 0x5b/255, 0x00/255),
+    "red": (0xe6/255, 0x2d/255, 0x42/255),
+    "pink": (0xd5/255, 0x61/255, 0x99/255),
+    "purple": (0x91/255, 0x41/255, 0xac/255),
+    "slate": (0x6f/255, 0x83/255, 0x96/255),
+}
+h1, s1, v1 = colorsys.rgb_to_hsv(r, g, b)
+if s1 < 0.15:
+    print("slate")
+else:
+    best = min(targets.items(), key=lambda kv: min(abs(h1 - colorsys.rgb_to_hsv(*kv[1])[0]), 1.0 - abs(h1 - colorsys.rgb_to_hsv(*kv[1])[0])) * 2.5 + abs(s1 - colorsys.rgb_to_hsv(*kv[1])[1]) * 0.5)
+    print(best[0])
+' "$PRIMARY_HEX" 2>/dev/null || echo "blue")"
+  gsettings set org.gnome.desktop.interface accent-color "$CLOSEST_ACCENT" 2>/dev/null || true
 fi
 
 # Reload Shell Theme via user-theme extension
@@ -268,5 +453,30 @@ if gnome-extensions list 2>/dev/null | grep -q 'user-theme'; then
   gsettings set org.gnome.shell.extensions.user-theme name '' || true
   gsettings set org.gnome.shell.extensions.user-theme name 'Material-You' || true
 fi
+
+# Update GDM Login Screen theme if configured
+update_gdm_theme() {
+  local gdm_dir="/etc/gnome-shell"
+  if [[ -d "$gdm_dir" && -w "$gdm_dir" ]]; then
+    local gdm_bin=""
+    if command -v gnome-matugen-gdm >/dev/null 2>&1; then
+      gdm_bin="$(command -v gnome-matugen-gdm)"
+    elif [[ -x "$HOME/.local/bin/gnome-matugen-gdm" ]]; then
+      gdm_bin="$HOME/.local/bin/gnome-matugen-gdm"
+    elif [[ -x "$(dirname "$0")/gnome-matugen-gdm" ]]; then
+      gdm_bin="$(dirname "$0")/gnome-matugen-gdm"
+    fi
+
+    if [[ -n "$gdm_bin" ]]; then
+      if [[ -n "$IMAGE_PATH" ]]; then
+        "$gdm_bin" --update --image "$IMAGE_PATH" || true
+      else
+        "$gdm_bin" --update || true
+      fi
+    fi
+  fi
+}
+
+update_gdm_theme
 
 echo "✅ Theme applied successfully!"
