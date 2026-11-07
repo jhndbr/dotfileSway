@@ -1,0 +1,10 @@
+# Configuración de Wofi
+width=520
+height=360
+location=center
+show=drun
+prompt=Buscar aplicación...
+filter_rate=100
+allow_images=false
+insensitive=true
+hide_scroll=true

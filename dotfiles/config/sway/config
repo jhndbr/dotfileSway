@@ -1,0 +1,301 @@
+# Sway Configuration - Debian Notebook (MSI Modern 15)
+# Minimalist, Modern & Monochromatic Setup (Sway + Foot + Wofi + Swaybg)
+
+### Variables
+set $mod Mod4
+set $left h
+set $down j
+set $up k
+set $right l
+set $term env XDG_CURRENT_DESKTOP=sway:GNOME GTK_THEME=Fluent-purple-Dark QT_STYLE_OVERRIDE=kvantum QT_PLUGIN_PATH=/home/jhon/.local/usr/lib/x86_64-linux-gnu/qt6/plugins:/home/jhon/.local/usr/lib/x86_64-linux-gnu/qt5/plugins LD_LIBRARY_PATH=/home/jhon/.local/usr/lib/x86_64-linux-gnu foot
+set $menu env XDG_CURRENT_DESKTOP=sway:GNOME GTK_THEME=Fluent-purple-Dark QT_STYLE_OVERRIDE=kvantum QT_PLUGIN_PATH=/home/jhon/.local/usr/lib/x86_64-linux-gnu/qt6/plugins:/home/jhon/.local/usr/lib/x86_64-linux-gnu/qt5/plugins LD_LIBRARY_PATH=/home/jhon/.local/usr/lib/x86_64-linux-gnu wofi --show drun
+set $scripts ~/.config/sway/scripts
+
+# Sincronizar variables de entorno con systemd y D-Bus
+exec systemctl --user import-environment DISPLAY WAYLAND_DISPLAY SWAYSOCK XDG_CURRENT_DESKTOP GTK_THEME QT_QPA_PLATFORMTHEME
+exec hash dbus-update-activation-environment 2>/dev/null && \
+     dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY SWAYSOCK XDG_CURRENT_DESKTOP=sway:GNOME GTK_THEME=Fluent-purple-Dark QT_QPA_PLATFORMTHEME=gtk3
+
+# Sincronizar tema GTK en dconf/gsettings en cada inicio o reload
+exec_always {
+    gsettings set org.gnome.desktop.interface gtk-theme 'Fluent-purple-Dark'
+    gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
+    gsettings set org.gnome.desktop.interface icon-theme 'WhiteSur-purple-dark'
+    gsettings set org.gnome.desktop.interface font-name 'Inter 10'
+}
+
+# Fuente del sistema estándar
+font pango:Inter 10
+
+# Cursor consistente (evita cambios de tamaño entre Sway, Wayland y XWayland)
+seat seat0 xcursor_theme Adwaita 24
+
+### Colores Fluent Purple Darker (Ventanas y Bordes)
+# clase                 borde   fondo   texto   indicador child_border
+client.focused          #ba68c8 #161616 #ffffff #ba68c8   #ba68c8
+client.focused_inactive #242424 #121212 #888888 #242424   #242424
+client.unfocused        #181818 #101010 #666666 #181818   #181818
+client.urgent           #ba68c8 #222222 #ffffff #ba68c8   #ba68c8
+client.placeholder      #000000 #101010 #ffffff #000000   #101010
+client.background       #101010
+
+# Bordes finos y espaciado moderno (smart gaps: sin bordes si hay 1 sola ventana)
+default_border pixel 2
+default_floating_border pixel 2
+gaps inner 5
+gaps outer 0
+smart_gaps on
+smart_borders on
+
+### Configuración de Pantalla (Notebook eDP-1)
+output eDP-1 {
+    resolution 1920x1080@60Hz
+    position 0,0
+}
+
+# Fondo de pantalla usando swaybg
+output * bg /home/jhon/Imágenes/fondo.jpg fill
+
+### Configuración de Entrada (Teclado Español y Touchpad)
+# Teclado en español de España (por defecto 'es'; presiona Alt+Shift para alternar con 'latam')
+input "type:keyboard" {
+    xkb_layout "es,latam"
+    xkb_options "grp:alt_shift_toggle"
+    xkb_numlock enabled
+}
+
+# Touchpad optimizado para notebook
+input "type:touchpad" {
+    dwt enabled                 # Desactiva el touchpad mientras se escribe (evita toques accidentales)
+    tap enabled                 # Tocar para hacer clic
+    natural_scroll enabled      # Desplazamiento natural (dos dedos)
+    middle_emulation enabled    # Emulación de clic central
+    accel_profile "adaptive"
+    pointer_accel 0.15
+}
+
+### Tapa de Notebook (Lid Switch inteligente)
+# Si hay monitor externo conectado sólo apaga eDP-1; si no, bloquea y suspende
+bindswitch --locked lid:on exec $scripts/lid.sh close
+bindswitch --locked lid:off exec $scripts/lid.sh open
+
+### Atajos de Teclas para Notebook (Brillo, Volumen y Multimedia)
+# Teclas de Brillo de pantalla (mediante brightnessctl / busctl)
+bindsym --locked XF86MonBrightnessDown exec $scripts/brightness.sh down
+bindsym --locked XF86MonBrightnessUp   exec $scripts/brightness.sh up
+
+# Teclas de Volumen y Micrófono (mediante PipeWire / WirePlumber / ALSA)
+bindsym --locked XF86AudioMute         exec $scripts/volume.py mute
+bindsym --locked XF86AudioLowerVolume  exec $scripts/volume.py down
+bindsym --locked XF86AudioRaiseVolume  exec $scripts/volume.py up
+bindsym --locked XF86AudioMicMute      exec $scripts/volume.py mic-mute
+
+# Control Multimedia nativo MPRIS (Firefox, Strawberry, Brave, Spotify, etc.)
+bindsym --locked XF86AudioPlay exec $scripts/media.py play-pause
+bindsym --locked XF86AudioNext exec $scripts/media.py next
+bindsym --locked XF86AudioPrev exec $scripts/media.py prev
+bindsym --locked XF86AudioStop exec $scripts/media.py stop
+
+# Capturas de pantalla (guardadas en ~/Imágenes/Capturas y copiadas al portapapeles)
+bindsym Print exec $scripts/screenshot.sh full
+bindsym Shift+Print exec $scripts/screenshot.sh area
+bindsym $mod+Print exec $scripts/screenshot.sh copy-area
+bindsym Ctrl+Print exec $scripts/screenshot.sh copy-area
+
+### Atajos Básicos de Sway y Escritorio
+# Terminal (foot)
+bindsym $mod+Return exec $term
+
+# Explorador de archivos (thunar)
+bindsym $mod+Shift+Return exec thunar
+
+# Lanzador de aplicaciones (wofi)
+bindsym $mod+a exec $menu
+
+# Historial del portapapeles (cliphist + wofi)
+bindsym $mod+c exec $scripts/clipboard.sh
+
+# Control de perfil de energía (Rendimiento, Equilibrado, Ahorro)
+bindsym $mod+p exec $scripts/power.sh menu
+bindsym $mod+Shift+p exec $scripts/power.sh toggle
+
+# Control de volumen avanzado (pavucontrol)
+bindsym $mod+Shift+v exec pavucontrol
+
+# Bloquear pantalla inmediatamente
+bindsym $mod+Escape exec swaylock -f
+
+# Cerrar ventana enfocada
+bindsym $mod+q kill
+
+# Recargar configuración de Sway
+bindsym $mod+Shift+c reload
+
+# Menú de Sistema / Salida / Apagado (wofi powermenu)
+bindsym $mod+Shift+e exec $scripts/powermenu.sh
+
+# Mover ventanas con el ratón
+floating_modifier $mod normal
+
+### Navegación y Enfoque
+# Con teclas vim (h, j, k, l)
+bindsym $mod+$left focus left
+bindsym $mod+$down focus down
+bindsym $mod+$up focus up
+bindsym $mod+$right focus right
+
+# Con flechas direccionales
+bindsym $mod+Left focus left
+bindsym $mod+Down focus down
+bindsym $mod+Up focus up
+bindsym $mod+Right focus right
+
+# Mover ventana enfocada (+ Shift)
+bindsym $mod+Shift+$left move left
+bindsym $mod+Shift+$down move down
+bindsym $mod+Shift+$up move up
+bindsym $mod+Shift+$right move right
+
+bindsym $mod+Shift+Left move left
+bindsym $mod+Shift+Down move down
+bindsym $mod+Shift+Up move up
+bindsym $mod+Shift+Right move right
+
+### Espacios de Trabajo (Workspaces 1-10)
+bindsym $mod+1 workspace number 1
+bindsym $mod+2 workspace number 2
+bindsym $mod+3 workspace number 3
+bindsym $mod+4 workspace number 4
+bindsym $mod+5 workspace number 5
+bindsym $mod+6 workspace number 6
+bindsym $mod+7 workspace number 7
+bindsym $mod+8 workspace number 8
+bindsym $mod+9 workspace number 9
+bindsym $mod+0 workspace number 10
+
+# Mover contenedor a espacio de trabajo
+bindsym $mod+Shift+1 move container to workspace number 1
+bindsym $mod+Shift+2 move container to workspace number 2
+bindsym $mod+Shift+3 move container to workspace number 3
+bindsym $mod+Shift+4 move container to workspace number 4
+bindsym $mod+Shift+5 move container to workspace number 5
+bindsym $mod+Shift+6 move container to workspace number 6
+bindsym $mod+Shift+7 move container to workspace number 7
+bindsym $mod+Shift+8 move container to workspace number 8
+bindsym $mod+Shift+9 move container to workspace number 9
+bindsym $mod+Shift+0 move container to workspace number 10
+
+### Diseño de Ventanas (Layout)
+bindsym $mod+b splith
+bindsym $mod+v splitv
+
+bindsym $mod+s layout stacking
+bindsym $mod+w layout tabbed
+bindsym $mod+e layout toggle split
+
+bindsym $mod+f fullscreen
+bindsym $mod+Shift+space floating toggle
+bindsym $mod+space focus mode_toggle
+
+### Scratchpad (Ventana minimizada al bloc)
+bindsym $mod+Shift+minus move scratchpad
+bindsym $mod+minus scratchpad show
+
+### Modo Redimensionar
+mode "resize" {
+    bindsym $left resize shrink width 10px
+    bindsym $down resize grow height 10px
+    bindsym $up resize shrink height 10px
+    bindsym $right resize grow width 10px
+
+    bindsym Left resize shrink width 10px
+    bindsym Down resize grow height 10px
+    bindsym Up resize shrink height 10px
+    bindsym Right resize grow width 10px
+
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+bindsym $mod+r mode "resize"
+
+### Barra de Estado Monocromática (Swaybar)
+bar {
+    position top
+    status_command ~/.config/sway/scripts/status.sh
+    font pango:Inter, Symbols Nerd Font 10
+
+    colors {
+        statusline #e0e0e0
+        background #101010
+        separator  #282828
+
+        # clase            borde   fondo   texto
+        focused_workspace  #ba68c8 #1c1424 #ffffff
+        active_workspace   #282828 #141414 #ffffff
+        inactive_workspace #161616 #101010 #888888
+        urgent_workspace   #ba68c8 #333333 #ffffff
+        binding_mode       #ba68c8 #222222 #ffffff
+    }
+}
+
+# Transparencia Fluent (Efecto translúcido acrílico)
+for_window [app_id="thunar"] opacity 0.88
+for_window [class="(?i)thunar"] opacity 0.88
+for_window [app_id="(?i)strawberry"] opacity 0.88
+for_window [class="(?i)strawberry"] opacity 0.88
+for_window [app_id="foot"] opacity 0.88
+
+### Reglas de Ventanas Flotantes (Utilidades de Escritorio y Diálogos)
+for_window [window_role="pop-up"] floating enable
+for_window [window_role="bubble"] floating enable
+for_window [window_role="dialog"] floating enable
+for_window [window_type="dialog"] floating enable
+for_window [window_role="task_dialog"] floating enable
+for_window [window_role="Preferences"] floating enable
+for_window [window_type="menu"] floating enable
+for_window [window_role="Open Files"] floating enable
+for_window [window_role="Save File"] floating enable
+
+# Aplicaciones de utilidad centradas y flotantes
+for_window [app_id="pavucontrol"] floating enable, resize set 680 460, move position center
+for_window [app_id="blueman-manager"] floating enable, resize set 680 460, move position center
+for_window [app_id="file-roller"] floating enable, move position center
+for_window [app_id="org.gnome.FileRoller"] floating enable, move position center
+for_window [app_id="nm-connection-editor"] floating enable, move position center
+for_window [app_id="imv"] floating enable, resize set 1000 700, move position center
+
+# Inhibir reposo/suspensión cuando cualquier ventana esté en pantalla completa (Videos, Streaming)
+for_window [app_id=".*"] inhibit_idle fullscreen
+for_window [class=".*"] inhibit_idle fullscreen
+
+### Autostart de Servicios de Sistema y Escritorio
+# Agente de autenticación Polkit (permite elevación de privilegios gráfica)
+exec /usr/libexec/polkit-mate-authentication-agent-1 &
+
+# Demonio de notificaciones
+exec mako &
+
+# Gestor de contraseñas y secretos
+exec gnome-keyring-daemon --start --components=secrets,ssh &
+
+# Applet de Bluetooth
+exec blueman-applet &
+
+# Historial del portapapeles con cliphist (texto e imágenes)
+exec wl-paste --type text --watch cliphist store &
+exec wl-paste --type image --watch cliphist store &
+
+### Gestión de Energía e Inactividad con Atenuación Progresiva (Notebook MSI)
+# - 2 minutos (120s): Atenuación suave de pantalla (dimming al 10%)
+# - 3 minutos (180s): Apagar pantalla (DPMS off)
+# - 5 minutos (300s): Bloquear la sesión con swaylock
+# - 10 minutos (600s): Suspender equipo si continúa la inactividad
+# - Bloquear siempre antes de entrar en suspensión
+exec swayidle -w \
+    timeout 120 '$scripts/dimmer.sh dim' resume '$scripts/dimmer.sh restore' \
+    timeout 180 'swaymsg "output * dpms off"' resume 'swaymsg "output * dpms on"' \
+    timeout 300 'swaylock -f' \
+    timeout 600 'systemctl suspend' \
+    before-sleep 'swaylock -f'
+
+include /etc/sway/config.d/*

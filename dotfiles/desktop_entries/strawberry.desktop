@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Strawberry
+GenericName=Music Player
+Comment=Music player and collection organizer
+Exec=/home/jhon/.local/bin/strawberry %U
+Icon=strawberry
+Terminal=false
+Type=Application
+Categories=AudioVideo;Audio;Player;Qt;

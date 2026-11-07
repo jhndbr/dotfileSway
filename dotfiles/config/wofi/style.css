@@ -1,0 +1,67 @@
+/* Fluent Purple Minimalist Wofi Style (Transparent & Square Borders) */
+
+window {
+    margin: 0px;
+    border: 2px solid #ba68c8;
+    background-color: rgba(16, 16, 16, 0.85);
+    border-radius: 0px;
+    font-family: "Inter", sans-serif;
+    font-size: 13px;
+}
+
+#input {
+    margin: 12px;
+    padding: 8px 12px;
+    border: 1px solid #351f47;
+    color: #ffffff;
+    background-color: rgba(22, 22, 22, 0.85);
+    border-radius: 0px;
+    font-family: "Inter", sans-serif;
+}
+
+#input:focus {
+    border-color: #ba68c8;
+}
+
+#inner-box {
+    margin: 4px 12px 12px 12px;
+    border: none;
+    background-color: transparent;
+}
+
+#outer-box {
+    margin: 0px;
+    border: none;
+    background-color: transparent;
+}
+
+#scroll {
+    margin: 0px;
+    border: none;
+}
+
+#text {
+    margin: 4px 8px;
+    border: none;
+    color: #d0c8d8;
+}
+
+#entry {
+    padding: 6px 8px;
+    margin: 2px 0px;
+    border: none;
+    border-radius: 0px;
+    background-color: transparent;
+    transition: background-color 100ms ease;
+}
+
+#entry:selected {
+    background-color: rgba(53, 31, 71, 0.90);
+    border: 1px solid #ba68c8;
+    border-radius: 0px;
+}
+
+#entry:selected #text {
+    color: #ffffff;
+    font-weight: 500;
+}

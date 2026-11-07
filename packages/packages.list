@@ -1,0 +1,77 @@
+# ==============================================================================
+# Lista de paquetes APT para replicar el entorno Debian 13 (Trixie) con Sway
+# ==============================================================================
+
+# Sistema Base y Herramientas Esenciales
+sudo
+curl
+wget
+git
+ca-certificates
+unzip
+p7zip-full
+file
+htop
+duf
+fastfetch
+dconf-cli
+dconf-gsettings-backend
+gsettings-desktop-schemas
+bash-completion
+python3
+
+# Compositor Sway y componentes Wayland
+sway
+swaybg
+swayidle
+swaylock
+foot
+wofi
+mako-notifier
+grim
+slurp
+wl-clipboard
+cliphist
+brightnessctl
+mate-polkit
+gnome-keyring
+xdg-desktop-portal
+xdg-desktop-portal-gtk
+xdg-desktop-portal-wlr
+xdg-utils
+libnotify-bin
+
+# Servidor de Audio, Bluetooth y Energía (Laptop)
+pipewire
+pipewire-audio
+pipewire-pulse
+wireplumber
+pavucontrol
+blueman
+power-profiles-daemon
+thermald
+
+# Explorador de archivos y aplicaciones de productividad
+thunar
+tumbler
+thunar-archive-plugin
+file-roller
+gvfs
+gvfs-backends
+imv
+zathura
+zathura-pdf-poppler
+strawberry
+vlc
+obs-studio
+firefox-esr
+
+# Librerías de soporte para AppImages y aplicaciones Electron (Joplin, etc.)
+libfuse2t64
+libnss3
+
+# Fuentes tipográficas del sistema y barra de estado
+fonts-inter
+fonts-jetbrains-mono
+fonts-font-awesome
+fonts-noto-color-emoji

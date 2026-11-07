@@ -1,0 +1,4 @@
+  * Patch code to use system shared libraries:
+    + Libb64
+    + UTF8-CPP
+    + libgetopt++

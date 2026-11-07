@@ -1,0 +1,22 @@
+[Default Applications]
+text/html=brave-origin.desktop
+x-scheme-handler/http=brave-origin.desktop
+x-scheme-handler/https=brave-origin.desktop
+x-scheme-handler/about=brave-origin.desktop
+x-scheme-handler/unknown=brave-origin.desktop
+inode/directory=thunar.desktop
+image/jpeg=imv.desktop
+image/png=imv.desktop
+image/gif=imv.desktop
+image/webp=imv.desktop
+image/bmp=imv.desktop
+application/pdf=org.pwmt.zathura.desktop
+application/zip=org.gnome.FileRoller.desktop
+application/x-tar=org.gnome.FileRoller.desktop
+application/x-7z-compressed=org.gnome.FileRoller.desktop
+application/x-compressed-tar=org.gnome.FileRoller.desktop
+application/x-gzip=org.gnome.FileRoller.desktop
+video/mp4=vlc.desktop
+video/mkv=vlc.desktop
+video/x-matroska=vlc.desktop
+video/webm=vlc.desktop

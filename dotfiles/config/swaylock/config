@@ -1,0 +1,39 @@
+# Swaylock Configuration - Monochromatic Minimalist
+daemonize
+ignore-empty-password
+show-failed-attempts
+
+# Screen background
+color=121212
+
+# Indicator Geometry & Font
+font=monospace
+font-size=16
+indicator-radius=85
+indicator-thickness=6
+
+# Inside circle colors (RRGGBB or RRGGBBAA)
+inside-color=181818
+inside-clear-color=222222
+inside-ver-color=222222
+inside-wrong-color=282828
+
+# Outer ring colors
+ring-color=444444
+ring-clear-color=888888
+ring-ver-color=ffffff
+ring-wrong-color=777777
+
+# Line separator
+line-uses-inside
+separator-color=00000000
+
+# Keypress & Backspace highlight
+key-hl-color=ffffff
+bs-hl-color=888888
+
+# Text colors
+text-color=ffffff
+text-clear-color=888888
+text-ver-color=ffffff
+text-wrong-color=ffffff

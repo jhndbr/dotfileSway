@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Joplin
+Comment=Aplicación de notas
+Exec=/home/jhon/.joplin/Joplin.AppImage
+Icon=accessories-text-editor
+Terminal=false
+Type=Application
+Categories=Office;Utility;
+StartupNotify=true

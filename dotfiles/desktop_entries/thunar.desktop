@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Thunar File Manager
+Name[es]=Administrador de archivos Thunar
+Exec=/home/jhon/.local/bin/thunar %U
+Icon=org.xfce.thunar
+Terminal=false
+Type=Application
+Categories=System;FileManager;

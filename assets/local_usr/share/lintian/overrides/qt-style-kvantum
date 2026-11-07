@@ -1,0 +1,3 @@
+qt-style-kvantum: no-manual-page *usr/bin/kvantummanager*
+qt-style-kvantum: no-manual-page *usr/bin/kvantumpreview*
+qt-style-kvantum: desktop-entry-invalid-category LXQt *usr/share/applications/kvantummanager.desktop*
