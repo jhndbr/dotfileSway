@@ -8,6 +8,36 @@ Dotfiles minimalistas, elegantes y funcionales para un entorno de escritorio bas
 
 ---
 
+## 🌟 Ecosistema de Configuraciones (Ramas Disponibles)
+
+Este repositorio reúne todas mis configuraciones y entornos distribuidos en ramas temáticas e independientes. Para clonar o cambiarte a una variante específica:
+
+```bash
+# Clonar directamente una variante
+git clone -b <nombre-de-rama> git@github.com:jhndbr/dotfileSway.git
+
+# O cambiarte a ella en tu repositorio local
+git checkout <nombre-de-rama>
+```
+
+| Rama | Distro | WM / Escritorio | Identidad Visual / Característica |
+| :--- | :--- | :--- | :--- |
+| [**`main`**](https://github.com/jhndbr/dotfileSway/tree/main) / **`arch-sway-monochrome`** | Arch Linux | Sway | Minimal macOS Monochromatic (Spotlight + Waybar Glass) |
+| [**`arch-sway-liquidglass`**](https://github.com/jhndbr/dotfileSway/tree/arch-sway-liquidglass) | Arch Linux | Sway | Apple Liquid Glass & Materials (iOS 27 / Tahoe en QML) |
+| [**`arch-mangowm-minimal`**](https://github.com/jhndbr/dotfileSway/tree/arch-mangowm-minimal) | Arch Linux | MangoWM | Ultra-minimalista Wayland tiling |
+| [**`arch-sway-laptop`**](https://github.com/jhndbr/dotfileSway/tree/arch-sway-laptop) | Arch Linux | Sway | Optimizado para laptops y pantallas integradas |
+| [**`arch-sway-mango-hybrid`**](https://github.com/jhndbr/dotfileSway/tree/arch-sway-mango-hybrid) | Arch Linux | Sway + MangoWM | Configuración híbrida dual para intercambiar WMs |
+| [**`arch-hyprland-neon`**](https://github.com/jhndbr/dotfileSway/tree/arch-hyprland-neon) | Arch Linux | Hyprland | Modern Glass, Waybar, Fastfetch, Kitty y Wallbash |
+| [**`void-dwm-suckless`**](https://github.com/jhndbr/dotfileSway/tree/void-dwm-suckless) | Void Linux | DWM | Suckless C puro con parches, dmenu y slstatus |
+| [**`void-sway-chameleon`**](https://github.com/jhndbr/dotfileSway/tree/void-sway-chameleon) | Void Linux | Sway | Dual-Theme dinámico (Catppuccin Mocha / Warm Paper) |
+| [**`void-multidesktop-setup`**](https://github.com/jhndbr/dotfileSway/tree/void-multidesktop-setup) | Void Linux | Modular | Automatizador post-instalación (Niri, Sway, KDE) |
+| [**`debian-sway-fluent`**](https://github.com/jhndbr/dotfileSway/tree/debian-sway-fluent) | Debian 13 | Sway | Fluent Purple (Fluent GTK, Kvantum, WhiteSur) |
+| [**`debian-gnome-matugen`**](https://github.com/jhndbr/dotfileSway/tree/debian-gnome-matugen) | Debian / Linux | GNOME Shell | Theming dinámico Material You (Shell, GDM, Libadwaita) |
+| [**`fedora-i3-catppuccin`**](https://github.com/jhndbr/dotfileSway/tree/fedora-i3-catppuccin) | Fedora | i3-wm | Tiling clásico X11 con paleta pastel Catppuccin |
+| [**`linux-xfce-layan`**](https://github.com/jhndbr/dotfileSway/tree/linux-xfce-layan) | Linux | XFCE 4 | Script de personalización estilo Layan / Orchis Glass |
+
+---
+
 ## Características
 
 - **Estética macOS Monochromatic** — Paleta monocromática oscura con acentos blancos
