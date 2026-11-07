@@ -32,6 +32,7 @@ git checkout <nombre-de-rama>
 | [**`void-sway-chameleon`**](https://github.com/jhndbr/dotfileSway/tree/void-sway-chameleon) | Void Linux | Sway | Dual-Theme dinámico (Catppuccin Mocha / Warm Paper) |
 | [**`void-multidesktop-setup`**](https://github.com/jhndbr/dotfileSway/tree/void-multidesktop-setup) | Void Linux | Modular | Automatizador post-instalación (Niri, Sway, KDE) |
 | [**`debian-sway-fluent`**](https://github.com/jhndbr/dotfileSway/tree/debian-sway-fluent) | Debian 13 | Sway | Fluent Purple (Fluent GTK, Kvantum, WhiteSur) |
+| [**`debian-sway-quickshell`**](https://github.com/jhndbr/dotfileSway/tree/debian-sway-quickshell) | Debian 13 | Sway | SwayShell con Quickshell (QtQuick/QML, Catppuccin, Glass UI) |
 | [**`debian-gnome-matugen`**](https://github.com/jhndbr/dotfileSway/tree/debian-gnome-matugen) | Debian / Linux | GNOME Shell | Theming dinámico Material You (Shell, GDM, Libadwaita) |
 | [**`fedora-i3-catppuccin`**](https://github.com/jhndbr/dotfileSway/tree/fedora-i3-catppuccin) | Fedora | i3-wm | Tiling clásico X11 con paleta pastel Catppuccin |
 | [**`linux-xfce-layan`**](https://github.com/jhndbr/dotfileSway/tree/linux-xfce-layan) | Linux | XFCE 4 | Script de personalización estilo Layan / Orchis Glass |
